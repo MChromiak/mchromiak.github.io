@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Attention model - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="https://michalchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+
+
+    <meta name="author" content="Michał Chromiak" />
+    <meta name="keywords" content="Attention model" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Michał Chromiak's blog"/>
+        <meta property="og:url" content="https://michalchromiak.github.io"/>
+        <meta property="og:description" content="Michał Chromiak's blog"/>
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://michalchromiak.github.io">
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://michalchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://michalchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://michalchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://michalchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://michalchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://michalchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://michalchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://michalchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://michalchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://michalchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://michalchromiak.github.io/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="https://michalchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://michalchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <ol class="breadcrumb">
+        <li><a href="https://michalchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+        <li><a href="https://michalchromiak.github.io/" title="Tags">Tags</a></li>
+        <li class="active">Attention model</li>
+    </ol>
+            <article>
+                <h2><a href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></h2>
+                    <div class="well well-sm">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-09-12T19:30:00+02:00"> Tue, 12 Sep 2017</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2017-12-03T19:30:00+01:00"> Sun, 03 Dec 2017</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://michalchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://michalchromiak.github.io/category/neural-nets.html">Neural Nets</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://michalchromiak.github.io/tag/transformer.html">transformer</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/attention-model.html">Attention model</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/machine-translation.html">Machine translation</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/bleu.html">BLEU</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/wmt2014.html">WMT2014</a>
+        /
+	<a href="https://michalchromiak.github.io/tag/sequence-modeling.html">Sequence modeling</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                <div class="summary">
+                  <div class="cover">
+<img src="/articles/2017/Sep/12/img/cover_trans.gif" alt="article cover">                  </div>
+                  <div class="sumtext">
+                    <p>Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new <em>transformer</em> architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.</p>
+<p><small><a href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/#disqus_thread" >View comments</a>.</small></p>                    <a class="btn btn-default btn-xs" href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">more ...</a>
+                  </div>
+                </div>
+            </article>
+            <hr/>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://michalchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+        Awarded PhD in 2016 by Polish Academy of Sciences in Computer Science. Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two titles of MSc in Mathematics and in Computer Science (Maria Curie-Skłodowska Univ.) 
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MichalChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://twitter.com/MichalChromiak"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal_Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="localhost:8000/feeds/all.rss"><i class="fa fa-rss-square fa-lg"></i> RSS</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://michalchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://michalchromiak.github.io/category/neural-nets.html"><i class="fa fa-folder-open fa-lg"></i>Neural Nets</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://michalchromiak.github.io/category/primer.html"><i class="fa fa-folder-open fa-lg"></i>Primer</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://michalchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/application.html">application</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/attention-model.html">Attention model</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/basics.html">basics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/bleu.html">BLEU</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/machine-translation.html">Machine translation</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/sequence-modeling.html">Sequence modeling</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/transformer.html">transformer</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://michalchromiak.github.io/tag/wmt2014.html">WMT2014</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="(https://www.reddit.com/r/MachineLearning/" target="_blank">Reddit r/MachineLearning/</a>
+    </li>
+    <li class="list-group-item">
+      <a href="(https://www.reddit.com/r/learnmachinelearning/" target="_blank">Reddit r/learnmachinelearning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="(https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="(https://deepart.io/" target="_blank">DeepArt Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://java-hive.blogspot.com/" target="_blank">My old blog on Java an SE</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://michalchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 Michał Chromiak
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>                <p><small>  <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+    Content
+  licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative Commons Attribution-ShareAlike 4.0 International License</a>, except where indicated otherwise.
+</small></p>
+         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://michalchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://michalchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://michalchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://michalchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://michalchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+</body>
+</html>

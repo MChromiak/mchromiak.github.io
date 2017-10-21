@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather|Source+Serif+Pro');
+
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
+  font-family: 'Merriweather', serif;
+}
+
+div.col-sm-9 {
+  background-color: white;
+}
+
+div.col-sm-3 {
+  background-color: white;
+}
+
+footer {
+  background-color: azure;
+}
+
+#banner .copy {
+  max-width: 800px;
+}
+
+#banner h1 {
+    color: #fff;
+    font-size: 21px;
+    line-height: 1.33;
+    opacity: 0.75;
+    text-transform: uppercase;
+}
+
+#banner .intro {
+    color: #fff;
+    font-family: "HelveticaNeue-CondensedBold","Helvetica Neue CE 600 Condensed","Helvetica Neue LT Condensed","Helvetica Neue 600 Condensed","HelveticaNeue-BoldCondensed","Helvetica Neue BoldCondensed","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 60px;
+    font-stretch: condensed;
+    font-weight: 700;
+    line-height: 0.9;
+    margin: 0;
+    margin-left: 4px;
+    text-transform: none;
+    opacity: 1;
+}
+
+
+/* Line under header */
+h1, h2
+{
+    border-bottom:2px solid #CCC;
+    width:100%;
+    padding-bottom:3px;
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+}
+/* Line before/after header */
+/*h1::before,
+h1::after {
+    display: inline-block;
+    content: "";
+    border-top: .3rem solid black;
+    width: 4rem;
+    margin: 0 1rem;
+    transform: translateY(-1rem);
+}*/
+
+/* Header permalinks */
+h1:hover .headerlink, h2:hover .headerlink,
+h3:hover .headerlink, h4:hover .headerlink,
+h5:hover .headerlink, h6:hover .headerlink {
+    display: inline;
+}
+
+.headerlink {
+    display: none;
+    color: black;
+    margin-left: 0.2em;
+    padding: 0 0.2em;
+    font-size: 70%;
+    position:relative;
+    top:-5px;
+}
+/* To justify text of articles
+div .entry-content {
+    text-align: justify;
+    text-justify: inter-word;
+}
+*/
+
+body{
+/* background-image: url("../img/background1.jpg");*/
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #08286b;
+}
+
+.entry-content a {
+  font-style: italic;
+}
+
+.entry-content p  {
+  font-family: 'Source Serif Pro', serif;
+  line-height: 1.6;
+  //width: 720px;
+  font-size: 16px;
+  margin-bottom: 1.5em;
+}
+
+.entry-content li  {
+  font-family: 'Source Serif Pro', serif;
+//line-height: 1.6;
+  font-size: 16px;
+  //margin-bottom: 1.5em;
+}
+
+.entry-content img{
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 4px;
+  margin: 1em 1em 1em 0;
+  box-shadow: 4px 4px 4px 0px rgba(128, 128, 128, 0.5);
+}
+
+.headerlink:hover {
+    opacity: 1;
+    background: #ddd;
+    color: blue;
+    text-decoration: none;
+}
+
+/* Each md has script at the end that adds awsome font for external link this change its size*/
+i.fa-external-link {
+    font-size: 9px;
+    position:relative;
+    top:-3px;
+}
+
+/* ================================================ ARTICLE LIST =============================== */
+/* COVER size width="200px" height="150px"         Use modified article_list.html form the theme*/
+/*    Use "Cover:" in .md file metadata. The img will be copied to "img" folder of date,
+      or <article-title>/img if included inside content of article
+*/
+.summary {
+//  border: 1px solid black;
+  overflow: auto;
+}
+
+.cover {
+  width: 215px;
+  float:left; /* add this */
+  //border: 1px solid red;
+}
+
+.cover img {
+    width: 200px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    //padding: 4px;
+    //margin: 1em 1em 1em 0;
+    box-shadow: 4px 4px 4px 0px rgba(128, 128, 128, 0.5);
+}

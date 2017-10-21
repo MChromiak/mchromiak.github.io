@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://michalchromiak.github.io/" rel="alternate"></link><link href="https://michalchromiak.github.io/feeds/all.atom.xml" rel="self"></link><id>https://michalchromiak.github.io/</id><updated>2017-12-03T19:30:00+01:00</updated><entry><title>The Transformer – Attention is all you need.</title><link href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"></link><published>2017-09-12T19:30:00+02:00</published><updated>2017-12-03T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:michalchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id="recommended-reading-before-approaching-this-post"&gt;Recommended reading before approaching this post:&lt;a title="Permanent link" href="#recommended-reading-before-approaching-this-post" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;RNN – Andrej Karpathy’s blog &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Seq2Seq - Nathan Lintz &lt;a href="https://indico.io/blog/sequence-modeling-neuralnets-part1/"&gt;Sequence Modeling With Neural Networks (Part 1): Language &amp;amp; Seq2Seq&lt;/a&gt;,
+Part2 &lt;a href="https://indico.io/blog/sequence-modeling-neural-networks-part2-attention-models/"&gt;Sequence modeling with attention&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;LSTM – Christopher Olah’s blog &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;Understanding LSTM Networks&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Attention – Christopher Olah &lt;a href="https://distill.pub/2016/augmented-rnns/#attentional-interfaces"&gt;Attention and Augmented Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="objective-or-goal-for-the-algorithm"&gt;Objective or goal for the algorithm&lt;a title="Permanent link" href="#objective-or-goal-for-the-algorithm" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Parallelization of Seq2Seq:&lt;/strong&gt; RNN/CNN handle sequences word-by-word sequentially which is an obstacle to parallelize. Transformer achieve parallelization by replacing recurrence with attention and encoding the symbol position in sequence. This in turn leads to significantly shorter training time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Reduce sequential computation:&lt;/strong&gt; Constant &lt;span class="math"&gt;\(O(1)\)&lt;/span&gt; number of operations to learn dependency between two symbols independently of their position distance in sequence.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="tldr"&gt;TL;DR&lt;a title="Permanent link" href="#tldr" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;RNN:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Advantages:&lt;/strong&gt; are popular and successful for variable-length representations such as sequences (e.g. languages), images, etc. RNN are considered core of seq2seq (with attention). The gating models such as LSTM or GRU are for long-range error propagation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Problems:&lt;/strong&gt; The sequentiality prohibits parallelization within instances. Long-range dependencies still tricky, despite gating.  Sequence-aligned states in RNN are wasteful. Hard to model hierarchical-alike domains such as languages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;CNN:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Advantages:&lt;/strong&gt; Trivial to parallelize (per layer) and fit intuition that most dependencies are local.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Problems:&lt;/strong&gt; Path length between positions can be logarithmic when using dilated convolutions, left-padding for text. (autoregressive CNNs WaveNet, ByteNET )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Solution:&lt;/strong&gt; Multi-head self-attention mechanism. Why attention? Table 2 of the paper shows that such attention networks can save 2–3 orders of magnitude of operations!&lt;/p&gt;
+&lt;h3 id="intro"&gt;Intro&lt;a title="Permanent link" href="#intro" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In this post I will elaborate on lately presented paper introducing the &lt;strong&gt;Transformer&lt;/strong&gt; architecture.
+Paper: &lt;a href="https://arxiv.org/abs/1706.03762"&gt;ArXiv&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As the paper assumes the in-depth prior knowledge of some topics I will try to explain the ideas of the paper so that they can be understood by a DL beginner.&lt;/p&gt;
+&lt;p&gt;When RNN’s (or CNN), takes a sequence as an input, it handles sentences word by word. This sequentiality  is an obstacle toward parallelization of the process. What is more, in cases when such sequences are too long, the model is prone to forgetting the content of distant positions in sequence or mix it with following positions’ content. For this reason &lt;em&gt;Transformer&lt;/em&gt; propose to encode each position and applying the attention mechanism, to relate two distant words, which then can be parallelized thus, accelerating the training.&lt;/p&gt;
+&lt;p&gt;Currently, in NLP the SOTA (&lt;em&gt;state-of-the-art&lt;/em&gt;) performance achieved by seq2seq models is focused around the idea of encoding the input sentence into a fixed-size vector representation. The vector size is fixed, regardless of the length of the input sentence. In obvious way this must loose some information. To face this issue &lt;em&gt;Transformer&lt;/em&gt; employs an alternative approach based on attention.&lt;/p&gt;
+&lt;p&gt;Due to multiple referred work it is beneficial to also read the mentioned research&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1703.03906"&gt;Denny Britz on Attention, 2017&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1705.04304"&gt;Self-attention (a.k.a Intra-attention), 2017&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="motivation"&gt;Motivation&lt;a title="Permanent link" href="#motivation" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The Transformer architecture is aimed at the problem of &lt;a href="https://arxiv.org/abs/1211.3711"&gt;&lt;em&gt;sequence transduction&lt;/em&gt; (by Alex Graves)&lt;/a&gt;, meaning any task where input sequences are transformed into output sequences. This includes speech recognition, text-to-speech transformation, machine translation, protein secondary structure prediction, Turing machines etc. Basically the goal is to design a single framework to handle as many sequences as possible.&lt;/p&gt;
+&lt;p&gt;Currently, complex RNN and CNN based on encoder-decoder scheme are dominating transduction models (language modeling and machine learning). Recurrent models due to sequential nature (computations focused on the position of symbol in input and output) are not allowing for parallelization along training, thus have a problem with learning long-term dependencies (&lt;a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&amp;amp;arnumber=5264952"&gt;Hochreiter,, et  al.&lt;/a&gt;) from memory. The bigger the memory is, the better, but the memory eventually  constrains batching across learning examples for long sequences, and this is why parallelization can not help.&lt;/p&gt;
+&lt;p&gt;Reducing this fundamental constraint of sequential computation has been target for numerous research like &lt;a href="https://arxiv.org/abs/1609.03499"&gt;Wavenet&lt;/a&gt; / &lt;a href="https://arxiv.org/abs/1610.10099"&gt;Bytenet&lt;/a&gt; or &lt;a href="https://arxiv.org/abs/1705.03122"&gt;ConvS2S&lt;/a&gt;. However, in those CNN-based approaches, the number of calculations in parallel computation of the hidden representation, for input&lt;span class="math"&gt;\(\rightarrow\)&lt;/span&gt;output position in sequence, grows with the distance between those positions. The complexity of s&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt; for ConvS2S and  &lt;span class="math"&gt;\(O(nlogn)\)&lt;/span&gt; for ByteNet makes it harder to learn dependencies on distant positions.&lt;/p&gt;
+&lt;p&gt;Transformer reduces the number of sequential operations to relate two symbols from input/output sequences  to a constant &lt;span class="math"&gt;\(O(1)\)&lt;/span&gt; number of operations. Transformer achieves this with the &lt;em&gt;multi-head attention&lt;/em&gt; mechanism that allows to model dependencies regardless of their distance in input or output sentence.   &lt;/p&gt;
+&lt;p&gt;Up till now, most of the research including attention is used along with RNNs. The novel approach of Transformer is however, to eliminate recurrence completely and replace it with attention to handle the dependencies between input and output. The Transformer moves the sweet spot of current ideas toward attention entirely. It eliminates the not only recurrence but also convolution in favor of applying &lt;strong&gt;self-attention&lt;/strong&gt; (a.k.a intra-attention). Additionally Transformer gives more space for parallelization (details present in paper).&lt;/p&gt;
+&lt;p&gt;The top performance in the paper is achieved while applying the &lt;strong&gt;attention&lt;/strong&gt; mechanism connecting encoder and decoder.&lt;/p&gt;
+&lt;p&gt;Transformer is claimed by authors to be the first to rely entirely on self-attention to compute representations of input and output.&lt;/p&gt;
+&lt;h3 id="information-on-processing-strategy-of-the-algorithm"&gt;Information on processing strategy of the algorithm&lt;a title="Permanent link" href="#information-on-processing-strategy-of-the-algorithm" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Transformer is based on sequence-to-sequence model for &lt;em&gt;Statistical Machine Translation&lt;/em&gt; (SMT) as introduced in &lt;a href="https://arxiv.org/abs/1406.1078"&gt;Cho et al., 2014&lt;/a&gt;. It includes two RNNs, one for &lt;strong&gt;encoder&lt;/strong&gt; to process the input and the other as a &lt;strong&gt;decoder&lt;/strong&gt;, for generating the output.&lt;/p&gt;
+&lt;p&gt;In general transformer’s &lt;em&gt;encoder&lt;/em&gt; maps input sequence to its continuous representation &lt;span class="math"&gt;\(z\)&lt;/span&gt; which in turn is used by &lt;em&gt;decoder&lt;/em&gt; to generate output, one symbol at a time.&lt;/p&gt;
+&lt;p&gt;The final state of the encoder is the fixed size vector &lt;span class="math"&gt;\(z\)&lt;/span&gt; that must encode entire source sentence which includes the sentence meaning. This final state is therefore called &lt;em&gt;sentence embedding&lt;/em&gt;
+&lt;sup id="sf-Transformer-Attention-is-all-you-need-1-back"&gt;&lt;a href="#sf-Transformer-Attention-is-all-you-need-1" class="simple-footnote" title=" While applying dimensionality reduction techniques (e.g. PCA, t-SNE) on embeddings the outcome plot gathers the semantically close sentences  together Sutskever et al., 2014."&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;The encoder-decoder model is designed at its each step to be &lt;strong&gt;auto-regressive&lt;/strong&gt; -  i.e. use previously generated  symbols as extra input while generating next symbol. Thus, &lt;span class="math"&gt;\( x_i + y_{i-1}\rightarrow y_i\)&lt;/span&gt;&lt;/p&gt;
+&lt;h2 id="transformer-is-based-on-encoder-decoder"&gt;Transformer is based on Encoder-Decoder&lt;a title="Permanent link" href="#transformer-is-based-on-encoder-decoder" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In Transformer (as in ByteNet or ConvS2S) the &lt;em&gt;decoder&lt;/em&gt; is stacked directly on top of &lt;em&gt;encoder&lt;/em&gt;. Encoder and decoder both are composed of stack of identical layers. Each of those stacked layers is composed out of two general types of sub-layers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;multi-head self-attention mechanism, and&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;position-wise fully connected FFN.&lt;/p&gt;
+&lt;p&gt;In contrast to ConvS2S however, where input representation considered each input element  combined with its absolute position number in sequence (providing sense of ordering; ByteNet have dilated convolutions and no position-wise FNN), transformer introduces two different NN for these two types of information.  &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The way the attention mechanism is applied and customized is what makes the Transformer novel.&lt;/p&gt;
+&lt;p&gt;One can find the reference Transformer model implementation from authors is present in &lt;a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py"&gt;Tensor2Tensor (T2T) library&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/encoder.png" alt="Encoder Decoder architecture "&gt;
+&lt;br&gt;
+Figure 1. Single layer of Encoder (left) and Decoder (right) that is build out of &lt;span class="math"&gt;\(N=6\)&lt;/span&gt; identical layers.&lt;/p&gt;
+&lt;h4 id="encoder"&gt;Encoder&lt;a title="Permanent link" href="#encoder" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Stage 1 – Encoder Input&lt;/strong&gt;
+Information on sequence ordering is very important. As there is no recurrence, nor convolution, this information on absolute (or relative) position of each token in a sequence is represented with use of "positional encodings" (&lt;a href="../../../../2017/Sep/03/Transformer-Attention-is-all-you-need/#positional-encoding"&gt;Read more&lt;/a&gt;). The input for the encoder is therefore, represented  as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;positional encodings&lt;/em&gt;  added &lt;span class="math"&gt;\(\oplus\)&lt;/span&gt; to&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;embedded inputs&lt;/em&gt;  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(N=6\)&lt;/span&gt; layers. In practice the &lt;span class="math"&gt;\(N=6\)&lt;/span&gt; means more than 6 layers. Each of those “layers” are actually composed of two layers: position-wise FNN and one (encoder), or two (decoder), attention-based sublayers. Each of those additionally contains 4 linear projections and the attention logic. Thus, providing effectively deeper than 6 layer architecture.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Stage 2 – Multi-head attention&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Stage 3 – position-wise FFN&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Stages 2 and 3 use the residual connection (thus, all employ &lt;span class="math"&gt;\(d_{model}=512\)&lt;/span&gt;) followed by normalization layer at its output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="decoder"&gt;Decoder&lt;a title="Permanent link" href="#decoder" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Decoder’s architecture is similar however, it employs additional layer in &lt;em&gt;Stage 3&lt;/em&gt; with mask multi-head attention over encoder output.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt; Stage 1 – Decoder input&lt;/strong&gt;
+The input is the &lt;em&gt;output embedding&lt;/em&gt;, offset by one position to ensure that the prediction for position &lt;span class="math"&gt;\(i\)&lt;/span&gt; is only dependent on positions previous to/less than &lt;span class="math"&gt;\(i\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt; Stage 2 Masked Multi-head attention&lt;/strong&gt;
+Modified to prevent positions to attend to subsequent positions.&lt;/p&gt;
+&lt;p&gt;Stages 2, 3 and 4 also use the residual connection followed by normalization layer at its   output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The details of each mechanism applied in the mentioned layers is more elaborated in following section.&lt;/p&gt;
+&lt;h3 id="mechanisms-used-to-compose-transformer-architecture"&gt;Mechanisms used to compose Transformer architecture&lt;a title="Permanent link" href="#mechanisms-used-to-compose-transformer-architecture" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;There are couple types of layers that transformer consists of. Their details are depict in following sections.&lt;/p&gt;
+&lt;h4 id="positional-encoding-pe"&gt;Positional Encoding – PE&lt;a title="Permanent link" href="#positional-encoding-pe" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In RNN (LSTM), the notion of time step is encoded in the sequence as inputs/outputs flow one at a time. In FNN, the &lt;em&gt;positional encoding&lt;/em&gt; must be preserved to represent the time in some way to preserve the &lt;em&gt;positional encoding&lt;/em&gt;. In case of the Transformer authors propose to encode time as &lt;span class="math"&gt;\(sine\)&lt;/span&gt; wave, as an added extra input. Such signal is added to inputs and outputs to represent time passing&lt;sup id="sf-Transformer-Attention-is-all-you-need-2-back"&gt;&lt;a href="#sf-Transformer-Attention-is-all-you-need-2" class="simple-footnote" title="It is interesting how this resembles the brain waves and neural oscillations."&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;In general, adding positional encodings to the input embeddings is a quite interesting topic. One way is to embed the absolute position of input elements (as in ConvS2S). However, authors use "sine and cosine functions of different frequencies". The "sinusoidal" version is quite complicated, while giving similar performance to the absolute position version. The crux is however, that it may allow the model to produce better translation on longer sentences at test time (at least longer than the sentences in the training data). This way sinusoidal method allows the model to extrapolate to longer sequence lengths&lt;sup id="sf-Transformer-Attention-is-all-you-need-3-back"&gt;&lt;a href="#sf-Transformer-Attention-is-all-you-need-3" class="simple-footnote" title="It reminds a bit the Pointer Networks that address similar problem"&gt;3&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;This encoding gives the model a sense of which portion of the sequence of the input (or output) it is currently dealing with. The positional encoding can be learned, or fixed. Authors made tests  (PPL, BLEU) showing that both: learned and fixed positional encodings perform similarly.  &lt;/p&gt;
+&lt;p&gt;In paper authors have decided on fixed variant using &lt;span class="math"&gt;\(sin\)&lt;/span&gt; and &lt;span class="math"&gt;\(cos\)&lt;/span&gt; functions to enable the network to learn information about tokens relative positions to the sequence.&lt;/p&gt;
+&lt;div class="math"&gt;$$ \begin{eqnarray} PE_{(pos,2i)} = sin(pos/10000^{2i/d_{model}}) \end{eqnarray}$$&lt;/div&gt;
+&lt;div class="math"&gt;$$ \begin{eqnarray} PE_{(pos,2i+1)} = cos(pos/10000^{2i/d_{model}})\end{eqnarray}$$&lt;/div&gt;
+&lt;p&gt;Of course authors motivate the use of sinusoidal functions due to enabling model to generalize to sequences longer than ones encountered during training.&lt;/p&gt;
+&lt;h3 id="attention"&gt;Attention&lt;a title="Permanent link" href="#attention" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Attention between encoder and decoder is crucial in NMT. Authors formulate the definition of &lt;em&gt;attention&lt;/em&gt; that has already been elaborated in &lt;a href="2017/Sep/01/Primer-NN/#attention-basis"&gt;Attention primer&lt;/a&gt;. It is a function that maps the 2-element input (&lt;em&gt;query&lt;/em&gt;, &lt;em&gt;key-value&lt;/em&gt; pairs) to an output. The output given by the mapping function is therefore, a weighted sum of the &lt;em&gt;values&lt;/em&gt;. Where weights for each &lt;em&gt;value&lt;/em&gt;  measures how much each input &lt;em&gt;key&lt;/em&gt; interacts with (or answers) the &lt;em&gt;query&lt;/em&gt;. While the attention is a goal for many research the novelty about transformer attention is that it is &lt;strong&gt;multi-head  self-attention&lt;/strong&gt;.&lt;/p&gt;
+&lt;h4 id="scaled-dot-product-attention"&gt;Scaled Dot-Product Attention&lt;a title="Permanent link" href="#scaled-dot-product-attention" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In terms of encoder-decoder, the &lt;strong&gt;query&lt;/strong&gt; is usually the hidden state of the &lt;em&gt;decoder&lt;/em&gt;. &lt;strong&gt;Key&lt;/strong&gt; is the hidden state of the &lt;em&gt;encoder&lt;/em&gt;, and the corresponding &lt;strong&gt;value&lt;/strong&gt; is normalized weight, representing how much attention a &lt;em&gt;key&lt;/em&gt; gets.  Value is calculated as a wighted sum – here the dot product of &lt;em&gt;query&lt;/em&gt; and &lt;em&gt;key&lt;/em&gt; is used to get a &lt;em&gt;value&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;It is assumed that queries and keys are &lt;span class="math"&gt;\(d_k\)&lt;/span&gt; dimension and values are &lt;span class="math"&gt;\(d_v\)&lt;/span&gt; dimension. Those dimensions are imposed by the linear projection discussed in the multi-head attention section. Then the  input is: queries’ matrix &lt;span class="math"&gt;\(Q\)&lt;/span&gt;, keys’ matrix &lt;span class="math"&gt;\(K\)&lt;/span&gt; and values’ matrix &lt;span class="math"&gt;\(V\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;compatibility function&lt;/em&gt; (see &lt;a href="../../../../2017/Sep/01/Primer-NN/#attention-basis"&gt;Attention primer&lt;/a&gt;)  is considered in terms of two, &lt;em&gt;additive&lt;/em&gt; and &lt;em&gt;multiplicative&lt;/em&gt; (dot-product) variants &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanau et al. 2014&lt;/a&gt; with similar theoretical complexity. However, the dot-product (&lt;span class="math"&gt;\(q \cdot  k = \sum_{i=1}^{d_k}q_i k_i\)&lt;/span&gt;) with scaling factor &lt;span class="math"&gt;\(1/\sqrt{d_k}\)&lt;/span&gt; is chosen due to being much faster and space-efficient, as it uses  optimized matrix multiplication code&lt;sup id="sf-Transformer-Attention-is-all-you-need-4-back"&gt;&lt;a href="#sf-Transformer-Attention-is-all-you-need-4" class="simple-footnote" title="The additional scaling is advised as for large \(d_k\) where dot product grow large in magnitude, as softmax is suspected to be pushed to vanishing gradient area, thus making the additive attention perform better. "&gt;4&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;div class="math"&gt;$$\begin{eqnarray} Attention (Q,K,V) = softmax \Big( \frac{QK^T}{\sqrt{d_k}} \Big) V \end{eqnarray}$$&lt;/div&gt;
+&lt;p&gt;Using NumPy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;attention&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;V&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Q&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;denum&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sqrt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;K&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;softmax&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;denum&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;V&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4 id="multi-head-attention"&gt;Multi-head attention&lt;a title="Permanent link" href="#multi-head-attention" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Transformer reduces the number of operations required to relate especially distant positions in input and output sequence to a &lt;span class="math"&gt;\(O(1)\)&lt;/span&gt;. However, this comes at cost of reduced effective resolution because of  averaging attention-weighted positions.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/MultiHead.png" alt="Multihead attetntion"&gt;
+&lt;br&gt;
+Figure 2. Multi-Head Attention consists of &lt;span class="math"&gt;\(h\)&lt;/span&gt; attention layers running in parallel.&lt;/p&gt;
+&lt;p&gt;To reduce this cost authors propose the multi-head attention:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(h=8\)&lt;/span&gt; attention layers (aka “heads”): that represent linear projection (for the purpose of dimension reduction) of key &lt;span class="math"&gt;\(K\)&lt;/span&gt; and query &lt;span class="math"&gt;\(Q\)&lt;/span&gt; into &lt;span class="math"&gt;\(d_k\)&lt;/span&gt;-dimension and value &lt;span class="math"&gt;\(V\)&lt;/span&gt; into &lt;span class="math"&gt;\(d_v\)&lt;/span&gt;- dimension:&lt;/p&gt;
+&lt;p&gt;
+&lt;/p&gt;&lt;div class="math"&gt;$$head_i = Attention(Q W^Q_i, K W^K_i, V W^V_i) , i=1,\dots,h$$&lt;/div&gt;
+where projections are parameter matrices &lt;span class="math"&gt;\(W^Q_i, W^K_i\in\mathbb{R}^{d_{model}\times d_k}, W^V_i\in\mathbb{R}^{d_{model}\times d_v}\)&lt;/span&gt;,
+for &lt;span class="math"&gt;\(d_k=d_v=d_{model}/h = 64\)&lt;/span&gt;&lt;p&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;scaled-dot attention in parallel applied on each layer (different linear projections of &lt;span class="math"&gt;\(k, q, v\)&lt;/span&gt;) results in &lt;span class="math"&gt;\(d_v\)&lt;/span&gt;-dimensional output.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;concatenate outputs of each layer (different linear projection; also referred as &lt;em&gt;”head”&lt;/em&gt;): &lt;span class="math"&gt;\(Concat(head_1,\dots,head_h)\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linearly project the concatenation result form the previous step:&lt;/p&gt;
+&lt;p&gt;
+&lt;/p&gt;&lt;div class="math"&gt;$$ MultiHeadAttention(Q,K,V) = Concat(head_1,\dots,head_h) W^O$$&lt;/div&gt;
+where  &lt;span class="math"&gt;\(W^0\in\mathbb{R}^{d_{hd_v}\times d_{model}}\)&lt;/span&gt;&lt;p&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Transformer use multi-head (d/h parallel attention functions) attention instead of single (&lt;span class="math"&gt;\(d_{model}\)&lt;/span&gt;-dimensional) attention function (i.e. &lt;span class="math"&gt;\(q,k,v\)&lt;/span&gt; all &lt;span class="math"&gt;\(d_{model}\)&lt;/span&gt;-dimensional) at similar computational cost as in the case of single-head attention due to reduced dimensions of each head.&lt;/p&gt;
+&lt;p&gt;Transformer imitates the classical attention mechanism (known e.g. from &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanau et al., 2014&lt;/a&gt; or Conv2S2) in encoder-decoder attention layers &lt;em&gt;queries&lt;/em&gt; are form previous decoder layer and the (memory) &lt;em&gt;keys&lt;/em&gt; and &lt;em&gt;values&lt;/em&gt; are from output of the encoder.  Therefore, each position in decoder can attend over all positions in the input sequence.&lt;/p&gt;
+&lt;h4 id="self-attention-sa"&gt;Self-Attention (SA)&lt;a title="Permanent link" href="#self-attention-sa" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;See &lt;a href="../../../../2017/Sep/01/Primer-NN/#attention-basis"&gt;Attention Primer&lt;/a&gt; for basics on attention.&lt;/p&gt;
+&lt;p&gt;In &lt;em&gt;encoder&lt;/em&gt; self-attention layers process input &lt;span class="math"&gt;\(queries, keys\)&lt;/span&gt; and &lt;span class="math"&gt;\(values\)&lt;/span&gt; that comes form same place – output of previous layer in encoder. Each position in encoder can attend to all positions from previous layer of the encoder&lt;/p&gt;
+&lt;p&gt;In &lt;em&gt;decoder&lt;/em&gt; self-attention layer enable each position to attend to all previous positions in the decoder, including the current position. To preserve auto-regressive property, the leftward information flow is presented inside the dot-product attention by masking out (set to &lt;span class="math"&gt;\(- \infty\)&lt;/span&gt;) all &lt;span class="math"&gt;\(values\)&lt;/span&gt; that are input for softmax which correspond to this illegal connections.&lt;/p&gt;
+&lt;p&gt;Authors motivates the use of self-attention layers instead of recurrent or convolutional layers with three desiderata:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Minimize total computational complexity per layer&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pros: SA layers connects all positions with &lt;span class="math"&gt;\(O(1)\)&lt;/span&gt; number of sequentially executed operations (eg. vs &lt;span class="math"&gt;\(O(n)\)&lt;/span&gt; in RNN)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Maximize amount of parallelizable computations, measured by minimum number of sequential operations required&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pros: for sequence length &lt;span class="math"&gt;\(n\)&lt;/span&gt; &amp;lt; representation dimensionality &lt;span class="math"&gt;\(d\)&lt;/span&gt; (true for SOTA sequence representation models like &lt;em&gt;word-piece, byte-pair&lt;/em&gt;). For very long sequences &lt;span class="math"&gt;\(n&amp;gt;d\)&lt;/span&gt; SA can consider only neighborhood of some size &lt;span class="math"&gt;\(r\)&lt;/span&gt;  in the input sequence centered around the respective output position, thus increasing the max path length to &lt;span class="math"&gt;\(O(n/r)\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Minimize maximum path length between any two input and output positions in network composed of the different layer types . The shorter the path between any combination of positions in the input and output sequences the easier to learn long-range dependencies. (See &lt;a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.24.7321"&gt;why&lt;/a&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="position-wise-ffn"&gt;Position-wise FFN&lt;a title="Permanent link" href="#position-wise-ffn" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In encoder and decoder the attention sublayers is being processed by a fully connected FNN. It is applied to each position separately and identically meaning two linear transformations and a ReLU
+&lt;/p&gt;
+&lt;div class="math"&gt;$$ FFN(x) = max(0, xW_1+b_1) W_2 + b_2$$&lt;/div&gt;
+&lt;p&gt;
+Linear transformations are the same for each position but use different parameters from layer to layer. It works alike two convolutions of kernel size 1. The input/ouput dimention is &lt;span class="math"&gt;\(d_{model}=512\)&lt;/span&gt; while inner0layer is &lt;span class="math"&gt;\(d_{ff}=2048\)&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id="pseudocode-or-flowchart-description-of-the-algorithm"&gt;Pseudocode or flowchart description of the algorithm.&lt;a title="Permanent link" href="#pseudocode-or-flowchart-description-of-the-algorithm" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p align="center"&gt;&lt;img src="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/transform20fps.gif" alt="Transformer  "&gt;
+&lt;br&gt;
+Figure 1. Transformer step-by-step sequence transduction in form of English-to-French translation. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;In encoder phase (shown in the Figure 1.), transformer first generates initial representation/embedding for each word in input sentence (empty circle). Next, for each word, self-attention aggregates information form all other words in context of sentence, and creates new representation (filled circles). The process is repeated for each word in sentence. Successively building new representations, based on previous ones is repeated multiple times and in parallel for each word (next layers of filled circles).&lt;/p&gt;
+&lt;p&gt;Decoder acts similarly generating one word at a time in a left-to-right-pattern. It attends to previously generated words of decoder and final representation of encoder.&lt;/p&gt;
+&lt;p&gt;It is worth noting that this self-attention strategy allows to face the issue of &lt;strong&gt;coreference resolution&lt;/strong&gt; where e.g. word “&lt;em&gt;it&lt;/em&gt;” in a sentence can refer to different noun of the sentence depending on context.&lt;/p&gt;
+&lt;h3 id="heuristics-or-rules-of-thumb"&gt;Heuristics or rules of thumb.&lt;a title="Permanent link" href="#heuristics-or-rules-of-thumb" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Authors have conducted a series of tests (Table 3 of the paper) where they discuss recommendation of &lt;span class="math"&gt;\(N=6\)&lt;/span&gt; layers with model size 512 based on &lt;span class="math"&gt;\(h=8\)&lt;/span&gt; heads with key, values dimensions of 64 using 100K steps.&lt;/p&gt;
+&lt;p&gt;It is also stated that dot-product compatibility function might be further optimized due to model quality is decreased with smaller &lt;span class="math"&gt;\(d_k\)&lt;/span&gt; (row B).&lt;/p&gt;
+&lt;p&gt;The proposed, fixed sinusoidal positional encodings are claimed to produce nearly equal score comparing to learned positional encodings.&lt;/p&gt;
+&lt;h3 id="what-classes-of-problem-is-the-algorithm-well-suited"&gt;What classes of problem is the algorithm well suited?&lt;a title="Permanent link" href="#what-classes-of-problem-is-the-algorithm-well-suited" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;sequence transduction (language translation)&lt;/li&gt;
+&lt;li&gt;classic language analysis task of syntactic constituency parsing&lt;/li&gt;
+&lt;li&gt;different inputs and outputs modalities, such as images and video&lt;/li&gt;
+&lt;li&gt;coreference resolution&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm"&gt;Common benchmark or example datasets used to demonstrate the algorithm.&lt;a title="Permanent link" href="#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Perplexity (PPL) BLEU&lt;/li&gt;
+&lt;li&gt;English-to-German translation development set WMT 2014 English-to-German and WMT 2014
+English-to-French translation tasks&lt;/li&gt;
+&lt;li&gt;newstest2013&lt;/li&gt;
+&lt;li&gt;English constituency parsing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="useful-resources-for-learning-more-about-the-algorithm"&gt;Useful resources for learning more about the algorithm.&lt;a title="Permanent link" href="#useful-resources-for-learning-more-about-the-algorithm" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google blog post1&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://research.googleblog.com/2017/06/accelerating-deep-learning-research.html"&gt;Google blog post2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="thoughts-on-the-idea"&gt;Thoughts on the idea.&lt;a title="Permanent link" href="#thoughts-on-the-idea" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;To my limited knowledge there are some statements that might benefit form more explanation:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;How the scaling factor (Equation 3) makes an impact?&lt;/li&gt;
+&lt;li&gt;How actually the &lt;strong&gt;positional encoding&lt;/strong&gt; work? Why they have chosen the sin/cos functions and why the position and dimension are in this relation? Finally how sinusoidal helps translate long sentences?&lt;/li&gt;
+&lt;li&gt;Does having separate position-wise FFNs help? (comparing to ConvS2S).&lt;/li&gt;
+&lt;li&gt;The &lt;em&gt;“cost of reduced effective resolution due to averaging attention-weighted position”&lt;/em&gt; is claimed to be a motivation for multi-head attention. How to understand better what is the issue and how multi-head attention helps?&lt;/li&gt;
+&lt;li&gt;The Transformer brings a significantly improvement over ConvS2S, but where does the improvement come from? It is not clear from the work. ConvS2S lacks the self-attention, is it what brings the advantage?&lt;/li&gt;
+&lt;li&gt;Masked Attention. The problem of using same parts of input on different decoding step is claimed to be solved by penalizing (mask-out to &lt;span class="math"&gt;\(-\infty\)&lt;/span&gt;) input tokens that have obtained high attention scores in the past decoding steps – a bit vague. How does it work? Maybe explicitly having a position-wise FFN automatically fixes that problem?&lt;/li&gt;
+&lt;li&gt;Applying multi-head attention might improve performance due to better parallelization. However, Table 3 also show increasing &lt;span class="math"&gt;\(h=1 to 8\)&lt;/span&gt; improves accuracy. Why? Moving  &lt;span class="math"&gt;\(h\)&lt;/span&gt; to 16 or 32 is not that beneficial. How to interpret this correctly?&lt;/li&gt;
+&lt;li&gt;How important the autoregression is in context of this architecture?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Please leave a comment if you have any other question, or would like to get more explanation on any of the paper’s particularities.&lt;/p&gt;
+&lt;h3 id="primary-references-or-resources-in-which-the-algorithm-was-first-described"&gt;Primary references or resources in which the algorithm was first described.&lt;a title="Permanent link" href="#primary-references-or-resources-in-which-the-algorithm-was-first-described" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Paper: &lt;a href="https://arxiv.org/abs/1706.03762"&gt;ArXiv&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="some-interesting-future-research"&gt;Some interesting future research&lt;a title="Permanent link" href="#some-interesting-future-research" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Devising more sophisticated compatibility function&lt;/li&gt;
+&lt;li&gt;Increase maximum path length to &lt;span class="math"&gt;\(O(n/r)\)&lt;/span&gt;, where &lt;span class="math"&gt;\(r\)&lt;/span&gt; would be only a neighborhood size of positions to be considered by self-attention instead of all positions in sequence&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h4 id="references"&gt;References:&lt;a title="Permanent link" href="#references" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;!--  Instead adding {:target="_blank"} to every link this adds it automatically additionally it adds also   link icon from http://fontawesome.io/icon/external-link/--&gt;
+
+&lt;p&gt;(function() {
+    var hostname = window.location.hostname;
+    var new_tab = true;
+    var set_icon = true;
+    for (var links = document.links, i = 0, a; a = links[i]; i++) {
+        if (a.hostname !== hostname) {
+            if (new_tab)
+                a.target = '_blank';
+            if (set_icon)
+                a.innerHTML +=
+                    ' &lt;i class="fa fa-external-link fa-1 external-link-margin"&gt;';
+        }
+    }
+})();
+&lt;/i&gt;&lt;/p&gt;&lt;i class="fa fa-external-link fa-1 external-link-margin"&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;/i&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Transformer-Attention-is-all-you-need-1"&gt; While applying dimensionality reduction techniques (e.g. PCA, t-SNE) on embeddings the outcome plot gathers the semantically close sentences  together &lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sutskever et al., 2014&lt;/a&gt;. &lt;a href="#sf-Transformer-Attention-is-all-you-need-1-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Transformer-Attention-is-all-you-need-2"&gt;It is interesting how this resembles the brain waves and &lt;a href="https://en.wikipedia.org/wiki/Neural_oscillation"&gt;neural oscillations&lt;/a&gt;. &lt;a href="#sf-Transformer-Attention-is-all-you-need-2-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Transformer-Attention-is-all-you-need-3"&gt;It reminds a bit the Pointer Networks that address similar problem &lt;a href="#sf-Transformer-Attention-is-all-you-need-3-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Transformer-Attention-is-all-you-need-4"&gt;The additional scaling is advised as for large &lt;span class="math"&gt;\(d_k\)&lt;/span&gt; where dot product grow large in magnitude, as softmax is suspected to be pushed to vanishing gradient area, thus making the additive attention perform better.  &lt;a href="#sf-Transformer-Attention-is-all-you-need-4-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="transformer"></category><category term="Sequence transduction"></category><category term="Attention model"></category><category term="Machine translation"></category><category term="BLEU"></category><category term="WMT2014"></category><category term="Sequence modeling"></category></entry><entry><title>Neural Networks Primer</title><link href="https://michalchromiak.github.io/articles/2017/Sep/01/Primer-NN/" rel="alternate"></link><published>2017-09-01T19:30:00+02:00</published><updated>2017-10-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:michalchromiak.github.io,2017-09-01:/articles/2017/Sep/01/Primer-NN/</id><summary type="html">&lt;p&gt;When you approach a new term you often find some Wiki page, Quora answers blogs and it sometimes might take some time before you find the true ground up, clear definition with meaningful example. I will put here the most intuitive explanations of basic topics. Due to extended nature of aspects and terms that are used across NN area, in this post I will place condensed definitions and a brief explanations – just to understand the intuition of terms that are mentioned in other posts along this blog.&lt;/p&gt;</summary><content type="html">&lt;p&gt;If any of the topic will grow enough I will put it into a separate post. To get in-depth understanding I recommend for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NLP:&lt;/strong&gt; the Yoav Goldberg's, 2016 &lt;a href="https://www.jair.org/media/4992/live-4992-9623-jair.pdf"&gt;A Primer on Neural Network Models for Natural Language Processing&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="rnn-primer-with-gradient-descent-gd"&gt;RNN primer with Gradient Descent (GD)&lt;a title="Permanent link" href="#rnn-primer-with-gradient-descent-gd" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;iframe src="https://www.youtube.com/embed/aircAruvnKk" height="315" width="420"&gt; &lt;/iframe&gt;
+&lt;iframe src="https://www.youtube.com/embed/IHZwWFHWa-w" height="315" width="420"&gt; &lt;/iframe&gt;
+&lt;iframe src="https://www.youtube.com/embed/ILsA4nyG7I0" height="315" width="420"&gt; &lt;/iframe&gt;&lt;/p&gt;
+&lt;h3 id="convolutional-neural-networks-cnn"&gt;Convolutional Neural Networks (CNN)&lt;a title="Permanent link" href="#convolutional-neural-networks-cnn" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;iframe src="https://www.youtube.com/embed/FmpDIaiMIeA" height="315" width="420"&gt; &lt;/iframe&gt;&lt;/p&gt;
+&lt;h3 id="activation-functions"&gt;Activation Functions&lt;a title="Permanent link" href="#activation-functions" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Useful &lt;a href="https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0"&gt;article&lt;/a&gt; and &lt;a href="https://github.com/Kulbear/deep-learning-nano-foundation/wiki/ReLU-and-Softmax-Activation-Functions"&gt;ReLu vs Softmax&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn"&gt;Recurrent Neural Networks(RNN) Vs Feedforward Neural Nets (FNN)&lt;a title="Permanent link" href="#recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;RNN bring much improvement over FNN due to provided internal representation of past events (a.k.a. memory).  RNN-based deep learning was so successful in sequence-to-sequence (s2s) due to its capability to handle sequences well. It should be noted that RNNs are &lt;em&gt;Turing-Complete&lt;/em&gt; &lt;a href="http://dl.acm.org/citation.cfm?id=207284"&gt;(H.T. Siegelmann, 1995)&lt;/a&gt;), and therefore have the capacity to simulate arbitrary procedures.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If training vanilla neural nets is optimization over functions, training recurrent nets is optimization over programs.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;RNN is thus also able to learn any measurable s2s mapping to arbitrary accuracy (&lt;a href="https://www.researchgate.net/publication/2495760_On_the_Approximation_Capability_of_Recurrent_Neural_Networks"&gt;B.Hammer, 2000, On the Approximation Capability of Recurrent Neural Networks&lt;/a&gt;). So we get great results in handwriting recognition, text generation and language modeling &lt;a href="https://arxiv.org/abs/1409.3215"&gt;(Sutskever, 2014)&lt;/a&gt;. The availability of information on past events is very important in RNN. The problem however arise, in case when lacking prior knowledge on how long the output sequence will be. It is because the training targets have to be pre-aligned with inputs and standard RNN simply maps input to output. Additionally it is not taking into account the information from past &lt;em&gt;outputs&lt;/em&gt;. One solution is to employ &lt;em&gt;structured prediction&lt;/em&gt; where two RNN can be used to: model input-output dependencies (&lt;em&gt;transcription&lt;/em&gt;) and second to model output-output dependencies (&lt;em&gt;prediction&lt;/em&gt;).  This way each output depends on entire input sequence and all past outputs.&lt;/p&gt;
+&lt;p&gt;Another limitation of RNN is the size of internal state. It can be seen on an example of encoder-decoder architecture for &lt;strong&gt;Naural Machine Translation (NMT)&lt;/strong&gt;. Here the encoder gets entire input sequence word by word while updating its internal state. While the decoder decodes it into e.g. other language.&lt;/p&gt;
+&lt;h3 id="encoder-decoder-scheme"&gt;Encoder-Decoder scheme&lt;a title="Permanent link" href="#encoder-decoder-scheme" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Seq2seq modeling&lt;/strong&gt; is a synonym of &lt;strong&gt;recurrent neural network based encoder-decoder architectures&lt;/strong&gt; (&lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sutskever et al., 2014;&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanau et al., 2014&lt;/a&gt;).
+Let us &lt;em&gt;“unroll”&lt;/em&gt; the scheme into &lt;span class="math"&gt;\(N\)&lt;/span&gt; encoder steps and &lt;span class="math"&gt;\(M\)&lt;/span&gt; decoder steps of hidden states &lt;span class="math"&gt;\(h\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="https://michalchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png" alt="Encoder Decoder architecture "&gt;
+&lt;br&gt;
+Figure 1. &lt;b&gt;Encoder-decoder architecture&lt;/b&gt; – example of a general approach for NMT.
+An encoder converts a source sentence into a "meaning" vector which is passed through a &lt;i&gt;decoder&lt;/i&gt; to produce a translation.&lt;/p&gt;
+&lt;p&gt;In encode-decoder architecture&lt;sup id="sf-Primer-NN-1-back"&gt;&lt;a href="#sf-Primer-NN-1" class="simple-footnote" title="One can often encounter references to autoencoder (AE) neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. Great example of autoencoder on Quora "&gt;1&lt;/a&gt;&lt;/sup&gt;, the&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;encoder – maps input data &lt;span class="math"&gt;\(x\)&lt;/span&gt; to a different (lower dimensional, compressed – i.e. encoded) representation, while the&lt;/li&gt;
+&lt;li&gt;decoder – maps encoder’s output new feature representation back into the input data space as a output sequence &lt;span class="math"&gt;\(y\)&lt;/span&gt;; left to right one at a time. Decoder generates &lt;span class="math"&gt;\(y_{i+1}\)&lt;/span&gt; token by computing new hidden state &lt;span class="math"&gt;\(h_{i+1}\)&lt;/span&gt; based on:&lt;ul&gt;
+&lt;li&gt;previous hidden &lt;span class="math"&gt;\(h_i\)&lt;/span&gt; state&lt;/li&gt;
+&lt;li&gt;an embedding &lt;span class="math"&gt;\(g_i\)&lt;/span&gt; of the previous target lonaguage word &lt;span class="math"&gt;\(y_i\)&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;conditional input &lt;span class="math"&gt;\(c_i\)&lt;/span&gt; derived form the encoder output - &lt;span class="math"&gt;\(z\)&lt;/span&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="math"&gt;$$input:(x_1, \dots, x_m) \xrightarrow[\text{maps}]{\text{encoder}} z=(z_1,\dots,z_m)\xrightarrow[\text{generates}]{\text{decoder}} output: (y_1,\dots, yn)$$&lt;/div&gt;
+&lt;p&gt;One can consider two types of models, with or, without “attention”. The latter assumes &lt;span class="math"&gt;\(\forall i c_i=z_m\)&lt;/span&gt; (&lt;a href="https://arxiv.org/abs/1406.1078"&gt;Cho et al., 2014&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Additionally, there is a problem with the encoder’s state &lt;span class="math"&gt;\(h^{E}_m\)&lt;/span&gt;, as a compressed and fixed-length vector. It must contain whole information on the source sentence. This looses some information&lt;sup id="sf-Primer-NN-2-back"&gt;&lt;a href="#sf-Primer-NN-2" class="simple-footnote" title="Due to its nature of compressing the input into lower dimension."&gt;2&lt;/a&gt;&lt;/sup&gt;. One can try to use some heuristics that can help to overcome this issue and improve performance of RNN:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Organize input.&lt;/strong&gt; Feed the input more than one time or provide input followed by reversed input &lt;sup id="sf-Primer-NN-3-back"&gt;&lt;a href="#sf-Primer-NN-3" class="simple-footnote" title=" 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. Sequence to sequence learning with neural networks. "&gt;3&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Provide more memory.&lt;/strong&gt; It turns out that the bigger the size of the memory the better (eg. LSTM applied to language modeling&lt;sup id="sf-Primer-NN-4-back"&gt;&lt;a href="#sf-Primer-NN-4" class="simple-footnote" title=" 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, Recurrent Neural Network Regularization. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections."&gt;4&lt;/a&gt;&lt;/sup&gt;) the RNN performs on various tasks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To avoid the memorization problem there has been research on the &lt;em&gt;attention&lt;/em&gt; mechanism.&lt;/p&gt;
+&lt;h3 id="attention-basis"&gt;Attention basis&lt;a title="Permanent link" href="#attention-basis" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The most intuitive &lt;strong&gt;attention definition&lt;/strong&gt; I know is the one contained within &lt;a href="https://michalchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;paper about Transformer architecture&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We will try to formalize this (let me know your suggestions) in the following form:&lt;/p&gt;
+&lt;div class="math"&gt;$$\begin{eqnarray} A(q, \{(k,v)\} ) \xrightarrow[\text{output}]{\text{maps as}} \sum_{i=1}^k{\overbrace{f_c(q,k_i)}^{\theta_i}}v_i, q \in Q, k \in K, v \in V \end{eqnarray}$$&lt;/div&gt;
+&lt;div class="math"&gt;$$Q, K, V – vector space, f_c- compatibility function$$&lt;/div&gt;
+&lt;p&gt;Concretely, an attention  mechanism is distribution of weights over the input states. It takes any number of inputs &lt;span class="math"&gt;\({x_1, ..., x_k}\)&lt;/span&gt;, and a query &lt;span class="math"&gt;\(q\)&lt;/span&gt;, and then produces weights &lt;span class="math"&gt;\({\theta_1, ..., \theta_k}\)&lt;/span&gt; for each input. This  measures how much each input interacts with (or answers) the query. The output of the attention mechanism, &lt;span class="math"&gt;\(out\)&lt;/span&gt;, is therefore the weighted average of its inputs:
+&lt;/p&gt;
+&lt;div class="math"&gt;$$ \begin{eqnarray} out = \sum_{i=1}^k \theta_i x_i \end{eqnarray}$$&lt;/div&gt;
+&lt;p&gt;Hence, networks that use attention, attend only on a part of the input sequence while still providing the output sentence. So one can image it as giving an auxiliary input for the network in form of linear combination. What is the clue here is that the weights of the linear combination are controlled by the network. It has been tested across multiple areas such as NMT or speech recognition.&lt;/p&gt;
+&lt;p&gt;In an encoder-decoder architecture for the embedding (fixed size vector) of a long sentence brings the problem of long dependency (e.g. in fixed-size encoded vector &lt;span class="math"&gt;\(h^E_N\)&lt;/span&gt;, where end word of the sentence depends on the starting word &lt;span class="math"&gt;\(h^E_1\)&lt;/span&gt;). And long depdendencies, is where RNN have problems. Even though "hacks" such as reverse/double feeding of the source sentence, or the LSTMs (memory), are sometimes improving the performance however, they do not always work perfectly&lt;sup id="sf-Primer-NN-5-back"&gt;&lt;a href="#sf-Primer-NN-5" class="simple-footnote" title=" E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input. "&gt;5&lt;/a&gt;&lt;/sup&gt; . This is why the fixed size encoding might be a bottleneck of performance. This is where the attention comes in.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Attention&lt;/em&gt;  is used as an alternative to memorizing and input manipulations. Here the model search for parts  of a source sentence (not fixed size vector) that are relevant to predicting a target word, and it should attend to, based on what it has learned in the past &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanu et al., 2016&lt;/a&gt;.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img title="Attention architecture2" src="https://michalchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/attention.png" alt="Attention architecture"&gt;
+&lt;br&gt;
+Figure 2. Attention architecture.&lt;/p&gt;
+&lt;p&gt;In this case, the larger  &lt;span class="math"&gt;\(\theta_{1,2}\)&lt;/span&gt;  would be the more decoder pays attention for the &lt;span class="math"&gt;\(y_3\)&lt;/span&gt; (third output word) in relation to other words as all weights (&lt;span class="math"&gt;\(\theta\)&lt;/span&gt;s) are normalized to sum to &lt;span class="math"&gt;\(1\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img title="Attention architecture3" src="https://michalchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/EncDecAttention.gif" alt="Attention architecture"&gt;
+&lt;br&gt;
+Figure 3. “Attention”; the blue link transparency represents how much the decoder pays attention to an encoded word. Less transparent, more attention. &lt;a href="https://research.googleblog.com/2016/09/a-neural-network-for-machine.html"&gt;Google Blog&lt;/a&gt; also &lt;a href="https://google.github.io/seq2seq/"&gt;general-purpose encoder-decoder framework for Tensorflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It is well visualized in an &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; matrix for French-English translation (See Figure Adopted form &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanu et al., 2016&lt;/a&gt;)&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img src="https://michalchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/attentionmatrix.png" alt="Attention matrix "&gt;
+&lt;br&gt;
+Figure 4. Attention matrix. Adopted form &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanu et al., 2016&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;In French input sentence two words “&lt;em&gt;la zone&lt;/em&gt;” are especially target for attention when translating to English “&lt;em&gt;Area&lt;/em&gt;”.&lt;/p&gt;
+&lt;p&gt;This matrix of size &lt;em&gt;InputSize&lt;/em&gt; &lt;span class="math"&gt;\(\times\)&lt;/span&gt; &lt;em&gt;OutputSize&lt;/em&gt; is filled by calculating attention for each &lt;em&gt;output&lt;/em&gt; symbol toward over every &lt;em&gt;input&lt;/em&gt; symbol. This gives us &lt;span class="math"&gt;\(\#Input^{\#Output}\)&lt;/span&gt;. For a longer sequences it might grow intensively.
+This approach requires a complete look-up over all input output elements, which is not actually working as an biological attention would. Intuitively attention should discard irrelevant objects without the need to interacting with them.
+What is called “attention” therefore is simply a kind of memory that is available for decoder while producing every single output element. It does not need the fixed-size encoded vector of the entire input. The weights only decide which symbols/words to get from the input-memory of the encoder.
+This so called attention is the subject of further development in form of &lt;a href="https://arxiv.org/abs/1503.08895"&gt;End-To-End Memory Networks&lt;/a&gt; where recurrent attention is used where  where multiple computational steps (hops) are performed per output symbol. This includes reading the same sequence many times before generating output and also changing the memory content at each step.&lt;/p&gt;
+&lt;p&gt;We can of course employ backpropagation to accustom the weights in an end-to-end learning  model.&lt;/p&gt;
+&lt;h3 id="layer-connections"&gt;Layer connections &lt;!--http://ruder.io/deep-learning-nlp-best-practices/index.html#fnref:6--&gt;&lt;a title="Permanent link" href="#layer-connections" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In Deep Learning networks architectures the problem of vanishing gradient is very common issue. Thus, some methods has been develop to mitigate its influence on the networks’ efficiency.  &lt;/p&gt;
+&lt;h4 id="highway-layers"&gt;Highway layers&lt;a title="Permanent link" href="#highway-layers" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;h4 id="residual-connections"&gt;Residual connections&lt;a title="Permanent link" href="#residual-connections" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Models with many layers often rely on shortcut or residual connections (Zhou et al., 2016; Wu et al., 2016). This trick has become main factor for &lt;a href="https://arxiv.org/abs/1512.03385"&gt;He et al. 2016 CVPR&lt;/a&gt; winning the ImageNet 2016 Residual connection is a connection between layers that adds the input &lt;span class="math"&gt;\(x\)&lt;/span&gt; of the current layer to its output via a short-cut connection.&lt;/p&gt;
+&lt;div class="math"&gt;$$ h = f(Wx+b) + \mathbf{x} $$&lt;/div&gt;
+&lt;p&gt;Residual connection helps with the &lt;em&gt;vanishing gradient&lt;/em&gt; problem because even if the layer nonlinearity &lt;span class="math"&gt;\(f\)&lt;/span&gt; is not giving result the output then becomes the identity function in form of the &lt;span class="math"&gt;\(\mathbf{x}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h4 id="dense-connections"&gt;Dense connections&lt;a title="Permanent link" href="#dense-connections" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;h3 id="position-embeddings"&gt;Position Embeddings&lt;a title="Permanent link" href="#position-embeddings" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Usually used in non-recurrent networks (e.g. CNNs) that needs to store the order of the sequence’s input tokens in a way different than recurrent one. The RNN learn the exact position in sequence through the recurrent hidden state computation.&lt;/p&gt;
+&lt;h4 id="autoregressive-ar"&gt;Autoregressive (AR)&lt;a title="Permanent link" href="#autoregressive-ar" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The problem of auto-regression is conditional mean of the distribution of future observations &lt;a href="https://arxiv.org/abs/1703.04122"&gt;Binkowski et al, 2017&lt;/a&gt;. In an autoregression model, we forecast the variable of interest using a linear combination of past values of the variable. The term &lt;em&gt;autoregression&lt;/em&gt; indicates that it is a regression of the variable against itself. In NN this refers to autoregressive understood as each unit receives input both from the preceding layer and the preceding units within the same layer.&lt;/p&gt;
+&lt;h3 id="end-to-end-learningtrainig"&gt;End-to-End learning/trainig&lt;a title="Permanent link" href="#end-to-end-learningtrainig" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Simplest way to train a model (i.e. to learn) is to put input at one end and get output on the other end. With NN an end-to-end learning would simply mean optimize network weights base on &lt;strong&gt;single model&lt;/strong&gt; with input and output.&lt;/p&gt;
+&lt;p&gt;There are however some cases when one model is not enough to achieve the desired output. It would then require a pipeline of independently trained models. It is most of the the case when input and output are of two distinct domains. Another case might be when NN has to many layers to fit into memory.  Hence, it is required to divide this one “big” NN into a pipeline of smaller ones. As a side note, this decomposition technique might not be effective because the optimizations would be done locally based only on intermediate outputs.&lt;/p&gt;
+&lt;h5 id="examples"&gt;Examples:&lt;a title="Permanent link" href="#examples" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;In case of a robot trained to move based on vision. One model might be used to pre-process the vision input (raw piexls) representation and pass it as input for another model responsible for decision process of which robot’s leg to move next. &lt;em&gt;image-to-motion&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Image captioning – transforming raw image pixel information into text describing the image &lt;em&gt;image-to-text&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Speech recognition - Transform speech to text  &lt;em&gt;sound-to-text&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="hyperparameters-aka-meta-parameters-free-parameters"&gt;Hyperparameters (aka meta-parameters, free-parameters)&lt;a title="Permanent link" href="#hyperparameters-aka-meta-parameters-free-parameters" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The crux of ML is finding (i.e. model training) a math formula (i.e. the model) with parameters that fit best into the data. However, the training is not able to find some higher level properties of model such as complexity or speed of learning straight from the data. Those properties are referred to as hyperparameters. For each trained model hyperparameters are predefined before even training process starts. Their values are important, however requires additional work. This work is done by trying different values for hyperparameters and training different models on them. Using the tests  than decides which values of hyperparameters should be chosen ie. is the fastest to achieve the goal, requires less steps etc. So hyperparameters can be determined from the data indirectly by using model selection.
+General approach to ML problem is making four decisions choosing the exact:
+&lt;em&gt; Model Type – e.g. FNN, RNN, SVM, etc
+&lt;/em&gt; Architecture – e.g. for RNN you choose number of hidden layers, number of units per hidden layer
+&lt;em&gt; Training parameters – e.g. decide learning rate, batch size
+&lt;/em&gt; Model parameters – model training finds the model parameters such as weights and biases in NN
+Hence, the hyper parameters are those considered in the &lt;em&gt;training parameters&lt;/em&gt; and &lt;em&gt;architecture&lt;/em&gt; steps.&lt;/p&gt;
+&lt;h5 id="examples-of-hyperparameters"&gt;Examples of hyperparameters:&lt;a title="Permanent link" href="#examples-of-hyperparameters" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;learning rate in gradient algorithms, number of hidden layers, number of clusters in a k-means clustering, number of leaves or depth of a tree, batch size in minibatch gradient descent, regularization parameter     &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="transfer-learning"&gt;Transfer learning&lt;a title="Permanent link" href="#transfer-learning" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Transfer learning is used in context of reinforced or supervised learning. Deep learning requires large datasets to perform well (avoiding overfitting etc.). The problem however arises when there is not enough data for a new task. Here is the idea to use other already existing and large datasets to fine-tunning NN to become useful for this new task with small amount of data (e.g. using &lt;strong&gt;features&lt;/strong&gt; pre-trained from CNN (ConvNet) can be feed linear support vector machine (SVM) ). In other words, one can transfer the learned representation to another problem. We must however avoid negative transfer as it can slow down training of target task.
+Searching for function &lt;span class="math"&gt;\(g()\)&lt;/span&gt; while having pre-trained &lt;span class="math"&gt;\(h()\)&lt;/span&gt; use projection of new inputs &lt;span class="math"&gt;\(x_i\)&lt;/span&gt; like this: &lt;span class="math"&gt;\((h(f(x_i)))\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h5 id="examples_1"&gt;Examples:&lt;a title="Permanent link" href="#examples_1" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;Positive transfer: If you learned previously how to classify a rotten vegetable form not rotten one you can apply this representation of rottenness into fruits even though you have never seen a rotten fruit before.&lt;/li&gt;
+&lt;li&gt;Negative transfer: learning one skill makes learning second  skill more difficult. If a kickboxer is about to train how to box. it might be hard to understand what is boxing unless he will be warned that he is not allowed to use kicks to box along with rules.&lt;/li&gt;
+&lt;li&gt;Proactive transfer:  When a model learned in the past affects the new model to be learned&lt;/li&gt;
+&lt;li&gt;Retroactive transfer: When a new model affects previously learned one.&lt;/li&gt;
+&lt;li&gt;Bilateral transfer: Robot learned to use left manipulator now must use also right manipulator however in a bit different symmetry.&lt;/li&gt;
+&lt;li&gt;Zero transfer: Two models are independent.&lt;/li&gt;
+&lt;li&gt;Stimulus generalization:  Knowing what is rotten fruit does not mean that if you find a rusty metal it is the same but you generalize enough to decide that in both cases it is unusable but not in the same way.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="fine-tuning"&gt;Fine tuning&lt;a title="Permanent link" href="#fine-tuning" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Fine tuning is considered mainly in context of supervised learning. When choosing best hyperparameters for an algorithm, fine tuning involves using a large set of mechanisms that solve this problem. When adjusting the the behaviors of the algorithm to further improve performance without manipulating the model itself.
+When fine tuning pre-trained model might be considered equivalent to transfer learning. This is true if the data used during the fine tuning procedure is of different nature than the data that the pre-trained model has been trained on.&lt;/p&gt;
+&lt;h5 id="examples_2"&gt;Examples:&lt;a title="Permanent link" href="#examples_2" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;Finding the best hyperparameters for the model&lt;/li&gt;
+&lt;li&gt;In transfer learning instead of bringing the freezed pre-trained model one cane make it dynamic and let adapt more to the new task.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="stacked-nn-snn-vs-deep-nn-dnn"&gt;Stacked NN (SNN) vs Deep NN (DNN)&lt;a title="Permanent link" href="#stacked-nn-snn-vs-deep-nn-dnn" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;and it is that i can buy it at every &lt;span class="math"&gt;\(N_1\)&lt;/span&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h4 id="references"&gt;References:&lt;a title="Permanent link" href="#references" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;script&gt;
+&lt;!-- This adds {}--&gt;
+(function() {
+    var hostname = window.location.hostname;
+    var new_tab = true;
+    var set_icon = true;
+    for (var links = document.links, i = 0, a; a = links[i]; i++) {
+        if (a.hostname !== hostname) {
+            if (new_tab)
+                a.target = '_blank';
+            if (set_icon)
+                a.innerHTML +=
+                    '&amp;nbsp&lt;i class="fa fa-external-link fa-1 external-link-margin" /&gt;';
+        }
+    }
+})();
+&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Primer-NN-1"&gt;One can often encounter references to &lt;strong&gt;autoencoder (AE)&lt;/strong&gt; neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. &lt;a href="https://www.quora.com/What-is-an-auto-encoder-in-machine-learning"&gt;Great example of autoencoder on Quora&lt;/a&gt;  &lt;a href="#sf-Primer-NN-1-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Primer-NN-2"&gt;Due to its nature of compressing the input into lower dimension. &lt;a href="#sf-Primer-NN-2-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Primer-NN-3"&gt; 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. &lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sequence to sequence learning with neural networks.&lt;/a&gt;  &lt;a href="#sf-Primer-NN-3-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Primer-NN-4"&gt; 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, &lt;a href="https://arxiv.org/abs/1409.2329"&gt;Recurrent Neural Network Regularization&lt;/a&gt;. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections. &lt;a href="#sf-Primer-NN-4-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Primer-NN-5"&gt; E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input.  &lt;a href="#sf-Primer-NN-5-back" class="simple-footnote-back"&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="basics"></category></entry><entry><title>The power of patterns – embrace the hurricanes.</title><link href="https://michalchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/" rel="alternate"></link><published>2017-08-25T19:30:00+02:00</published><updated>2017-09-10T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:michalchromiak.github.io,2017-08-25:/articles/2017/Aug/25/embrace-hurricane/</id><summary type="html">&lt;p&gt;Reducing uncertainty is very challenging and important task in many areas. It it literally often a matter of live and death. If the prediction is accurate, it is easy to imagine how meaningful it is, especially in cases such as weather forecasts in case of hurricanes.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recent hurricane Harvey has become one of the most devastating and dangerous of its kind along the history. However, the question arises if our science has the tools to do something to help in such cases. Of course, currently there Is no technology that can physically eliminate the threat of hurricane by neutralizing it or changing its path but one can think of a more mathematical way of predicting its behavior.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img alt="Forecast 2005-2015" src="https://michalchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/img/cover_irma.jpg"&gt;
+&lt;br&gt;
+Figure 1. Forecast 2005-2015 Katrina&lt;/p&gt;
+&lt;p&gt;Now we all know, that predicting weather is not an easy task which is very resource consuming and above all is unstable and its accuracy decrees dramatically over time. There are two main factors deciding on  safety of inhabitants of a potentially endangered area.  &lt;br&gt;
+First is the time. Due to meteorologists observations we can track hurricanes quite well, so even thought hurricane can change its characteristics (e.g. wind speed, direction etc.), we know where it currently is localized. The satellites and aerial observations makes a decent job here. Therefore the speed and vector of the storm may change, but we have means to track it down.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img alt="Forecast for Hurricane Harvey August 24" src="https://michalchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/img/forecast1.png"&gt;
+&lt;br&gt;
+Figure 2. Forecast for Hurricane Harvey August 24.&lt;/p&gt;
+&lt;p&gt;However, the question is: where will it hit next? This is how we came to the second factor which is determining the evacuation area. As it is not possible to predict the exact area that the hurricane will strike the evacuation must be urged over vast areas that potentially can be in danger. This results in millions of people urged by the authorities to evacuate. While evacuation always covers all areas likely to be destroyed by the storm, the predictions might help to narrow the area of hurricane impact. This gives us a chance to relocate rescue units and resources so that the evacuation could be more accurately supervised in areas that will suffer from the actual hurricane hit. Additionally the better forecasting brings the potential to estimate the losses and future demands of supplies and help for the most endangered areas.&lt;/p&gt;
+&lt;h2 id="patterns-to-the-rescue"&gt;Patterns to the rescue&lt;a class="headerlink" href="#patterns-to-the-rescue" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Due to the revolution of AI today we can use a fresh take on hurricane forecasting. Contingency plans must be ready for any occasion, but in a final call they must meet up the dynamic changes in weather, accordingly. Millions of decisions must be made along with forecasting machine learning pipelines constantly refining, based on data conclusions while eliminating noise and zero-in on the important data.&lt;/p&gt;
+&lt;p&gt;The Hurricane Harvey was target to a machine learning systems that were based on global hurricane forecasts like the Canadian Model, the European Centre, and the U.S.’ National Hurricane Centre model. The system used the pattern recognition with to bias-correct forecasts originating from the historical performance of forecasts along last 30 years.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img alt="Forecast for Hurricane Harvey August 30" src="https://michalchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/img/forecast2.png"&gt;
+&lt;br&gt;
+Figure 3. This figure shows the overall recorded track of Hurricane Harvey as of August 30th.&lt;/p&gt;
+&lt;p&gt;As the weather forecast becomes more “intelligent” it is extremely important to work on this kind of application further due to enormous possibilities to save not only economy but also potentially many human lives.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img alt="Forecast for Hurricane Harvey two days prior to making landfall" src="https://michalchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/img/forecast3.png"&gt;
+&lt;br&gt;
+Figure 4. This figure from &lt;a href="https://www.weatheranalytics.com/solutions/beacon/"&gt;Weather Analytics’ Beacon Hurricane&lt;/a&gt; platform shows a forecast of Harvey two days prior to making landfall.&lt;/p&gt;
+&lt;p&gt;Let us hope that upcoming cat.5 Irma Hurricane will be a well foretasted one.&lt;/p&gt;
+&lt;h4 id="side-notes"&gt;Side notes&lt;a class="headerlink" href="#side-notes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;There is also an interesting news &lt;a href="https://www.today.com/video/hurricane-harvey-damage-is-being-assessed-by-new-technology-1037443651962"&gt;1&lt;/a&gt;, &lt;a href="https://www.eagleview.com/2017/09/providing-rapid-answers-machine-learning-post-hurricane-harvey/"&gt;2&lt;/a&gt; and article on &lt;a href="https://medium.com/towards-data-science/hurricane-harvey-insurtech-case-study-visual-intelligence-is-transforming-claim-response-times-3275042fbd8d"&gt;how to InsureTech&lt;/a&gt; companies use visual intelligence to transform claim response times using unstructured data. The insurers use machine learning to approximate a claim size likely due to the hurricane event. The visual inspection can be additionally processed based on aerial and satellites images. This can be also useful for deciding if the claim would be directly related to hurricane.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Edit&lt;/strong&gt;
+Unfortunately this has again came up to a point where the predictions failed when  today (as of 10th , Sept.  2017) Hurricane Irma has striked the south of Florida. It was forecast that it will focus on Miami, FL area, instead it rushed towards the west coast of Florida moving towards Tampa.&lt;/p&gt;</content><category term="application"></category><category term="PatternRecognition"></category></entry></feed>
