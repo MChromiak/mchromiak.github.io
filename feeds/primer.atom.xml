@@ -106,13 +106,15 @@ This so called attention is the subject of further development in form of &lt;a 
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="hyperparameters-aka-meta-parameters-free-parameters"&gt;Hyperparameters (aka meta-parameters, free-parameters)&lt;a title="Permanent link" href="#hyperparameters-aka-meta-parameters-free-parameters" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The crux of ML is finding (i.e. model training) a math formula (i.e. the model) with parameters that fit best into the data. However, the training is not able to find some higher level properties of model such as complexity or speed of learning straight from the data. Those properties are referred to as hyperparameters. For each trained model hyperparameters are predefined before even training process starts. Their values are important, however requires additional work. This work is done by trying different values for hyperparameters and training different models on them. Using the tests  than decides which values of hyperparameters should be chosen ie. is the fastest to achieve the goal, requires less steps etc. So hyperparameters can be determined from the data indirectly by using model selection.
-General approach to ML problem is making four decisions choosing the exact:
-&lt;em&gt; Model Type – e.g. FNN, RNN, SVM, etc
-&lt;/em&gt; Architecture – e.g. for RNN you choose number of hidden layers, number of units per hidden layer
-&lt;em&gt; Training parameters – e.g. decide learning rate, batch size
-&lt;/em&gt; Model parameters – model training finds the model parameters such as weights and biases in NN
-Hence, the hyper parameters are those considered in the &lt;em&gt;training parameters&lt;/em&gt; and &lt;em&gt;architecture&lt;/em&gt; steps.&lt;/p&gt;
+&lt;p&gt;The crux of ML is finding (i.e. model training) a math formula (i.e. the model) with parameters that fit best into the data. However, the training is not able to find some higher level properties of model such as complexity or speed of learning straight from the data. Those properties are referred to as hyperparameters. For each trained model hyperparameters are predefined before even training process starts. Their values are important, however requires additional work. This work is done by trying different values for hyperparameters and training different models on them. Using the tests  than, decides which values of hyperparameters should be chosen i.e. is the fastest to achieve the goal, requires less steps etc. So hyperparameters can be determined from the data indirectly by using model selection.&lt;/p&gt;
+&lt;p&gt;General approach to ML problem is making four decisions choosing the exact:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Model Type – e.g. FNN, RNN, SVM, etc&lt;/li&gt;
+&lt;li&gt;Architecture – e.g. for RNN you choose number of hidden layers, number of units per hidden layer&lt;/li&gt;
+&lt;li&gt;Training parameters – e.g. decide learning rate, batch size&lt;/li&gt;
+&lt;li&gt;Model parameters – model training finds the model parameters such as weights and biases in NN
+Hence, the hyper parameters are those considered in the &lt;em&gt;training parameters&lt;/em&gt; and &lt;em&gt;architecture&lt;/em&gt; steps.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h5 id="examples-of-hyperparameters"&gt;Examples of hyperparameters:&lt;a title="Permanent link" href="#examples-of-hyperparameters" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;learning rate in gradient algorithms, number of hidden layers, number of clusters in a k-means clustering, number of leaves or depth of a tree, batch size in minibatch gradient descent, regularization parameter     &lt;/li&gt;
