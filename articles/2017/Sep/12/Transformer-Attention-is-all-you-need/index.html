@@ -240,6 +240,15 @@ Information on sequence ordering is very important. As there is no recurrence, n
 <p>Stages 2 and 3 use the residual connection (thus, all employ <span class="math">\(d_{model}=512\)</span>) followed by normalization layer at its output.</p>
 </li>
 </ul>
+<p>Thus, encoder works like this:</p>
+<div class="highlight"><pre><span></span>Stage1_out = Embedding512 + TokenPositionEncoding512
+Stage2_out = layer_normalization(multihead_attention(x) + x)
+Stage3_out = layer_normalization(FFN(Stage2_out) + Stage2_out)
+
+out_enc = Stage3_out
+</pre></div>
+
+
 <h4 id="decoder">Decoder<a title="Permanent link" href="#decoder" class="headerlink">🔗</a></h4>
 <p>Decoder’s architecture is similar however, it employs additional layer in <em>Stage 3</em> with mask multi-head attention over encoder output.</p>
 <ul>
@@ -254,6 +263,21 @@ Modified to prevent positions to attend to subsequent positions.</p>
 </li>
 </ul>
 <p>The details of each mechanism applied in the mentioned layers is more elaborated in following section.</p>
+<p>Put together decoder works as follows:</p>
+<div class="highlight"><pre><span></span>Stage1_out = OutputEmbedding512 + TokenPositionEncoding512
+
+Stage2_Mask = masked_multihead_attention(Stage1_out) + Stage1_out
+Stage2_Norm1 = layer_normalization(Stage2_Mask)
+Stage2_Multi = multihead_attention(Stage2_Norm1 + out_enc) +  Stage2_Norm1
+Stage2_Norm2 = layer_normalization(Stage2_Multi)
+
+Stage3_FNN = FNN(Stage2_Norm2) + Stage2_Norm2
+Stage3_Norm = layer_normalization(Stage3_FNN)
+
+out_dec = Stage3_Norm
+</pre></div>
+
+
 <h3 id="mechanisms-used-to-compose-transformer-architecture">Mechanisms used to compose Transformer architecture<a title="Permanent link" href="#mechanisms-used-to-compose-transformer-architecture" class="headerlink">🔗</a></h3>
 <p>There are couple types of layers that transformer consists of. Their details are depict in following sections.</p>
 <h4 id="positional-encoding-pe">Positional Encoding – PE<a title="Permanent link" href="#positional-encoding-pe" class="headerlink">🔗</a></h4>

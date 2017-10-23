@@ -86,6 +86,15 @@ Information on sequence ordering is very important. As there is no recurrence, n
 &lt;p&gt;Stages 2 and 3 use the residual connection (thus, all employ &lt;span class="math"&gt;\(d_{model}=512\)&lt;/span&gt;) followed by normalization layer at its output.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;Thus, encoder works like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Stage1_out = Embedding512 + TokenPositionEncoding512
+Stage2_out = layer_normalization(multihead_attention(x) + x)
+Stage3_out = layer_normalization(FFN(Stage2_out) + Stage2_out)
+
+out_enc = Stage3_out
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h4 id="decoder"&gt;Decoder&lt;a title="Permanent link" href="#decoder" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Decoder’s architecture is similar however, it employs additional layer in &lt;em&gt;Stage 3&lt;/em&gt; with mask multi-head attention over encoder output.&lt;/p&gt;
 &lt;ul&gt;
@@ -100,6 +109,21 @@ Modified to prevent positions to attend to subsequent positions.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The details of each mechanism applied in the mentioned layers is more elaborated in following section.&lt;/p&gt;
+&lt;p&gt;Put together decoder works as follows:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Stage1_out = OutputEmbedding512 + TokenPositionEncoding512
+
+Stage2_Mask = masked_multihead_attention(Stage1_out) + Stage1_out
+Stage2_Norm1 = layer_normalization(Stage2_Mask)
+Stage2_Multi = multihead_attention(Stage2_Norm1 + out_enc) +  Stage2_Norm1
+Stage2_Norm2 = layer_normalization(Stage2_Multi)
+
+Stage3_FNN = FNN(Stage2_Norm2) + Stage2_Norm2
+Stage3_Norm = layer_normalization(Stage3_FNN)
+
+out_dec = Stage3_Norm
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h3 id="mechanisms-used-to-compose-transformer-architecture"&gt;Mechanisms used to compose Transformer architecture&lt;a title="Permanent link" href="#mechanisms-used-to-compose-transformer-architecture" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;There are couple types of layers that transformer consists of. Their details are depict in following sections.&lt;/p&gt;
 &lt;h4 id="positional-encoding-pe"&gt;Positional Encoding – PE&lt;a title="Permanent link" href="#positional-encoding-pe" class="headerlink"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
