@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Primer</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/primer.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-10-01T19:30:00+02:00</updated><entry><title>Neural Networks Primer</title><link href="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/" rel="alternate"></link><published>2017-09-01T19:30:00+02:00</published><updated>2017-10-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-01:/articles/2017/Sep/01/Primer-NN/</id><summary type="html">&lt;p&gt;When you approach a new term you often find some Wiki page, Quora answers blogs and it sometimes might take some time before you find the true ground up, clear definition with meaningful example. I will put here the most intuitive explanations of basic topics. Due to extended nature of aspects and terms that are used across NN area, in this post I will place condensed definitions and a brief explanations – just to understand the intuition of terms that are mentioned in other posts along this blog.&lt;/p&gt;</summary><content type="html">&lt;p&gt;If any of the topic will grow enough I will put it into a separate post. To get in-depth understanding I recommend for:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - ML Dojo</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/ml-dojo.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-10-01T19:30:00+02:00</updated><entry><title>Neural Networks Primer</title><link href="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/" rel="alternate"></link><published>2017-09-01T19:30:00+02:00</published><updated>2017-10-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-01:/articles/2017/Sep/01/Primer-NN/</id><summary type="html">&lt;p&gt;When you approach a new term you often find some Wiki page, Quora answers blogs and it sometimes might take some time before you find the true ground up, clear definition with meaningful example. I will put here the most intuitive explanations of basic topics. Due to extended nature of aspects and terms that are used across NN area, in this post I will place condensed definitions and a brief explanations – just to understand the intuition of terms that are mentioned in other posts along this blog.&lt;/p&gt;</summary><content type="html">&lt;p&gt;If any of the topic will grow enough I will put it into a separate post. To get in-depth understanding I recommend for:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;NLP:&lt;/strong&gt; the Yoav Goldberg's, 2016 &lt;a href="https://www.jair.org/media/4992/live-4992-9623-jair.pdf"&gt;A Primer on Neural Network Models for Natural Language Processing&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -145,8 +145,27 @@ When fine tuning pre-trained model might be considered equivalent to transfer le
 &lt;li&gt;Finding the best hyperparameters for the model&lt;/li&gt;
 &lt;li&gt;In transfer learning instead of bringing the freezed pre-trained model one cane make it dynamic and let adapt more to the new task.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=stacked-nn-snn-vs-deep-nn-dnn&gt;Stacked NN (SNN) vs Deep NN (DNN)&lt;a title="Permanent link" class=headerlink href=#stacked-nn-snn-vs-deep-nn-dnn&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;and it is that i can buy it at every &lt;span class=math&gt;\(N_1\)&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=evolutionary-algorithms-evolutionary-computation-ec&gt;Evolutionary algorithms (Evolutionary Computation - EC)&lt;a title="Permanent link" class=headerlink href=#evolutionary-algorithms-evolutionary-computation-ec&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In machine learning problems, you typically have two components:&lt;/p&gt;
+&lt;div class=highlight&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1. The model (function class, etc)
+2. Methods of fitting the model (optimization algorithms)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Neural networks are a model: given a layout and a setting of weights, the neural net produces some output. There exist some canonical methods of fitting neural nets, such as backpropagation, contrastive divergence, etc. However, the big point of neural networks is that if someone gave you the 'right' weights, you'd do well on the problem.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms address the second part -- fitting the model. Again, there are some canonical models that go with evolutionary algorithms: for example, evolutionary programming typically tries to optimize over all programs of a particular type. However, EAs are essentially a way of finding the right parameter values for a particular model. Usually, you write your model parameters in such a way that the crossover operation is a reasonable thing to do and turn the EA crank to get a reasonable setting of parameters out.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms are one class of strategies that can be used in machine learning, just like backpropagation and many others.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms usually converge slowly because they make no use of gradient information. On the other hand they provide at least a chance to escape from local optima and find the global one.&lt;/p&gt;
+&lt;p&gt;Now, you could, for example, use evolutionary algorithms to train a neural network and I'm sure it's been done. However, the critical bit that EA require to work is that the crossover operation must be a reasonable thing to do -- by taking part of the parameters from one reasonable setting and the rest from another reasonable setting, you'll often end up with an even better parameter setting. Most times EA is used, this is not the case and it ends up being something like simulated annealing, only more confusing and inefficient.&lt;/p&gt;
+&lt;h3 id=todos&gt;ToDos&lt;a title="Permanent link" class=headerlink href=#todos&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;optimizers: GD (BGD, SGD, MBGD), AdaGrad, Adam, ...)&lt;/li&gt;
+&lt;li&gt;regularization&lt;/li&gt;
+&lt;li&gt;generalization&lt;/li&gt;
+&lt;li&gt;Stacked NN (SNN) vs Deep NN (DNN)&lt;/li&gt;
+&lt;li&gt;backpropagation&lt;/li&gt;
+&lt;li&gt;1x(Feed forward) + 1x(backpropagation) = epoch (eg 10-15 epochs)&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
 &lt;h4 id=references&gt;References:&lt;a title="Permanent link" class=headerlink href=#references&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;script&gt;

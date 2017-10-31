@@ -22,7 +22,7 @@
         <meta property="og:url" content="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/"/>
         <meta property="og:description" content="When you approach a new term you often find some Wiki page, Quora answers blogs and it sometimes might take some time before you find the true ground up, clear definition with meaningful example. I will put here the most intuitive explanations of basic topics. Due to extended nature of aspects and terms that are used across NN area, in this post I will place condensed definitions and a brief explanations – just to understand the intuition of terms that are mentioned in other posts along this blog."/>
         <meta property="article:published_time" content="2017-09-01" />
-            <meta property="article:section" content="Primer" />
+            <meta property="article:section" content="ML Dojo" />
             <meta property="article:tag" content="basics" />
             <meta property="article:author" content="Michał Chromiak" />
 
@@ -46,8 +46,8 @@
 
 
 
-        <link href="https://mchromiak.github.io/feeds/primer.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Michał Chromiak's blog Primer ATOM Feed"/>
+        <link href="https://mchromiak.github.io/feeds/ml-dojo.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ML Dojo ATOM Feed"/>
 
 </head>
 <body>
@@ -95,7 +95,7 @@
         <div class="col-sm-9">
             <ol class="breadcrumb">
                 <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
-                <li><a href="https://mchromiak.github.io/category/primer.html" title="Primer">Primer</a></li>
+                <li><a href="https://mchromiak.github.io/category/ml-dojo.html" title="ML Dojo">ML Dojo</a></li>
                 <li class="active">Neural Networks Primer</li>
             </ol>
     <section id="content">
@@ -127,7 +127,7 @@
             <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
-        <a href="https://mchromiak.github.io/category/primer.html">Primer</a>
+        <a href="https://mchromiak.github.io/category/ml-dojo.html">ML Dojo</a>
 
 
 <span class="label label-default">Tags</span>
@@ -281,8 +281,27 @@ When fine tuning pre-trained model might be considered equivalent to transfer le
 <li>Finding the best hyperparameters for the model</li>
 <li>In transfer learning instead of bringing the freezed pre-trained model one cane make it dynamic and let adapt more to the new task.</li>
 </ul>
-<h3 id=stacked-nn-snn-vs-deep-nn-dnn>Stacked NN (SNN) vs Deep NN (DNN)<a title="Permanent link" class=headerlink href=#stacked-nn-snn-vs-deep-nn-dnn>🔗</a></h3>
-<p>and it is that i can buy it at every <span class=math>\(N_1\)</span></p>
+<h3 id=evolutionary-algorithms-evolutionary-computation-ec>Evolutionary algorithms (Evolutionary Computation - EC)<a title="Permanent link" class=headerlink href=#evolutionary-algorithms-evolutionary-computation-ec>🔗</a></h3>
+<p>In machine learning problems, you typically have two components:</p>
+<div class=highlight><pre><span></span>1. The model (function class, etc)
+2. Methods of fitting the model (optimization algorithms)
+</pre></div>
+
+
+<p>Neural networks are a model: given a layout and a setting of weights, the neural net produces some output. There exist some canonical methods of fitting neural nets, such as backpropagation, contrastive divergence, etc. However, the big point of neural networks is that if someone gave you the 'right' weights, you'd do well on the problem.</p>
+<p>Evolutionary algorithms address the second part -- fitting the model. Again, there are some canonical models that go with evolutionary algorithms: for example, evolutionary programming typically tries to optimize over all programs of a particular type. However, EAs are essentially a way of finding the right parameter values for a particular model. Usually, you write your model parameters in such a way that the crossover operation is a reasonable thing to do and turn the EA crank to get a reasonable setting of parameters out.</p>
+<p>Evolutionary algorithms are one class of strategies that can be used in machine learning, just like backpropagation and many others.</p>
+<p>Evolutionary algorithms usually converge slowly because they make no use of gradient information. On the other hand they provide at least a chance to escape from local optima and find the global one.</p>
+<p>Now, you could, for example, use evolutionary algorithms to train a neural network and I'm sure it's been done. However, the critical bit that EA require to work is that the crossover operation must be a reasonable thing to do -- by taking part of the parameters from one reasonable setting and the rest from another reasonable setting, you'll often end up with an even better parameter setting. Most times EA is used, this is not the case and it ends up being something like simulated annealing, only more confusing and inefficient.</p>
+<h3 id=todos>ToDos<a title="Permanent link" class=headerlink href=#todos>🔗</a></h3>
+<ul>
+<li>optimizers: GD (BGD, SGD, MBGD), AdaGrad, Adam, ...)</li>
+<li>regularization</li>
+<li>generalization</li>
+<li>Stacked NN (SNN) vs Deep NN (DNN)</li>
+<li>backpropagation</li>
+<li>1x(Feed forward) + 1x(backpropagation) = epoch (eg 10-15 epochs)</li>
+</ul>
 <hr>
 <h4 id=references>References:<a title="Permanent link" class=headerlink href=#references>🔗</a></h4>
 <script>
@@ -448,10 +467,10 @@ When fine tuning pre-trained model might be considered equivalent to transfer le
       <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/neural-nets.html"><i class="fa fa-folder-open fa-lg"></i>Neural Nets</a>
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/primer.html"><i class="fa fa-folder-open fa-lg"></i>Primer</a>
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
     </li>
   </ul>
 </li>

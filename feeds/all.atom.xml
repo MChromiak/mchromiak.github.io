@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-12-03T19:30:00+01:00</updated><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"></link><published>2017-09-12T19:30:00+02:00</published><updated>2017-12-03T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id=recommended-reading-before-approaching-this-post&gt;Recommended reading before approaching this post:&lt;a title="Permanent link" class=headerlink href=#recommended-reading-before-approaching-this-post&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-10-30T19:30:00+01:00</updated><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"></link><published>2017-09-12T19:30:00+02:00</published><updated>2017-10-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id=recommended-reading-before-approaching-this-post&gt;Recommended reading before approaching this post:&lt;a title="Permanent link" class=headerlink href=#recommended-reading-before-approaching-this-post&gt;🔗&lt;/a&gt;&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;RNN – Andrej Karpathy’s blog &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Seq2Seq - Nathan Lintz &lt;a href="https://indico.io/blog/sequence-modeling-neuralnets-part1/"&gt;Sequence Modeling With Neural Networks (Part 1): Language &amp;amp; Seq2Seq&lt;/a&gt;,
@@ -207,10 +207,13 @@ Linear transformations are the same for each position, but use different paramet
 &lt;h3 id=pseudocode-or-flowchart-description-of-the-algorithm&gt;Pseudocode or flowchart description of the algorithm.&lt;a title="Permanent link" class=headerlink href=#pseudocode-or-flowchart-description-of-the-algorithm&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/transform20fps.gif" alt="Transformer  "&gt;
 &lt;br&gt;
-Figure 1. Transformer step-by-step sequence transduction in form of English-to-French translation. Adopted from [Google Blog] (https://research.googleblog.com/2017/08/transformer-novel-neural-network.html)&lt;/p&gt;
+Figure 3. Transformer step-by-step sequence transduction in form of English-to-French translation. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;In encoder phase (shown in the Figure 1.), transformer first generates initial representation/embedding for each word in input sentence (empty circle). Next, for each word, self-attention aggregates information form all other words in context of sentence, and creates new representation (filled circles). The process is repeated for each word in sentence. Successively building new representations, based on previous ones is repeated multiple times and in parallel for each word (next layers of filled circles).&lt;/p&gt;
 &lt;p&gt;Decoder acts similarly generating one word at a time in a left-to-right-pattern. It attends to previously generated words of decoder and final representation of encoder.&lt;/p&gt;
 &lt;p&gt;It is worth noting that this self-attention strategy allows to face the issue of &lt;strong&gt;coreference resolution&lt;/strong&gt; where e.g. word “&lt;em&gt;it&lt;/em&gt;” in a sentence can refer to different noun of the sentence depending on context.&lt;/p&gt;
+&lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/CoreferenceResolution.png" alt="coreference resolution"&gt;
+&lt;br&gt;
+Figure 4. Co-reference resolution. The &lt;em&gt;it&lt;/em&gt; in both cases relates to different token. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb.&lt;a title="Permanent link" class=headerlink href=#heuristics-or-rules-of-thumb&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Authors have conducted a series of tests (Table 3 of the paper) where they discuss recommendation of &lt;span class=math&gt;\(N=6\)&lt;/span&gt; layers with model size 512 based on &lt;span class=math&gt;\(h=8\)&lt;/span&gt; heads with key, values dimensions of 64 using 100K steps.&lt;/p&gt;
 &lt;p&gt;It is also stated that dot-product compatibility function might be further optimized due to model quality is decreased with smaller &lt;span class=math&gt;\(d_k\)&lt;/span&gt; (row B).&lt;/p&gt;
@@ -477,8 +480,27 @@ When fine tuning pre-trained model might be considered equivalent to transfer le
 &lt;li&gt;Finding the best hyperparameters for the model&lt;/li&gt;
 &lt;li&gt;In transfer learning instead of bringing the freezed pre-trained model one cane make it dynamic and let adapt more to the new task.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=stacked-nn-snn-vs-deep-nn-dnn&gt;Stacked NN (SNN) vs Deep NN (DNN)&lt;a title="Permanent link" class=headerlink href=#stacked-nn-snn-vs-deep-nn-dnn&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;and it is that i can buy it at every &lt;span class=math&gt;\(N_1\)&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=evolutionary-algorithms-evolutionary-computation-ec&gt;Evolutionary algorithms (Evolutionary Computation - EC)&lt;a title="Permanent link" class=headerlink href=#evolutionary-algorithms-evolutionary-computation-ec&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In machine learning problems, you typically have two components:&lt;/p&gt;
+&lt;div class=highlight&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1. The model (function class, etc)
+2. Methods of fitting the model (optimization algorithms)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Neural networks are a model: given a layout and a setting of weights, the neural net produces some output. There exist some canonical methods of fitting neural nets, such as backpropagation, contrastive divergence, etc. However, the big point of neural networks is that if someone gave you the 'right' weights, you'd do well on the problem.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms address the second part -- fitting the model. Again, there are some canonical models that go with evolutionary algorithms: for example, evolutionary programming typically tries to optimize over all programs of a particular type. However, EAs are essentially a way of finding the right parameter values for a particular model. Usually, you write your model parameters in such a way that the crossover operation is a reasonable thing to do and turn the EA crank to get a reasonable setting of parameters out.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms are one class of strategies that can be used in machine learning, just like backpropagation and many others.&lt;/p&gt;
+&lt;p&gt;Evolutionary algorithms usually converge slowly because they make no use of gradient information. On the other hand they provide at least a chance to escape from local optima and find the global one.&lt;/p&gt;
+&lt;p&gt;Now, you could, for example, use evolutionary algorithms to train a neural network and I'm sure it's been done. However, the critical bit that EA require to work is that the crossover operation must be a reasonable thing to do -- by taking part of the parameters from one reasonable setting and the rest from another reasonable setting, you'll often end up with an even better parameter setting. Most times EA is used, this is not the case and it ends up being something like simulated annealing, only more confusing and inefficient.&lt;/p&gt;
+&lt;h3 id=todos&gt;ToDos&lt;a title="Permanent link" class=headerlink href=#todos&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;optimizers: GD (BGD, SGD, MBGD), AdaGrad, Adam, ...)&lt;/li&gt;
+&lt;li&gt;regularization&lt;/li&gt;
+&lt;li&gt;generalization&lt;/li&gt;
+&lt;li&gt;Stacked NN (SNN) vs Deep NN (DNN)&lt;/li&gt;
+&lt;li&gt;backpropagation&lt;/li&gt;
+&lt;li&gt;1x(Feed forward) + 1x(backpropagation) = epoch (eg 10-15 epochs)&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr&gt;
 &lt;h4 id=references&gt;References:&lt;a title="Permanent link" class=headerlink href=#references&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;script&gt;
