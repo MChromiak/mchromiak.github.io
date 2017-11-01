@@ -71,7 +71,7 @@ Figure 1. Single layer of Encoder (left) and Decoder (right) that is build out o
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Stage 1 – Encoder Input&lt;/strong&gt;
-Information on sequence ordering is very important. As there is no recurrence, nor convolution, this information on absolute (or relative) position of each token in a sequence is represented with use of "positional encodings" (&lt;a href="../../../../2017/Sep/03/Transformer-Attention-is-all-you-need/#positional-encoding"&gt;Read more&lt;/a&gt;). The input for the encoder is therefore, represented  as:&lt;/p&gt;
+Information on sequence ordering is very important. As there is no recurrence, nor convolution, this information on absolute (or relative) position of each token in a sequence is represented with use of "positional encodings" (&lt;a href="../../../../2017/Sep/12/Transformer-Attention-is-all-you-need/#positional-encoding"&gt;Read more&lt;/a&gt;). The input for the encoder is therefore, represented  as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;em&gt;positional encodings&lt;/em&gt;  added &lt;span class=math&gt;\(\oplus\)&lt;/span&gt; to&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;embedded inputs&lt;/em&gt;  &lt;/li&gt;
