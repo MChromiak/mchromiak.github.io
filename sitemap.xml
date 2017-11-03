@@ -4,91 +4,91 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/archives.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/archives.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tags.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/tags.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/categories.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/categories.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/pages/about.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/pages/about.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/pages/categorisation.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/pages/categorisation.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/pages/contact-detail.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/pages/contact-detail.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/pages/links.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/pages/links.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/pages/resources.html</loc>
-<lastmod>2017-11-03T15:45:24-00:00</lastmod>
+<loc>https://mchromiak.github.io/pages/resources.html</loc>
+<lastmod>2017-11-03T15:46:37-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</loc>
+<loc>https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</loc>
 <lastmod>2017-10-30T19:30:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/articles/2017/Sep/01/Primer-NN/</loc>
+<loc>https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/</loc>
 <lastmod>2017-10-01T19:30:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/articles/2017/Aug/25/embrace-hurricane/</loc>
+<loc>https://mchromiak.github.io/articles/2017/Aug/25/embrace-hurricane/</loc>
 <lastmod>2017-09-10T19:30:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/michal-chromiak.html</loc>
+<loc>https://mchromiak.github.io/author/michal-chromiak.html</loc>
 <lastmod>2017-10-30T19:30:00+01:24</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
