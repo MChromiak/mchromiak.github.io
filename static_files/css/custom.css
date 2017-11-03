@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather|Source+Serif+Pro');
+@import url('https://fonts.googleapis.com/css?family=Aladin|Berkshire+Swash|Great+Vibes|Lakki+Reddy|Niconne|Rancho|Rouge+Script|Ruge+Boogie|Sofia');
 
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
   font-family: 'Merriweather', serif;
@@ -29,14 +30,24 @@ footer {
 }
 
 #banner .intro {
+
     color: #fff;
-    font-family: "HelveticaNeue-CondensedBold","Helvetica Neue CE 600 Condensed","Helvetica Neue LT Condensed","Helvetica Neue 600 Condensed","HelveticaNeue-BoldCondensed","Helvetica Neue BoldCondensed","Helvetica Neue",Helvetica,Arial,sans-serif;
+/* google fonts
+    font-family: 'Rancho', cursive;
+    font-family: 'Niconne', cursive;
+    font-family: 'Ruge Boogie', cursive;
+    font-family: 'Aladin', cursive;*/
+
+    font-family: 'Berkshire Swash', cursive;
+        font-size: 70px;
+    /*font-family: "HelveticaNeue-CondensedBold","Helvetica Neue CE 600 Condensed","Helvetica Neue LT Condensed","Helvetica Neue 600 Condensed","HelveticaNeue-BoldCondensed","Helvetica Neue BoldCondensed","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 60px;
     font-stretch: condensed;
-    font-weight: 700;
+    font-weight: 700;*/
     line-height: 0.9;
     margin: 0;
     margin-left: 4px;
+    margin-top: 10px;
     text-transform: none;
     opacity: 1;
 }
