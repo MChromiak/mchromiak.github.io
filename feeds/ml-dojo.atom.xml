@@ -28,7 +28,7 @@
 &lt;p&gt;Another limitation of RNN is the size of internal state. It can be seen on an example of encoder-decoder architecture for &lt;strong&gt;Neural Machine Translation (NMT)&lt;/strong&gt;. Here the encoder gets entire input sequence word by word while updating its internal state. While the decoder decodes it into e.g. other language.&lt;/p&gt;
 &lt;h3 id=encoder-decoder-scheme&gt;Encoder-Decoder scheme&lt;a title="Permanent link" class=headerlink href=#encoder-decoder-scheme&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Seq2seq modeling&lt;/strong&gt; is a synonym of &lt;strong&gt;recurrent neural network based encoder-decoder architectures&lt;/strong&gt; (&lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sutskever et al., 2014;&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1409.0473"&gt;Bahdanau et al., 2014&lt;/a&gt;).
-Let us &lt;em&gt;“unroll”&lt;/em&gt; the scheme into &lt;span class=math&gt;\(N\)&lt;/span&gt; encoder steps and &lt;span class=math&gt;\(M\)&lt;/span&gt; decoder steps of hidden states &lt;span class=math&gt;\(h\)&lt;/span&gt;.&lt;/p&gt;
+Let us &lt;em&gt;“unroll”&lt;/em&gt; the scheme into &lt;span class=math&gt;\(M\)&lt;/span&gt; encoder steps and &lt;span class=math&gt;\(N\)&lt;/span&gt; decoder steps of hidden states &lt;span class=math&gt;\(h\)&lt;/span&gt;.&lt;/p&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png" alt="Encoder Decoder architecture "&gt;
 &lt;br&gt;
 Figure 1. &lt;b&gt;Encoder-decoder architecture&lt;/b&gt; – example of a general approach for NMT.
@@ -38,7 +38,7 @@ An encoder converts a source sentence into a "meaning" vector which is passed th
 &lt;li&gt;encoder – maps input data &lt;span class=math&gt;\(x\)&lt;/span&gt; to a different (lower dimensional, compressed – i.e. encoded) representation, while the&lt;/li&gt;
 &lt;li&gt;decoder – maps encoder’s output new feature representation back into the input data space as a output sequence &lt;span class=math&gt;\(y\)&lt;/span&gt;; left to right one at a time. Decoder generates &lt;span class=math&gt;\(y_{i+1}\)&lt;/span&gt; token by computing new hidden state &lt;span class=math&gt;\(h_{i+1}\)&lt;/span&gt; based on:&lt;ul&gt;
 &lt;li&gt;previous hidden &lt;span class=math&gt;\(h_i\)&lt;/span&gt; state&lt;/li&gt;
-&lt;li&gt;an embedding &lt;span class=math&gt;\(g_i\)&lt;/span&gt; of the previous target lonaguage word &lt;span class=math&gt;\(y_i\)&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;an embedding &lt;span class=math&gt;\(g_i\)&lt;/span&gt; of the previous target language word &lt;span class=math&gt;\(y_i\)&lt;/span&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;conditional input &lt;span class=math&gt;\(c_i\)&lt;/span&gt; derived form the encoder output - &lt;span class=math&gt;\(z\)&lt;/span&gt;.&lt;/li&gt;
@@ -134,7 +134,7 @@ Hence, the hyper parameters are those considered in the &lt;em&gt;training param
 &lt;/ul&gt;
 &lt;h3 id=transfer-learning&gt;Transfer learning&lt;a title="Permanent link" class=headerlink href=#transfer-learning&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Transfer learning is used in context of reinforced or supervised learning. Deep learning requires large datasets to perform well (avoiding overfitting etc.). The problem however arises when there is not enough data for a new task. Here is the idea to use other already existing and large datasets to fine-tunning NN to become useful for this new task with small amount of data (e.g. using &lt;strong&gt;features&lt;/strong&gt; pre-trained from CNN (ConvNet) can be feed linear support vector machine (SVM) ). In other words, one can transfer the learned representation to another problem. We must however avoid negative transfer as it can slow down training of target task.
-Searching for function &lt;span class=math&gt;\(g()\)&lt;/span&gt; while having pre-trained &lt;span class=math&gt;\(h()\)&lt;/span&gt; use projection of new inputs &lt;span class=math&gt;\(x_i\)&lt;/span&gt; like this: &lt;span class=math&gt;\((h(f(x_i)))\)&lt;/span&gt;.&lt;/p&gt;
+Searching for function &lt;span class=math&gt;\(g()\)&lt;/span&gt; while having pre-trained &lt;span class=math&gt;\(h()\)&lt;/span&gt; use projection of new inputs &lt;span class=math&gt;\(x_i\)&lt;/span&gt; like this: &lt;span class=math&gt;\((h(g(x_i)))\)&lt;/span&gt;.&lt;/p&gt;
 &lt;h5 id=examples_1&gt;Examples:&lt;a title="Permanent link" class=headerlink href=#examples_1&gt;🔗&lt;/a&gt;&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;Positive transfer: If you learned previously how to classify a rotten vegetable form not rotten one you can apply this representation of rottenness into fruits even though you have never seen a rotten fruit before.&lt;/li&gt;
@@ -165,12 +165,15 @@ When fine tuning pre-trained model might be considered equivalent to transfer le
 &lt;p&gt;Evolutionary algorithms are one class of strategies that can be used in machine learning, just like backpropagation and many others.&lt;/p&gt;
 &lt;p&gt;Evolutionary algorithms usually converge slowly because they make no use of gradient information. On the other hand they provide at least a chance to escape from local optima and find the global one.&lt;/p&gt;
 &lt;p&gt;Now, you could, for example, use evolutionary algorithms to train a neural network and I'm sure it's been done. However, the critical bit that EA require to work is that the crossover operation must be a reasonable thing to do -- by taking part of the parameters from one reasonable setting and the rest from another reasonable setting, you'll often end up with an even better parameter setting. Most times EA is used, this is not the case and it ends up being something like simulated annealing, only more confusing and inefficient.&lt;/p&gt;
+&lt;h3 id=learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates&gt;Learning rate schemes (aka learning rate annealing or adaptive learning rates)&lt;a title="Permanent link" class=headerlink href=#learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Changing the learning rate along training with e.g. Stochastic Gradient Descent (SGD) increases performance and reduce training time. With adaptive change to &lt;em&gt;learning rate&lt;/em&gt; along training one can use different schemes/schedules on how the learning rate should change.&lt;br&gt;
+See &lt;a href="http://cs231n.github.io/neural-networks-3/#anneal"&gt;cs231n&lt;/a&gt; on learning rate annealing and &lt;a href="https://www.tensorflow.org/versions/r0.12/api_docs/python/train/decaying_the_learning_rate"&gt;Tensorflow decaying learning rate&lt;/a&gt;.&lt;/p&gt;
 &lt;!--
 ### ToDos
 
 * training (aka learning: Fitting the "hyper parameters" of the model for all the examples) vs inference (Learning the values of the latent variables for a specific example) vs prediciton https://www.quora.com/What-is-the-difference-between-inference-and-learning
  https://blogs.nvidia.com/blog/2016/08/22/difference-deep-learning-training-inference-ai/
-
+* generalize from extremely small data sets classification accuracy of 92.07%. http://cognitivemedium.com/rmnist_anneal_ensemble
 * AutoML https://research.googleblog.com/2017/11/automl-for-large-scale-image.html
 * wod2vec http://mccormickml.com/2016/04/27/word2vec-resources/
 * Pooling
@@ -191,24 +194,6 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 
 &lt;hr&gt;
 &lt;h4 id=references&gt;References:&lt;a title="Permanent link" class=headerlink href=#references&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;script&gt;
-&lt;!-- This adds {}--&gt;
-(function() {
-    var hostname = window.location.hostname;
-    var new_tab = true;
-    var set_icon = true;
-    for (var links = document.links, i = 0, a; a = links[i]; i++) {
-        if (a.hostname !== hostname) {
-            if (new_tab)
-                a.target = '_blank';
-            if (set_icon)
-                a.innerHTML +=
-                    '&amp;nbsp&lt;i class="fa fa-external-link fa-1 external-link-margin" /&gt;';
-        }
-    }
-})();
-&lt;/script&gt;
-
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

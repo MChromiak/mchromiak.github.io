@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Machine translation - Michał Chromiak's blog</title>
+    <title>language model - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
 
 
     <meta name="author" content="Michał Chromiak" />
-    <meta name="keywords" content="Machine translation" />
+    <meta name="keywords" content="language model" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Michał Chromiak's blog" />
@@ -91,19 +91,19 @@
     <ol class="breadcrumb">
         <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
         <li><a href="https://mchromiak.github.io/" title="Tags">Tags</a></li>
-        <li class="active">Machine translation</li>
+        <li class="active">language model</li>
     </ol>
             <article>
-                <h2><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></h2>
+                <h2><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></h2>
                     <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-09-12T19:30:00+02:00"> Tue, 12 Sep 2017</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-11-30T19:30:00+01:00"> Thu, 30 Nov 2017</time>
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2017-10-30T19:30:00+01:00"> Mon, 30 Oct 2017</time>
+                <i class="fa fa-calendar"></i><time datetime="2017-11-30T19:30:00+01:00"> Thu, 30 Nov 2017</time>
             </span>
 
 
@@ -115,27 +115,23 @@
 
 
 <span class="label label-default">Tags</span>
-	<a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
-        /
-	<a href="https://mchromiak.github.io/tag/transformer.html">transformer</a>
-        /
-	<a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
-        /
-	<a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
-        /
-	<a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
-        /
-	<a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
-        /
 	<a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
+        /
+	<a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
+        /
+	<a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
+        /
+	<a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
+        /
+	<a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary">
                   <div class="cover">
-<img src="https://mchromiak.github.io/articles/2017/Sep/12/img/cover_trans.gif" alt="article cover">                  </div>
+<img src="https://mchromiak.github.io/articles/2017/Nov/30/img/nlp-cover.png" alt="article cover">                  </div>
                   <div class="sumtext">
-                    <p>Transformer - more than meets the eye! Are we there yet? Well... not really, but...</br>   How about eliminating recurrence and convolution from transduction? Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new <em>transformer</em> architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.</p>
-<p><small><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/#disqus_thread" >View comments</a>.</small></p>                    <a class="btn btn-default btn-xs" href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">more ...</a>
+                    <p>Language modeling (LM) is the essential part of Natural Language Processing (NLP) tasks such as  Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Goal of the Language Model is to compute the probability of sentence considered as a word sequence. This article explains how to model the language using probability and n-grams. It also discuss the language model evaluation with  use of <em>perplexity</em>.</p>
+<p><small><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/#disqus_thread" >View comments</a>.</small></p>                    <a class="btn btn-default btn-xs" href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">more ...</a>
                   </div>
                 </div>
             </article>
@@ -174,7 +170,7 @@
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -295,7 +291,7 @@
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (1)
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
           </a>
         </li>
   </ul>

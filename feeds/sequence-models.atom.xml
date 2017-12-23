@@ -1,10 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Sequence Models</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/sequence-models.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-10-30T19:30:00+01:00</updated><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"></link><published>2017-09-12T19:30:00+02:00</published><updated>2017-10-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;How about eliminating recurrence and convolution from transduction? Transformer - more than meets the eye. Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id=recommended-reading-before-approaching-this-post&gt;Recommended reading before approaching this post:&lt;a title="Permanent link" class=headerlink href=#recommended-reading-before-approaching-this-post&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Sequence Models</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/sequence-models.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2017-11-30T19:30:00+01:00</updated><entry><title>NLP: Explaining Neural Language Modeling</title><link href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/" rel="alternate"></link><published>2017-11-30T19:30:00+01:00</published><updated>2017-11-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-11-30:/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/</id><summary type="html">&lt;p&gt;Language modeling (LM) is the essential part of Natural Language Processing (NLP) tasks such as  Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Goal of the Language Model is to compute the probability of sentence considered as a word sequence. This article explains how to model the language using probability and n-grams. It also discuss the language model evaluation with  use of &lt;em&gt;perplexity&lt;/em&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Read before:&lt;/strong&gt;
+* &lt;a href="https://medium.com/@gon.esbuyo/get-started-with-nlp-part-i-d67ca26cc828"&gt;Get started with NLP (Part I)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Key Takeaways:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The goal of a language model is to compute a probability of a token (e.g. a sentence or a sequence of words).&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Language Model (LM) actually a grammar of a language as it gives the probability of word that will follow&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Dictionary:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Corpus&lt;/strong&gt; - Body of text, singular. Corpora is the plural of this. Example: A collection of medical journals.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Token&lt;/strong&gt;- Each "entity" that is a part of whatever was split up based on rules. For examples, each word is a token when a sentence is "tokenized" into words. Each sentence can also be a token, if you tokenized the sentences out of a paragraph.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lexicon&lt;/strong&gt; - Words and their meanings. Example: English dictionary. Consider, however, that various fields will have different lexicons. For example: To a financial investor, the first meaning for thef word "Bull" is someone who is confident about the market, as compared to the common English lexicon, where the first meaning for the word "Bull" is an animal. As such, there is a special lexicon for financial investors, doctors, children, mechanics, and so on.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="intro"&gt;Intro&lt;a class="headerlink" href="#intro" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;Language Modeling (LM)&lt;/em&gt; is one of the most important parts of modern Natural Language Processing (NLP). There are many sorts of applications for  Language Modeling, like: Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Each of those tasks require use of &lt;em&gt;language model&lt;/em&gt;. Language model is required to represent the text to a form understandable from the machine point of view.&lt;/p&gt;
+&lt;p&gt;Below I have elaborated on the means to model a corpus of text to use in multiple machine learning NLP tasks.    &lt;/p&gt;
+&lt;h3 id="motivation"&gt;Motivation&lt;a class="headerlink" href="#motivation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Each part of natural language has to assume some representation. Written text in natural way is composed out of sentences that consist of words that in turn contains letters. Each of those pieces of  text sentence can be a subject for analysis. Of course we can also use morphemes [ref]Small meaningful units that make up words. [\ref] or n-grams of the text.&lt;/p&gt;
+&lt;p&gt;One way or another, the text needs to be normalized.  Normalized mean that indexed text and query terms must have same form. For example, &lt;em&gt;U.S.A.&lt;/em&gt; and &lt;em&gt;u.s.a.&lt;/em&gt; are to be considered same (remove dots and case fold - lowercase) and return same result while querying any of them.  Thus, an implicit word classes equivalence must be defined.&lt;/p&gt;
+&lt;h4 id="tokenizing"&gt;Tokenizing&lt;a class="headerlink" href="#tokenizing" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Choosing which text segmentation (aka tokenizing) technique will be used is arbitrary, but depends strictly on the undergoing tasks, their specification, heuristics and preconditions. For instance, if we are after a single character statistics of text task we will probably choose to operate on letters not on n-grams or words. The result for text fragmentation is called &lt;strong&gt;token&lt;/strong&gt;. So by referring to a token in general one actually refers to the fragmentation technique outcome in form of a sentence, word, n-gram, morpheme, letter etc.  &lt;/p&gt;
+&lt;p&gt;However, even word-oriented tokens might give a different set of distinct tokens. For instance in a lemma based tokens the &lt;em&gt;cat&lt;/em&gt; and plural &lt;em&gt;cats&lt;/em&gt; would count as one word having same stem (core meaning-bearing unit). On the other hand, if we make more strict distinctions, that would e.g. differentiate &lt;em&gt;word form&lt;/em&gt;, we would get two distinct tokens. It all depends how you define a token.&lt;/p&gt;
+&lt;p&gt;To make things more clear, lets settle three terms:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;vocabulary&lt;/strong&gt; set of different types&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;type&lt;/strong&gt;  an element of vocabulary, and a&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;token&lt;/strong&gt; as an instance of a &lt;em&gt;type&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Additionally, language modeling must consider the correlated ordering of tokens. This is because every language is based on some grammar, where order has a lot of influence on the meaning of a text.  &lt;/p&gt;
+&lt;p&gt;To complete the NLP tasks we must provide a measure to enable comparison operations and thus assessment method for grading our model. This measure is probability. This involves all kinds of tasks, for example:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Machine translation:&lt;/strong&gt; translating a sentence saying about height it would probably state that &lt;span class="math"&gt;\( P(tall\ man) &amp;gt; P(large\ man)\)&lt;/span&gt; as the ‘&lt;em&gt;large&lt;/em&gt;’ might also refer to weight or general appearance thus, not as probable as ‘&lt;em&gt;tall&lt;/em&gt;’&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Spelling Correction:&lt;/strong&gt;  Spell correcting sentence: “Put you name into form”, so that &lt;span class="math"&gt;\(P(name\ into\ \textbf{form}) &amp;gt; P(name\ into\ \textbf{from})\)&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Speech Recognition:&lt;/strong&gt; Call my nurse: &lt;span class="math"&gt;\(P(Call\ my\ nurse.) \gg P(coal\ miners)\)&lt;/span&gt;, I have no idea. &lt;span class="math"&gt;\(P(no\ idea.) \gg P(No\ eye\ deer.)\)&lt;/span&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Summarization, question answering, sentiment analysis&lt;/strong&gt; etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="the-probabilistic-language-modeling"&gt;The probabilistic language modeling&lt;a class="headerlink" href="#the-probabilistic-language-modeling" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The probability of a sentence &lt;span class="math"&gt;\(S\)&lt;/span&gt; (as a sequence of &lt;em&gt;words&lt;/em&gt; &lt;span class="math"&gt;\(w_i\)&lt;/span&gt;) is : &lt;span class="math"&gt;\(P(S) = P(w_1,w_2, w_3,\ldots,w_n)\)&lt;/span&gt;. Now it is important to find the probability of upcoming word. It is an everyday task made e.g. while typing  your mobile keyboard. We will settle the &lt;em&gt;conditional probability&lt;/em&gt;  of &lt;span class="math"&gt;\(w_4\)&lt;/span&gt; depending on all previous words. For a 4 word sentence this conditional probability is:&lt;/p&gt;
+&lt;div class="math"&gt;$$ P(S)=P(w_1, w_2, w_3, w_4) \equiv P(w_4 |w_1, w_2, w3) $$&lt;/div&gt;
+&lt;p&gt;This way we can actually represent the language grammar, however, in NLP it is accustomed to use the LM term.&lt;/p&gt;
+&lt;p&gt;To calculate the joint probability  of a sentence (as a word sequence) &lt;span class="math"&gt;\(P(W)\)&lt;/span&gt; the chain rule of probability will be used.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Probability Chain Rule:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="math"&gt;$$P(A|B) = \frac{P(A\cap B)}{P(B)} \implies P(A\cap B)=P(A|B)P(B)$$&lt;/div&gt;
+&lt;p&gt;so in general for a token sequence we get:&lt;/p&gt;
+&lt;div class="math"&gt;$$P(S)=P(w_1,\ldots,w_n) = P(w_1)P(w_2|w_1) P(w_3)P(w_1,w_2)\ldots P(w_n|w_1,\ldots w_{n-1}) ={\displaystyle \prod_{i} P(w_i|w_1,\ldots w_{i-1})}$$&lt;/div&gt;
+&lt;p&gt;To estimate each probability a straightforward solution could be to use simple counting.&lt;/p&gt;
+&lt;div class="math"&gt;$$P(w_5|w_1,w_2,w_3,w_4)= \frac{count(w_1,w_2,w_3,w_4,w_5)}{count(w_1,w_2,w_3,w_4)}$$&lt;/div&gt;
+&lt;p&gt;but this gives us to many possible sequences to ever estimate. Imagine how much data (occurrences of each sentence) we would have to get to make this &lt;em&gt;count&lt;/em&gt;s meaningful.&lt;/p&gt;
+&lt;p&gt;To cope with this issue we can simplify by applying the &lt;strong&gt;Markov Assumption&lt;/strong&gt;, which states that it is enough to pick only one, or a couple of previous words as a prefix:&lt;/p&gt;
+&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-k},\ldots P(w_{i-1}))}$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(k\)&lt;/span&gt; is the number of previous tokens (&lt;em&gt;prefix&lt;/em&gt; size) that we consider.&lt;/p&gt;
+&lt;h3 id="n-grams"&gt;N-grams&lt;a class="headerlink" href="#n-grams" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;An N-gram is a contiguous (order matters) sequence of items, which in this case is the words in text. The n-grams depends on the size of the &lt;em&gt;prefix&lt;/em&gt;. The simplest case is the &lt;em&gt;Unigram mode&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; (Uni-) 1-gram model&lt;/strong&gt;
+The simplest case of &lt;em&gt;Markov assumption&lt;/em&gt; is case when the size of prefix is one.
+&lt;span class="math"&gt;\(P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This will provide us with grammar that only consider one word. As a result it produces a set of unrelated words. It actually would generate sentences with random word order.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; Bigram &lt;/strong&gt;
+However, if we consider a 2-word (tandem) bigrams correlations where we condition each word on previous one we get some sens of meaning between couples of words.&lt;/p&gt;
+&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$&lt;/div&gt;
+&lt;p&gt;This way we get a sequence of tandems that have meaning tandem-wise. This still is not enough to face a long range dependencies from natural languages, like English. This would be difficult even in case of n-grams as there can be very long sentences with dependencies. However, a 3-gram can get us a pretty nice &lt;a href="http://tetration.xyz/Ngram-Tutorial/"&gt;approximation&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;and how he probably more easily believe me i never see how much as that he and pride and unshackled
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4 id="estimate-n-gram-probabilities"&gt;Estimate n-gram probabilities&lt;a class="headerlink" href="#estimate-n-gram-probabilities" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Estimation can be done with &lt;strong&gt;Maximum Likelihood Estimate (MLE)&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="math"&gt;$$P(w_i|w_{i-1})=\frac{count(w_{i-1},w_i)}{count(w_{i-1 })}$$&lt;/div&gt;
+&lt;!-- z jupytera:
+Z google ngram raw bigram count table
+normalize by unigrams --&gt;
+
+&lt;p&gt;So the 2-gram estimate  of sentence probability would be the product of all component tandems ordered as in the sentence.&lt;/p&gt;
+&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$&lt;/div&gt;
+&lt;p&gt;In practice, the outcome should be represented in &lt;em&gt;log&lt;/em&gt; form. There are two reasons for this. Firstly, if the sentence is long and the probabilities are really small, then such product might end in arithmetic underflow.  Secondly, adding is faster - and when we use logarithm we know that: &lt;span class="math"&gt;\(log(a*b) = log(a)+log(b)\)&lt;/span&gt;, thus:&lt;/p&gt;
+&lt;p&gt;&lt;span class="math"&gt;\(log(P(w_1,\ldots,w_n)) \approx {\displaystyle \sum_{i} log(P(w_i|w_{i-1}))}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This is why the Language Model is stored in logarithmic values.&lt;/p&gt;
+&lt;h3 id="publicly-available-corpora"&gt;Publicly available corpora&lt;a class="headerlink" href="#publicly-available-corpora" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;There is available &lt;a href="http://www.gutenberg.org/ebooks/search/"&gt;Gutenberg Project&lt;/a&gt; providing with text format of some books.&lt;/p&gt;
+&lt;p&gt;Google also released a publicly available corpus trillion word corpus with over 13 million unique words. It is nice corpus from Google Books with already implemented &lt;a href="https://books.google.com/ngrams"&gt;N-Gram viewer&lt;/a&gt; that enables to plot word counts. It includes number of corpora for multiple languages. See the below chart an example of unigram, 2-gram and 3-gram occurrences.&lt;/p&gt;
+&lt;iframe name="ngram_chart" src="https://books.google.com/ngrams/interactive_chart?content=machine+learning%2Cdeep+learning%2Cnlp%2Cnatural+language+processing&amp;year_start=1982&amp;year_end=2008&amp;corpus=0&amp;smoothing=3&amp;share=&amp;direct_url=t1%3B%2Cmachine%20learning%3B%2Cc0%3B.t1%3B%2Cdeep%20learning%3B%2Cc0%3B.t1%3B%2Cnlp%3B%2Cc0%3B.t1%3B%2Cnatural%20language%20processing%3B%2Cc0" width=860 height=300 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling=no&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Such a large scale text analysis can be done by downloading &lt;a href="http://storage.googleapis.com/books/ngrams/books/datasetsv2.html"&gt;each dataset&lt;/a&gt; using the &lt;a href="https://books.google.com/ngrams/info"&gt;Ngram Viewer API&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I have created a project to collect and analyze those datasets locally with custom configuration. See the &lt;a href="https://github.com/MChromiak/MC_Utils"&gt;GitHub repo&lt;/a&gt; for the source code.&lt;/p&gt;
+&lt;h3 id="language-model-evaluation-perplexity"&gt;Language Model evaluation – Perplexity&lt;a class="headerlink" href="#language-model-evaluation-perplexity" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The good LM should calculate higher probabilities to “real” and “frequently observed” sentences than the ones that are wrong accordingly to natural language grammar or those that are rarely observed.&lt;/p&gt;
+&lt;p&gt;To make such assumption, we first train the language model on one set and test it on completely new dataset. Then we can compare the results of our model on the new dataset and evaluate, how good (how accurate in terms of a task e.g. translation, spell check etc) &lt;strong&gt;on average&lt;/strong&gt; it works on this new, previously unseen dataset. For instance how many words it translates correctly. This way one can compare and decide which language model fits the best to a task. This is called &lt;em&gt;extrinsic evaluation&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The extrinsic evaluation approach however, requires multiple tests on models which are expensive. An alternative is the &lt;em&gt;intrinsic evaluation&lt;/em&gt; which is about testing the LM itself not some particular task or application. The popular intrinsic evaluation is &lt;strong&gt;perplexity&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;As &lt;strong&gt;perplexity&lt;/strong&gt; is a bad approximation to an extreme extrinsic evaluation, in cases where the test dataset does NOT look just like the training set. Thus, it is useful only at the early stages of experiment. So later in experiment extrinsic evaluation should also be used.&lt;/p&gt;
+&lt;p&gt;Best model is the one that best predicts an unseen test set, or assigns on average the probability to all sentences that is sees.&lt;/p&gt;
+&lt;p&gt;Perprexity metric is the probability of the test set, normalized for the length of the probability by the number of words.&lt;/p&gt;
+&lt;div class="math"&gt;$$ PP(S) = P(w_1,\ldots, w_N)^{-\frac{1}{N}} =\sqrt[\leftroot{0}\uproot{3}N]{\frac{1}{P(w_1,\ldots, w_N)}} = $$&lt;/div&gt;
+&lt;p&gt;This way the longer the sentence the less probable it will be. Then again by the chain rule:&lt;/p&gt;
+&lt;div class="math"&gt;$$ = \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_1,\ldots, w_{i-1})}}} $$&lt;/div&gt;
+&lt;p&gt;In case of 2-gram using Markov approximation of the chain rule:&lt;/p&gt;
+&lt;div class="math"&gt;$$ PP(S) =  \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_{i-1})}}}$$&lt;/div&gt;
+&lt;p&gt;So &lt;em&gt;perplexity&lt;/em&gt; is a function of probability of the sentence. The meaning of the inversion in perplexity means that whenever we minimize the perplexity we maximize the probability.&lt;/p&gt;
+&lt;p&gt;Perplexity is weighted equivalent branching factor.&lt;/p&gt;
+&lt;p&gt;To be continued...&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="NLP"></category><category term="language model"></category><category term="ngram"></category><category term="perplexity"></category><category term="smoothing"></category></entry><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"></link><published>2017-09-12T19:30:00+02:00</published><updated>2017-10-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Transformer - more than meets the eye! Are we there yet? Well... not really, but...&lt;/br&gt;   How about eliminating recurrence and convolution from transduction? Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id=recommended-reading-before-approaching-this-post&gt;Recommended reading before approaching this post:&lt;a title="Permanent link" class=headerlink href=#recommended-reading-before-approaching-this-post&gt;🔗&lt;/a&gt;&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;RNN – Andrej Karpathy’s blog &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Seq2Seq - Nathan Lintz &lt;a href="https://indico.io/blog/sequence-modeling-neuralnets-part1/"&gt;Sequence Modeling With Neural Networks (Part 1): Language &amp;amp; Seq2Seq&lt;/a&gt;,
 Part2 &lt;a href="https://indico.io/blog/sequence-modeling-neural-networks-part2-attention-models/"&gt;Sequence modeling with attention&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;LSTM – Christopher Olah’s blog &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;Understanding LSTM Networks&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;LSTM – Christopher Olah’s blog &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;Understanding LSTM Networks&lt;/a&gt; and R2Rt.com &lt;a href="https://r2rt.com/written-memories-understanding-deriving-and-extending-the-lstm.html"&gt;Written Memories: Understanding, Deriving and Extending the LSTM&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Attention – Christopher Olah &lt;a href="https://distill.pub/2016/augmented-rnns/#attentional-interfaces"&gt;Attention and Augmented Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=objective-or-goal-for-the-algorithm&gt;Objective or goal for the algorithm&lt;a title="Permanent link" class=headerlink href=#objective-or-goal-for-the-algorithm&gt;🔗&lt;/a&gt;&lt;/h3&gt;
@@ -32,7 +195,16 @@ Part2 &lt;a href="https://indico.io/blog/sequence-modeling-neural-networks-part2
 &lt;p&gt;In this post I will elaborate on lately presented paper introducing the &lt;strong&gt;Transformer&lt;/strong&gt; architecture.
 Paper: &lt;a href="https://arxiv.org/abs/1706.03762"&gt;ArXiv&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As the paper assumes the in-depth prior knowledge of some topics, I will try to explain the ideas of the paper so that they can be understood by a DL beginner.&lt;/p&gt;
-&lt;p&gt;When RNN’s (or CNN) takes a sequence as an input, it handles sentences word by word. This sequentiality  is an obstacle toward parallelization of the process. What is more, in cases when such sequences are too long, the model is prone to forgetting the content of distant positions in sequence or mix it with following positions’ content. For this reason &lt;em&gt;Transformer&lt;/em&gt; propose to encode each position and applying the attention mechanism, to relate two distant words, which then can be parallelized thus, accelerating the training.&lt;/p&gt;
+&lt;p&gt;When RNN’s (or CNN) takes a sequence as an input, it handles sentences word by word. This sequentiality  is an obstacle toward parallelization of the process. What is more, in cases when such sequences are too long, the model is prone to forgetting the content of distant positions in sequence or mix it with following positions’ content.&lt;/p&gt;
+&lt;p&gt;One solution to this was Convolution seq2seq. Convolution enables parallelization for GPU processing. Thus &lt;a href="https://arxiv.org/abs/1705.03122"&gt;Gehring et al, 2017&lt;/a&gt; (Facebook AI) present a 100% convolutional architecture to represent hierarchical representation of input sequence. The crux is that close input elements interact at lower layers while distant interacts at higher layers. The stacking of convolution layers is being used to evaluate long range dependencies between words. This is all possible despite fixed width kernels of convolution filters. The authors has also included two tricks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Positional embeddings - that are added to the input embeddings, capturing a sense of order in a sequence&lt;/li&gt;
+&lt;li&gt;Multi-step attention - attention is computed with current decoder state and embedding of previous target word token&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/MultiStepAttention.gif" alt="Multi-step attention "&gt;
+&lt;br&gt;
+Figure 1. Multi-step attention form ConvS2S.&lt;/p&gt;
+&lt;p&gt;As an alternative to convolutions, a new approach is presented by the &lt;em&gt;Transformer&lt;/em&gt;. It proposes to encode each position and applying the attention mechanism, to relate two distant words, which then can be parallelized thus, accelerating the training.&lt;/p&gt;
 &lt;p&gt;Currently, in NLP the SOTA (&lt;em&gt;state-of-the-art&lt;/em&gt;) performance achieved by seq2seq models is focused around the idea of encoding the input sentence into a fixed-size vector representation. The vector size is fixed, regardless of the length of the input sentence. In obvious way this must loose some information. To face this issue &lt;em&gt;Transformer&lt;/em&gt; employs an alternative approach based on attention.&lt;/p&gt;
 &lt;p&gt;Due to multiple referred work it is beneficial to also read the mentioned research&lt;/p&gt;
 &lt;ul&gt;
@@ -65,7 +237,7 @@ Paper: &lt;a href="https://arxiv.org/abs/1706.03762"&gt;ArXiv&lt;/a&gt;.&lt;/p&g
 &lt;p&gt;One can find the reference Transformer model implementation from authors is present in &lt;a href="https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py"&gt;Tensor2Tensor (T2T) library&lt;/a&gt;&lt;/p&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/encoder.png" alt="Encoder Decoder architecture "&gt;
 &lt;br&gt;
-Figure 1. Single layer of Encoder (left) and Decoder (right) that is build out of &lt;span class=math&gt;\(N=6\)&lt;/span&gt; identical layers.&lt;/p&gt;
+Figure 2. Single layer of Encoder (left) and Decoder (right) that is build out of &lt;span class=math&gt;\(N=6\)&lt;/span&gt; identical layers.&lt;/p&gt;
 &lt;h4 id=encoder&gt;Encoder&lt;a title="Permanent link" class=headerlink href=#encoder&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -153,7 +325,7 @@ out_dec = Stage3_Norm
 &lt;p&gt;Transformer reduces the number of operations required to relate (especially distant) positions in input and output sequence to a &lt;span class=math&gt;\(O(1)\)&lt;/span&gt;. However, this comes at cost of reduced effective resolution because of averaging attention-weighted positions.&lt;/p&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/MultiHead.png" alt="Multihead attetntion"&gt;
 &lt;br&gt;
-Figure 2. Multi-Head Attention consists of &lt;span class=math&gt;\(h\)&lt;/span&gt; attention layers running in parallel.&lt;/p&gt;
+Figure 3. Multi-Head Attention consists of &lt;span class=math&gt;\(h\)&lt;/span&gt; attention layers running in parallel.&lt;/p&gt;
 &lt;p&gt;To reduce this cost authors propose the multi-head attention:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -207,13 +379,13 @@ Linear transformations are the same for each position, but use different paramet
 &lt;h3 id=pseudocode-or-flowchart-description-of-the-algorithm&gt;Pseudocode or flowchart description of the algorithm.&lt;a title="Permanent link" class=headerlink href=#pseudocode-or-flowchart-description-of-the-algorithm&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/transform20fps.gif" alt="Transformer  "&gt;
 &lt;br&gt;
-Figure 3. Transformer step-by-step sequence transduction in form of English-to-French translation. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
+Figure 4. Transformer step-by-step sequence transduction in form of English-to-French translation. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;In encoder phase (shown in the Figure 1.), transformer first generates initial representation/embedding for each word in input sentence (empty circle). Next, for each word, self-attention aggregates information form all other words in context of sentence, and creates new representation (filled circles). The process is repeated for each word in sentence. Successively building new representations, based on previous ones is repeated multiple times and in parallel for each word (next layers of filled circles).&lt;/p&gt;
 &lt;p&gt;Decoder acts similarly generating one word at a time in a left-to-right-pattern. It attends to previously generated words of decoder and final representation of encoder.&lt;/p&gt;
 &lt;p&gt;It is worth noting that this self-attention strategy allows to face the issue of &lt;strong&gt;coreference resolution&lt;/strong&gt; where e.g. word “&lt;em&gt;it&lt;/em&gt;” in a sentence can refer to different noun of the sentence depending on context.&lt;/p&gt;
 &lt;p align=center&gt;&lt;img src="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/img/CoreferenceResolution.png" alt="coreference resolution"&gt;
 &lt;br&gt;
-Figure 4. Co-reference resolution. The &lt;em&gt;it&lt;/em&gt; in both cases relates to different token. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
+Figure 5. Co-reference resolution. The &lt;em&gt;it&lt;/em&gt; in both cases relates to different token. Adopted from &lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google Blog&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb.&lt;a title="Permanent link" class=headerlink href=#heuristics-or-rules-of-thumb&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Authors have conducted a series of tests (Table 3 of the paper) where they discuss recommendation of &lt;span class=math&gt;\(N=6\)&lt;/span&gt; layers with model size 512 based on &lt;span class=math&gt;\(h=8\)&lt;/span&gt; heads with key, values dimensions of 64 using 100K steps.&lt;/p&gt;
 &lt;p&gt;It is also stated that dot-product compatibility function might be further optimized due to model quality is decreased with smaller &lt;span class=math&gt;\(d_k\)&lt;/span&gt; (row B).&lt;/p&gt;
@@ -238,6 +410,11 @@ English-to-French translation tasks&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://research.googleblog.com/2017/08/transformer-novel-neural-network.html"&gt;Google blog post1&lt;/a&gt;,&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://research.googleblog.com/2017/06/accelerating-deep-learning-research.html"&gt;Google blog post2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;There are also some more general learning open-source software frameworks for NMT:
+&lt;em&gt; &lt;a href="https://github.com/tensorflow/nmt"&gt;Tensorflow: Neural Machine Translation (seq2seq) Tutorial&lt;/a&gt;
+Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Google Research. Based on &lt;a href="https://research.googleblog.com/2017/07/building-your-own-neural-machine.html"&gt;Google Research blog.&lt;/a&gt;&lt;br&gt;
+&lt;/em&gt; &lt;a href="https://github.com/facebookresearch/fairseq"&gt;Torch: FirSeq&lt;/a&gt; seq2seq and ConvS2S from Facebook AI.
+* &lt;a href="https://github.com/tensorflow/tensor2tensor"&gt;Tensorflow: Tensor2Tensor&lt;/a&gt; From used by Transformer authors.&lt;/p&gt;
 &lt;h3 id=thoughts-on-the-idea&gt;Thoughts on the idea.&lt;a title="Permanent link" class=headerlink href=#thoughts-on-the-idea&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;To my limited knowledge there are some statements that might benefit form more explanation:&lt;/p&gt;
 &lt;ol&gt;
@@ -262,24 +439,6 @@ English-to-French translation tasks&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 &lt;h4 id=references&gt;References:&lt;a title="Permanent link" class=headerlink href=#references&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;script&gt;
-&lt;!--  Instead adding {:target="_blank"} to every link this adds it automatically additionally it adds also   link icon from http://fontawesome.io/icon/external-link/--&gt;
-(function() {
-    var hostname = window.location.hostname;
-    var new_tab = true;
-    var set_icon = true;
-    for (var links = document.links, i = 0, a; a = links[i]; i++) {
-        if (a.hostname !== hostname) {
-            if (new_tab)
-                a.target = '_blank';
-            if (set_icon)
-                a.innerHTML +=
-                    '&amp;nbsp;&lt;i class="fa fa-external-link fa-1 external-link-margin" /&gt;';
-        }
-    }
-})();
-&lt;/script&gt;
-
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -334,4 +493,4 @@ English-to-French translation tasks&lt;/li&gt;
         "}";
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-1&gt;While applying dimensionality reduction techniques (e.g. PCA, t-SNE) on embeddings, the outcome plot gathers the semantically close sentences  together &lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sutskever et al., 2014&lt;/a&gt;. &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-1-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-2&gt;It is interesting how this resembles the brain waves and &lt;a href="https://en.wikipedia.org/wiki/Neural_oscillation"&gt;neural oscillations&lt;/a&gt;. &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-2-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-3&gt;It reminds a bit the Pointer Networks that address similar problem &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-3-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-4&gt;The additional scaling factor is advised for large &lt;span class=math&gt;\(d_k\)&lt;/span&gt; where dot product grow large in magnitude, as softmax is suspected to be pushed to vanishing gradient area, thus making the additive attention perform better.  &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-4-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="transformer"></category><category term="Sequence transduction"></category><category term="Attention model"></category><category term="Machine translation"></category><category term="BLEU"></category><category term="WMT2014"></category><category term="Sequence modeling"></category></entry></feed>
+&lt;/script&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-1&gt;While applying dimensionality reduction techniques (e.g. PCA, t-SNE) on embeddings, the outcome plot gathers the semantically close sentences  together &lt;a href="https://arxiv.org/abs/1409.3215"&gt;Sutskever et al., 2014&lt;/a&gt;. &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-1-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-2&gt;It is interesting how this resembles the brain waves and &lt;a href="https://en.wikipedia.org/wiki/Neural_oscillation"&gt;neural oscillations&lt;/a&gt;. &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-2-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-3&gt;It reminds a bit the Pointer Networks that address similar problem &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-3-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Transformer-Attention-is-all-you-need-4&gt;The additional scaling factor is advised for large &lt;span class=math&gt;\(d_k\)&lt;/span&gt; where dot product grow large in magnitude, as softmax is suspected to be pushed to vanishing gradient area, thus making the additive attention perform better.  &lt;a class=simple-footnote-back href=#sf-Transformer-Attention-is-all-you-need-4-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="NMT"></category><category term="transformer"></category><category term="Sequence transduction"></category><category term="Attention model"></category><category term="Machine translation"></category><category term="seq2seq"></category><category term="NLP"></category></entry></feed>
