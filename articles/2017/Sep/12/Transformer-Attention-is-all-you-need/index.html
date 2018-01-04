@@ -256,7 +256,7 @@ Information on sequence ordering is very important. As there is no recurrence, n
 </ul>
 <p>Thus, encoder works like this:</p>
 <div class=highlight><pre><span></span>Stage1_out = Embedding512 + TokenPositionEncoding512
-Stage2_out = layer_normalization(multihead_attention(x) + x)
+Stage2_out = layer_normalization(multihead_attention(Stage1_out) + Stage1_out)
 Stage3_out = layer_normalization(FFN(Stage2_out) + Stage2_out)
 
 out_enc = Stage3_out
@@ -273,20 +273,20 @@ The input is the <em>output embedding</em>, offset by one position to ensure tha
 <li>
 <p><strong> Stage 2 Masked Multi-head attention</strong>
 Modified to prevent positions to attend to subsequent positions.</p>
-<p>Stages 2, 3 and 4 also use the residual connection followed by normalization layer at its   output.</p>
 </li>
 </ul>
+<p>Stages 2, 3 and 4 also use the residual connection followed by normalization layer at its output.</p>
 <p>The details of each mechanism applied in the mentioned layers is more elaborated in following section.</p>
 <p>Put together decoder works as follows:</p>
 <div class=highlight><pre><span></span>Stage1_out = OutputEmbedding512 + TokenPositionEncoding512
 
-Stage2_Mask = masked_multihead_attention(Stage1_out) + Stage1_out
-Stage2_Norm1 = layer_normalization(Stage2_Mask)
+Stage2_Mask = masked_multihead_attention(Stage1_out)
+Stage2_Norm1 = layer_normalization(Stage2_Mask) + Stage1_out
 Stage2_Multi = multihead_attention(Stage2_Norm1 + out_enc) +  Stage2_Norm1
-Stage2_Norm2 = layer_normalization(Stage2_Multi)
+Stage2_Norm2 = layer_normalization(Stage2_Multi) + Stage2_Multi
 
-Stage3_FNN = FNN(Stage2_Norm2) + Stage2_Norm2
-Stage3_Norm = layer_normalization(Stage3_FNN)
+Stage3_FNN = FNN(Stage2_Norm2)
+Stage3_Norm = layer_normalization(Stage3_FNN) + Stage2_Norm2
 
 out_dec = Stage3_Norm
 </pre></div>
@@ -651,6 +651,9 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
     </li>
     <li class="list-group-item">
       <a href="https://nips.cc/" target="_blank">NIPS Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://aifrontiers.com/" target="_blank">AI Frontiers</a>
     </li>
     <li class="list-group-item">
       <a href="https://developers.google.com/machine-learning/glossary/" target="_blank">ML Glossary</a>
