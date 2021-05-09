@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Computer Vision</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/computer-vision.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2021-05-05T15:54:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</title><link href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/" rel="alternate"></link><published>2021-05-05T15:54:00+02:00</published><updated>2021-05-05T15:54:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-05:/articles/2021/May/05/MLP-Mixer/</id><summary type="html">&lt;p&gt;Let's try to answer the question: is it enough to have the FFN MLP, with matrix multiplication routines and scalar non-linearities to compete with modern architectures such as ViT or CNNs? No need for convolution, attention? It sounds that we have been here in the past. However, does it mean that the researchers are lost and go rounding in circles? It turns out that what has changes along the way is the increase in the scale of the resources and the data which originally helped ML and especially DL flourish past 5-7 years ago. We will discuss the paper which proves that MLP based solutions can replace CNN and attention based Transformers with comparable scores at image classification benchmarks and at pre-training/inference costs similar to SOTA models.&lt;/p&gt;</summary><content type="html">&lt;h4 id=tldr&gt;TL:DR&lt;a class=headerlink href=#tldr title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;MLP is all you need to get adequately comparable results to SOTA CNNs and Transformer - while reaching linear complexity in number of input pixels.&lt;/strong&gt;&lt;/p&gt;
+&lt;h4 id=contribution-of-paper&gt;Contribution of paper:&lt;a class=headerlink href=#contribution-of-paper title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Proves that MLP based architecture can be on pair with modern SOTA in terms of accuracy and computational resource trade-off for training and inference.&lt;/li&gt;
+&lt;li&gt;Mixer has linear computation complexity in number of input pixels, in contrast to ViT and similarly to CNNs.&lt;/li&gt;
+&lt;li&gt;Unlike ViT, no need for position embedding (token-mixing MLP is sensitive to the order of input tokens)&lt;/li&gt;
+&lt;li&gt;Uses standard classification head with global average pooling followed by linear classifier.&lt;/li&gt;
+&lt;li&gt;Mixer-MLP scales better than attention based counterparts for bigger training sets to an extend that it  is on pair with them. Footnote: One interesting question is what would happen with even bigger training sets than the ones used in experiments? Would Mixer supersede remaining SOTA architectures?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Raise questions on:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How useful would it be to compare the features learned from CNN/Transformer solutions and those learned from such a simple architecture?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consequently:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;What is the role of the inductive biases of such features and how they influence the generalization?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=intro&gt;Intro&lt;a class=headerlink href=#intro title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In this article we will investigate the paper:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;"MLP-Mixer: An all-MLP Architecture for Vision" Ilya Tolstikhin et al. 2021&lt;/strong&gt;: &lt;a href="https://arxiv.org/abs/2105.01601"&gt;ArXiv - Submitted on 4 May 2021&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The current, established computer vision architectures are based on CNNs and attention. The self-attention oriented modern Vision Transformer (ViT) models relies heavily on learning from raw data. The idea presented in the paper is simply to apply MLP repeatedly for spacial locations and feature channels.&lt;/p&gt;
+&lt;h3 id=motivation&gt;Motivation&lt;a class=headerlink href=#motivation title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The Transformer/CNN trend in the area has dominated research in terms of SOTA results. Authors claim that the paper goal is to initiate discussion and opening questions on how the feature learned from both the MLP and present dominating approaches can be compared? It is also interesting how the induced biases contained within the features compares and influence the ability to generalize.&lt;/p&gt;
+&lt;h3 id=the-processing-strategy-of-the-algorithm&gt;The processing strategy of the algorithm&lt;a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Similarly to the  &lt;a href="https://arxiv.org/abs/2105.01601"&gt;&lt;em&gt;Vision Transformer&lt;/em&gt;&lt;/a&gt;. Each input image is divided into a grid of linearly projected, non-overlapping &lt;span class=math&gt;\(16\times 16\)&lt;/span&gt; pixel patches (&lt;em&gt;tokens&lt;/em&gt;). Patches are put into one table of &lt;span class=math&gt;\(patches\times channels\)&lt;/span&gt; as an input for the architecture. This is conversely to previous architectures, where patches would be unrolled into one, single vector of consecutive patches.&lt;/p&gt;
+&lt;p&gt;The patches are basic parts that the architecture is working on as they are propagated through the network. The Mixer stacked layers are all of the same size. This is unlike CNNs where we shrink the resolution, but increase the channels.   &lt;/p&gt;
+&lt;p align=center&gt;&lt;img alt="MLP-Mixer general architecture" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer.png"&gt;
+&lt;br&gt;
+Figure 1. MLP-Mixer general architecture.&lt;/p&gt;
+&lt;p&gt;At first every patch is feed through per-patch, fully connected layer, providing the latent vector representation (embeddings) per each patch. This is then passed to multiple &lt;em&gt;Mixer layers&lt;/em&gt; of the same size – each layer build out of two MLP blocks.&lt;/p&gt;
+&lt;p&gt;There are two types of Mixer-MLP blocks that acts on rows and columns of the input table:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Token-Mixing&lt;/strong&gt; ; &lt;span class=math&gt;\(Channels \times Patches\)&lt;/span&gt; (acts on columns) enables &lt;em&gt;communication across different spacial locations&lt;/em&gt; (tokens) of an image present in a single channel. A single column of the input table collects all tokens’ parts (across different patches) of a single channel.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Channel-Mixing&lt;/strong&gt; &lt;span class=math&gt;\(Patches \times Channels\)&lt;/span&gt; (acts on rows); enables communication across different channels as their input is an individual token as a row from the input table.    &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;MLP-Mixer use the idea of small kernel convolutions. The channel-mixing MLP_2 with &lt;span class=math&gt;\(1\times1\)&lt;/span&gt; convolutions becomes effectively dense matrix multiplication applied independently to each spacial location. However, it does not allow aggregation of cross-spacial information. This motivates the token-mixing MLP_1 phase that includes the dense matrix multiplications applied to each feature/channel across all spatial locations.&lt;/p&gt;
+&lt;h4 id=the-mlp-block-structure&gt;The MLP block structure&lt;a class=headerlink href=#the-mlp-block-structure title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The latent representation of patches form the fully-connected layer is first feed into the &lt;em&gt;token-mixer&lt;/em&gt; in a &lt;span class=math&gt;\(channel x patch\)&lt;/span&gt; table. Whit that in mind, it takes all the patches (columns) per channel (row) and feeds it to the  &lt;em&gt;MLP1&lt;/em&gt; (two fully connected layers connected with GELU). Each MLP consists of two fully-connected layers and a non-linearity - GELU -  applied independently to each row of its input data tensor.&lt;/p&gt;
+&lt;p&gt;The Mixer approach, is based on the idea that channels in individual patches mean similar things. It is because they come from same function of the per-patch fully-connected layer. This first layer put same object information into same channels for different patches. Thus, as they mean similar things, we will group them by channels, and aggregate over all patches within each channel. Therefore each channel have same information in form of feature.&lt;/p&gt;
+&lt;p align=center&gt;&lt;img alt="MLP-Mixer layer details" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer-layer.png"&gt;
+&lt;br&gt;
+Figure 2. Detailed architecture schema of MLP-Mixer layer.&lt;/p&gt;
+&lt;p&gt;Each of the patches is feed through the same &lt;em&gt;MLP1&lt;/em&gt; with shared weights across all columns of the input table. Thus, we are dealing here with a dense matrix multiplication with a weight sharing across same channel of different patches&lt;sup id=sf-MLP-Mixer-1-back&gt;&lt;a href=#sf-MLP-Mixer-1 class=simple-footnote title="Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention."&gt;1&lt;/a&gt;&lt;/sup&gt;. In token-mixing, the &lt;em&gt;MLP_1&lt;/em&gt; share the same kernel (of full receptive field) for all of the channels. Therefore, if a channel reacts as a feature across the patches, it is easy to aggregate all the patches that include this feature.&lt;/p&gt;
+&lt;p&gt;Second stage is to transpose back to &lt;span class=math&gt;\(patches x channels\)&lt;/span&gt; and repeat same  computation in &lt;em&gt;MLP_2&lt;/em&gt; however, this time with weight sharing across all patches (rows of the input table). This kind of sharing provides positional invariance, which happens to also be part of CNNs. For each patch we apply computation across all of the channels (features) of that patch.&lt;/p&gt;
+&lt;p&gt;Other components include: skip-connections, dropout, layer norm on the channels, and linear classifier head&lt;/p&gt;
+&lt;h3 id=objective-or-goal-for-the-algorithm&gt;Objective or goal for the algorithm&lt;a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The general idea of the MLP-Mixer is to separate the &lt;em&gt;channel-mixing&lt;/em&gt; (per-location) operations and the &lt;em&gt;cross-location&lt;/em&gt; (token-mixing) operations. This is what distinguish it from the solutions described in following section.
+This way if we aggregate among the same channels (token-mixing) then if a channel reacts across the patches we can aggregate all the patches that have that feature because the feature producing map was shared.&lt;/p&gt;
+&lt;p&gt;Mixer computational complexity is linear in the number of input patches (input sequence length) in token-mixing, conversely to the previous ViT architecture - whose computational complexity is quadratic. Additionally, as the channel hidden width in channel-mixing, is also independent of the patch size, the overall complexity is &lt;strong&gt;linear&lt;/strong&gt; in the number of pixels. Which is also the case with CNNs.&lt;/p&gt;
+&lt;h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm&gt;Metaphors, or analogies to other architectures describing the behavior of the algorithm&lt;a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The MLP-Mixer does not use the convolutions, nor self-attention - which are heavily used by the current successful architectures.&lt;/p&gt;
+&lt;p&gt;Reference to remaining, modern vision architectures can be based on two techniques of layers that mix features at:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;one spatial location&lt;/li&gt;
+&lt;li&gt;across different spatial locations,&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Both of those can be applied exclusively, or at once.&lt;/p&gt;
+&lt;p&gt;In CNNs - deeper layers have larger receptive field – with &lt;span class=math&gt;\(N \times N, N&amp;gt;1\)&lt;/span&gt; convolutions and pooling implement the second approach while with &lt;span class=math&gt;\(1 \times 1\)&lt;/span&gt; would use first one.  &lt;br&gt;
+The Mixer architecture is a very special case of CNN with &lt;span class=math&gt;\(1 \times 1\)&lt;/span&gt; convolutions in channel-mixing, and for token-mixing it is a single-channel depth-wise convolution of a full receptive field with parameter sharing. Conversely, CNNs are not special cases of MLP-Mixer as the plain matrix multiplication of Mixer is less complex than costly convolutions specialized implementation.&lt;/p&gt;
+&lt;p&gt;While referring to the attention-based architectures such as Vision Transformers, the self-attention enables both techniques while the MLP blocks are focusing only on the first one.&lt;/p&gt;
+&lt;p&gt;The Mixer architecture embrace both techniques (using MLPs), but separates them clearly: the first, per-location operations is implemented in &lt;em&gt;channel-mixing&lt;/em&gt;, and the cross-location operations are implemented with the &lt;em&gt;token-mixing&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Similarly to Transformers, each layer in Mixer (except for the initial patch projection layer) takes an input of the same (aka &lt;em&gt;isotropic&lt;/em&gt;) size. This is in contrast to typical CNN that have a pyramidal structure: deeper layers have a lower resolution input, but more channels&lt;sup id=sf-MLP-Mixer-2-back&gt;&lt;a href=#sf-MLP-Mixer-2 class=simple-footnote title="One can also refer to one of the non-typical designs, of other combinations such as isotropic ResNets and pyramidal ViTs."&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb&lt;a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Authors have commenced series of tests with couple of parameters. The patch resolution e.g. &lt;span class=math&gt;\(16 \times 16\)&lt;/span&gt;. The scale expressed in number of mixer layers: &lt;strong&gt;S&lt;/strong&gt;mall: 8, &lt;strong&gt;B&lt;/strong&gt;ig: 16, &lt;strong&gt;L&lt;/strong&gt;arge: 24 and &lt;strong&gt;H&lt;/strong&gt;uge: 32 following the &lt;a href="https://arxiv.org/abs/2105.01601"&gt;&lt;em&gt;Vision Transformer (ViT)&lt;/em&gt;&lt;/a&gt; paper approach&lt;sup id=sf-MLP-Mixer-3-back&gt;&lt;a href=#sf-MLP-Mixer-3 class=simple-footnote title="One of the authors has actually also coauthored that ViT paper."&gt;3&lt;/a&gt;&lt;/sup&gt;.      &lt;/p&gt;
+&lt;p&gt;The results of the experiments shows that the MLP-Mixer is comparable with current SOTA however, is not as good. Therefore, authors have found a metric that distinguish the Mixer architecture. It is the &lt;em&gt;Throuput&lt;/em&gt; (column 5 in the below figure) defined as number of images per second per computation core.&lt;/p&gt;
+&lt;p align=center&gt;&lt;img alt="MLP-Mixer layer details" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/Mixer-Throughput.png"&gt;
+&lt;br&gt;
+Figure 3. Transfer performance, inference throughput, and training cost.Sorted by inference throughput.&lt;/p&gt;
+&lt;p&gt;Additionally, authors have found out that on a very particular task of training linear 5-shoot classifier on frozen representation of what the model outcomes evaluated on Top-1 accuracy.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: Top-1 accuracy is the conventional accuracy, model prediction (the one with the highest &amp;gt;probability) must be exactly the expected answer. It measures the proportion of examples for &amp;gt;which the predicted label matches the single target label.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This has been evaluated, and discussed in context of the role of model scale.&lt;/p&gt;
+&lt;h4 id=scalability-mixer-is-catching-up&gt;Scalability - Mixer is catching up&lt;a class=headerlink href=#scalability-mixer-is-catching-up title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;With training set size increase the authors state that the scalability of Mixer is much more favorably comparing to big transfer (BiT) that plateaus and is on pair with ViT. Moreover, in all cases the differences in the scalability performance of Mixer is getting very close, if not same, as remaining models.&lt;/p&gt;
+&lt;p align=center&gt;&lt;img alt="MLP-Mixer layer details" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/Top1-scalability.png"&gt;
+&lt;br&gt;
+Figure 4. Transfer performance, inference throughput, and training cost.Sorted by inference throughput.&lt;/p&gt;
+&lt;p&gt;This is the most significant result, but authors compare also some more tasks, for details please refer to the paper.
+The conclusion from the results however might be, that the smaller the training set, the worse the Mixer performs in terms of pre-training, and the bigger training set, the gap between the Mixer and remaining architectures (ViT, BiT) shrinks.&lt;/p&gt;
+&lt;h4 id=weight-visualization&gt;Weight visualization&lt;a class=headerlink href=#weight-visualization title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p align=center&gt;The weight visualization analysis confirm the general assumption on how we observe the neural network work. In the image we see that lower layers learn first the most general features (left), then go to bit larger ones (middle) and the detailed (right).
+&lt;img alt="MLP-Mixer weight visualization" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer-Weights.png"&gt;
+&lt;br&gt;
+Figure 5. MLP-Mixer input weights to hidden units visualization in token-mixing MLPs of Mixer-B/16 model trained on JFT-300M proprietary Google dataset used for training image classification models.&lt;/p&gt;
+&lt;p&gt;Interestingly the weights visualization differs based on the type of the training set that authors have used:&lt;/p&gt;
+&lt;h3 id=what-classes-of-problem-is-the-algorithm-well-suited&gt;What classes of problem is the algorithm well suited?&lt;a class=headerlink href=#what-classes-of-problem-is-the-algorithm-well-suited title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The architecture seems useful especially for big scale training sets of vision tasks - as tested according to the description in next section. However, it might as well be applied to some NLP tasks however, with adequately prepared text “patches”.  &lt;/p&gt;
+&lt;h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm&gt;Common benchmark or example datasets used to demonstrate the algorithm&lt;a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Comparing to CNN or attention based is claimed to be on pair with the existing SOTA methods in terms of the trade-off between accuracy and computational resources required for training and inference.
+Authors have testesd downstream tasks such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ILSVRC2012 “ImageNet” (1.3M training examples, 1k classes) with the original validation labels and cleaned-up ReaL labels,&lt;/li&gt;
+&lt;li&gt;CIFAR-10/100 (50k examples, 10/100 classes),&lt;/li&gt;
+&lt;li&gt;Oxford-IIIT Pets (3.7k examples, 36 classes), and&lt;/li&gt;
+&lt;li&gt;Oxford Flowers-102 (2k examples, 102 classes) and also evaluate on the&lt;/li&gt;
+&lt;li&gt;Visual Task Adaptation Benchmark (VTAB-1k), which consists of 19 diverse datasets, each with 1k training examples.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-MLP-Mixer-1&gt;Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention. &lt;a href=#sf-MLP-Mixer-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-2&gt;One can also refer to one of the non-typical designs, of other combinations such as &lt;a href="https://arxiv.org/abs/1909.03205"&gt;isotropic ResNets&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/2102.12122"&gt;pyramidal ViTs&lt;/a&gt;. &lt;a href=#sf-MLP-Mixer-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-3&gt;One of the authors has actually also coauthored that ViT paper. &lt;a href=#sf-MLP-Mixer-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"></category><category term="MLP"></category><category term="Transformer"></category><category term="CV"></category><category term="ViT"></category></entry></feed>

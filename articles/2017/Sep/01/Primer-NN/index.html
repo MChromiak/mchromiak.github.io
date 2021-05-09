@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <link href="/static_files/img/favicon.jpg" rel="icon">
+    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
 
-<link rel="canonical" href="/articles/2017/Sep/01/Primer-NN/">
+<link rel="canonical" href="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/">
 
         <meta name="author" content="Michał Chromiak" />
         <meta name="keywords" content="basics" />
@@ -19,9 +19,9 @@
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="Neural Networks Primer"/>
-        <meta property="og:url" content="/articles/2017/Sep/01/Primer-NN/"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/"/>
         <meta property="og:description" content="When you approach a new term you often find some Wiki page, Quora answers blogs and it sometimes might take some time before you find the true ground up, clear definition with meaningful example. I will put here the most intuitive explanations of basic topics. Due to extended nature of aspects and terms that are used across NN area, in this post I will place condensed definitions and a brief explanations – just to understand the intuition of terms that are mentioned in other posts along this blog."/>
-            <meta property="og:image" content="/articles/2017/Sep/01/img/cover_net.jpeg" />
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2017/Sep/01/img/cover_net.jpeg" />
 
         <meta property="article:published_time" content="2017-09-01" />
             <meta property="article:section" content="ML Dojo" />
@@ -33,24 +33,26 @@
     <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@drChromiak">
         <meta name="twitter:creator" content="@drChromiak">
-    <meta name="twitter:domain" content="">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
         <meta property="twitter:image"
-              content="/articles/2017/Sep/01/img/cover_net.jpeg"/>
+              content="https://mchromiak.github.io/articles/2017/Sep/01/img/cover_net.jpeg"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
-    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="/theme/css/pygments/colorful.css" rel="stylesheet">
-    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
-        <link href="/static_files/css/custom.css" rel="stylesheet">
+    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
 
-        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
               title="Michał Chromiak's blog ATOM Feed"/>
 
 
 
+        <link href="https://mchromiak.github.io/feeds/ml-dojo.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ML Dojo ATOM Feed"/>
 
 </head>
 <body>
@@ -64,24 +66,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">
-<img class="img-responsive pull-left gap-right" src="/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                         <li><a href="/pages/about.html">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
                              About
                           </a></li>
-                         <li><a href="/pages/categorisation.html">
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
                              Categorisation
                           </a></li>
-                         <li><a href="/pages/contact-detail.html">
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
                              Contact detail
                           </a></li>
-                         <li><a href="/pages/links.html">
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
                              Links
                           </a></li>
-                         <li><a href="/pages/resources.html">
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
                              Resources
                           </a></li>
             </ul>
@@ -97,15 +99,15 @@
     <div class="row">
         <div class="col-sm-9">
             <ol class="breadcrumb">
-                <li><a href="" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
-                <li><a href="/category/ml-dojo.html" title="ML Dojo">ML Dojo</a></li>
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/ml-dojo.html" title="ML Dojo">ML Dojo</a></li>
                 <li class="active">Neural Networks Primer</li>
             </ol>
     <section id="content">
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="/articles/2017/Sep/01/Primer-NN/"
+                    <a href="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/"
                        rel="bookmark"
                        title="Permalink to Neural Networks Primer">
                         Neural Networks Primer
@@ -127,18 +129,18 @@
 
 
             <span class="label label-default">By</span>
-            <a href="/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
-        <a href="/category/ml-dojo.html">ML Dojo</a>
+        <a href="https://mchromiak.github.io/category/ml-dojo.html">ML Dojo</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="/tag/basics.html">basics</a>
+	<a href="https://mchromiak.github.io/tag/basics.html">basics</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-<img src="/articles/2017/Sep/01/img/cover_net.jpeg" alt="article cover">
+<img src="https://mchromiak.github.io/articles/2017/Sep/01/img/cover_net.jpeg" alt="article cover">
                 <p>If any of the topic will grow enough I will put it into a separate post. To get in-depth understanding I recommend for:</p>
 <ul>
 <li><strong>NLP:</strong> the Yoav Goldberg's, 2016 <a href="https://www.jair.org/media/4992/live-4992-9623-jair.pdf">A Primer on Neural Network Models for Natural Language Processing</a></li>
@@ -171,7 +173,7 @@
 <h3 id=encoder-decoder-scheme>Encoder-Decoder scheme<a class=headerlink href=#encoder-decoder-scheme title="Permanent link">🔗</a></h3>
 <p><strong>Seq2seq modeling</strong> is a synonym of <strong>recurrent neural network based encoder-decoder architectures</strong> (<a href="https://arxiv.org/abs/1409.3215">Sutskever et al., 2014;</a> and <a href="https://arxiv.org/abs/1409.0473">Bahdanau et al., 2014</a>).
 Let us <em>“unroll”</em> the scheme into <span class=math>\(M\)</span> encoder steps and <span class=math>\(N\)</span> decoder steps of hidden states <span class=math>\(h\)</span>.</p>
-<p align=center><img alt="Encoder Decoder architecture " src="/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png">
+<p align=center><img alt="Encoder Decoder architecture " src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png">
 <br>
 Figure 1. <b>Encoder-decoder architecture</b> – example of a general approach for NMT.
 An encoder converts a source sentence into a "meaning" vector which is passed through a <i>decoder</i> to produce a translation.</p>
@@ -198,7 +200,7 @@ An encoder converts a source sentence into a "meaning" vector which is passed th
 </ul>
 <p>To avoid the memorization problem there has been research on the <em>attention</em> mechanism.</p>
 <h3 id=attention-basis>Attention basis<a class=headerlink href=#attention-basis title="Permanent link">🔗</a></h3>
-<p>The most intuitive <strong>attention definition</strong> I know is the one contained within <a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">paper about Transformer architecture</a>:</p>
+<p>The most intuitive <strong>attention definition</strong> I know is the one contained within <a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">paper about Transformer architecture</a>:</p>
 <blockquote>
 <p>An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.</p>
 </blockquote>
@@ -210,21 +212,21 @@ An encoder converts a source sentence into a "meaning" vector which is passed th
 <div class=math>$$ \begin{eqnarray} out = \sum_{i=1}^k \theta_i x_i \end{eqnarray}$$</div>
 <p>Hence, networks that use attention, attend only on a part of the input sequence while still providing the output sentence. So one can image it as giving an auxiliary input for the network in form of linear combination. What is the clue here is that the weights of the linear combination are controlled by the network. It has been tested across multiple areas such as NMT or speech recognition.</p>
 <p>In an encoder-decoder architecture for the embedding (fixed size vector) of a long sentence brings the problem of long dependency (e.g. in fixed-size encoded vector <span class=math>\(h^E_N\)</span>, where end word of the sentence depends on the starting word <span class=math>\(h^E_1\)</span>). And long dependencies, is where RNN have problems. Even though “hacks” such as reverse/double feeding of the source sentence, or the LSTMs (memory), are sometimes improving the performance however, they do not always work perfectly<sup id=sf-Primer-NN-5-back><a href=#sf-Primer-NN-5 class=simple-footnote title="E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input.">5</a></sup>. It is because the state and the gradient in LSTM would start to make the gradient vanish. It is called “long” time memory but its not that long to work e.g. for 2000 words. This is where <em>convolutions</em> came in.</p>
-<p align=center><img alt="WaveNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/WaveNet.gif" title="WaveNet architecture">
-<img alt="ByteNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/ByteNet.png" title="ByteNet architecture">
+<p align=center><img alt="WaveNet architecture" src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/WaveNet.gif" title="WaveNet architecture">
+<img alt="ByteNet architecture" src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/ByteNet.png" title="ByteNet architecture">
 <br>
 Figure 2. WaveNet (left; sound) (<a href="https://deepmind.com/blog/wavenet-generative-model-raw-audio/">image courtesy</a>) and ByteNet (right; NLP) architecture (Image acquired from <a href="https://arxiv.org/abs/1610.10099">Neural Machine Translation in Linear Time, Kalchbrenner et. al 2016</a>).</p>
 <p>This is why the fixed size encoding might be a bottleneck of performance. This is where the attention comes in.</p>
 <p><em>Attention</em>  is used as an alternative to memorizing and input manipulations. Here the model search for parts  of a source sentence (not fixed size vector) that are relevant to predicting a target word, and it should attend to, based on what it has learned in the past <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>.</p>
-<p align=center><img alt="Attention architecture" src="/articles/2017/Sep/01/Primer-NN/img/attention.png" title="Attention architecture2">
+<p align=center><img alt="Attention architecture" src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/attention.png" title="Attention architecture2">
 <br>
 Figure 2. Attention architecture.</p>
 <p>In this case, the larger  <span class=math>\(\theta_{1,2}\)</span>  would be the more decoder pays attention for the <span class=math>\(y_3\)</span> (third output word) in relation to other words as all weights (<span class=math>\(\theta\)</span>s) are normalized to sum to <span class=math>\(1\)</span>.</p>
-<p align=center><img alt="Attention architecture" src="/articles/2017/Sep/01/Primer-NN/img/EncDecAttention.gif" title="Attention architecture3">
+<p align=center><img alt="Attention architecture" src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/EncDecAttention.gif" title="Attention architecture3">
 <br>
 Figure 3. “Attention”; the blue link transparency represents how much the decoder pays attention to an encoded word. Less transparent, more attention. <a href="https://research.googleblog.com/2016/09/a-neural-network-for-machine.html">Google Blog</a> also <a href="https://google.github.io/seq2seq/">general-purpose encoder-decoder framework for Tensorflow</a></p>
 <p>It is well visualized in an <span class=math>\(\theta\)</span> matrix for French-English translation (See Figure Adopted form <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>)</p>
-<p align=center><img alt="Attention matrix " src="/articles/2017/Sep/01/Primer-NN/img/attentionmatrix.png">
+<p align=center><img alt="Attention matrix " src="https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/img/attentionmatrix.png">
 <br>
 Figure 4. Attention matrix. Adopted form <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>)</p>
 <p>In French input sentence two words “<em>la zone</em>” are especially target for attention when translating to English “<em>Area</em>”.</p>
@@ -415,7 +417,7 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
 
-                var disqus_url = '/articles/2017/Sep/01/Primer-NN/';
+                var disqus_url = 'https://mchromiak.github.io/articles/2017/Sep/01/Primer-NN/';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -443,7 +445,7 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
             <aside>
 <div id="aboutme">
         <p>
-            <img width="100%" class="img-thumbnail" src="/static_files/img/me.png"/>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
         </p>
     <p>
       <strong>About Michał Chromiak</strong><br/>
@@ -471,9 +473,9 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
-    <li class="list-group-item"><a href="/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
-    <li class="list-group-item"><a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -483,16 +485,16 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
   <ul class="list-group" id="categories">
     <li class="list-group-item">
-      <a href="/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
     </li>
     <li class="list-group-item">
-      <a href="/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
     </li>
     <li class="list-group-item">
-      <a href="/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
     </li>
     <li class="list-group-item">
-      <a href="/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
     </li>
   </ul>
 </li>
@@ -500,73 +502,73 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 
 <!-- Sidebar/Tag Cloud -->
 <li class="list-group-item">
-  <a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <a href="https://mchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
   <ul class="list-group list-inline tagcloud" id="tags">
     <li class="list-group-item tag-4">
-      <a href="/tag/application.html">application</a>
+      <a href="https://mchromiak.github.io/tag/application.html">application</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="/tag/attention-model.html">Attention model</a>
+      <a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/basics.html">basics</a>
+      <a href="https://mchromiak.github.io/tag/basics.html">basics</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/bert.html">BERT</a>
+      <a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/cv.html">CV</a>
+      <a href="https://mchromiak.github.io/tag/cv.html">CV</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/elmo.html">ELMo</a>
+      <a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/ernie-10.html">ERNIE 1.0</a>
+      <a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/language-model.html">language model</a>
+      <a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="/tag/machine-translation.html">Machine translation</a>
+      <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/mlp.html">MLP</a>
+      <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/ngram.html">ngram</a>
+      <a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="/tag/nlp.html">NLP</a>
+      <a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="/tag/nmt.html">NMT</a>
+      <a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/openai-gpt.html">OpenAI GPT</a>
+      <a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/patternrecognition.html">PatternRecognition</a>
+      <a href="https://mchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/perplexity.html">perplexity</a>
+      <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="/tag/seq2seq.html">seq2seq</a>
+      <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="/tag/sequence-transduction.html">Sequence transduction</a>
+      <a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/smoothing.html">smoothing</a>
+      <a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="/tag/transformer.html">Transformer</a>
+      <a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/vit.html">ViT</a>
+      <a href="https://mchromiak.github.io/tag/vit.html">ViT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="/tag/xlnet.html">XLNet</a>
+      <a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
     </li>
   </ul>
 </li>
@@ -624,23 +626,23 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
-          <a href="/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
           </a>
         </li>
   </ul>
@@ -668,17 +670,17 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
       </div>
    </div>
 </footer>
-<script src="/theme/js/jquery.min.js"></script>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/theme/js/bootstrap.min.js"></script>
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="/theme/js/respond.min.js"></script>
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
 
-    <script src="/static_files/js/custom.js"></script>
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
 
-    <script src="/theme/js/bodypadding.js"></script>
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
     <!-- Disqus -->
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -709,6 +711,6 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 
         <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
-    <script src="/static_files/js/article.js"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
 </body>
 </html>
