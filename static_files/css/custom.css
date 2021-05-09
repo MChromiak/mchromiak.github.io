@@ -153,18 +153,19 @@ i.fa-external-link {
       or <article-title>/img if included inside content of article
 */
 .summary {
+  width: 800px;
 //  border: 1px solid black;
   overflow: auto;
 }
 
 .cover {
-  width: 215px;
+  width: 800px;//215px;
   float:left; /* add this */
   //border: 1px solid red;
 }
 
 .cover img {
-    width: 200px;
+    width: 800px;//200px;
     border: 1px solid #bbb;
     border-radius: 3px;
     //padding: 4px;

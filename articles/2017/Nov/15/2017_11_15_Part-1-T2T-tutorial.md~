@@ -1,0 +1,80 @@
+Title: Tensor2Tensor tutorial [Part 1] - One model to learn them all.
+Status: draft
+Category: ML Dojo
+Date: 2017-11-15 19:30
+Modified: 2017-11-15 19:30
+Tags: tensorflow, T2T, MultiModel, seq2seq
+Slug: Tensor2Tensor-Tutorial-Part1
+Related_posts: Transformer-Attention-is-all-you-need
+Cover: articles/2017/Nov/15/img/RingCover.jpg
+Summary: Tensor2Tensor (T2T) is on open-source framework (originating form Google Brain Team) and binaries for supervised learning with TensorFlow made to boost models' utilization and inter-model comparisons with a focus on sequence tasks. T2T  addresses the challenge of modularity and portability for models being trained and executed on TF. However, it is hard to find any comprehensive tutorials on Tensot2Tensor. This tutorial will elaborate on *Tensot2Tensor*’s architecture and applications, with code examples. </br></br>This blog post is the first part of the Tensot2Tensor tutorial. Second part of Tensor2Tensor tutorial will be linked here when its ready.
+#### TL;DR
+**Main features:**
+
+* T2T is a framework to define ML pipeline like a puzzle with exchangeable parts and provides multiple state-of-the-art baseline models, datasets and tuning parameters out-of-the-box; and new ones can be added easily
+* Many datasets across modalities - text, audio, image - available for generation and use, and new ones can be added easily
+* Easily swap amongst datasets and models by command-line flag with the data generation script `t2t-datagen` and the training script `t2t-trainer`
+* Models can be used with any dataset and input mode (or even multiple); all modality-specific processing (e.g. embedding lookups for text tokens) is done with `Modality` objects, which are specified per-feature in the dataset/task specification
+* Support for multi-GPU machines and synchronous (1 master, many workers) and asynchronous (independent workers synchronizing through a parameter server) distributed training
+
+### Intro
+In June 2017 Google Bran Team has [announced](https://research.googleblog.com/2017/06/accelerating-deep-learning-research.html) release of Tensor2Tensor (T2T) open-source system for training deep learning models in TensorFlow. Its name comes from the fact that each module of the architecture, that covers one step in ML pipeline, accepts an input tensor, transforms it with a function, and outputs a result in form of tensor as well. Experimenting with evaluating new combinations of models, datasets and other parameters is where t2t shines the most at the moment however, its multi-modal learning capabilities originated form MultiModel are truly amazing.
+### Motivation
+The idea originates form the paper [One Model To Learn Them All](https://arxiv.org/abs/1706.05137) where it is stated that a model can be trained not only on one domain task, but in a multi-domain manner. It provides means for training one model concurrently on many tasks, from different domains like translation, image classification and speech recognition. So the model is capable of **transferring knowledge** across heterogeneous domains. As such, t2t is an approach towards the convergence of vision, audio and language understanding into a single network.
+Overall T2T’s goal is to make it much easier and faster to use state-of-the-art models, compare them, or use for multiple ML application domains, while at the same time require less foundational engineering work. Concretely, t2t acts like a workbench where you can mix and match a few basic components. Library provides framework to use existing models, that are already implemented out-of-the-box, as well as using user-defined, custom models that might be totally new, customized or are simply just an incremental work towards already published architectures. The models that are already implemented within T2T library are some of the most recent ones, such as the [Transformer](../../../../2017/Sep/12/Transformer-Attention-is-all-you-need/), MultiModel, Nural GPU, ByteNet, SliceNet etc.  
+### Tensor2Tensor - architecture
+The framework is of course based on TensorFlow tools, abstracting commonly-used deep-learning model pipelines into an extensible object model with standardized APIs for components needed in TF training. The unified interfaces makes it more standardized to handle the most common DL system components such as: datasets, models, optimizers, [learning rate decay schemes](../../../../2017/Sep/01/Primer-NN/#learning-rate-schemes), hyperparameters etc. One can simply pick a dataset, pre-trained model, optimizer, set of hyperparameters and just run such a configuration to find out how it performs.
+
+**Modularity**[ref]Google also provided less modular tool in form of [google/seq2seq](https://github.com/google/seq2seq) [/ref] of t2t is based on tensors. This means that each stage of ML pipeline (ie .between input data sequence  and output prediction sequence) is a **function** that maps input tensor to output tensor. Here is why we call it **tensor-to-tensor**. This way adding e.g. a new model is limited to providing a tenstor-to-tensor function that will be placed in right spot of the whole setup, letting the remaining parts (like embedding, loss etc.) unchanged. Every piece of the puzzle can be replaced by adequate other piece in just a several dozen of lines of code. Such an easy modular swapping enables fast and reliable way to compare each part of pipeline.
+
+As already mentioned, this means that arbitrary model plugged inside t2t can be trained on different tasks from different domains (referred in t2t as **modalities**; such as sound, vision, text). The cherry-pick of this is that a single model training can be commenced jointly  (See [MultiModel](https://arxiv.org/abs/1706.05137) which proof-of-concept is implemented in t2t) on different modalities. This way tasks with more training data can serve to train and apply learned model to tasks with less training data - e.g., an image recognition task can improve performance on a language task. This way one can tackle even eight (See [MultiModel](https://arxiv.org/abs/1706.05137) tasks of different *modalities* at once. T2T includes library of datasets and models from different modalities, drawn from recent SOTA papers.
+
+As a framework, t2t is not confined to just one model or dataset. Present implementation includes some of the most established concepts. For instance, some of the included datasets involve:
+
+* image classification: MNIST, CIFAR-10, CIFAR-100, ImageNet
+* image captioning: [MS COCO](http://mscoco.org/)
+* speech recognition: [WSJ](https://catalog.ldc.upenn.edu/ldc94s13a)
+* language modeling; LM1B
+* translation: [WMT](http://www.statmt.org/wmt16/translation-task.html)
+* [Penn Treebank](https://catalog.ldc.upenn.edu/ldc99t42) parsing corpus.
+
+The above datasets are referred as **Problems** along the framework terminology. The full *problem* list is available after issuing binary `t2t-trainer –registry_help`, which additionally provides details on remaining key ingredients used along DL processing, that are: *Models*, *Hparams* or *RangedHParams* configurations, and *Modalities*.
+
+**Best practices** are already included out-of-the-box in t2t in form of generating scripts. Those scripts handles all of the configuration pieces mentioned in previous paragraph[ref]eg. the correct padding of sequences and the corresponding cross-entropy loss, well-tuned parameters for the Adam optimizer, adaptive batching, synchronous distributed training, well-tuned data augmentation for images, label smoothing, and a number of hyper-parameter configurations that worked very well[/ref], as well as a standard interface between these components. Those predefined configurations are tuned to fit the current state-of-the-art results.
+
+### Tensor2Tensor - processing strategy
+
+Focusing on a research topic and repeating experiments to compare and exchange results rather than orchestrating TF pipelines is what t2t is good at. The core TF python APIs are abstracted by t2t to assure layers of object interfaces enables use of TF pipeline components like serialization or compression.
+
+The datasets are stored using [TFRecord](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/lib/io/tf_record.py) [protobuf](https://github.com/google/protobuf) standard TF format files.
+
+### Example:
+
+There is nothing more clear than an example on how to use the T2T. There are two ways to use the t2t framework. One is with binaries provided in the [bin](https://github.com/tensorflow/tensor2tensor/tree/master/tensor2tensor/bin) directory and some basic use of the exemplary *transformer*  model for En-De translation using GPU is provided by authors in a simple [walkthrough](https://github.com/tensorflow/tensor2tensor#walkthrough).
+
+The second usage is simply importing *tenesor2tensor* into your python code. Authors have also provided a two simple use cases with code examples of MNIST and translation tasks, that can can investigated using the Google colaboratory [notebook](https://colab.research.google.com/notebook#fileId=/v2/external/notebooks/t2t/hello_t2t.ipynb&scrollTo=EB4MP7_y_SuQ).
+Lets try to explain and follow the examples with additional commentary.
+
+#### Tensor2Tensor on translation task.
+To use the tensor to tensor we will have to install the `tensor2tensor` and the `tf-nightly` packages. We will use the `tf-nightly` as it has [introduced](https://research.googleblog.com/2017/10/eager-execution-imperative-define-by.html) the Eager Evaluation:
+ >Eager execution is not included in the latest release (version 1.4) of TensorFlow. To use it, you will need to build TensorFlow from source or install the nightly builds. ([TF Eager Doc](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/eager/python/g3doc/guide.md))
+
+There are official [examples](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/eager)  on Eager TensorFlow.
+
+
+<iframe name="notebook" src="./T2T_with_TF_Eager.html" width=860 height=300 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling=no> Turn on iframes</iframe>
+
+
+### Objective or goal for the algorithm
+### Metaphors or analogies are commonly used to describe the behavior of the algorithm?
+### Pseudocode or flowchart description of the algorithm
+### Heuristics or rules of thumb
+### What classes of problem is the algorithm well suited?
+### Common benchmark or example datasets used to demonstrate the algorithm
+### Useful resources for learning more about the algorithm
+### Primary references or resources in which the algorithm was first described
+
+## My implementation
+
+---
+#### References:

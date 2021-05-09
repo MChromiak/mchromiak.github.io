@@ -221,9 +221,8 @@ The simplest case of <em>Markov assumption</em> is case when the size of prefix 
 However, if we consider a 2-word (tandem) bigrams correlations where we condition each word on previous one we get some sens of meaning between couples of words.</p>
 <div class="math">$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$</div>
 <p>This way we get a sequence of tandems that have meaning tandem-wise. This still is not enough to face a long range dependencies from natural languages, like English. This would be difficult even in case of n-grams as there can be very long sentences with dependencies. However, a 3-gram can get us a pretty nice <a href="http://tetration.xyz/Ngram-Tutorial/">approximation</a>.</p>
-<div class="highlight"><pre><span></span>and how he probably more easily believe me i never see how much as that he and pride and unshackled
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>and how he probably more easily believe me i never see how much as that he and pride and unshackled
+</code></pre></div>
 
 <h4 id="estimate-n-gram-probabilities">Estimate n-gram probabilities<a class="headerlink" href="#estimate-n-gram-probabilities" title="Permanent link">🔗</a></h4>
 <p>Estimation can be done with <strong>Maximum Likelihood Estimate (MLE)</strong>:</p>
@@ -273,11 +272,14 @@ normalize by unigrams -->
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -291,6 +293,8 @@ normalize by unigrams -->
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -311,6 +315,8 @@ normalize by unigrams -->
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -395,9 +401,9 @@ normalize by unigrams -->
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
     <li class="list-group-item"><a href="/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
     <li class="list-group-item"><a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
-    <li class="list-group-item"><a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -408,6 +414,9 @@ normalize by unigrams -->
   <ul class="list-group" id="categories">
     <li class="list-group-item">
       <a href="/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
     </li>
     <li class="list-group-item">
       <a href="/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
@@ -436,6 +445,9 @@ normalize by unigrams -->
       <a href="/tag/bert.html">BERT</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="/tag/cv.html">CV</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="/tag/elmo.html">ELMo</a>
     </li>
     <li class="list-group-item tag-4">
@@ -446,6 +458,9 @@ normalize by unigrams -->
     </li>
     <li class="list-group-item tag-2">
       <a href="/tag/machine-translation.html">Machine translation</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/mlp.html">MLP</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="/tag/ngram.html">ngram</a>
@@ -474,8 +489,11 @@ normalize by unigrams -->
     <li class="list-group-item tag-4">
       <a href="/tag/smoothing.html">smoothing</a>
     </li>
-    <li class="list-group-item tag-2">
-      <a href="/tag/transformer.html">transformer</a>
+    <li class="list-group-item tag-1">
+      <a href="/tag/transformer.html">Transformer</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/vit.html">ViT</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="/tag/xlnet.html">XLNet</a>
@@ -536,6 +554,10 @@ normalize by unigrams -->
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
+          <a href="/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
           <a href="/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
           </a>
         </li>
@@ -564,7 +586,7 @@ normalize by unigrams -->
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2019 Michał Chromiak
+         <div class="col-xs-10">&copy; 2021 Michał Chromiak
             &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>                <p><small>  <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>

@@ -142,15 +142,17 @@
 <ul>
 <li><strong>NLP:</strong> the Yoav Goldberg's, 2016 <a href="https://www.jair.org/media/4992/live-4992-9623-jair.pdf">A Primer on Neural Network Models for Natural Language Processing</a></li>
 </ul>
-<h3 id=rnn-primer-with-gradient-descent-gd>RNN primer with Gradient Descent (GD)<a title="Permanent link" class=headerlink href=#rnn-primer-with-gradient-descent-gd>🔗</a></h3>
-<p><iframe height=315 frameborder=0 allowfullscreen="" src="https://www.youtube.com/embed/aircAruvnKk" width=420> </iframe>
-<iframe height=315 frameborder=0 allowfullscreen="" src="https://www.youtube.com/embed/IHZwWFHWa-w" width=420> </iframe>
-<iframe height=315 frameborder=0 allowfullscreen="" src="https://www.youtube.com/embed/Ilg3gGewQ5U" width=420></iframe>
-<iframe height=315 frameborder=0 allowfullscreen="" src="https://www.youtube.com/embed/tIeHLnjs5U8" width=420></iframe>
-<iframe height=315 frameborder=0 allowfullscreen="" src="https://www.youtube.com/embed/ILsA4nyG7I0" width=420> </iframe></p>
-<h3 id=convolutional-neural-networks-cnn>Convolutional Neural Networks (CNN)<a title="Permanent link" class=headerlink href=#convolutional-neural-networks-cnn>🔗</a></h3>
-<p><iframe height=315 src="https://www.youtube.com/embed/FmpDIaiMIeA" width=420> </iframe></p>
-<h3 id=activation-functions>Activation Functions<a title="Permanent link" class=headerlink href=#activation-functions>🔗</a></h3>
+<h3 id=rnn-primer-with-gradient-descent-gd>RNN primer with Gradient Descent (GD)<a class=headerlink href=#rnn-primer-with-gradient-descent-gd title="Permanent link">🔗</a></h3>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/aircAruvnKk" frameborder=0 allowfullscreen=""> </iframe>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/IHZwWFHWa-w" frameborder=0 allowfullscreen=""> </iframe>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/Ilg3gGewQ5U" frameborder=0 allowfullscreen=""></iframe>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/tIeHLnjs5U8" frameborder=0 allowfullscreen=""></iframe>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/ILsA4nyG7I0" frameborder=0 allowfullscreen=""> </iframe>
+
+<h3 id=convolutional-neural-networks-cnn>Convolutional Neural Networks (CNN)<a class=headerlink href=#convolutional-neural-networks-cnn title="Permanent link">🔗</a></h3>
+<iframe width=420 height=315 src="https://www.youtube.com/embed/FmpDIaiMIeA"> </iframe>
+
+<h3 id=activation-functions>Activation Functions<a class=headerlink href=#activation-functions title="Permanent link">🔗</a></h3>
 <p>There are two types of activation functions: <em>saturating</em> and <em>non-saturating</em>. <em>Saturating</em> means that such function squeezes the input.</p>
 <ul>
 <li>I.e. <span class=math>\(f\)</span> is non-saturating ⇔<span class=math>\((|\lim_{z\rightarrow−\infty}f(z)|=+\infty)\lor|\lim_{z\rightarrow+\infty}f(z)|=+\infty)\)</span>,</li>
@@ -158,21 +160,21 @@
 </ul>
 <p>phew! :)</p>
 <p>Useful <a href="https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0">article</a> and <a href="https://github.com/Kulbear/deep-learning-nano-foundation/wiki/ReLU-and-Softmax-Activation-Functions">ReLu vs Softmax</a>. Also <a href="http://cs231n.github.io/neural-networks-1/">part of cs231n</a></p>
-<h3 id=recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn>Recurrent Neural Networks(RNN) Vs Feedforward Neural Nets (FNN)<a title="Permanent link" class=headerlink href=#recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn>🔗</a></h3>
+<h3 id=recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn>Recurrent Neural Networks(RNN) Vs Feedforward Neural Nets (FNN)<a class=headerlink href=#recurrent-neural-networksrnn-vs-feedforward-neural-nets-fnn title="Permanent link">🔗</a></h3>
 <p>RNN bring much improvement over FNN due to provided internal representation of past events (a.k.a. memory).  RNN-based deep learning was so successful in sequence-to-sequence (s2s) due to its capability to handle sequences well. It should be noted that RNNs are <em>Turing-Complete</em> <a href="http://dl.acm.org/citation.cfm?id=207284">(H.T. Siegelmann, 1995)</a>), and therefore have the capacity to simulate arbitrary procedures.</p>
 <blockquote>
 <p>If training vanilla neural nets is optimization over functions, training recurrent nets is optimization over programs.</p>
 </blockquote>
 <p>RNN is thus also able to learn any measurable s2s mapping to arbitrary accuracy (<a href="https://www.researchgate.net/publication/2495760_On_the_Approximation_Capability_of_Recurrent_Neural_Networks">B.Hammer, 2000, On the Approximation Capability of Recurrent Neural Networks</a>). So we get great results in handwriting recognition, text generation and language modeling <a href="https://arxiv.org/abs/1409.3215">(Sutskever, 2014)</a>. The availability of information on past events is very important in RNN. The problem however arise, in case when lacking prior knowledge on how long the output sequence will be. It is because the training targets have to be pre-aligned with inputs and standard RNN simply maps input to output. Additionally it is not taking into account the information from past <em>outputs</em>. One solution is to employ <em>structured prediction</em> where two RNN can be used to: model input-output dependencies (<em>transcription</em>) and second to model output-output dependencies (<em>prediction</em>).  This way each output depends on entire input sequence and all past outputs.</p>
 <p>Another limitation of RNN is the size of internal state. It can be seen on an example of encoder-decoder architecture for <strong>Neural Machine Translation (NMT)</strong>. Here the encoder gets entire input sequence word by word while updating its internal state. While the decoder decodes it into e.g. other language.</p>
-<h3 id=encoder-decoder-scheme>Encoder-Decoder scheme<a title="Permanent link" class=headerlink href=#encoder-decoder-scheme>🔗</a></h3>
+<h3 id=encoder-decoder-scheme>Encoder-Decoder scheme<a class=headerlink href=#encoder-decoder-scheme title="Permanent link">🔗</a></h3>
 <p><strong>Seq2seq modeling</strong> is a synonym of <strong>recurrent neural network based encoder-decoder architectures</strong> (<a href="https://arxiv.org/abs/1409.3215">Sutskever et al., 2014;</a> and <a href="https://arxiv.org/abs/1409.0473">Bahdanau et al., 2014</a>).
 Let us <em>“unroll”</em> the scheme into <span class=math>\(M\)</span> encoder steps and <span class=math>\(N\)</span> decoder steps of hidden states <span class=math>\(h\)</span>.</p>
-<p align=center><img src="/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png" alt="Encoder Decoder architecture ">
+<p align=center><img alt="Encoder Decoder architecture " src="/articles/2017/Sep/01/Primer-NN/img/EncoderDecoder_MC.png">
 <br>
 Figure 1. <b>Encoder-decoder architecture</b> – example of a general approach for NMT.
 An encoder converts a source sentence into a "meaning" vector which is passed through a <i>decoder</i> to produce a translation.</p>
-<p>In encode-decoder architecture<sup id=sf-Primer-NN-1-back><a title="One can often encounter references to autoencoder (AE) neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. Great example of autoencoder on Quora " class=simple-footnote href=#sf-Primer-NN-1>1</a></sup>, the</p>
+<p>In encode-decoder architecture<sup id=sf-Primer-NN-1-back><a href=#sf-Primer-NN-1 class=simple-footnote title="One can often encounter references to autoencoder (AE) neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. Great example of autoencoder on Quora ">1</a></sup>, the</p>
 <ul>
 <li>encoder – maps input data <span class=math>\(x\)</span> to a different (lower dimensional, compressed – i.e. encoded) representation, while the</li>
 <li>decoder – maps encoder’s output new feature representation back into the input data space as a output sequence <span class=math>\(y\)</span>; left to right one at a time. Decoder generates <span class=math>\(y_{i+1}\)</span> token by computing new hidden state <span class=math>\(h_{i+1}\)</span> based on:<ul>
@@ -184,17 +186,17 @@ An encoder converts a source sentence into a "meaning" vector which is passed th
 </ul>
 <div class=math>$$input:(x_1, \dots, x_m) \xrightarrow[\text{maps}]{\text{encoder}} z=(z_1,\dots,z_m)\xrightarrow[\text{generates}]{\text{decoder}} output: (y_1,\dots, yn)$$</div>
 <p>One can consider two types of models, with or, without “attention”. The latter assumes <span class=math>\(\forall i c_i=z_m\)</span> (<a href="https://arxiv.org/abs/1406.1078">Cho et al., 2014</a>)</p>
-<p>Additionally, there is a problem with the encoder’s state <span class=math>\(h^{E}_m\)</span>, as a compressed and fixed-length vector. It must contain whole information on the source sentence. This looses some information<sup id=sf-Primer-NN-2-back><a title="Due to its nature of compressing the input into lower dimension." class=simple-footnote href=#sf-Primer-NN-2>2</a></sup>. One can try to use some heuristics that can help to overcome this issue and improve performance of RNN:</p>
+<p>Additionally, there is a problem with the encoder’s state <span class=math>\(h^{E}_m\)</span>, as a compressed and fixed-length vector. It must contain whole information on the source sentence. This looses some information<sup id=sf-Primer-NN-2-back><a href=#sf-Primer-NN-2 class=simple-footnote title="Due to its nature of compressing the input into lower dimension.">2</a></sup>. One can try to use some heuristics that can help to overcome this issue and improve performance of RNN:</p>
 <ul>
 <li>
-<p><strong>Organize input.</strong> Feed the input more than one time or provide input followed by reversed input <sup id=sf-Primer-NN-3-back><a title=" 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. Sequence to sequence learning with neural networks. " class=simple-footnote href=#sf-Primer-NN-3>3</a></sup>.</p>
+<p><strong>Organize input.</strong> Feed the input more than one time or provide input followed by reversed input <sup id=sf-Primer-NN-3-back><a href=#sf-Primer-NN-3 class=simple-footnote title=" 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. Sequence to sequence learning with neural networks. ">3</a></sup>.</p>
 </li>
 <li>
-<p><strong>Provide more memory.</strong> It turns out that the bigger the size of the memory the better (eg. LSTM applied to language modeling<sup id=sf-Primer-NN-4-back><a title=" 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, Recurrent Neural Network Regularization. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections." class=simple-footnote href=#sf-Primer-NN-4>4</a></sup>) the RNN performs on various tasks.</p>
+<p><strong>Provide more memory.</strong> It turns out that the bigger the size of the memory the better (eg. LSTM applied to language modeling<sup id=sf-Primer-NN-4-back><a href=#sf-Primer-NN-4 class=simple-footnote title=" 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, Recurrent Neural Network Regularization. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections.">4</a></sup>) the RNN performs on various tasks.</p>
 </li>
 </ul>
 <p>To avoid the memorization problem there has been research on the <em>attention</em> mechanism.</p>
-<h3 id=attention-basis>Attention basis<a title="Permanent link" class=headerlink href=#attention-basis>🔗</a></h3>
+<h3 id=attention-basis>Attention basis<a class=headerlink href=#attention-basis title="Permanent link">🔗</a></h3>
 <p>The most intuitive <strong>attention definition</strong> I know is the one contained within <a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">paper about Transformer architecture</a>:</p>
 <blockquote>
 <p>An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.</p>
@@ -206,22 +208,22 @@ An encoder converts a source sentence into a "meaning" vector which is passed th
 </p>
 <div class=math>$$ \begin{eqnarray} out = \sum_{i=1}^k \theta_i x_i \end{eqnarray}$$</div>
 <p>Hence, networks that use attention, attend only on a part of the input sequence while still providing the output sentence. So one can image it as giving an auxiliary input for the network in form of linear combination. What is the clue here is that the weights of the linear combination are controlled by the network. It has been tested across multiple areas such as NMT or speech recognition.</p>
-<p>In an encoder-decoder architecture for the embedding (fixed size vector) of a long sentence brings the problem of long dependency (e.g. in fixed-size encoded vector <span class=math>\(h^E_N\)</span>, where end word of the sentence depends on the starting word <span class=math>\(h^E_1\)</span>). And long dependencies, is where RNN have problems. Even though “hacks” such as reverse/double feeding of the source sentence, or the LSTMs (memory), are sometimes improving the performance however, they do not always work perfectly<sup id=sf-Primer-NN-5-back><a title="E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input." class=simple-footnote href=#sf-Primer-NN-5>5</a></sup>. It is because the state and the gradient in LSTM would start to make the gradient vanish. It is called “long” time memory but its not that long to work e.g. for 2000 words. This is where <em>convolutions</em> came in.</p>
-<p align=center><img title="WaveNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/WaveNet.gif" alt="WaveNet architecture">
-<img title="ByteNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/ByteNet.png" alt="ByteNet architecture">
+<p>In an encoder-decoder architecture for the embedding (fixed size vector) of a long sentence brings the problem of long dependency (e.g. in fixed-size encoded vector <span class=math>\(h^E_N\)</span>, where end word of the sentence depends on the starting word <span class=math>\(h^E_1\)</span>). And long dependencies, is where RNN have problems. Even though “hacks” such as reverse/double feeding of the source sentence, or the LSTMs (memory), are sometimes improving the performance however, they do not always work perfectly<sup id=sf-Primer-NN-5-back><a href=#sf-Primer-NN-5 class=simple-footnote title="E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input.">5</a></sup>. It is because the state and the gradient in LSTM would start to make the gradient vanish. It is called “long” time memory but its not that long to work e.g. for 2000 words. This is where <em>convolutions</em> came in.</p>
+<p align=center><img alt="WaveNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/WaveNet.gif" title="WaveNet architecture">
+<img alt="ByteNet architecture" src="/articles/2017/Sep/01/Primer-NN/img/ByteNet.png" title="ByteNet architecture">
 <br>
 Figure 2. WaveNet (left; sound) (<a href="https://deepmind.com/blog/wavenet-generative-model-raw-audio/">image courtesy</a>) and ByteNet (right; NLP) architecture (Image acquired from <a href="https://arxiv.org/abs/1610.10099">Neural Machine Translation in Linear Time, Kalchbrenner et. al 2016</a>).</p>
 <p>This is why the fixed size encoding might be a bottleneck of performance. This is where the attention comes in.</p>
 <p><em>Attention</em>  is used as an alternative to memorizing and input manipulations. Here the model search for parts  of a source sentence (not fixed size vector) that are relevant to predicting a target word, and it should attend to, based on what it has learned in the past <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>.</p>
-<p align=center><img title="Attention architecture2" src="/articles/2017/Sep/01/Primer-NN/img/attention.png" alt="Attention architecture">
+<p align=center><img alt="Attention architecture" src="/articles/2017/Sep/01/Primer-NN/img/attention.png" title="Attention architecture2">
 <br>
 Figure 2. Attention architecture.</p>
 <p>In this case, the larger  <span class=math>\(\theta_{1,2}\)</span>  would be the more decoder pays attention for the <span class=math>\(y_3\)</span> (third output word) in relation to other words as all weights (<span class=math>\(\theta\)</span>s) are normalized to sum to <span class=math>\(1\)</span>.</p>
-<p align=center><img title="Attention architecture3" src="/articles/2017/Sep/01/Primer-NN/img/EncDecAttention.gif" alt="Attention architecture">
+<p align=center><img alt="Attention architecture" src="/articles/2017/Sep/01/Primer-NN/img/EncDecAttention.gif" title="Attention architecture3">
 <br>
 Figure 3. “Attention”; the blue link transparency represents how much the decoder pays attention to an encoded word. Less transparent, more attention. <a href="https://research.googleblog.com/2016/09/a-neural-network-for-machine.html">Google Blog</a> also <a href="https://google.github.io/seq2seq/">general-purpose encoder-decoder framework for Tensorflow</a></p>
 <p>It is well visualized in an <span class=math>\(\theta\)</span> matrix for French-English translation (See Figure Adopted form <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>)</p>
-<p align=center><img src="/articles/2017/Sep/01/Primer-NN/img/attentionmatrix.png" alt="Attention matrix ">
+<p align=center><img alt="Attention matrix " src="/articles/2017/Sep/01/Primer-NN/img/attentionmatrix.png">
 <br>
 Figure 4. Attention matrix. Adopted form <a href="https://arxiv.org/abs/1409.0473">Bahdanu et al., 2016</a>)</p>
 <p>In French input sentence two words “<em>la zone</em>” are especially target for attention when translating to English “<em>Area</em>”.</p>
@@ -230,22 +232,22 @@ This approach requires a complete look-up over all input output elements, which 
 What is called “attention” therefore is simply a kind of memory that is available for decoder while producing every single output element. It does not need the fixed-size encoded vector of the entire input. The weights only decide which symbols/words to get from the input-memory of the encoder.
 This so called attention is the subject of further development in form of <a href="https://arxiv.org/abs/1503.08895">End-To-End Memory Networks</a> where recurrent attention is used where  where multiple computational steps (hops) are performed per output symbol. This includes reading the same sequence many times before generating output and also changing the memory content at each step.</p>
 <p>We can of course employ backpropagation to accustom the weights in an end-to-end learning  model.</p>
-<h3 id=layer-connections>Layer connections <!--http://ruder.io/deep-learning-nlp-best-practices/index.html#fnref:6--><a title="Permanent link" class=headerlink href=#layer-connections>🔗</a></h3>
+<h3 id=layer-connections>Layer connections <!--http://ruder.io/deep-learning-nlp-best-practices/index.html#fnref:6--><a class=headerlink href=#layer-connections title="Permanent link">🔗</a></h3>
 <p>In Deep Learning networks architectures the problem of vanishing gradient is very common issue. Thus, some methods has been develop to mitigate its influence on the networks’ efficiency.  </p>
-<h4 id=highway-layers>Highway layers<a title="Permanent link" class=headerlink href=#highway-layers>🔗</a></h4>
-<h4 id=residual-connections>Residual connections<a title="Permanent link" class=headerlink href=#residual-connections>🔗</a></h4>
+<h4 id=highway-layers>Highway layers<a class=headerlink href=#highway-layers title="Permanent link">🔗</a></h4>
+<h4 id=residual-connections>Residual connections<a class=headerlink href=#residual-connections title="Permanent link">🔗</a></h4>
 <p>Models with many layers often rely on shortcut or residual connections (Zhou et al., 2016; Wu et al., 2016). This trick has become main factor for <a href="https://arxiv.org/abs/1512.03385">He et al. 2016 CVPR</a> winning the ImageNet 2016 Residual connection is a connection between layers that adds the input <span class=math>\(x\)</span> of the current layer to its output via a short-cut connection.</p>
 <div class=math>$$ h = f(Wx+b) + \mathbf{x} $$</div>
 <p>Residual connection helps with the <em>vanishing gradient</em> problem because even if the layer nonlinearity <span class=math>\(f\)</span> is not giving result the output then becomes the identity function in form of the <span class=math>\(\mathbf{x}\)</span>.</p>
-<h4 id=dense-connections>Dense connections<a title="Permanent link" class=headerlink href=#dense-connections>🔗</a></h4>
-<h3 id=position-embeddings>Position Embeddings<a title="Permanent link" class=headerlink href=#position-embeddings>🔗</a></h3>
+<h4 id=dense-connections>Dense connections<a class=headerlink href=#dense-connections title="Permanent link">🔗</a></h4>
+<h3 id=position-embeddings>Position Embeddings<a class=headerlink href=#position-embeddings title="Permanent link">🔗</a></h3>
 <p>Usually used in non-recurrent networks (e.g. CNNs) that needs to store the order of the sequence’s input tokens in a way different than recurrent one. The RNN learn the exact position in sequence through the recurrent hidden state computation.</p>
-<h4 id=autoregressive-ar>Autoregressive (AR)<a title="Permanent link" class=headerlink href=#autoregressive-ar>🔗</a></h4>
+<h4 id=autoregressive-ar>Autoregressive (AR)<a class=headerlink href=#autoregressive-ar title="Permanent link">🔗</a></h4>
 <p>The problem of auto-regression is conditional mean of the distribution of future observations <a href="https://arxiv.org/abs/1703.04122">Binkowski et al, 2017</a>. In an autoregression model, we forecast the variable of interest using a linear combination of past values of the variable. The term <em>autoregression</em> indicates that it is a regression of the variable against itself. In NN this refers to autoregressive understood as each unit receives input both from the preceding layer and the preceding units within the same layer.</p>
-<h3 id=end-to-end-learningtrainig>End-to-End learning/trainig<a title="Permanent link" class=headerlink href=#end-to-end-learningtrainig>🔗</a></h3>
+<h3 id=end-to-end-learningtrainig>End-to-End learning/trainig<a class=headerlink href=#end-to-end-learningtrainig title="Permanent link">🔗</a></h3>
 <p>Simplest way to train a model (i.e. to learn) is to put input at one end and get output on the other end. With NN an end-to-end learning would simply mean optimize network weights base on <strong>single model</strong> with input and output.</p>
 <p>There are however some cases when one model is not enough to achieve the desired output. It would then require a pipeline of independently trained models. It is most of the the case when input and output are of two distinct domains. Another case might be when NN has to many layers to fit into memory.  Hence, it is required to divide this one “big” NN into a pipeline of smaller ones. As a side note, this decomposition technique might not be effective because the optimizations would be done locally based only on intermediate outputs.</p>
-<h5 id=examples>Examples:<a title="Permanent link" class=headerlink href=#examples>🔗</a></h5>
+<h5 id=examples>Examples:<a class=headerlink href=#examples title="Permanent link">🔗</a></h5>
 <ul>
 <li>
 <p>In case of a robot trained to move based on vision. One model might be used to pre-process the vision input (raw pixels) representation and pass it as input for another model responsible for decision process of which robot’s leg to move next. <em>image-to-motion</em></p>
@@ -257,7 +259,7 @@ This so called attention is the subject of further development in form of <a hre
 <p>Speech recognition - Transform speech to text  <em>sound-to-text</em></p>
 </li>
 </ul>
-<h3 id=hyperparameters-aka-meta-parameters-free-parameters>Hyperparameters (aka meta-parameters, free-parameters)<a title="Permanent link" class=headerlink href=#hyperparameters-aka-meta-parameters-free-parameters>🔗</a></h3>
+<h3 id=hyperparameters-aka-meta-parameters-free-parameters>Hyperparameters (aka meta-parameters, free-parameters)<a class=headerlink href=#hyperparameters-aka-meta-parameters-free-parameters title="Permanent link">🔗</a></h3>
 <p>The crux of ML is finding (i.e. model training) a math formula (i.e. the model) with parameters that fit best into the data. However, the training is not able to find some higher level properties of model such as complexity or speed of learning straight from the data. Those properties are referred to as hyperparameters. For each trained model hyperparameters are predefined before even training process starts. Their values are important, however requires additional work. This work is done by trying different values for hyperparameters and training different models on them. Using the tests  than, decides which values of hyperparameters should be chosen i.e. is the fastest to achieve the goal, requires less steps etc. So hyperparameters can be determined from the data indirectly by using model selection.</p>
 <p>General approach to ML problem is making four decisions choosing the exact:</p>
 <ul>
@@ -267,14 +269,14 @@ This so called attention is the subject of further development in form of <a hre
 <li>Model parameters – model training finds the model parameters such as weights and biases in NN
 Hence, the hyper parameters are those considered in the <em>training parameters</em> and <em>architecture</em> steps.</li>
 </ul>
-<h5 id=examples-of-hyperparameters>Examples of hyperparameters:<a title="Permanent link" class=headerlink href=#examples-of-hyperparameters>🔗</a></h5>
+<h5 id=examples-of-hyperparameters>Examples of hyperparameters:<a class=headerlink href=#examples-of-hyperparameters title="Permanent link">🔗</a></h5>
 <ul>
 <li>learning rate in gradient algorithms, number of hidden layers, number of clusters in a k-means clustering, number of leaves or depth of a tree, batch size in minibatch gradient descent, regularization parameter     </li>
 </ul>
-<h3 id=transfer-learning>Transfer learning<a title="Permanent link" class=headerlink href=#transfer-learning>🔗</a></h3>
+<h3 id=transfer-learning>Transfer learning<a class=headerlink href=#transfer-learning title="Permanent link">🔗</a></h3>
 <p>Transfer learning is used in context of reinforced or supervised learning. Deep learning requires large datasets to perform well (avoiding overfitting etc.). The problem however arises when there is not enough data for a new task. Here is the idea to use other already existing and large datasets to fine-tunning NN to become useful for this new task with small amount of data (e.g. using <strong>features</strong> pre-trained from CNN (ConvNet) can be feed linear support vector machine (SVM) ). In other words, one can transfer the learned representation to another problem. We must however avoid negative transfer as it can slow down training of target task.
 Searching for function <span class=math>\(g()\)</span> while having pre-trained <span class=math>\(h()\)</span> use projection of new inputs <span class=math>\(x_i\)</span> like this: <span class=math>\((h(g(x_i)))\)</span>.</p>
-<h5 id=examples_1>Examples:<a title="Permanent link" class=headerlink href=#examples_1>🔗</a></h5>
+<h5 id=examples_1>Examples:<a class=headerlink href=#examples_1 title="Permanent link">🔗</a></h5>
 <ul>
 <li>Positive transfer: If you learned previously how to classify a rotten vegetable form not rotten one you can apply this representation of rottenness into fruits even though you have never seen a rotten fruit before.</li>
 <li>Negative transfer: learning one skill makes learning second  skill more difficult. If a kickboxer is about to train how to box. it might be hard to understand what is boxing unless he will be warned that he is not allowed to use kicks to box along with rules.</li>
@@ -284,27 +286,26 @@ Searching for function <span class=math>\(g()\)</span> while having pre-trained 
 <li>Zero transfer: Two models are independent.</li>
 <li>Stimulus generalization:  Knowing what is rotten fruit does not mean that if you find a rusty metal it is the same but you generalize enough to decide that in both cases it is unusable but not in the same way.</li>
 </ul>
-<h3 id=fine-tuning>Fine tuning<a title="Permanent link" class=headerlink href=#fine-tuning>🔗</a></h3>
+<h3 id=fine-tuning>Fine tuning<a class=headerlink href=#fine-tuning title="Permanent link">🔗</a></h3>
 <p>Fine tuning is considered mainly in context of supervised learning. When choosing best hyperparameters for an algorithm, fine tuning involves using a large set of mechanisms that solve this problem. When adjusting the the behaviors of the algorithm to further improve performance without manipulating the model itself.
 When fine tuning pre-trained model might be considered equivalent to transfer learning. This is true if the data used during the fine tuning procedure is of different nature than the data that the pre-trained model has been trained on.</p>
-<h5 id=examples_2>Examples:<a title="Permanent link" class=headerlink href=#examples_2>🔗</a></h5>
+<h5 id=examples_2>Examples:<a class=headerlink href=#examples_2 title="Permanent link">🔗</a></h5>
 <ul>
 <li>Finding the best hyperparameters for the model</li>
 <li>In transfer learning instead of bringing the frozen pre-trained model one cane make it dynamic and let adapt more to the new task.</li>
 </ul>
-<h3 id=evolutionary-algorithms-evolutionary-computation-ec>Evolutionary algorithms (Evolutionary Computation - EC)<a title="Permanent link" class=headerlink href=#evolutionary-algorithms-evolutionary-computation-ec>🔗</a></h3>
+<h3 id=evolutionary-algorithms-evolutionary-computation-ec>Evolutionary algorithms (Evolutionary Computation - EC)<a class=headerlink href=#evolutionary-algorithms-evolutionary-computation-ec title="Permanent link">🔗</a></h3>
 <p>In machine learning problems, you typically have two components:</p>
-<div class=highlight><pre><span></span>1. The model (function class, etc)
-2. Methods of fitting the model (optimization algorithms)
-</pre></div>
-
+<div class=highlight><pre><span></span><code><span class=mf>1.</span> <span class=n>The</span> <span class=n>model</span> <span class=p>(</span><span class=n>function</span> <span class=n>class</span><span class=p>,</span> <span class=n>etc</span><span class=p>)</span>
+<span class=mf>2.</span> <span class=n>Methods</span> <span class=n>of</span> <span class=n>fitting</span> <span class=n>the</span> <span class=n>model</span> <span class=p>(</span><span class=n>optimization</span> <span class=n>algorithms</span><span class=p>)</span>
+</code></pre></div>
 
 <p>Neural networks are a model: given a layout and a setting of weights, the neural net produces some output. There exist some canonical methods of fitting neural nets, such as backpropagation, contrastive divergence, etc. However, the big point of neural networks is that if someone gave you the 'right' weights, you'd do well on the problem.</p>
 <p>Evolutionary algorithms address the second part -- fitting the model. Again, there are some canonical models that go with evolutionary algorithms: for example, evolutionary programming typically tries to optimize over all programs of a particular type. However, EAs are essentially a way of finding the right parameter values for a particular model. Usually, you write your model parameters in such a way that the crossover operation is a reasonable thing to do and turn the EA crank to get a reasonable setting of parameters out.</p>
 <p>Evolutionary algorithms are one class of strategies that can be used in machine learning, just like backpropagation and many others.</p>
 <p>Evolutionary algorithms usually converge slowly because they make no use of gradient information. On the other hand they provide at least a chance to escape from local optima and find the global one.</p>
 <p>Now, you could, for example, use evolutionary algorithms to train a neural network and I'm sure it's been done. However, the critical bit that EA require to work is that the crossover operation must be a reasonable thing to do -- by taking part of the parameters from one reasonable setting and the rest from another reasonable setting, you'll often end up with an even better parameter setting. Most times EA is used, this is not the case and it ends up being something like simulated annealing, only more confusing and inefficient.</p>
-<h3 id=learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates>Learning rate schemes (aka learning rate annealing or adaptive learning rates)<a title="Permanent link" class=headerlink href=#learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates>🔗</a></h3>
+<h3 id=learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates>Learning rate schemes (aka learning rate annealing or adaptive learning rates)<a class=headerlink href=#learning-rate-schemes-aka-learning-rate-annealing-or-adaptive-learning-rates title="Permanent link">🔗</a></h3>
 <p>Changing the learning rate along training with e.g. Stochastic Gradient Descent (SGD) increases performance and reduce training time. With adaptive change to <em>learning rate</em> along training one can use different schemes/schedules on how the learning rate should change.<br>
 See <a href="http://cs231n.github.io/neural-networks-3/#anneal">cs231n</a> on learning rate annealing and <a href="https://www.tensorflow.org/versions/r0.12/api_docs/python/train/decaying_the_learning_rate">Tensorflow decaying learning rate</a>.</p>
 <!--
@@ -330,9 +331,8 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 * capsule network https://hackernoon.com/what-is-a-capsnet-or-capsule-network-2bfbe48769cc
 * Conjoint analysis https://www.kdnuggets.com/2017/11/conjoint-analysis-primer.html
 -->
-
 <hr>
-<h4 id=references>References:<a title="Permanent link" class=headerlink href=#references>🔗</a></h4>
+<h4 id=references>References:<a class=headerlink href=#references title="Permanent link">🔗</a></h4>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -347,11 +347,14 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -365,6 +368,8 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -385,9 +390,11 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-</script><ol class=simple-footnotes><li id=sf-Primer-NN-1>One can often encounter references to <strong>autoencoder (AE)</strong> neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. <a href="https://www.quora.com/What-is-an-auto-encoder-in-machine-learning">Great example of autoencoder on Quora</a>  <a class=simple-footnote-back href=#sf-Primer-NN-1-back>↩</a></li><li id=sf-Primer-NN-2>Due to its nature of compressing the input into lower dimension. <a class=simple-footnote-back href=#sf-Primer-NN-2-back>↩</a></li><li id=sf-Primer-NN-3> 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. <a href="https://arxiv.org/abs/1409.3215">Sequence to sequence learning with neural networks.</a>  <a class=simple-footnote-back href=#sf-Primer-NN-3-back>↩</a></li><li id=sf-Primer-NN-4> 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, <a href="https://arxiv.org/abs/1409.2329">Recurrent Neural Network Regularization</a>. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections. <a class=simple-footnote-back href=#sf-Primer-NN-4-back>↩</a></li><li id=sf-Primer-NN-5>E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input. <a class=simple-footnote-back href=#sf-Primer-NN-5-back>↩</a></li></ol>
+</script><ol class=simple-footnotes><li id=sf-Primer-NN-1>One can often encounter references to <strong>autoencoder (AE)</strong> neural network. In case of which we are considering a perfect Encoder-Decoder network where its input is matching its output. In such case the network can reconstruct its own input. The input size is reduced/compressed with hidden layers until the input is compressed into required size (also the size of the target hidden layer) of few variables. From this compressed representation the network tries to reconstruct (decode) the input. Autoencoder is a feature extraction algorithm that helps to find a representation for data and so that the representation can be feed to other algorithms, for example a classifier. Autoencoders can be stacked and trained in a progressive way, we train an autoencoder and then we take the middle layer generated by the AE and use it as input for another AE and so on. <a href="https://www.quora.com/What-is-an-auto-encoder-in-machine-learning">Great example of autoencoder on Quora</a>  <a href=#sf-Primer-NN-1-back class=simple-footnote-back>↩</a></li><li id=sf-Primer-NN-2>Due to its nature of compressing the input into lower dimension. <a href=#sf-Primer-NN-2-back class=simple-footnote-back>↩</a></li><li id=sf-Primer-NN-3> 2014 Ilya Sutskever, Oriol Vinyals, and Quoc V Le. <a href="https://arxiv.org/abs/1409.3215">Sequence to sequence learning with neural networks.</a>  <a href=#sf-Primer-NN-3-back class=simple-footnote-back>↩</a></li><li id=sf-Primer-NN-4> 2014 Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals, <a href="https://arxiv.org/abs/1409.2329">Recurrent Neural Network Regularization</a>. Normally the dropout would perturb the recurrent connections amplifies the noise and making difficult for LSTM to learn to store information for long time, thus presenting lower performance. Here the authors modify the dropout regularization technique for LSTMs at the same time preserving memory by applying the dropout operator only to the non-recurrent connections. <a href=#sf-Primer-NN-4-back class=simple-footnote-back>↩</a></li><li id=sf-Primer-NN-5>E.g. reversing sentence in language where the first word of output is dependent on the last word of an input will decrease  performance even worse. Then the first output word would depend on a word that is last in the processing chain of a reversed input. <a href=#sf-Primer-NN-5-back class=simple-footnote-back>↩</a></li></ol>
             </div>
             <!-- /.entry-content -->
     <hr />
@@ -463,9 +470,9 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
     <li class="list-group-item"><a href="/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
     <li class="list-group-item"><a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
-    <li class="list-group-item"><a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -476,6 +483,9 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
   <ul class="list-group" id="categories">
     <li class="list-group-item">
       <a href="/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
     </li>
     <li class="list-group-item">
       <a href="/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
@@ -504,6 +514,9 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
       <a href="/tag/bert.html">BERT</a>
     </li>
     <li class="list-group-item tag-4">
+      <a href="/tag/cv.html">CV</a>
+    </li>
+    <li class="list-group-item tag-4">
       <a href="/tag/elmo.html">ELMo</a>
     </li>
     <li class="list-group-item tag-4">
@@ -514,6 +527,9 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
     </li>
     <li class="list-group-item tag-2">
       <a href="/tag/machine-translation.html">Machine translation</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/mlp.html">MLP</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="/tag/ngram.html">ngram</a>
@@ -542,8 +558,11 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
     <li class="list-group-item tag-4">
       <a href="/tag/smoothing.html">smoothing</a>
     </li>
-    <li class="list-group-item tag-2">
-      <a href="/tag/transformer.html">transformer</a>
+    <li class="list-group-item tag-1">
+      <a href="/tag/transformer.html">Transformer</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/vit.html">ViT</a>
     </li>
     <li class="list-group-item tag-4">
       <a href="/tag/xlnet.html">XLNet</a>
@@ -604,6 +623,10 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
+          <a href="/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
           <a href="/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
           </a>
         </li>
@@ -632,7 +655,7 @@ http://colah.github.io/posts/2015-09-Visual-Information/   https://datascience.s
    <div class="container">
       <hr>
       <div class="row">
-         <div class="col-xs-10">&copy; 2019 Michał Chromiak
+         <div class="col-xs-10">&copy; 2021 Michał Chromiak
             &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
             <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
             <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>                <p><small>  <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>

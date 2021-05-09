@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="/static_files/img/favicon.jpg" rel="icon">
+
+<link rel="canonical" href="/articles/2021/May/05/MLP-Mixer/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="MLP,Transformer,CV,ViT" />
+        <meta name="description" content="Let&#39;s try to answer the question: is it enough to have the FFN MLP, with matrix multiplication routines and scalar non-linearities to compete with modern architectures such as ViT or CNNs? No need for convolution, attention? It sounds that we have been here in the past. However, does it mean that the researchers are lost and go rounding in circles? It turns out that what has changes along the way is the increase in the scale of the resources and the data which originally helped ML and especially DL flourish past 5-7 years ago. We will discuss the paper which proves that MLP based solutions can replace CNN and attention based Transformers with comparable scores at image classification benchmarks and at pre-training/inference costs similar to SOTA models." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision"/>
+        <meta property="og:url" content="/articles/2021/May/05/MLP-Mixer/"/>
+        <meta property="og:description" content="Let&#39;s try to answer the question: is it enough to have the FFN MLP, with matrix multiplication routines and scalar non-linearities to compete with modern architectures such as ViT or CNNs? No need for convolution, attention? It sounds that we have been here in the past. However, does it mean that the researchers are lost and go rounding in circles? It turns out that what has changes along the way is the increase in the scale of the resources and the data which originally helped ML and especially DL flourish past 5-7 years ago. We will discuss the paper which proves that MLP based solutions can replace CNN and attention based Transformers with comparable scores at image classification benchmarks and at pre-training/inference costs similar to SOTA models."/>
+            <meta property="og:image" content="/articles/2021/May/06/img/MLP-Mixer_Cover.png" />
+
+        <meta property="article:published_time" content="2021-05-05" />
+            <meta property="article:section" content="Computer Vision" />
+            <meta property="article:tag" content="MLP" />
+            <meta property="article:tag" content="Transformer" />
+            <meta property="article:tag" content="CV" />
+            <meta property="article:tag" content="ViT" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="">
+        <meta property="twitter:image"
+              content="/articles/2021/May/06/img/MLP-Mixer_Cover.png"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="/category/computer-vision.html" title="Computer Vision">Computer Vision</a></li>
+                <li class="active">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/articles/2021/May/05/MLP-Mixer/"
+                       rel="bookmark"
+                       title="Permalink to MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision">
+                        MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2021-05-05T15:54:00+02:00"> Wed, 05 May 2021</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2021-05-05T15:54:00+02:00"> Wed, 05 May 2021</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="/category/computer-vision.html">Computer Vision</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/mlp.html">MLP</a>
+        /
+	<a href="/tag/transformer.html">Transformer</a>
+        /
+	<a href="/tag/cv.html">CV</a>
+        /
+	<a href="/tag/vit.html">ViT</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h4 id=tldr>TL:DR<a class=headerlink href=#tldr title="Permanent link">🔗</a></h4>
+<p><strong>MLP is all you need to get adequately comparable results to SOTA CNNs and Transformer - while reaching linear complexity in number of input pixels.</strong></p>
+<h4 id=contribution-of-paper>Contribution of paper:<a class=headerlink href=#contribution-of-paper title="Permanent link">🔗</a></h4>
+<ul>
+<li>Proves that MLP based architecture can be on pair with modern SOTA in terms of accuracy and computational resource trade-off for training and inference.</li>
+<li>Mixer has linear computation complexity in number of input pixels, in contrast to ViT and similarly to CNNs.</li>
+<li>Unlike ViT, no need for position embedding (token-mixing MLP is sensitive to the order of input tokens)</li>
+<li>Uses standard classification head with global average pooling followed by linear classifier.</li>
+<li>Mixer-MLP scales better than attention based counterparts for bigger training sets to an extend that it  is on pair with them. Footnote: One interesting question is what would happen with even bigger training sets than the ones used in experiments? Would Mixer supersede remaining SOTA architectures?</li>
+</ul>
+<p>Raise questions on:</p>
+<ul>
+<li>How useful would it be to compare the features learned from CNN/Transformer solutions and those learned from such a simple architecture?</li>
+</ul>
+<p>Consequently:</p>
+<ul>
+<li>What is the role of the inductive biases of such features and how they influence the generalization?</li>
+</ul>
+<h3 id=intro>Intro<a class=headerlink href=#intro title="Permanent link">🔗</a></h3>
+<p>In this article we will investigate the paper:</p>
+<p><strong>"MLP-Mixer: An all-MLP Architecture for Vision" Ilya Tolstikhin et al. 2021</strong>: <a href="https://arxiv.org/abs/2105.01601">ArXiv - Submitted on 4 May 2021</a></p>
+<p>The current, established computer vision architectures are based on CNNs and attention. The self-attention oriented modern Vision Transformer (ViT) models relies heavily on learning from raw data. The idea presented in the paper is simply to apply MLP repeatedly for spacial locations and feature channels.</p>
+<h3 id=motivation>Motivation<a class=headerlink href=#motivation title="Permanent link">🔗</a></h3>
+<p>The Transformer/CNN trend in the area has dominated research in terms of SOTA results. Authors claim that the paper goal is to initiate discussion and opening questions on how the feature learned from both the MLP and present dominating approaches can be compared? It is also interesting how the induced biases contained within the features compares and influence the ability to generalize.</p>
+<h3 id=the-processing-strategy-of-the-algorithm>The processing strategy of the algorithm<a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link">🔗</a></h3>
+<p>Similarly to the  <a href="https://arxiv.org/abs/2105.01601"><em>Vision Transformer</em></a>. Each input image is divided into a grid of linearly projected, non-overlapping <span class=math>\(16\times 16\)</span> pixel patches (<em>tokens</em>). Patches are put into one table of <span class=math>\(patches\times channels\)</span> as an input for the architecture. This is conversely to previous architectures, where patches would be unrolled into one, single vector of consecutive patches.</p>
+<p>The patches are basic parts that the architecture is working on as they are propagated through the network. The Mixer stacked layers are all of the same size. This is unlike CNNs where we shrink the resolution, but increase the channels.   </p>
+<p align=center><img alt="MLP-Mixer general architecture" src="/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer.png">
+<br>
+Figure 1. MLP-Mixer general architecture.</p>
+<p>At first every patch is feed through per-patch, fully connected layer, providing the latent vector representation (embeddings) per each patch. This is then passed to multiple <em>Mixer layers</em> of the same size – each layer build out of two MLP blocks.</p>
+<p>There are two types of Mixer-MLP blocks that acts on rows and columns of the input table:</p>
+<ol>
+<li>
+<p><strong>Token-Mixing</strong> ; <span class=math>\(Channels \times Patches\)</span> (acts on columns) enables <em>communication across different spacial locations</em> (tokens) of an image present in a single channel. A single column of the input table collects all tokens’ parts (across different patches) of a single channel.</p>
+</li>
+<li>
+<p><strong>Channel-Mixing</strong> <span class=math>\(Patches \times Channels\)</span> (acts on rows); enables communication across different channels as their input is an individual token as a row from the input table.    </p>
+</li>
+</ol>
+<p>MLP-Mixer use the idea of small kernel convolutions. The channel-mixing MLP_2 with <span class=math>\(1\times1\)</span> convolutions becomes effectively dense matrix multiplication applied independently to each spacial location. However, it does not allow aggregation of cross-spacial information. This motivates the token-mixing MLP_1 phase that includes the dense matrix multiplications applied to each feature/channel across all spatial locations.</p>
+<h4 id=the-mlp-block-structure>The MLP block structure<a class=headerlink href=#the-mlp-block-structure title="Permanent link">🔗</a></h4>
+<p>The latent representation of patches form the fully-connected layer is first feed into the <em>token-mixer</em> in a <span class=math>\(channel x patch\)</span> table. Whit that in mind, it takes all the patches (columns) per channel (row) and feeds it to the  <em>MLP1</em> (two fully connected layers connected with GELU). Each MLP consists of two fully-connected layers and a non-linearity - GELU -  applied independently to each row of its input data tensor.</p>
+<p>The Mixer approach, is based on the idea that channels in individual patches mean similar things. It is because they come from same function of the per-patch fully-connected layer. This first layer put same object information into same channels for different patches. Thus, as they mean similar things, we will group them by channels, and aggregate over all patches within each channel. Therefore each channel have same information in form of feature.</p>
+<p align=center><img alt="MLP-Mixer layer details" src="/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer-layer.png">
+<br>
+Figure 2. Detailed architecture schema of MLP-Mixer layer.</p>
+<p>Each of the patches is feed through the same <em>MLP1</em> with shared weights across all columns of the input table. Thus, we are dealing here with a dense matrix multiplication with a weight sharing across same channel of different patches<sup id=sf-MLP-Mixer-1-back><a href=#sf-MLP-Mixer-1 class=simple-footnote title="Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention.">1</a></sup>. In token-mixing, the <em>MLP_1</em> share the same kernel (of full receptive field) for all of the channels. Therefore, if a channel reacts as a feature across the patches, it is easy to aggregate all the patches that include this feature.</p>
+<p>Second stage is to transpose back to <span class=math>\(patches x channels\)</span> and repeat same  computation in <em>MLP_2</em> however, this time with weight sharing across all patches (rows of the input table). This kind of sharing provides positional invariance, which happens to also be part of CNNs. For each patch we apply computation across all of the channels (features) of that patch.</p>
+<p>Other components include: skip-connections, dropout, layer norm on the channels, and linear classifier head</p>
+<h3 id=objective-or-goal-for-the-algorithm>Objective or goal for the algorithm<a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link">🔗</a></h3>
+<p>The general idea of the MLP-Mixer is to separate the <em>channel-mixing</em> (per-location) operations and the <em>cross-location</em> (token-mixing) operations. This is what distinguish it from the solutions described in following section.
+This way if we aggregate among the same channels (token-mixing) then if a channel reacts across the patches we can aggregate all the patches that have that feature because the feature producing map was shared.</p>
+<p>Mixer computational complexity is linear in the number of input patches (input sequence length) in token-mixing, conversely to the previous ViT architecture - whose computational complexity is quadratic. Additionally, as the channel hidden width in channel-mixing, is also independent of the patch size, the overall complexity is <strong>linear</strong> in the number of pixels. Which is also the case with CNNs.</p>
+<h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm>Metaphors, or analogies to other architectures describing the behavior of the algorithm<a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link">🔗</a></h3>
+<p>The MLP-Mixer does not use the convolutions, nor self-attention - which are heavily used by the current successful architectures.</p>
+<p>Reference to remaining, modern vision architectures can be based on two techniques of layers that mix features at:</p>
+<ol>
+<li>one spatial location</li>
+<li>across different spatial locations,</li>
+</ol>
+<p>Both of those can be applied exclusively, or at once.</p>
+<p>In CNNs - deeper layers have larger receptive field – with <span class=math>\(N \times N, N&gt;1\)</span> convolutions and pooling implement the second approach while with <span class=math>\(1 \times 1\)</span> would use first one.  <br>
+The Mixer architecture is a very special case of CNN with <span class=math>\(1 \times 1\)</span> convolutions in channel-mixing, and for token-mixing it is a single-channel depth-wise convolution of a full receptive field with parameter sharing. Conversely, CNNs are not special cases of MLP-Mixer as the plain matrix multiplication of Mixer is less complex than costly convolutions specialized implementation.</p>
+<p>While referring to the attention-based architectures such as Vision Transformers, the self-attention enables both techniques while the MLP blocks are focusing only on the first one.</p>
+<p>The Mixer architecture embrace both techniques (using MLPs), but separates them clearly: the first, per-location operations is implemented in <em>channel-mixing</em>, and the cross-location operations are implemented with the <em>token-mixing</em></p>
+<p>Similarly to Transformers, each layer in Mixer (except for the initial patch projection layer) takes an input of the same (aka <em>isotropic</em>) size. This is in contrast to typical CNN that have a pyramidal structure: deeper layers have a lower resolution input, but more channels<sup id=sf-MLP-Mixer-2-back><a href=#sf-MLP-Mixer-2 class=simple-footnote title="One can also refer to one of the non-typical designs, of other combinations such as isotropic ResNets and pyramidal ViTs.">2</a></sup>.</p>
+<h3 id=heuristics-or-rules-of-thumb>Heuristics or rules of thumb<a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link">🔗</a></h3>
+<p>Authors have commenced series of tests with couple of parameters. The patch resolution e.g. <span class=math>\(16 \times 16\)</span>. The scale expressed in number of mixer layers: <strong>S</strong>mall: 8, <strong>B</strong>ig: 16, <strong>L</strong>arge: 24 and <strong>H</strong>uge: 32 following the <a href="https://arxiv.org/abs/2105.01601"><em>Vision Transformer (ViT)</em></a> paper approach<sup id=sf-MLP-Mixer-3-back><a href=#sf-MLP-Mixer-3 class=simple-footnote title="One of the authors has actually also coauthored that ViT paper.">3</a></sup>.      </p>
+<p>The results of the experiments shows that the MLP-Mixer is comparable with current SOTA however, is not as good. Therefore, authors have found a metric that distinguish the Mixer architecture. It is the <em>Throuput</em> (column 5 in the below figure) defined as number of images per second per computation core.</p>
+<p align=center><img alt="MLP-Mixer layer details" src="/articles/2021/May/05/MLP-Mixer/img/Mixer-Throughput.png">
+<br>
+Figure 3. Transfer performance, inference throughput, and training cost.Sorted by inference throughput.</p>
+<p>Additionally, authors have found out that on a very particular task of training linear 5-shoot classifier on frozen representation of what the model outcomes evaluated on Top-1 accuracy.</p>
+<blockquote>
+<p>Note: Top-1 accuracy is the conventional accuracy, model prediction (the one with the highest &gt;probability) must be exactly the expected answer. It measures the proportion of examples for &gt;which the predicted label matches the single target label.</p>
+</blockquote>
+<p>This has been evaluated, and discussed in context of the role of model scale.</p>
+<h4 id=scalability-mixer-is-catching-up>Scalability - Mixer is catching up<a class=headerlink href=#scalability-mixer-is-catching-up title="Permanent link">🔗</a></h4>
+<p>With training set size increase the authors state that the scalability of Mixer is much more favorably comparing to big transfer (BiT) that plateaus and is on pair with ViT. Moreover, in all cases the differences in the scalability performance of Mixer is getting very close, if not same, as remaining models.</p>
+<p align=center><img alt="MLP-Mixer layer details" src="/articles/2021/May/05/MLP-Mixer/img/Top1-scalability.png">
+<br>
+Figure 4. Transfer performance, inference throughput, and training cost.Sorted by inference throughput.</p>
+<p>This is the most significant result, but authors compare also some more tasks, for details please refer to the paper.
+The conclusion from the results however might be, that the smaller the training set, the worse the Mixer performs in terms of pre-training, and the bigger training set, the gap between the Mixer and remaining architectures (ViT, BiT) shrinks.</p>
+<h4 id=weight-visualization>Weight visualization<a class=headerlink href=#weight-visualization title="Permanent link">🔗</a></h4>
+<p align=center>The weight visualization analysis confirm the general assumption on how we observe the neural network work. In the image we see that lower layers learn first the most general features (left), then go to bit larger ones (middle) and the detailed (right).
+<img alt="MLP-Mixer weight visualization" src="/articles/2021/May/05/MLP-Mixer/img/MLP-Mixer-Weights.png">
+<br>
+Figure 5. MLP-Mixer input weights to hidden units visualization in token-mixing MLPs of Mixer-B/16 model trained on JFT-300M proprietary Google dataset used for training image classification models.</p>
+<p>Interestingly the weights visualization differs based on the type of the training set that authors have used:</p>
+<h3 id=what-classes-of-problem-is-the-algorithm-well-suited>What classes of problem is the algorithm well suited?<a class=headerlink href=#what-classes-of-problem-is-the-algorithm-well-suited title="Permanent link">🔗</a></h3>
+<p>The architecture seems useful especially for big scale training sets of vision tasks - as tested according to the description in next section. However, it might as well be applied to some NLP tasks however, with adequately prepared text “patches”.  </p>
+<h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm>Common benchmark or example datasets used to demonstrate the algorithm<a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link">🔗</a></h3>
+<p>Comparing to CNN or attention based is claimed to be on pair with the existing SOTA methods in terms of the trade-off between accuracy and computational resources required for training and inference.
+Authors have testesd downstream tasks such as:</p>
+<ul>
+<li>ILSVRC2012 “ImageNet” (1.3M training examples, 1k classes) with the original validation labels and cleaned-up ReaL labels,</li>
+<li>CIFAR-10/100 (50k examples, 10/100 classes),</li>
+<li>Oxford-IIIT Pets (3.7k examples, 36 classes), and</li>
+<li>Oxford Flowers-102 (2k examples, 102 classes) and also evaluate on the</li>
+<li>Visual Task Adaptation Benchmark (VTAB-1k), which consists of 19 diverse datasets, each with 1k training examples.</li>
+</ul>
+<h4 id=footnotes>Footnotes:<a class=headerlink href=#footnotes title="Permanent link">🔗</a></h4>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><ol class=simple-footnotes><li id=sf-MLP-Mixer-1>Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention. <a href=#sf-MLP-Mixer-1-back class=simple-footnote-back>↩</a></li><li id=sf-MLP-Mixer-2>One can also refer to one of the non-typical designs, of other combinations such as <a href="https://arxiv.org/abs/1909.03205">isotropic ResNets</a> and <a href="https://arxiv.org/abs/2102.12122">pyramidal ViTs</a>. <a href=#sf-MLP-Mixer-2-back class=simple-footnote-back>↩</a></li><li id=sf-MLP-Mixer-3>One of the authors has actually also coauthored that ViT paper. <a href=#sf-MLP-Mixer-3-back class=simple-footnote-back>↩</a></li></ol>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+    </ul>
+</section>
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = '/articles/2021/May/05/MLP-Mixer/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+        Completed his PhD in 2016 by Polish Academy of Sciences (PAS) in Computer Science. Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MichalChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://twitter.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal_Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="localhost:8000/feeds/all.rss"><i class="fa fa-rss-square fa-lg"></i> RSS</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
+    <li class="list-group-item"><a href="/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
+    <li class="list-group-item"><a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="/tag/application.html">application</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="/tag/attention-model.html">Attention model</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/basics.html">basics</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/bert.html">BERT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/cv.html">CV</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/elmo.html">ELMo</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/ernie-10.html">ERNIE 1.0</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/language-model.html">language model</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="/tag/machine-translation.html">Machine translation</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/mlp.html">MLP</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/ngram.html">ngram</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="/tag/nlp.html">NLP</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="/tag/nmt.html">NMT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/openai-gpt.html">OpenAI GPT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/patternrecognition.html">PatternRecognition</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/perplexity.html">perplexity</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="/tag/seq2seq.html">seq2seq</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="/tag/sequence-transduction.html">Sequence transduction</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/smoothing.html">smoothing</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="/tag/transformer.html">Transformer</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/vit.html">ViT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="/tag/xlnet.html">XLNet</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="http://www.iclr.cc" target="_blank">ICLR Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://icml.cc" target="_blank">ICML Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://nips.cc/" target="_blank">NIPS Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://aifrontiers.com/" target="_blank">AI Frontiers</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary/" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepart.io/" target="_blank">DeepArt Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group Andrew Ng</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://ai-on.org/" target="_blank">AI•ON open ML collaboration</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://java-hive.blogspot.com/" target="_blank">My old blog on Java an SE</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://karpathy.github.io/2016/09/07/phd/" target="_blank">PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://alt.qcri.org/semeval2017/" target="_blank">SemEval2017</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://medium.freecodecamp.org/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c" target="_blank">Free CS courses</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2021 Michał Chromiak
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>                <p><small>  <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+    Content
+  licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative Commons Attribution-ShareAlike 4.0 International License</a>, except where indicated otherwise.
+</small></p>
+         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+    <script src="/static_files/js/custom.js"></script>
+
+    <script src="/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="/static_files/js/article.js"></script>
+</body>
+</html>
