@@ -1,0 +1,19 @@
+Title: DINO: Emerging Properties in Self-Supervised Vision Transformers
+Status: published
+Category: Computer Vision
+Date: 2021-05-05 15:54
+Modified: 2021-05-05 15:54
+Tags: Transformer, CV, ViT, Self-Supervised
+Slug: DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers
+Related_posts: Transformer-Attention-is-all-you-need
+Cover: articles/2021/May/03/img/Dino_Cover.png
+Summary: asdasda
+
+
+
+![Self-attention from a Vision Transformer with 8 × 8 patches trained with no supervision]({attach}img/dino-intro.png)
+
+#### TL:DR
+
+
+#### Contribution of paper:

@@ -159,13 +159,13 @@ i.fa-external-link {
 }
 
 .cover {
-  width: 415px;
+  width: 315px;
   float:left; /* add this */
   //border: 1px solid red;
 }
 
 .cover img {
-    width: 400px;
+    width: 300px;
     border: 1px solid #bbb;
     border-radius: 3px;
     //padding: 4px;
