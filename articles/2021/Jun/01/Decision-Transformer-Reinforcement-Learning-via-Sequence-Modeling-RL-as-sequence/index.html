@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Decision Transformer: Unifying sequence modeling and model-free, offline RL - Michał Chromiak's blog</title>
+    <title>Decision Transformer: Unifying sequence modelling and model-free, offline RL - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
 
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Decision Transformer: Unifying sequence modeling and model-free, offline RL"/>
+        <meta property="og:title" content="Decision Transformer: Unifying sequence modelling and model-free, offline RL"/>
         <meta property="og:url" content="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/"/>
         <meta property="og:description" content="Can we apply massive advancements of Transformer approach with its simplicity and scalability to Reinforcement Learning (RL)? Yes, but for that - one needs to approach RL as a sequence modeling problem. The Decision Transformer does that by abstracting RL as a conditional sequence modeling and using language modeling technique of casual masking of self-attention from GPT/BERT, enabling autoregressive generation of trajectories from the previous tokens in a sequence. The classical RL approach of fitting the value functions, or computing policy gradients (needs live correction; online), has been ditched in favor of masked Transformer yielding optimal actions. The Decision Transformer can match or outperform strong algorithms designed explicitly for offline RL with minimal modifications from standard language modeling architectures."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2021/Jun/01/img/DecisionTransformer-Cover.png" />
@@ -105,7 +105,7 @@
             <ol class="breadcrumb">
                 <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
                 <li><a href="https://mchromiak.github.io/category/reinforcement-learning.html" title="Reinforcement learning">Reinforcement learning</a></li>
-                <li class="active">Decision Transformer: Unifying sequence modeling and model-free, offline RL</li>
+                <li class="active">Decision Transformer: Unifying sequence modelling and model-free, offline RL</li>
             </ol>
     <section id="content">
         <article>
@@ -113,8 +113,8 @@
                 <h1>
                     <a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/"
                        rel="bookmark"
-                       title="Permalink to Decision Transformer: Unifying sequence modeling and model-free, offline RL">
-                        Decision Transformer: Unifying sequence modeling and model-free, offline RL
+                       title="Permalink to Decision Transformer: Unifying sequence modelling and model-free, offline RL">
+                        Decision Transformer: Unifying sequence modelling and model-free, offline RL
                     </a>
                 </h1>
             </header>
@@ -160,7 +160,7 @@
 Figure 1. Conditioned on a starting state and generating largest possible return at each node, Decision Transformer sequences optimal paths.  (<a href="https://arxiv.org/abs/2106.01345">Source</a>)</p>
 <h4 id=tldr>TL;DR<a class=headerlink href=#tldr title="Permanent link">🔗</a></h4>
 <ul>
-<li>The idea is simple. Each modality (return, state, or action) is passed into an embedding network (convolutional encoder for images, linear layer for continuous states). The embeddings are then processed by an autoregressive transformer model, trained to predict the next action given the previous tokens using a linear output layer.</li>
+<li>The idea is simple. 1) Each modality (return, state, or action) is passed into an embedding network (convolutional encoder for images, linear layer for continuous states). 2) embeddings are processed by an autoregressive transformer model, trained to predict the next action given the previous tokens using a linear output layer.</li>
 <li>Instead of training policy in a  a RL way, authors aim at sequence modeling objective, with use of sequence modeling algorithm, based on Transformer (the Transformer is not crucial here and could be replaced by any other autoregressive sequence modeling algorithm such as LSTM)</li>
 <li>The algorithm is looking for <em>actions</em> conditioning based on the future (autoregressive) desired <em>reward</em>.</li>
 <li>Presented algorithm requires more work/memorizing/learn by the network to get the <em>action</em> for a given <em>reward</em> (two inputs: state and reward), comparing to classical RL where the <em>action</em> is the output based on the maximized <em>reward</em> for a <em>policy</em>. One input: <em>state</em>, to train the <em>policy</em>. However, authors tested how transformers can cope with this approach minding recent advancements in sequence modeling.</li>
@@ -440,7 +440,7 @@ Figure 8. Results comparin DT to TD learning (CQL) and behavior cloning across A
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modeling and model-free, offline RL</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modelling and model-free, offline RL</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/06/MLP-Mixer/">MLP-Mixer: MLP is all you need... again? ...</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/">RL Primer</a></li>
   </ul>
