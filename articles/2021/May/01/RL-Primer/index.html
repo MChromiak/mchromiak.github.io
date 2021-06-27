@@ -164,7 +164,7 @@ uses the transition function (and the reward function) in order to estimate the 
 </blockquote>
 <p>In an <strong>online RL</strong> there is an <em>Agent</em> and the <em>Environment</em>. Agent <span class="math">\(A\)</span> performs actions <span class="math">\(a\)</span> in environment <span class="math">\(E\)</span>, and the <span class="math">\(E\)</span> response with the <em>reward</em> <span class="math">\(r\)</span> and <em>observation</em> <span class="math">\(o\)</span> (or a <em>state</em> <span class="math">\(s\)</span> if it is not partially observable environment). Additionally a <em>policy</em> (network) is the algorithm used by the agent to decide its actions. This is the part that can be <em>model-based</em> or <em>model-free</em>. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.</p>
 <p>Policy can be model-based or model-free. Question is how to optimize the policy network via <em>policy gradient</em> (PG)?</p>
-<p>PG algorithms directly try to optimize the policy to increase rewards.</p>
+<p>PG algorithms directly try to optimize the policy to increase rewards, however this directly needs correction from environment in online fashion.</p>
 <h4 id="markov-decision-processes-mdp">Markov decision processes (MDP).<a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link">🔗</a></h4>
 <p>MDP is a process with a fixed number of states, and it randomly evolves from one state to another at each step. The probability for it to evolve from state A to state B is fixed.</p>
 <h4 id="what-is-offline-rl">What is <em>Offline</em> RL?<a class="headerlink" href="#what-is-offline-rl" title="Permanent link">🔗</a></h4>
