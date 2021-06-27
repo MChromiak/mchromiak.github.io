@@ -209,7 +209,7 @@ Figure 1. Multi-step attention form ConvS2S.</p>
 </ul>
 <h3 id=motivation>Motivation<a class=headerlink href=#motivation title="Permanent link">🔗</a></h3>
 <p>The Transformer architecture is aimed at the problem of <a href="https://arxiv.org/abs/1211.3711"><em>sequence transduction</em> (by Alex Graves)</a>, meaning any task where input sequences are transformed into output sequences. This includes speech recognition, text-to-speech transformation, machine translation, protein secondary structure prediction, Turing machines etc. Basically the goal is to design a single framework to handle as many sequences as possible.</p>
-<p>Currently, complex RNN and CNN based on encoder-decoder scheme are dominating transduction models (language modeling and machine learning). Recurrent models due to sequential nature (computations focused on the position of symbol in input and output) are not allowing for parallelization along training, thus have a problem with learning long-term dependencies (<a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&amp;arnumber=5264952">Hochreiter,, et  al.</a>) from memory. The bigger the memory is, the better, but the memory eventually  constrains batching across learning examples for long sequences, and this is why parallelization can not help.</p>
+<p>Currently, complex RNN and CNN based on encoder-decoder scheme are dominating transduction models (language modeling and machine learning). Recurrent models due to sequential nature (computations focused on the position of symbol in input and output) are not allowing for parallelization along training, thus have a problem with learning long-term dependencies (<a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&amp;arnumber=5264952">Kolen,, et  al.</a>) from memory. The bigger the memory is, the better, but the memory eventually  constrains batching across learning examples for long sequences, and this is why parallelization can not help.</p>
 <p>Reducing this fundamental constraint of sequential computation has been target for numerous research like <a href="https://arxiv.org/abs/1609.03499">Wavenet</a> / <a href="https://arxiv.org/abs/1610.10099">Bytenet</a> or <a href="https://arxiv.org/abs/1705.03122">ConvS2S</a>. However, in those CNN-based approaches, the number of calculations in parallel computation of the hidden representation, for input<span class=math>\(\rightarrow\)</span>output position in sequence, grows with the distance between those positions. The complexity of <span class=math>\(O(n)\)</span> for ConvS2S and  <span class=math>\(O(nlogn)\)</span> for ByteNet makes it harder to learn dependencies on distant positions.</p>
 <p>Transformer reduces the number of sequential operations to relate two symbols from input/output sequences  to a constant <span class=math>\(O(1)\)</span> number of operations. Transformer achieves this with the <em>multi-head attention</em> mechanism that allows to model dependencies regardless of their distance in input or output sentence.   </p>
 <p>Up till now, most of the research including attention is used along with RNNs. The novel approach of Transformer is however, to eliminate recurrence completely and replace it with attention to handle the dependencies between input and output. The Transformer moves the sweet spot of current ideas toward attention entirely. It eliminates the not only recurrence but also convolution in favor of applying <strong>self-attention</strong> (a.k.a intra-attention). Additionally Transformer gives more space for parallelization (details present in paper).</p>
@@ -545,7 +545,7 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
         </p>
     <p>
       <strong>About Michał Chromiak</strong><br/>
-        Completed his PhD in 2016 by Polish Academy of Sciences (PAS) in Computer Science. Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
     </p>
 </div><!-- Sidebar -->
 <section class="well well-sm">
@@ -569,9 +569,9 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/">MLP is all you need... again? ... MLP-Mixer: An all-MLP Architecture for Vision</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/">ERNIE 2.0: A continual pre-training framework for language understanding</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modeling and model-free, offline RL</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/06/MLP-Mixer/">MLP-Mixer: MLP is all you need... again? ...</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/">RL Primer</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -588,6 +588,9 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
@@ -627,6 +630,12 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
     <li class="list-group-item tag-2">
       <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
     </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/markov-decision-process.html">Markov Decision Process</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/mdp.html">MDP</a>
+    </li>
     <li class="list-group-item tag-4">
       <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
     </li>
@@ -647,6 +656,12 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
     </li>
     <li class="list-group-item tag-4">
       <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/reinforcement-learning.html">Reinforcement Learning</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/rl.html">RL</a>
     </li>
     <li class="list-group-item tag-2">
       <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
@@ -722,7 +737,11 @@ Ground-up explaining NMT concepts tutorial with code, based on Tensorflow by Goo
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (1)
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (2)
           </a>
         </li>
         <li class="list-group-item">

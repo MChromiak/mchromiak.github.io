@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Reinforcement learning</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/reinforcement-learning.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2021-06-01T19:30:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>Decision Transformer: Unifying sequence modeling and model-free, offline RL</title><link href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/" rel="alternate"></link><published>2021-06-01T19:30:00+02:00</published><updated>2021-06-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-06-01:/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/</id><summary type="html">&lt;p&gt;Can we apply massive advancements of Transformer approach with its simplicity and scalability to Reinforcement Learning (RL)? Yes, but for that - one needs to approach RL as a sequence modeling problem. The &lt;em&gt;Decision Transformer&lt;/em&gt; does that by abstracting RL as a &lt;em&gt;conditional sequence modeling&lt;/em&gt; and using language modeling technique of casual masking of self-attention from GPT/BERT, enabling autoregressive generation of &lt;em&gt;trajectories&lt;/em&gt; from the previous tokens in a sequence. The classical RL approach of fitting the &lt;em&gt;value functions&lt;/em&gt;, or computing &lt;em&gt;policy gradients&lt;/em&gt;, has been ditched in favor of masked Transformer yielding optimal &lt;em&gt;actions&lt;/em&gt;. The Decision Transformer can match or outperform strong algorithms designed explicitly for offline RL with minimal modifications from standard language modeling architectures.&lt;/p&gt;</summary><content type="html">&lt;h4 id=the-decision-transformer-paper-explained&gt;The Decision Transformer paper explained.&lt;a class=headerlink href=#the-decision-transformer-paper-explained title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In this article we will explain and discuss the paper:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href="https://arxiv.org/abs/2106.01345"&gt;"Decision Transformer: Reinforcement Learning via Sequence Modeling"&lt;/a&gt;&lt;/strong&gt;: by Chen L. et al, ArXiv&lt;/p&gt;
+&lt;p&gt;that explores application of transformers to model sequential decision making problems - formalized as Reinforcement Learning (RL). By training a language model on a training dataset of random walk trajectories, it can figure out optimal trajectories by just conditioning on a large reward.&lt;/p&gt;
+&lt;p align=center&gt;&lt;img alt="Illustrative example of finding shortest path for a fixed graph (left) posed as reinforcement learning. Training dataset consists of random walk trajectories and their per-node returns-to-go (middle). \label{fig:dtgraph}" src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/DT_OptimalGraphPath.png"&gt;
+Figure 1. Conditioned on a starting state and generating largest possible return at each node, Decision Transformer sequences optimal paths.  (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h4 id=tldr&gt;TL;DR&lt;a class=headerlink href=#tldr title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;The idea is simple each modality (return, state, or action) is passed into an embedding network (convolutional encoder for images, linear layer for continuous states). The embeddings are then processed by an autoregressive transformer model, trained to predict the next action given the previous tokens using a linear output layer.&lt;/li&gt;
+&lt;li&gt;Instead of training_policy_ in a  a RL way, authors aim at sequence modeling objective, with use of sequence modeling algorithm, based on Transformer (the Transformer is not crucial here and could be replaced by any other autoregressive sequence modeling algorithm such as LSTM)&lt;/li&gt;
+&lt;li&gt;The algorithm is looking for &lt;em&gt;actions&lt;/em&gt; conditioning based on the future (autoregressive) desired &lt;em&gt;reward&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Presented algorithm requires more work/memorizing/learn by the network to get the &lt;em&gt;action&lt;/em&gt; for a given &lt;em&gt;reward&lt;/em&gt; (two inputs: state and reward), comparing to classical RL where the &lt;em&gt;action&lt;/em&gt; is the output based on the maximized &lt;em&gt;reward&lt;/em&gt; for a &lt;em&gt;policy&lt;/em&gt;. One input: &lt;em&gt;state&lt;/em&gt;, to train the &lt;em&gt;policy&lt;/em&gt;. However, authors tested how transformers can cope with this approach minding recent advancements in sequence modeling.&lt;/li&gt;
+&lt;li&gt;Decision Transformer is based on &lt;a href="../../../May/01/RL-Primer/#what-is-offline-rl"&gt;offline RL&lt;/a&gt; to learn form historical sequence of (reward, state actions) tuples to output &lt;em&gt;action&lt;/em&gt;, based on imitation of similar past &lt;em&gt;reward&lt;/em&gt; and &lt;em&gt;state&lt;/em&gt; inputs and &lt;em&gt;action&lt;/em&gt; outputs.&lt;/li&gt;
+&lt;li&gt;Solution is learning about sequence evolution in a training dataset by learning from agents' past behaviors for similar inputs: &lt;em&gt;state&lt;/em&gt;  and the presently required &lt;em&gt;reward&lt;/em&gt;, to output an &lt;em&gt;action&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Limitation:&lt;/strong&gt; If the &lt;em&gt;credit assignment&lt;/em&gt; needs to happen longer than within one context, so when the relevant &lt;em&gt;action&lt;/em&gt; for the &lt;em&gt;reward&lt;/em&gt; is outside of the sequence that the Transformer attends to, it will fail as it would be out of the context.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=contribution-of-paper&gt;Contribution of paper:&lt;a class=headerlink href=#contribution-of-paper title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;use the GPT architecture to autoregressively model trajectories&lt;/li&gt;
+&lt;li&gt;bypass the need for bootstrapping (one of "deadly triad"&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1 class=simple-footnote title="When one tries to combine time difference (TD) learning (or Bootstrapping), off-policy learning, and function approximations (such as Deep Neural Network), instabilities and divergence may arise."&gt;1&lt;/a&gt;&lt;/sup&gt;) by applying transformer models on collected experience using sequence modeling objective&lt;/li&gt;
+&lt;li&gt;enable to avoid discounting factor for future rewards used in TD thus, avoid inducing undesired short-range behaviors&lt;/li&gt;
+&lt;li&gt;bridge sequence modeling and transformers with RL&lt;/li&gt;
+&lt;li&gt;test if sequence modeling can perform policy optimization by evaluating Decision Transformer on offline RL benchmarks in Atari, OpenAI Gym, and Key-to-Door environments&lt;/li&gt;
+&lt;li&gt;DecisionTransformer (&lt;strong&gt;without&lt;/strong&gt; dynamic programming) match, or exceeds performance of SOTA model-free offline RL: &lt;a href="https://arxiv.org/abs/2006.04779"&gt;Conservative Q-Learing (CQL)&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1907.04543"&gt;Random Ensemble Mixture (REM)&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1710.10044"&gt;Quantile Regression Deep Q-Network (QR-DQN)&lt;/a&gt; or behavioral cloning (BC)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=intro&gt;Intro&lt;a class=headerlink href=#intro title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In contrast to supervised learning, where the agent that imitates actions will (by definition) learn at its best to be on pair with the input data (trainer), the Reinforcement Learning can learn how to be much better like in case of AlphaGo (Go), AlphaStar (StarCraft II), AlphaZero (Chess) or OpenAI Five (Dota2).&lt;/p&gt;
+&lt;p&gt;Transformer framework is known of its performance, scalability and simplicity, as well as its generic approach. The level of abstraction that is available via transformer framework reduces the &lt;em&gt;inductive bias&lt;/em&gt; and thus, is more flexible and effective in multiple applications relying more on the data than on assumed, hand designed concepts. As this has already been proven in NLP with GPT and BERT models and Computer Vision with Vision Transformer (ViT), authors have adapted transformers to the realm of Reinforcement Learning (RL).&lt;/p&gt;
+&lt;p&gt;If you are already familiar with RL terms used in the intro you might want to go directly to the &lt;a href=#motivation&gt;Decision Transformer paper motivation explained&lt;/a&gt;. For more explanation of the terms referred in the paper please see &lt;a href="../../../May/01/RL-Primer"&gt;prerequisite RL knowledge&lt;/a&gt; section.&lt;/p&gt;
+&lt;h3 id=motivation&gt;Motivation&lt;a class=headerlink href=#motivation title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Transformer framework has proven to be very efficient in multiple applications in NLP and CV by modeling high-dimensional distributions of semantic concepts at scale.
+Due to natural consequence of transformer nature, the input should be in form of a sequence thus, in case of &lt;em&gt;Decision Transformer&lt;/em&gt; the RL has been casted as conditional sequence modeling. Specifically, the sequence modeling with transformers is used for policy optimization in RL as a strong algorithmic paradigm.&lt;/p&gt;
+&lt;p&gt;Transformers can also perform &lt;em&gt;credit assignment&lt;/em&gt; directly via self-attention, in contrast to Bellman backups which slowly propagate rewards and are prone to “distractor” signals. This might help transformers to work with sparse, or distracting rewards. It even made Decision Transformer (DT) to outperform RL baseline for tasks requiring long term credit assignment due to the usage of long contexts. The DT aims to avoid any inductive bias for credit assignment, e.g. by explicitly learning the reward function or a critic, in favor of natural emergence of such properties thanks to transformer approach.&lt;/p&gt;
+&lt;h3 id=objective-or-goal-for-the-algorithm&gt;Objective, or goal for the algorithm&lt;a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The goal is to investigate if generative trajectory modeling – i.e. modeling the joint distribution of the sequence of states, actions, and rewards – can serve as a replacement for conventional RL algorithms.&lt;/p&gt;
+&lt;h3 id=the-processing-strategy-of-the-algorithm&gt;The processing strategy of the algorithm&lt;a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The classic RL is focused on maximizing the reward_for a state by finding an action that actually will maximize the reward. Conversely, the key aspect of DT is to condition on future desired reward. This way the algorithm has additional - reward - input, along with the state. This way it is expected not only to maximize, but to fit to the actual reward value and that requires more learning/memorization. This is where transformers have proven to work particularly well for sequence modeling. Natural consequence of this design decision is to use the offline RL. This is why the paper is focused on the world of model-free and offline RL algorithms.&lt;/p&gt;
+&lt;p&gt;The tasks expects to find the right action for a given state and reward. The offline nature allows the Transformer to look into historical (offline, training dataset) data to find the same state with similar history and about the same reward from future action. From such past experience similar action will be deduced &lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2 class=simple-footnote title="Similarly to behavioral cloning which maximizes the reward based on expert demonstrations.[\ref]. This way based on the past sequence experiences,"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a name=fig:DT&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;script src="https://vjs.zencdn.net/7.11.4/video.min.js"&gt;&lt;/script&gt;
+&lt;video id=my-player class="video-js vjs-theme-sea vjs-big-play-centered" controls preload=auto autoplay loop="" muted=""&gt;
+ &lt;source src="../img/dt.webm" type="video/webm"&gt;
+ &lt;p class=vjs-no-js&gt;
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      &lt;a href="https://videojs.com/html5-video-support/" target=_blank&gt; supports HTML5 video&lt;/a&gt;
+    &lt;/p&gt;
+&lt;/video&gt;
+&lt;p align=center&gt;Figure 2. Decision Transformer overview (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;the Transformer outputs an &lt;em&gt;action&lt;/em&gt; that in the past agents ended up with, for same &lt;em&gt;state&lt;/em&gt;, while getting similar &lt;em&gt;reward&lt;/em&gt; which in current timestep agent is expected to get (See &lt;a href=#fig:DT&gt;Figure 2.&lt;/a&gt;).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The major drawback of this approach is that it is limited to the context sequence length. Thus, in case when agent done action more aligned for current state-reward condition which however, is outside of the context (self-attended input of Transformer) - the sequence model will not be able to infer about that as it only attends to tokens within the limited length context.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Therefore, the DT is better for credit assignment for longer distances than the LSTMs (see &lt;a href=#the-considerations-of-the-DT&gt;more&lt;/a&gt;), but the drawback is that it still does not allow to ditch the classical RL dynamic programming methods as the are still suitable for the longer-than-context learning problems.&lt;/p&gt;
+&lt;p&gt;The key is that with minimal modifications to transformer, DT models trajectories autoregressively.  The goal here is to be able to conditionally generate actions at test time, based on &lt;strong&gt;future&lt;/strong&gt; desired &lt;em&gt;returns&lt;/em&gt; &lt;span class=math&gt;\(\hat{R}\)&lt;/span&gt; (using modeled rewards) rather than past &lt;em&gt;rewards&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=""&gt;&lt;em&gt;trajectory&lt;/em&gt;&lt;/a&gt; - &lt;span class=math&gt;\(\tau\)&lt;/span&gt; - is made of sequence of states, actions and rewards at given timesteps: &lt;span class=math&gt;\(\tau = (s_0, a_0. r_0, s_1, a_1, r_1, \ldots, s_T, a_T, r_T)\)&lt;/span&gt; The return of a trajectory at &lt;span class=math&gt;\(t\)&lt;/span&gt; timestep, is the sum of future rewards of the trajectory starting from &lt;span class=math&gt;\(t\)&lt;/span&gt;: &lt;span class=math&gt;\(R_t = \sum_{t'=t}^T r_{t'}\)&lt;/span&gt; (without discount factor&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3 class=simple-footnote title="The discount factor \(\gamma\) presence (in eg CQL) in the return calculation is a design decision for the problem formulation and it enables stability of the solution at price of discounting more of the future distant rewards than the closer ones in an episode."&gt;3&lt;/a&gt;&lt;/sup&gt;).&lt;/p&gt;
+&lt;p&gt;The goal of offline RL is to learn a policy which maximizes the &lt;strong&gt;expected return&lt;/strong&gt; &lt;span class=math&gt;\(\mathbb{E}[\sum_{t=1}^T r_t]\)&lt;/span&gt; in an  Markov Decision Process (MDP).
+In DT instead of feeding rewards &lt;span class=math&gt;\(R\)&lt;/span&gt; directly the DT uses (future) &lt;em&gt;returns-to-go&lt;/em&gt; &lt;span class=math&gt;\(\hat{R}\)&lt;/span&gt; therefore, the trajectory becomes: &lt;span class=math&gt;\(\tau = (\hat{R}_1, s_1, a_1.  \hat{R}_2, s_2, a_2,  \ldots, \hat{R}_T), s_T, a_T\)&lt;/span&gt;.
+After executing the generated action for the current state, algorithm decrement the target return by the achieved reward and repeat until episode termination.&lt;/p&gt;
+&lt;p&gt;The input of the architecture is a state that is encoded with DQN encoder with linear layer to project to the embedding dimension followed by layer normalization. To obtain token embeddings, we learn a linear layer for each modality (return-to-go, state, or action), which projects raw inputs to the embedding dimension. The linear layer is replaced with convolution encoder for environments with visual inputs.
+An embedding for each timestep is learned and added to each token –  this is different from the standard positional embedding used by transformers, as one timestep corresponds to three tokens (one for each modality: return-to-go, state, or action). The tokens are then processed by a GPT model, which predicts future action tokens via autoregressive modeling.&lt;/p&gt;
+&lt;p&gt;The training use a dataset of offline trajectories. Samples minibatches of sequence length K are used from dataset. The Transformer head used for predicting for input token &lt;span class=math&gt;\(s_t\)&lt;/span&gt; is used to predict &lt;span class=math&gt;\(a_t\)&lt;/span&gt; either with cross-entropy for discrete actions or mean-squared for continuous actions while the loses are averaged.  &lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:DTalgo&gt;&lt;/a&gt;
+&lt;img alt="Decision Transformer Pseudocode (for continuous actions)" src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/DT_algo.png"&gt;
+Figure 3. Decision Transformer Pseudocode (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm&gt;Metaphors, or analogies to other architectures describing the behavior of the algorithm&lt;a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;There are two main approaches for offline learning that are compared to Decision Transformer: &lt;em&gt;Behavioral Cloning&lt;/em&gt; (BC) and &lt;em&gt;Conservative Q-Learning&lt;/em&gt; (CQL). The BC is to simply mimic behavior in episodes that has lead to good rewards.&lt;/p&gt;
+&lt;h4 id=the-considerations-of-the-dt&gt;The considerations of the DT&lt;a class=headerlink href=#the-considerations-of-the-dt title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;An important aspect that should be mentioned about DT is related to its offline learning nature. That is the high dependency on the dataset that is picked as the training set of episodes. In the paper, the dataset is based on experience of DQN high performing agent, as an active reinforcement learner. This way the source episodes in dataset are not a random demonstrations, but are more of a set of &lt;strong&gt;expert&lt;/strong&gt; demonstrations.&lt;/p&gt;
+&lt;p&gt;Additionally, DT is a sequence model and not an RL model. Interestingly, the transformer part of DT, could be replaced with any other autoregressive sequence modeling architecture such as LSTM.  In which case the past (state, action, reward) tuples can get propagated as a hidden representation, one step at a time, while producing next action (or a Q-value in case of Q-learning) that results with a certain reward.&lt;/p&gt;
+&lt;p&gt;The LSTMs finds the decisive action that lead to the expected result (during training) in a sequence of actions. As we are looking for this most meaningful actions to gain the expected final state, it is not the last action  in the sequence of state changing actions, that might be the best. The goal of RL is to assign the highest reward to this most meaningful action in an episode. This way in future this actions will be favored.&lt;/p&gt;
+&lt;p&gt;For LSTMs this requires to go back though the episode sequence of states (and actions) deeper with Back Propagation Though Time (BPTT)&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4 class=simple-footnote title=" one trains recurrent neural networks by unrolling the network into a virtual feed forward network, and applying the backpropagation algorithm to that. This method is called Back-Propagation-Through-Time (BPTT), as it requires propagation of gradients backwards in time."&gt;4&lt;/a&gt;&lt;/sup&gt; which limits how far back the error is propagated (to at most the length of the trajectory) because it is computationally expensive, as the number of timesteps increase in LSTM (as a RNN variant).&lt;/p&gt;
+&lt;p&gt;Therefore, it is a very hard (esp. in architectures like RNN/LSTM) task to do the long-range time credit assignments.&lt;/p&gt;
+&lt;p&gt;To solve this problem a &lt;a href="https://www.sciencedirect.com/science/article/pii/B9781558601413500304"&gt;dynamic programming&lt;/a&gt; is used in RL.  Therefore, instead of having to just learn from the reward and assign it to an action, each timestep will output not only an &lt;em&gt;action&lt;/em&gt;, but also a &lt;em&gt;value&lt;/em&gt; (similarly as Q-function already returns a value in Q-learning). The algorithm that does this is called Temporal Difference learning. The &lt;em&gt;value&lt;/em&gt; is the expected/estimated return (final reward in the future) of the episode, starting from the given state, and following till the final state (return) is reached. This way, the final return prediction is not the only learning signal, but also this gives predictions of future reward values for the next actions in each of the intermediate, consecutive states in the path that leads to the final return state. In other words, at each state the  &lt;em&gt;value function&lt;/em&gt; not only tries to predict the final return (which is really noisy for states that are far from return), but also train the value function to predict all the values from states that are between the current state and the final one in an episode. Thus, trying to predict the output of the value function.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Bellman (aka backup / update) operator - operation of updating the value of state &lt;span class=math&gt;\(s\)&lt;/span&gt; from the value of other states that could be potentially reached from state &lt;span class=math&gt;\(s\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Bellman equation for the &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;V-function&lt;/a&gt; (State-Value) simplifies computation:&lt;/p&gt;
+&lt;div class=math&gt;\begin{equation}
+v^\pi (s)=  \mathbb{E_\pi}[R_{t+1} + \gamma  v(S_{t+1})| S_t = s]
+\end{equation}&lt;/div&gt;
+&lt;p&gt;Bellman equation decomposes the V-function into two parts, the immediate reward - &lt;span class=math&gt;\(R_{t+1}\)&lt;/span&gt; - plus the discounted future values of successor states. This equation simplifies the computation of the value function. This way, rather than summing over multiple time steps, we find the optimal solution of a complex problem by breaking it down into simpler, recursive subproblems and utilizing the fact that finding their optimal solution to the overall problem depends upon the optimal solution to its subproblems. Which make it a &lt;em&gt;dynamic programming&lt;/em&gt; algorithm similarly to the &lt;a href="../../../May/01/RL-Primer/#temporal-difference-td-learning"&gt;Temporal Difference&lt;/a&gt; approach,&lt;/p&gt;
+&lt;p&gt;It works similarly in terms of the &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;Q-function&lt;/a&gt; (State-Action value function) in Q-learning, where this approach is formalized with the Bellman's recurrence equation.&lt;/p&gt;
+&lt;div class=math&gt;\begin{equation}
+q_\pi (s,a) = \mathbb{E_\pi}[R_{t+1} + \gamma q_\pi (S_{t+1}, A_{t+1})| S_t=s, A_t=a]
+\end{equation}&lt;/div&gt;
+&lt;p&gt;Here, State-Action Value of a state can be decomposed into the immediate reward we get on performing a certain action in state &lt;span class=math&gt;\(s\)&lt;/span&gt; and moving to another state  &lt;span class=math&gt;\(s’\)&lt;/span&gt; plus the discounted value of the state-action value of the state &lt;span class=math&gt;\(s’\)&lt;/span&gt; with respect to the some action &lt;span class=math&gt;\(a\)&lt;/span&gt; our agent will take from that state on-wards.&lt;/p&gt;
+&lt;p&gt;In RL we use the TD learning and Q-functions to allow &lt;em&gt;credit assignment&lt;/em&gt; for long time ranges.&lt;/p&gt;
+&lt;p&gt;However, as the DT is a sequence modeling problem there is no need for &lt;em&gt;dynamic programming&lt;/em&gt; techniques such as Temporal Difference (TD) to be applied. This is due to the Transformer nature, that enables to attend (route information) from any sequence element to any other sequence element in a single step. Therefore, technically the &lt;em&gt;credit assignment&lt;/em&gt; can be done in a single step - but under one crucial condition: &lt;strong&gt;as as long as if it fits into context&lt;/strong&gt;.&lt;/p&gt;
+&lt;h5 id=limitations&gt;Limitations&lt;a class=headerlink href=#limitations title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;p&gt;The limitation of this &lt;em&gt;credit assignment&lt;/em&gt; approach is that this works only works for a given length of Transformer input sequence (context). If one would like to predict correlations and do the &lt;em&gt;credit assignment&lt;/em&gt; across longer spans, than the Transformer input sequence (as a context), still the &lt;em&gt;dynamic programming&lt;/em&gt; would be required.&lt;/p&gt;
+&lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb&lt;a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The DT has been tested on the Atari dataset. The show that DT outperformed remaining algorithms on most of the games however, with high standard deviation.&lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:dtatari&gt;&lt;/a&gt;
+&lt;img alt="Gamer-normalized scores for the 1% DQN-replay Atari dataset. We report the mean and variance across 3 seeds. Best mean scores are highlighted in bold. Decision Transformer (DT) performs comparably to CQL on 3 out of 4 games, and outperforms other baselines." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_atari.png"&gt;
+Figure 4. Decision Transformer Pseudocode (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;The lower standard deviation and also mostly better results, comparing  to CQL, are presented for OpenAI Gym considering the continuous control tasks from the D4RL benchmark.&lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:dt_openai&gt;&lt;/a&gt;
+&lt;img alt="DT results for D4RL datasets." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_openaigym.png"&gt;
+Figure 5. Decision Transformer (DT) outperforms conventional RL algorithms on almost all tasks. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Additionally, comparing to behavioral (see &lt;a href=#ig:dt_bc&gt;Figure 6.&lt;/a&gt;) cloning trained on set percentent of the experience 10, 25, 40, 100 percent. The results show that BC can give better performance than DT if the choice will select certain percentage not not necessarily pickign the best &lt;em&gt;trajectories&lt;/em&gt;. To find the right percentage additional hyper-parameter search while DT is just one run solution.&lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:dt_bc&gt;&lt;/a&gt;
+&lt;img alt="DT vs BC." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_openaigym.png"&gt;
+Figure 6. Comparison between Decision Transformer (DT) and Percentile Behavior Cloning (%BC). (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;However, one should note that in each of the experiments the DT hyperparameters are different for each experiment. For instance whenever a task is a sparse reward task the context length is increased to limit the impact of the context boundary limitation as described in previous &lt;a href=#limitations&gt;sections&lt;/a&gt;. To confirm this Table 5 in the paper shows that the longer the context the better.&lt;/p&gt;
+&lt;p&gt;Additionally, in experiments such as the game of Pong the reward is known to be at max 21 it helped to condition on the reward of 20 (see Table 8 of the appendix). Therefore, the fact of knowing the reward is crucial to setup the hperparameters correctly.&lt;/p&gt;
+&lt;p&gt;The limitation of DT seems to be that you need to know the reward that task is aiming for and according to Figure 4. of the paper putting arbitrary large value for reward is not possible. When green line of expected oracle is aligned with the blue line of the DT outcome, means that the reward is as expected. Soon after the received reward is higher than the one observed from the training dataset performance drops.  &lt;/p&gt;
+&lt;p&gt;One final example if the &lt;em&gt;Key-to-Door&lt;/em&gt; environment where the use of Transformer with longer context where the one step credit assignment can be done is proven. This however is only limited to the size/length of the context. The &lt;a href=#fig:dt_ktd&gt;Figure 7.&lt;/a&gt; shows that with the DT, if the agent does not pick up the key in the first room, it already knows in second room that the game is lost due to being withing the context of Transformer's attention and that knows from the past offline episodes that not picking the key means that the game is lost.&lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:dt_ktd&gt;&lt;/a&gt;
+&lt;img alt=key-to-door. src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_ktd.png"&gt;
+Figure 7. Comparison between Decision Transformer (DT) and Percentile Behavior Cloning (%BC). (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;h3 id=what-classes-of-problem-is-the-algorithm-well&gt;What classes of problem is the algorithm well ?&lt;a class=headerlink href=#what-classes-of-problem-is-the-algorithm-well title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;As shown in the test results as long as the context length of the Decision Transformer matches the task expectation the solutions behaves better than other methods like CQL or BC. However, to achieve this, one needs to know the length of the context in form of a hyperparameter.&lt;/p&gt;
+&lt;p&gt;Additionally, for the sake of the performance, knowing the maximum reward is also important.&lt;/p&gt;
+&lt;h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm&gt;Common benchmark or example datasets used to demonstrate the algorithm&lt;a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Decision Transformer can match the performance of well-studied and specialized TD learning algorithms developed for these settings.&lt;/p&gt;
+&lt;p align=center&gt;&lt;a name=fig:dt_perf&gt;&lt;/a&gt;
+&lt;img alt="DT performance comparison." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_perf.png"&gt;
+Figure 8. Results comparin DT to TD learning (CQL) and behavior cloning across Atari, OpenAI Gym, and Minigrid. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;As DT is based on a offline mode, a very important part of offline RL is how do we pick this fixed dataset to model upon. Here it is based on DQN expert learner so the results are good and far from being random.&lt;/p&gt;
+&lt;p&gt;In the paper authors compare to two approaches that are used in offline RL setup:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Behavioral Cloning&lt;/em&gt; (BC) where the agent tries to mimic those agents from the dataset, which have gained high rewards for their actions.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Q-Learning&lt;/em&gt; (actually a &lt;em&gt;Conservative Q-Learning&lt;/em&gt;) (CQL). Q-learning is a classic RL algorithm which uses Q-function to estimate Q-values, along the possible state and action space, to maximize the total reward. The Conservative Q-learning (CQL) is more of a pessimistic approach, that helps to mitigate the tendency of Q-function to overestimate the Q-values that one gets from certain actions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=useful-resources-for-learning-more-about-the-algorithm&gt;Useful resources for learning more about the algorithm:&lt;a class=headerlink href=#useful-resources-for-learning-more-about-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2106.01345"&gt;ArXiv Paper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/kzl/decision-transformer"&gt;GitHub implementation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+
+&lt;h3 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1&gt;When one tries to combine &lt;em&gt;time difference&lt;/em&gt; (TD) learning (or Bootstrapping), off-policy learning, and function approximations (such as Deep Neural Network), instabilities and divergence may arise. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2&gt;Similarly to behavioral cloning which maximizes the reward based on expert demonstrations.[\ref]. This way based on the past sequence experiences, &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3&gt;The &lt;em&gt;discount&lt;/em&gt; factor &lt;span class=math&gt;\(\gamma\)&lt;/span&gt; presence (in eg CQL) in the return calculation is a design decision for the problem formulation and it enables stability of the solution at price of discounting more of the future distant rewards than the closer ones in an episode. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4&gt; one trains recurrent neural networks by unrolling the network into a virtual feed forward network, and applying the backpropagation algorithm to that. This method is called Back-Propagation-Through-Time (BPTT), as it requires propagation of gradients backwards in time. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"></category><category term="Transformer"></category><category term="Reinforcement Learning"></category><category term="RL"></category><category term="MDP"></category><category term="Markov Decision Process"></category></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"></link><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
+&lt;h3 id="prerequisite-rl-knowledge"&gt;Prerequisite RL knowledge&lt;a class="headerlink" href="#prerequisite-rl-knowledge" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Here are explained some of the main terms that this paper uses to motivate its goal. Form more details please refer to free online book from &lt;a href="http://incompleteideas.net/book/the-book.html"&gt;Richard S. Sutton
+and Andrew G. Barto Second &lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt; Edition MIT Press, Cambridge, MA, 2018&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id="what-is-model-free-rl"&gt;What is &lt;em&gt;Model-free&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-model-free-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;A “policy”, is a strategy that an agent uses to pursue a goal.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Model-free algorithm:
+estimates the optimal policy without using or estimating the dynamics (transition and reward functions) of the environment.&lt;/p&gt;
+&lt;p&gt;Model-based algorithm:
+uses the transition function (and the reward function) in order to estimate the optimal policy.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In an &lt;strong&gt;online RL&lt;/strong&gt; there is an &lt;em&gt;Agent&lt;/em&gt; and the &lt;em&gt;Environment&lt;/em&gt;. Agent &lt;span class="math"&gt;\(A\)&lt;/span&gt; performs actions &lt;span class="math"&gt;\(a\)&lt;/span&gt; in environment &lt;span class="math"&gt;\(E\)&lt;/span&gt;, and the &lt;span class="math"&gt;\(E\)&lt;/span&gt; response with the &lt;em&gt;reward&lt;/em&gt; &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;em&gt;observation&lt;/em&gt; &lt;span class="math"&gt;\(o\)&lt;/span&gt; (or a &lt;em&gt;state&lt;/em&gt; &lt;span class="math"&gt;\(s\)&lt;/span&gt; if it is not partially observable environment). Additionally a &lt;em&gt;policy&lt;/em&gt; (network) is the algorithm used by the agent to decide its actions. This is the part that can be &lt;em&gt;model-based&lt;/em&gt; or &lt;em&gt;model-free&lt;/em&gt;. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.&lt;/p&gt;
+&lt;p&gt;Policy can be model-based or model-free. Question is how to optimize the policy network via &lt;em&gt;policy gradient&lt;/em&gt; (PG)?&lt;/p&gt;
+&lt;p&gt;PG algorithms directly try to optimize the policy to increase rewards.&lt;/p&gt;
+&lt;h4 id="markov-decision-processes-mdp"&gt;Markov decision processes (MDP).&lt;a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;MDP is a process with a fixed number of states, and it randomly evolves from one state to another at each step. The probability for it to evolve from state A to state B is fixed.&lt;/p&gt;
+&lt;h4 id="what-is-offline-rl"&gt;What is &lt;em&gt;Offline&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-offline-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In &lt;strong&gt;offline&lt;/strong&gt; RL there is an agent and (instead of interactive environment) a limited, fixed dataset. The dataset contains experience (trajectory rollouts of arbitrary policies) from other scenarios where agents were learning a &lt;em&gt;policy&lt;/em&gt; to gain a good &lt;em&gt;reward&lt;/em&gt;. In contrast to online RL, such setup is more challenging as there is no dynamic environment to test hypothesis, and all is left is to have a set of &lt;em&gt;trajectories&lt;/em&gt; without live feedback. By observing historical episodes of interaction from other agents, an offline agent needs to learn a good policy to achieve a high reward.&lt;/p&gt;
+&lt;h4 id="reward-return"&gt;Reward /return&lt;a class="headerlink" href="#reward-return" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;Reward&lt;/strong&gt;
+Reward is the quantity received from the environment in a given timestep as a result of an action&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Return&lt;/strong&gt;:
+Return is defined as a function of reward sequence, which can be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;simple sum of rewards (also called cumulative reward), or a&lt;/li&gt;
+&lt;li&gt;sum of &lt;em&gt;discounted&lt;/em&gt; rewards (also called &lt;em&gt;cumulative future discounted reward&lt;/em&gt;):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a name="tdr"&gt;
+&lt;/p&gt;
+&lt;div class="math"&gt;$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$&lt;/div&gt;
+&lt;p&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;"Cumulative" refers to the summation.&lt;/li&gt;
+&lt;li&gt;"Future" refers to the fact that it's an expected value of all the future timesteps values until the end of the episode with respect to the present quantity.&lt;/li&gt;
+&lt;li&gt;"Discounted" refers to the "gamma" &lt;span class="math"&gt;\(\gamma\)&lt;/span&gt; &lt;em&gt;discount rate&lt;/em&gt; factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from &lt;span class="math"&gt;\(t+1\)&lt;/span&gt;.&lt;/li&gt;
+&lt;li&gt;"Reward" refers to the main quantity of interest, i.e. the reward received from the environment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The goal of an RL algorithm is to select actions that maximize the expected cumulative reward (the return) of the agent.&lt;/p&gt;
+&lt;h4 id="what-is-credit-assignment"&gt;What is &lt;em&gt;Credit Assignment&lt;/em&gt;?&lt;a class="headerlink" href="#what-is-credit-assignment" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In real world RL the state (and action) space usually needs to be very fine to cover all possibly relevant situations. This leads to the combinatorial explosion of states and actions which is referred as &lt;em&gt;curse of dimensionality&lt;/em&gt;.
+As an agent interacts with an environment in discrete timesteps, agent takes an action for current state and the environment emits a perception in form of a &lt;em&gt;reward&lt;/em&gt; and an &lt;em&gt;observation&lt;/em&gt;. In case of fully observable Markov Decision Process (MDP) it is the next state (of the environment and the agents). Agent's goal is to maximize the reward. In such &lt;strong&gt;fine grained&lt;/strong&gt; state-action spaces the reward occur terribly temporally delayed.&lt;/p&gt;
+&lt;p&gt;The (temporal) &lt;em&gt;credit assignment problem&lt;/em&gt; (CAP) is the problem of determining the actions that lead to a certain outcome. The problem of determining the contribution of each agent to the result of the training is the (temporal) CAP. In order to maximize the reward in the long run, the agent needs to determine which actions will lead to such outcome, which is essentially the temporal CAP. This way, an action that leads to a higher final cumulative reward should have more &lt;em&gt;credit&lt;/em&gt; (value) than an action that lead to a lower final reward. For instance, in Q-learning (the &lt;em&gt;off-policy&lt;/em&gt; algorithm) agents attempts to determine actions that will lead to the highest value in each state.&lt;/p&gt;
+&lt;p&gt;In RL, due to CAP, reward signals will only very weakly affect all temporally distant states that have preceded it. The influence of a reward gets more and more diluted over time and this can lead to bad convergence properties of the RL mechanism. Many steps must be performed by an iterative RL algorithm to propagate the influence of delayed reinforcement to all states and actions that have an effect on that reinforcement.&lt;/p&gt;
+&lt;h4 id="value-functions"&gt;Value functions&lt;a class="headerlink" href="#value-functions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Q-Learning is about learning Q-function that takes state and action conditioned on the history to predict future rewards.
+VF are state-action pair functions that estimate how good a particular action will be in a given state, or what the return for that action is expected to be.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;V-function&lt;/strong&gt; (State-Value) &lt;span class="math"&gt;\(v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]\)&lt;/span&gt; &lt;br &gt; &lt;strong&gt;Value&lt;/strong&gt;   of state &lt;span class="math"&gt;\(s\)&lt;/span&gt; under policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Q-function&lt;/strong&gt;  (State-Action) &lt;span class="math"&gt;\(q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]\)&lt;/span&gt;  &lt;br &gt;&lt;strong&gt;Quality&lt;/strong&gt;  of taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; with policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;.  The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; while taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good action &lt;span class="math"&gt;\(a\)&lt;/span&gt; is, given a state for agent following a policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Q-Value&lt;/strong&gt; - value in state-action table.  The Q-function is implemented as a table of states and actions and Q-values for each s,a pair are stored there.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Estimating&lt;/strong&gt; VF for a particular policy, helps to accurately choose an action that will provide the best total reward possible, after being in that given state.&lt;/p&gt;
+&lt;h4 id="temporal-difference-td-learning"&gt;Temporal Difference (TD) Learning&lt;a class="headerlink" href="#temporal-difference-td-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;em&gt;Temporal Difference&lt;/em&gt; (TD) (aka &lt;em&gt;bootstrapping&lt;/em&gt; method) solves the problem of &lt;strong&gt;estimating&lt;/strong&gt; &lt;a href="#value-functions"&gt;value function&lt;/a&gt;. If the value functions were to be calculated &lt;strong&gt;without estimation&lt;/strong&gt;, the agent would need to wait until the final reward was received before any state-action pair values can be updated. Once the final reward was received, the path taken to reach the final state would need to be traced back and each value updated accordingly. TD address this issue.&lt;/p&gt;
+&lt;p&gt;TD learning is a unsupervised, RL model-free method learning by bootstrapping from current estimate of value function. In TD, agent is learning from an environment through episodes with no prior knowledge of the environment. TD methods adjust predictions to match later, more accurate, predictions about the future before the final outcome is known.&lt;/p&gt;
+&lt;p&gt;Instead of calculating the total future reward, at each step, TD tries to predict the combination of immediate reward and its own reward prediction at the next moment in time.&lt;/p&gt;
+&lt;p&gt;TD method is called a "bootstrapping" method, because the value is updated partly using an existing estimate and not a final reward.&lt;/p&gt;
+&lt;h4 id="onoff-policy-algorithm"&gt;On/Off-policy algorithm&lt;a class="headerlink" href="#onoff-policy-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Off-policy algorithm - evaluate and improve a (target) policy that is different from (current) policy which is used for action selection. When passing the reward from the next state to the current state, it takes the maximum possible reward of the new state and ignores whatever policy we are using. Eg. Q-learning is off-policy as it updates its Q-values using the Q-value of the next state and the &lt;em&gt;greedy&lt;/em&gt; action. In other words, it estimates the &lt;strong&gt;return&lt;/strong&gt; (cumulative/total  &lt;a href="#tdr"&gt;discounted return&lt;/a&gt; future reward, starting from current timestep) for state-action pairs assuming a greedy policy were followed, despite the fact that it's not following a greedy policy.&lt;/p&gt;
+&lt;p&gt;On-policy algorithm - evaluate and improve the same policy which is being used to select actions, Eg. Sarsa  updates its Q-values using the Q-value of the next state and the current policy's action. It estimates the return for state-action pairs assuming the current policy continues to be followed.&lt;/p&gt;
+&lt;h4 id="action-selection-policies"&gt;Action Selection Policies&lt;a class="headerlink" href="#action-selection-policies" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;There are three common policies used for action selection. The aim of these policies is to balance the trade-off between &lt;strong&gt;exploitation&lt;/strong&gt; and &lt;strong&gt;exploration&lt;/strong&gt;, by not always exploiting what has been learned so far.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;greedy - Will lock on one action that happened to have good results at one point of time but it is not in reality the optimal action. So Greedy will keep exploiting this action while ignoring the others which might be better. It Exploits too much.&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft - very similar to &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy. The best action is selected with probability &lt;span class="math"&gt;\(1 - \epsilon\)&lt;/span&gt; and the rest of the time a random action is chosen uniformly.&lt;/li&gt;
+&lt;li&gt;softmax - one drawback of &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy and &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It is not clear which of these policies produces the best results overall. The nature of the task will have some bearing on how well each policy influences learning. If the problem we are trying to solve is of a game playing nature, against a human opponent, human factors may also be influential.&lt;/p&gt;
+&lt;h4 id="exploitation-vs-exploration"&gt;Expl&lt;strong&gt;oit&lt;/strong&gt;ation vs explo&lt;strong&gt;r&lt;/strong&gt;ation&lt;a class="headerlink" href="#exploitation-vs-exploration" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Exploitation - keep the current approach. Chooses the greedy action to get the most reward by exploiting the agent’s current action-value estimates. But by being greedy with respect to action-value estimates, may not actually get the most reward and lead to sub-optimal behaviour.&lt;/p&gt;
+&lt;p&gt;Exploration - Try new approach.  Allows an agent to improve its current knowledge about each action, hopefully leading to long-term benefit. Improving the accuracy of the estimated action-values, enables an agent to make more informed decisions in the future.&lt;/p&gt;
+&lt;p&gt;When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Reinforcement learning"></category><category term="Reinforcement Learning"></category><category term="RL"></category><category term="MDP"></category><category term="Markov Decision Process"></category></entry></feed>

@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather|Source+Serif+Pro|Berkshire+Swash');
+/* IMporting css for video */
+@import url("https://unpkg.com/video.js@7/dist/video-js.min.css");
+@import url("https://unpkg.com/@videojs/themes@1/dist/sea/index.css");
 
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
   font-family: 'Merriweather', serif;
@@ -133,6 +136,22 @@ body{
   box-shadow: 4px 4px 4px 0px rgba(128, 128, 128, 0.5);
 }
 
+/* to embedd webm converted from gifs */
+.entry-content video{
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 4px;
+  margin: 1em 1em 1em 0;
+  box-shadow: 4px 4px 4px 0px rgba(128, 128, 128, 0.5);
+}
+.entry-content .video-js{
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
 .headerlink:hover {
     opacity: 1;
     background: #ddd;
@@ -152,6 +171,9 @@ i.fa-external-link {
 /*    Use "Cover:" in .md file metadata. The img will be copied to "img" folder of date,
       or <article-title>/img if included inside content of article
 */
+a.artsubtitle{
+   font-size:20px; 
+}
 .summary {
   width: 800px;
 //  border: 1px solid black;
