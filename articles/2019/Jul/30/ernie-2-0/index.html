@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+    <link href="/static_files/img/favicon.jpg" rel="icon">
 
-<link rel="canonical" href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/">
+<link rel="canonical" href="/articles/2019/Jul/30/ernie-2-0/">
 
         <meta name="author" content="Michał Chromiak" />
         <meta name="keywords" content="NMT,transformer,Sequence transduction,Attention model,Machine translation,seq2seq,NLP,ELMo,OpenAI GPT,BERT,ERNIE 1.0,XLNet" />
@@ -19,9 +19,9 @@
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="ERNIE 2.0: A continual pre-training framework for language understanding"/>
-        <meta property="og:url" content="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/"/>
+        <meta property="og:url" content="/articles/2019/Jul/30/ernie-2-0/"/>
         <meta property="og:description" content="ERNIE 2.0 (Enhanced Representation through kNowledge IntEgration), a new knowledge integration language representation model that aims to beat SOTA results of BERT and XLNet. While pre-training with more than just several simple tasks to grasp the co-occurrence of words or sentences for language modeling, Ernie aims to explore named entities, semantic closeness and discourse relations to obtain valuable lexical, syntactic and semantic information from training corpora. Ernie 2.0 focus on building and learning incrementally pre-training tasks through constant multi-task learning. And it brings some interesting results."/>
-            <meta property="og:image" content="https://mchromiak.github.io/articles/2019/Jul/30/img/enrieCover.jpeg" />
+            <meta property="og:image" content="/articles/2019/Jul/30/img/enrieCover.jpeg" />
 
         <meta property="article:published_time" content="2019-07-30" />
             <meta property="article:section" content="Sequence Models" />
@@ -44,26 +44,24 @@
     <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@drChromiak">
         <meta name="twitter:creator" content="@drChromiak">
-    <meta name="twitter:domain" content="https://mchromiak.github.io">
+    <meta name="twitter:domain" content="">
         <meta property="twitter:image"
-              content="https://mchromiak.github.io/articles/2019/Jul/30/img/enrieCover.jpeg"/>
+              content="/articles/2019/Jul/30/img/enrieCover.jpeg"/>
 
 
     <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
-    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
-        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+    <link href="/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+        <link href="/static_files/css/custom.css" rel="stylesheet">
 
-        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
               title="Michał Chromiak's blog ATOM Feed"/>
 
 
 
-        <link href="https://mchromiak.github.io/feeds/sequence-models.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Michał Chromiak's blog Sequence Models ATOM Feed"/>
 
 </head>
 <body>
@@ -77,24 +75,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="https://mchromiak.github.io/" class="navbar-brand">
-<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+            <a href="/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                         <li><a href="/pages/about.html">
                              About
                           </a></li>
-                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                         <li><a href="/pages/categorisation.html">
                              Categorisation
                           </a></li>
-                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                         <li><a href="/pages/contact-detail.html">
                              Contact detail
                           </a></li>
-                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                         <li><a href="/pages/links.html">
                              Links
                           </a></li>
-                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                         <li><a href="/pages/resources.html">
                              Resources
                           </a></li>
             </ul>
@@ -110,15 +108,15 @@
     <div class="row">
         <div class="col-sm-9">
             <ol class="breadcrumb">
-                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
-                <li><a href="https://mchromiak.github.io/category/sequence-models.html" title="Sequence Models">Sequence Models</a></li>
+                <li><a href="" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="/category/sequence-models.html" title="Sequence Models">Sequence Models</a></li>
                 <li class="active">ERNIE 2.0: A continual pre-training framework for language understanding</li>
             </ol>
     <section id="content">
         <article>
             <header class="page-header">
                 <h1>
-                    <a href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/"
+                    <a href="/articles/2019/Jul/30/ernie-2-0/"
                        rel="bookmark"
                        title="Permalink to ERNIE 2.0: A continual pre-training framework for language understanding">
                         ERNIE 2.0: A continual pre-training framework for language understanding
@@ -140,36 +138,36 @@
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
-        <a href="https://mchromiak.github.io/category/sequence-models.html">Sequence Models</a>
+        <a href="/category/sequence-models.html">Sequence Models</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
+	<a href="/tag/nmt.html">NMT</a>
         /
-	<a href="https://mchromiak.github.io/tag/transformer.html">transformer</a>
+	<a href="/tag/transformer.html">transformer</a>
         /
-	<a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
+	<a href="/tag/sequence-transduction.html">Sequence transduction</a>
         /
-	<a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
+	<a href="/tag/attention-model.html">Attention model</a>
         /
-	<a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
+	<a href="/tag/machine-translation.html">Machine translation</a>
         /
-	<a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
+	<a href="/tag/seq2seq.html">seq2seq</a>
         /
-	<a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
+	<a href="/tag/nlp.html">NLP</a>
         /
-	<a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
+	<a href="/tag/elmo.html">ELMo</a>
         /
-	<a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
+	<a href="/tag/openai-gpt.html">OpenAI GPT</a>
         /
-	<a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
+	<a href="/tag/bert.html">BERT</a>
         /
-	<a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
+	<a href="/tag/ernie-10.html">ERNIE 1.0</a>
         /
-	<a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
+	<a href="/tag/xlnet.html">XLNet</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
@@ -191,7 +189,7 @@ Contribution of paper:</p>
 <li>Paper: <a href="https://arxiv.org/abs/1907.12412"> Ernie 2.0: A continual pre-training framework for language understanding. ArXiv</a>.</li>
 <li>Code for fine-tuning and pre-trained models for English: <a href="https://github.com/PaddlePaddle/ERNIE">GitHub</a></li>
 </ul>
-<p align="center"><img alt="ERNIE2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif">
+<p align="center"><img alt="ERNIE2" src="/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif">
 <br>
 Figure 1. A continual pre-training framework for language understanding.</p>
 <h3 id="the-continual-pre-training">The continual pre-training<a class="headerlink" href="#the-continual-pre-training" title="Permanent link">🔗</a></h3>
@@ -212,7 +210,7 @@ Continuously, task-by-task new tasks are added starting from first, initial task
 <p>The phase of fine-tuning of the pre-trained model for language understanding tasks (e.g question answering, natural language inference, semantic similarity) is done with task specific supervised data.</p>
 <h3 id="ernie-20-model">ERNIE 2.0 model<a class="headerlink" href="#ernie-20-model" title="Permanent link">🔗</a></h3>
 <p>The model is similar to BERT or XLNet.</p>
-<p align="center"><img alt="ERNIE2struct" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png">
+<p align="center"><img alt="ERNIE2struct" src="/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png">
 <br>
 Figure 2. ERNIE 2.0 model structure. The input embedding consists of the token embedding, the sentence embedding, the position embedding and the task embedding. There are seven pre-training tasks in the ERNIE 2.0 model.</p>
 <h4 id="encoder">Encoder<a class="headerlink" href="#encoder" title="Permanent link">🔗</a></h4>
@@ -220,10 +218,10 @@ Figure 2. ERNIE 2.0 model structure. The input embedding consists of the token e
 <h4 id="task-embeddings">Task embeddings<a class="headerlink" href="#task-embeddings" title="Permanent link">🔗</a></h4>
 <p>The model feeds task embedding to modulate the characteristic of different tasks.Each task has an id ranging from 0 to N. Each task id is assigned to one unique task embedding. The model input contains the corresponding token, segment, position and task embedding. Any task id can initialize model in the fine-tuning process.</p>
 <h1 id="results">Results<a class="headerlink" href="#results" title="Permanent link">🔗</a></h1>
-<p align="center"><img alt="ERNIE2res1" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/engTasks.png">
+<p align="center"><img alt="ERNIE2res1" src="/articles/2019/Jul/30/ernie-2-0/img/engTasks.png">
 <br>
 Figure 3. ERNIE 2.0 The results on GLUE benchmark for English tasks.</p>
-<p align="center"><img alt="ERNIE2res2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png">
+<p align="center"><img alt="ERNIE2res2" src="/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png">
 <br>
 Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
             </div>
@@ -231,7 +229,7 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
-        <li><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+        <li><a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
     </ul>
 </section>
     <hr />
@@ -251,7 +249,7 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
 
-                var disqus_url = 'https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/';
+                var disqus_url = '/articles/2019/Jul/30/ernie-2-0/';
 
             var disqus_config = function () {
                 this.language = "en";
@@ -279,7 +277,7 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
             <aside>
 <div id="aboutme">
         <p>
-            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+            <img width="100%" class="img-thumbnail" src="/static_files/img/me.png"/>
         </p>
     <p>
       <strong>About Michał Chromiak</strong><br/>
@@ -307,9 +305,9 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modelling and model-free, offline RL</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/">MLP-Mixer: MLP is all you need... again? ...</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/">RL Primer</a></li>
+    <li class="list-group-item"><a href="/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modelling and model-free, offline RL</a></li>
+    <li class="list-group-item"><a href="/articles/2021/May/05/MLP-Mixer/">MLP-Mixer: MLP is all you need... again? ...</a></li>
+    <li class="list-group-item"><a href="/articles/2021/May/01/RL-Primer/">RL Primer</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -319,19 +317,19 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
   <ul class="list-group" id="categories">
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+      <a href="/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+      <a href="/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+      <a href="/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+      <a href="/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
     </li>
     <li class="list-group-item">
-      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+      <a href="/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
     </li>
   </ul>
 </li>
@@ -339,85 +337,85 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
 
 <!-- Sidebar/Tag Cloud -->
 <li class="list-group-item">
-  <a href="https://mchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <a href="/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
   <ul class="list-group list-inline tagcloud" id="tags">
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/application.html">application</a>
+      <a href="/tag/application.html">application</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
+      <a href="/tag/attention-model.html">Attention model</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/basics.html">basics</a>
+      <a href="/tag/basics.html">basics</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
+      <a href="/tag/bert.html">BERT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/cv.html">CV</a>
+      <a href="/tag/cv.html">CV</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
+      <a href="/tag/elmo.html">ELMo</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
+      <a href="/tag/ernie-10.html">ERNIE 1.0</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
+      <a href="/tag/language-model.html">language model</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
+      <a href="/tag/machine-translation.html">Machine translation</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/markov-decision-process.html">Markov Decision Process</a>
+      <a href="/tag/markov-decision-process.html">Markov Decision Process</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/mdp.html">MDP</a>
+      <a href="/tag/mdp.html">MDP</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
+      <a href="/tag/mlp.html">MLP</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
+      <a href="/tag/ngram.html">ngram</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
+      <a href="/tag/nlp.html">NLP</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
+      <a href="/tag/nmt.html">NMT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
+      <a href="/tag/openai-gpt.html">OpenAI GPT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
+      <a href="/tag/patternrecognition.html">PatternRecognition</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
+      <a href="/tag/perplexity.html">perplexity</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/reinforcement-learning.html">Reinforcement Learning</a>
+      <a href="/tag/reinforcement-learning.html">Reinforcement Learning</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/rl.html">RL</a>
+      <a href="/tag/rl.html">RL</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
+      <a href="/tag/seq2seq.html">seq2seq</a>
     </li>
     <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
+      <a href="/tag/sequence-transduction.html">Sequence transduction</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
+      <a href="/tag/smoothing.html">smoothing</a>
     </li>
     <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
+      <a href="/tag/transformer.html">Transformer</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/vit.html">ViT</a>
+      <a href="/tag/vit.html">ViT</a>
     </li>
     <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
+      <a href="/tag/xlnet.html">XLNet</a>
     </li>
   </ul>
 </li>
@@ -475,27 +473,27 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          <a href="/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (2)
+          <a href="/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (2)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          <a href="/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          <a href="/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          <a href="/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
           </a>
         </li>
         <li class="list-group-item">
-          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          <a href="/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
           </a>
         </li>
   </ul>
@@ -523,17 +521,17 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
       </div>
    </div>
 </footer>
-<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+<script src="/theme/js/jquery.min.js"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+<script src="/theme/js/bootstrap.min.js"></script>
 
 <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
-<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+<script src="/theme/js/respond.min.js"></script>
 
-    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+    <script src="/static_files/js/custom.js"></script>
 
-    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <script src="/theme/js/bodypadding.js"></script>
     <!-- Disqus -->
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -564,6 +562,6 @@ Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
 
         <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
-    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+    <script src="/static_files/js/article.js"></script>
 </body>
 </html>
