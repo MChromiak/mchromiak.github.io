@@ -1,6 +1,6 @@
 Title: Trajectory Transformer: Reinforcement Learning as Sequence problem
 Subtitle: Reinforcement Learning as One Big Sequence Modeling Problem - Research Paper Explained
-Status: draft
+Status: hidden
 Category: Reinforcement learning
 Date: 2021-06-10 14:00
 Modified: 2021-06-10 14:00
