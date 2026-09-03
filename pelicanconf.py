@@ -159,7 +159,7 @@ ADDTHIS_PROFILE = 'ra-59ea3c17b283c631'
 
 #Reqired by theme pelican-bootstrap3
 PLUGIN_PATHS = ['../pelican-plugins']
-PLUGINS = ['i18n_subsites','related_posts','tag_cloud','simple_footnotes','render_math','sitemap']
+PLUGINS = ['i18n_subsites','related_posts','tag_cloud','simple_footnotes','pelican.plugins.render_math','sitemap']
 
 MARKDOWN = {
     'extension_configs': {
