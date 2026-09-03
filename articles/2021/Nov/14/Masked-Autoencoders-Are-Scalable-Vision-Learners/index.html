@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet. - Michał Chromiak's blog</title>
+    <title>🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet. - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -14,13 +14,13 @@
 
         <meta name="author" content="Michał Chromiak" />
         <meta name="keywords" content="Representation Learning,Self-Supervision (SSL),CV,ViT,BERT,GPT,Autoencoder,Scalability" />
-        <meta name="description" content="MAE is a simple autoencoding approach that reconstructs the original signal - image - given its partial observation. Thanks to successful introduction of patching approach in ViT it has become more feasible for CV as an alternative to convnets. The MEA paper use the ViT&#39;s patch-based approach to replicate masking strategy (similarly to BERT) for image patches. MAE randomly samples (without replacement) uniformly distributed and non-overlapping patches regularly created from image. MAE learns very high-capacity models that generalize well. Thanks to very high masking ratio (e.g., 75%) authors were able to reduce the training time by &gt;3x while at the same time reducing the memory consumption thus, enabling the MAE to scale better for large models, like ViT-Large/-Huge on ImageNet-1K with 87.8% accuracy." />
+        <meta name="description" content="A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy." />
 
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet."/>
+        <meta property="og:title" content="🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet."/>
         <meta property="og:url" content="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/"/>
-        <meta property="og:description" content="MAE is a simple autoencoding approach that reconstructs the original signal - image - given its partial observation. Thanks to successful introduction of patching approach in ViT it has become more feasible for CV as an alternative to convnets. The MEA paper use the ViT&#39;s patch-based approach to replicate masking strategy (similarly to BERT) for image patches. MAE randomly samples (without replacement) uniformly distributed and non-overlapping patches regularly created from image. MAE learns very high-capacity models that generalize well. Thanks to very high masking ratio (e.g., 75%) authors were able to reduce the training time by &gt;3x while at the same time reducing the memory consumption thus, enabling the MAE to scale better for large models, like ViT-Large/-Huge on ImageNet-1K with 87.8% accuracy."/>
+        <meta property="og:description" content="A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2021/Nov/14/img/MaskedAE1.png" />
 
         <meta property="article:published_time" content="2021-11-14" />
@@ -108,7 +108,7 @@
             <ol class="breadcrumb">
                 <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
                 <li><a href="https://mchromiak.github.io/category/computer-vision.html" title="Computer Vision">Computer Vision</a></li>
-                <li class="active">Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet.</li>
+                <li class="active">🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</li>
             </ol>
     <section id="content">
         <article>
@@ -116,8 +116,8 @@
                 <h1>
                     <a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/"
                        rel="bookmark"
-                       title="Permalink to Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet.">
-                        Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet.
+                       title="Permalink to 🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.">
+                        🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.
                     </a>
                 </h1>
             </header>
@@ -131,7 +131,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2021-11-14T11:18:00+01:00"> Sun, 14 Nov 2021</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-03T10:30:00+02:00"> Thu, 03 Sep 2026</time>
             </span>
 
 
@@ -161,134 +161,248 @@
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p align=center><img alt="MAE test results for COCO validation images reconstruction" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png">
-Figure 1. MAE test results for COCO validation images reconstruction. Masked | Reconstruction | Ground-truth
+                <p align="center"><img alt="MAE reconstructions for COCO validation images" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png">
+Figure 1. COCO validation images: masked input | MAE reconstruction | ground truth. The MAE model was pretrained on ImageNet-1K, not COCO.
 <br></p>
-<h4 id=the-mae-for-scalable-learning-paper-explained>The MAE for scalable learning paper explained.<a class=headerlink href=#the-mae-for-scalable-learning-paper-explained title="Permanent link">🔗</a></h4>
-<p>In this article we will explain and discuss the paper on simple, effective, and scalable form of a masked autoencoder (MAE) for visual representation learning:</p>
-<p><strong><a href="https://arxiv.org/abs/2111.06377">"Masked Autoencoders Are Scalable Vision Learners"</a></strong>: ArXiv Nov, 11, 2021</p>
-<h4 id=tldr>TL;DR<a class=headerlink href=#tldr title="Permanent link">🔗</a></h4>
+<h4 id="the-mae-scalable-learning-paper-explained">The MAE scalable-learning paper explained<a class="headerlink" href="#the-mae-scalable-learning-paper-explained" title="Permanent link">🔗</a></h4>
+<p>This article explains <strong><a href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html">"Masked Autoencoders Are Scalable Vision Learners"</a></strong> by Kaiming He, Xinlei Chen, Saining Xie, Yanghao Li, Piotr Dollár, and Ross Girshick. The work first appeared on arXiv on November 11, 2021 and was published at CVPR 2022.</p>
+<h4 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">🔗</a></h4>
 <ul>
-<li>MAE is asymmetric (decoder use &lt;10% computation per token of encoder) encoder-decoder architecture with only the NON-masked, visible patches / tokens (25% of all patches) as the encoder input, and encoded visual patches (encoder output) and masked tokens as the decoder input - resulting in decreased memory and computation requirements.</li>
-<li>Small decoder (default decoder has &lt;10% computation per token vs. the encoder) reconstruct the original image <strong>pixels</strong> (by predicting the pixel values for each masked patch) only for training.</li>
-<li>After training decoder is discarded (decoder), while the encoder is applied to unmasked images to produce representations for recognition tasks.</li>
-<li>The mean squared error (MSE) loss function is computed between the reconstructed and original images in the pixel space.</li>
-<li>Removing masked patches from encoder improve performance by 14%.</li>
-<li>MAE outperforms DINO, MoCO, BEiT on on ImageNet-1K.</li>
-<li>MAE can scale up easily: by fine-tuning 448 size, achieve 87.8% accuracy, using only ImageNet-1K data.</li>
-<li>MAE is considerably faster (3.5× per epoch) than BEiT.</li>
+<li>MAE uses an asymmetric encoder-decoder architecture. With the default 75% masking ratio, the encoder receives only the visible 25% of image patches and no mask tokens.</li>
+<li>After the encoder, a lightweight decoder receives the encoded visible patches plus learned mask tokens placed at the missing positions.</li>
+<li>The decoder predicts the RGB pixel values of every patch, but the mean squared error (MSE) training loss is computed only over masked patches.</li>
+<li>The default decoder uses less than 10% of the encoder's computation per token. It is used only during pretraining and discarded afterward.</li>
+<li>For recognition, the encoder processes the complete, uncorrupted image.</li>
+<li>Excluding mask tokens from the encoder improves ImageNet linear-probe accuracy from 59.6% to 73.5%, a 13.9 percentage-point gain. Fine-tuning accuracy improves from 84.2% to 84.9%.</li>
+<li>Random masking works better than the block-wise and grid-wise alternatives evaluated in the paper.</li>
+<li>MAE does not require two augmented views or negative examples. Its default recipe nevertheless uses random resized cropping and horizontal flipping.</li>
+<li>Under end-to-end ImageNet-1K fine-tuning, MAE outperforms the DINO, MoCo v3, and BEiT results reported in the paper's comparison table. This claim does not extend to every evaluation protocol.</li>
+<li>A ViT-H/14 pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy using no external pretraining data.</li>
+<li>The paper reports that MAE is 3.5 times faster per pretraining epoch than BEiT.</li>
 </ul>
-<h4 id=contribution-of-paper>Contribution of paper:<a class=headerlink href=#contribution-of-paper title="Permanent link">🔗</a></h4>
+<h4 id="contributions-of-the-paper">Contributions of the paper<a class="headerlink" href="#contributions-of-the-paper" title="Permanent link">🔗</a></h4>
 <ul>
-<li>Using pixels as reconstruction target instead of fancier things works very well. Per-patch normalization helps quite a bit.</li>
-<li>Asymmetric autoencoder helps to improve performance.</li>
-<li>In contrast to recent contrastive learning solutions it does not require augmentation heavily (center-crop, no flipping).</li>
+<li>A high masking ratio turns pixel reconstruction into a challenging self-supervised task while reducing the encoder's workload.</li>
+<li>An asymmetric architecture keeps mask tokens out of the large encoder and handles the full token sequence only in a lightweight decoder.</li>
+<li>Direct pixel prediction is competitive with discrete-token targets. Normalizing pixels within each patch improves representation quality.</li>
+<li>MAE works with modest image augmentation. The default is random resized cropping with horizontal flipping; even the center-crop, no-flip ablation remains reasonably effective.</li>
+<li>The efficient recipe scales from ViT-Base to ViT-Huge and transfers well to classification, object detection, instance segmentation, and semantic segmentation.</li>
 </ul>
-<h3 id=motivation>Motivation<a class=headerlink href=#motivation title="Permanent link">🔗</a></h3>
-<p>The masking idea has been very successful in NLP, especially since BERT. In CV, applying masking in form of mask tokens, or positional embeddings was challenging due to specifics of CNN-based architectures. With ViT eliminating CNN limitations this has become possible. With contrast to NLP, images contain a sparse semantic information that have potential to optimize image representation by applying a technique to reduce the heavy spacial redundancy, that consumes processing power, but on the other hand - can be reconstructed with high level understanding of objects and scenes. Paper focus here around the idea of masking high portions of image just to create a self-supervised task to reconstruct it.</p>
-<p>This decoder-based reconstruction becomes even more important for images if we decide to use low-level pixel wise reconstruction that has minimal semantic level without perception of object, scene no parts of bigger entities.</p>
-<h3 id=objective-or-goal-for-the-algorithm>Objective, or goal for the algorithm<a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link">🔗</a></h3>
-<p>Objective of the algorithm is to prepare universal latent representation for downstream (transfer-learning) tasks. The goal of this paper is to adapt a well known pre-training techniques based on autoencoders and masking, while apply them for ViT based approach for computer vision tasks.</p>
-<h3 id=intro>Intro<a class=headerlink href=#intro title="Permanent link">🔗</a></h3>
-<p>The introduction ResNet has been very impactful in deep learning, especially in computer Vision (CV), and has also been heavily utilized in recent advances in self-supervision such as BYOL, MoCo or SimCLR<sup id=sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back><a href=#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1 class=simple-footnote title="It is worth mentioning that because the first author and the project lead of this paper - Kamming He - is actually also the first author of the  Deep Residual Learning for Image Recognition, as well as the Momentum Contrast for Unsupervised Visual Representation Learning">1</a></sup>.</p>
-<p>Patch-based self-supervision has been a topic for a while now, but mostly it was tied to ResNets with all their complexity included. With ViT this has been greatly simplified.</p>
-<p>With use of ViT first interesting approach for patch-based SSL has been proposed in <a href="https://arxiv.org/abs/2106.08254">BEiT: BERT Pre-Training of Image Transformers</a> (Jan, 2021), using masked approach for images based on image patches and image discrete visual tokens. BEiT's pre-training objective was to recover original <em>visual tokens</em> based on the masked image patches. Now the <em>masked autoencoder</em> approach has been proposed as a further evolutionary step that instead on visual tokens focus on pixel level. MAE outperforms BEiT in object detection and segmentation tasks. Paper also claims that MAE does not need (for normalized pixels) tokenization (e.g. dVAE) to be on pair or better in terms of performance thus, being faster and simpler.</p>
-<h3 id=the-processing-strategy-of-the-algorithm>The processing strategy of the algorithm<a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link">🔗</a></h3>
-<p>MAE is based on autoencoder architecture with encoder that creates the latent representation from observed signal and decoder trying to reconstruct the input signal from latent representation. The difference here is that the encoder will get only small part of the input.</p>
-<p align=center><img alt="MAE architecture" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/MaskedAE.png">
-Figure 1a. MAE architecture.
+<h3 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">🔗</a></h3>
+<p>Masking has been highly successful in natural language processing, especially in BERT. Applying related ideas to computer vision was historically less straightforward because convolutional architectures do not naturally operate on sequences of independently removable patches. Vision Transformers (ViTs) make the construction simple: divide an image into patches, hide a subset, and learn to predict the missing content.</p>
+<p>Images and language differ in an important way. Language is semantically dense: a missing word generally carries substantial meaning. Images have strong spatial redundancy, so a model can often infer nearby pixels from texture or local continuity. MAE therefore masks a large random fraction of the image, typically 75%, to reduce this redundancy and require a more holistic understanding of objects and scenes.</p>
+<p>The reconstruction target is deliberately low-level: pixel values rather than class labels or discrete semantic tokens. The decoder specializes in reconstruction, while the encoder is expected to learn a representation useful for later recognition tasks.</p>
+<h3 id="objective">Objective<a class="headerlink" href="#objective" title="Permanent link">🔗</a></h3>
+<p>The objective is to pretrain a reusable visual encoder without labels. After pretraining, the decoder is removed and the encoder is transferred to downstream tasks through linear probing, partial fine-tuning, or full fine-tuning.</p>
+<h3 id="background">Background<a class="headerlink" href="#background" title="Permanent link">🔗</a></h3>
+<p>ResNet has been highly influential in computer vision and has served as the backbone for self-supervised systems such as BYOL, MoCo, and SimCLR.<sup id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back"><a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1" class="simple-footnote" title="The first author and project lead of MAE, Kaiming He, was also the first author of Deep Residual Learning for Image Recognition and Momentum Contrast for Unsupervised Visual Representation Learning.">1</a></sup></p>
+<p>Earlier masked-image approaches often used convolutional networks or more complicated prediction targets. ViT simplified patch-based self-supervision by representing an image directly as a sequence of patch tokens.</p>
+<p><a href="https://arxiv.org/abs/2106.08254">BEiT: BERT Pre-Training of Image Transformers</a>, first submitted in June 2021, predicts discrete visual tokens for masked patches. Those targets are produced by a discrete variational autoencoder (dVAE). MAE instead predicts pixels. The paper finds that normalized-pixel targets are statistically comparable to dVAE-token targets across the evaluated ImageNet, COCO, and ADE20K settings, without requiring a separately pretrained tokenizer.</p>
+<h3 id="how-mae-works">How MAE works<a class="headerlink" href="#how-mae-works" title="Permanent link">🔗</a></h3>
+<p>MAE is an autoencoder: an encoder maps the observed input to a latent representation, and a decoder reconstructs the missing part of the input. Its defining feature is that the large encoder operates only on visible patches.</p>
+<p align="center"><img alt="MAE architecture" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/MaskedAE.png">
+Figure 1a. MAE architecture. This illustration shows fewer than 25% visible patches; the paper's default configuration uses exactly 25% visible patches and masks 75%.
 <br></p>
-<p>The input signal is an image divided into uniformly distributed and non-overlapping patches regularly created from image. Depending on the scenario only less than $25\%$ of the patches will be treated as encoder's input and mapped into latent representation. The rest of the patches, so called masked tokens will be directly forwarded to decoder input. Such a sparse input enables encoder to create an efficient mapping.</p>
-<p>Encoder is a ViT with regular linear projection and positional embeddings followed by series of Transformer blocks, but due to only lest than quarter of visible patches causes it to use less compute and memory.</p>
-<p>The input of the decoder becomes the latent representation of visible patches supplemented with the rest of the masked tokens all equipped with the positional embeddings. Decoder is is build out of series of Transformer blocks however, as it is used only during training it can be designed arbitrarily and independently of encoder. Authors reported to use by default decoder with  $&lt;10\%$ computation per token in comparison to encoder. This optimize time of the decoder needed during pre-training phase of learning the representation.</p>
-<p align=center><img alt="Masking images validation examples" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/ImgValid80Perc_39out196.png">
-Figure 2. Masking images validation examples with masking ratio 80% (39 of 196 patches encoded).<br>
-Masked | Reconstruction | Original Image
-<br></p>
-<p>The decoder (ViT) output is a vector of pixel values reconstruction predictions for each patch. Number of decoder output channels equals the number of patches in the image.</p>
-<p>The <em>mean sqiuared error</em> (MSE) is the loss function calculated between the predicted and original image in the pixel space - however, only for masked patches (as in BERT). It is worth mentioning that the pixel performance advantage over BEiT is present when the pixels are normalized across each patch.</p>
-<h4 id=processing-steps>Processing steps<a class=headerlink href=#processing-steps title="Permanent link">🔗</a></h4>
+<h4 id="patch-sampling">Patch sampling<a class="headerlink" href="#patch-sampling" title="Permanent link">🔗</a></h4>
+<p>An image of height <span class="math">\(H\)</span>, width <span class="math">\(W\)</span>, and <span class="math">\(C\)</span> channels is divided into <span class="math">\(N=HW/p^2\)</span> regular, non-overlapping patches of size <span class="math">\(p\times p\)</span>. For each image, MAE samples visible patches uniformly without replacement. The remaining patches are removed from the encoder input.</p>
+<p>The default mask ratio is 75%, so the encoder processes exactly 25% of the patch tokens. Other mask ratios are evaluated experimentally; 75% provides the best linear-probe result and is near the top of the fine-tuning range.</p>
+<h4 id="encoder-and-decoder">Encoder and decoder<a class="headerlink" href="#encoder-and-decoder" title="Permanent link">🔗</a></h4>
+<p>The encoder is a standard ViT with linear patch projection, positional embeddings, and Transformer blocks. It receives visible patch embeddings and a class token, but no mask tokens. Processing a quarter of the normal patch sequence substantially reduces computation and memory.</p>
+<p>The decoder receives:</p>
 <ol>
-<li>For every image a list of tokens with positional embeddings is created for every patch. The tokens are then randomly shuffled and the masked ratio is removed from the end of the list.</li>
-<li>For tokens remaining in the list encoder produces latent representation</li>
-<li>To the list containing latent representation we append the list of masked tokens, and based on the positional embeddings the order is restored in the list - <em>unshuffle</em></li>
-<li>Decoder consumes the list as an input.</li>
+<li>the encoder's representations of visible patches;</li>
+<li>copies of a shared learned mask-token vector for missing positions; and</li>
+<li>positional embeddings that identify every patch location.</li>
 </ol>
-<p>The only overhead are the <em>shuffle</em> and <em>unshuffle</em> operations, but those are fast.</p>
-<h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm>Metaphors, or analogies to other architectures describing the behavior of the algorithm<a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link">🔗</a></h3>
+<p>The tokens are restored to their original spatial order before passing through the decoder's Transformer blocks. The decoder can be designed independently of the encoder, but its design is not irrelevant: decoder depth strongly affects linear probing, while fine-tuning is less sensitive to it.</p>
+<p>The default decoder has eight Transformer blocks with width 512. It uses about 9% of the encoder's FLOPs per token, which the paper summarizes as less than 10%. Because only the lightweight decoder processes the full sequence, the overall pretraining system is efficient.</p>
+<p align="center"><img alt="Masked-image reconstruction examples" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/ImgValid80Perc_39out196.png">
+Figure 2. ImageNet validation examples evaluated with an 80% mask ratio: 39 of 196 patches are visible. Masked input | reconstruction | ground truth.
+<br></p>
+<h4 id="reconstruction-target-and-loss">Reconstruction target and loss<a class="headerlink" href="#reconstruction-target-and-loss" title="Permanent link">🔗</a></h4>
+<p>For every patch, the decoder outputs a vector with <span class="math">\(p^2C\)</span> channels: one value for every pixel and color channel in that patch. With RGB <span class="math">\(16\times16\)</span> patches, the output dimension is <span class="math">\(16^2\times3=768\)</span> per patch token. The number of decoder output tokens, not the number of output channels, corresponds to the number of image patches.</p>
+<p>Let <span class="math">\(M\)</span> denote the set of masked patch indices, <span class="math">\(y_i\in\mathbb{R}^{p^2C}\)</span> the target pixels for patch <span class="math">\(i\)</span>, and <span class="math">\(\hat{y}_i\)</span> the corresponding prediction. The paper defines MSE over masked patches in prose. Written explicitly, the official implementation computes:</p>
+<div class="math">$$
+L_{\mathrm{MAE}} =
+\frac{1}{|M|}
+\sum_{i\in M}
+\frac{1}{p^2C}
+\left\|\hat{y}_i-y_i\right\|_2^2.
+$$</div>
+<p>No loss is applied to visible patches. The authors report that computing loss over all patches slightly decreases downstream accuracy.</p>
+<p>The paper also evaluates per-patch normalized targets:</p>
+<div class="math">$$
+\tilde{y}_i =
+\frac{y_i-\mu_i}
+{\sqrt{\sigma_i^2+\varepsilon}},
+$$</div>
+<p>where <span class="math">\(\mu_i\)</span> and <span class="math">\(\sigma_i^2\)</span> are the mean and variance of the pixel values within patch <span class="math">\(i\)</span>. Normalized pixels improve the ImageNet fine-tuning result from 84.9% to 85.4% in the 800-epoch ViT-L ablation.</p>
+<h4 id="processing-steps">Processing steps<a class="headerlink" href="#processing-steps" title="Permanent link">🔗</a></h4>
+<ol>
+<li>Divide each image into patches, linearly embed them, and add positional embeddings.</li>
+<li>Randomly shuffle the patch-token list and retain the visible fraction.</li>
+<li>Process only the visible tokens with the encoder.</li>
+<li>Project the encoded tokens to the decoder dimension and append learned mask tokens.</li>
+<li>Unshuffle the full list so visible representations and mask tokens return to their spatial positions.</li>
+<li>Add decoder positional embeddings and process the full sequence with the decoder.</li>
+<li>Predict the pixel vector for every patch and average MSE only over masked patches.</li>
+</ol>
+<p>The shuffle and unshuffle operations add negligible overhead and require no specialized sparse operators.</p>
+<h3 id="connections-to-other-architectures">Connections to other architectures<a class="headerlink" href="#connections-to-other-architectures" title="Permanent link">🔗</a></h3>
 <ul>
-<li>
-<p>The natural reference for this kind of research is BERT and GPT that use the pre-training phase by deliberately hold out parts of the input sequences and aim to train the models to predict the missing values. however, BERT and GPT were developed for high semantic density modality of NLP.</p>
-</li>
-<li>
-<p>The part of the MAE that learns to reconstruct the noised input signal can be referred to as a non-classical form of <em>denoising autoencoders</em> (DAE).</p>
-</li>
-<li>
-<p>In terms of modern self-supervision learning counterparts of MAE they use contrastive learning, negative sampling, image (dis)similarity (SimCLR, MoCo, BYOL,  DINO), and are strongly dependent on the tedious use of augmentation methods for the input images. MAE does not rely on those augmentations which are replaced by random masking.</p>
-</li>
+<li><strong>BERT</strong> masks input tokens and predicts the missing tokens. MAE transfers this broad idea to image patches, but uses a much higher masking ratio and predicts pixels.</li>
+<li><strong>GPT</strong> uses causal autoregressive prediction rather than BERT-style bidirectional masked-token reconstruction. It is an inspiration for scalable self-supervised pretraining, not a direct architectural analogue of MAE.</li>
+<li><strong>Denoising autoencoders</strong> corrupt an input and reconstruct the original signal. MAE is a form of denoising autoencoding, although its sparse encoder and asymmetric decoder differ from classical designs.</li>
+<li><strong>SimCLR and MoCo</strong> use contrastive objectives with negative examples. <strong>BYOL and DINO</strong> avoid explicit negatives but still match representations across augmented views. MAE instead constructs its pretext task through random masking and pixel reconstruction.</li>
 </ul>
-<h3 id=heuristics-or-rules-of-thumb>Heuristics or rules of thumb<a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link">🔗</a></h3>
-<p>Authors reported high masking ratio as the optimal for MAE:</p>
-<p align=center><img alt="Masking ratio performance graph" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/maskratioperf.png">
-Figure 3. Masking ratio performance for <em>fine-tunning</em> vs <em>linear probing</em>.
+<p>MAE relies less heavily on view augmentation than these representation-matching systems, but augmentation is not entirely absent from its default training recipe.</p>
+<h3 id="practical-findings">Practical findings<a class="headerlink" href="#practical-findings" title="Permanent link">🔗</a></h3>
+<h4 id="masking-ratio">Masking ratio<a class="headerlink" href="#masking-ratio" title="Permanent link">🔗</a></h4>
+<p align="center"><img alt="Masking-ratio performance graph" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/maskratioperf.png">
+Figure 3. ImageNet fine-tuning and linear-probe accuracy at different masking ratios.
 <br></p>
-<p>and present the adequate visualization:</p>
-<p align=center><img alt="Masking ratio performance graph" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/MaskPercentages.png">
-Figure 4. Masking ratio results.
+<p>The best masking ratio depends on the evaluation protocol. Linear-probe accuracy peaks at 75% masking with 73.5%. Fine-tuning is less sensitive: ratios from roughly 40% to 80% all perform strongly, with the plotted maximum of 85.0% at 60%.</p>
+<p>The reconstructions below illustrate how outputs change when the same model, pretrained with 75% masking, is evaluated with 75%, 85%, and 95% masking.</p>
+<p align="center"><img alt="Reconstructions at different masking ratios" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/MaskPercentages.png">
+Figure 4. Original image and reconstructions at mask ratios of 75%, 85%, and 95%.
 <br></p>
-<p>Probably an intuitive conclusion is that the longer we pre-train, the better accuracy we get<sup id=sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back><a href=#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2 class=simple-footnote title=" On the down sides it is worth mentioning that ViTs need to be trained a lot longer than ResNets - see How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers, and that in general long training is good in Knowledge distillation: A good teacher is patient and consistent">2</a></sup>.</p>
-<p align=center><img alt="Learning time gains" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/trainLength.png">
-Figure 5. Longer training gives noticeable improvements.
+<h4 id="training-duration">Training duration<a class="headerlink" href="#training-duration" title="Permanent link">🔗</a></h4>
+<p>The reported accuracy continues to improve through the longest evaluated schedule of 1600 epochs.<sup id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back"><a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2" class="simple-footnote" title="Long ViT training schedules are discussed in How to Train Your ViT? Data, Augmentation, and Regularization in Vision Transformers. A related perspective on long training appears in Knowledge Distillation: A Good Teacher Is Patient and Consistent. These works provide context rather than direct evidence about MAE's mechanism.">2</a></sup></p>
+<p align="center"><img alt="Accuracy versus pretraining length" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/trainLength.png">
+Figure 5. Fine-tuning and linear-probe accuracy improve with longer MAE pretraining in the evaluated 100-to-1600-epoch range.
 <br></p>
-<p>The simplification of decoder in MAE can get as far as a single Transformer block and would perform  almost equally well if the encoder is later fine-tuned (84.8% - see <a href=#tab:adv>Table 1.a</a>). A single Transformer block is the minimal requirement to propagate information from visible tokens to mask tokens.</p>
-<p align=center><img alt="MAE ablation results \label{tab:adv}" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/advantages.png">
-Table 1. MAE ablation experiments.
+<p>The result should not be extrapolated indefinitely: the experiment shows improvement up to 1600 epochs, not a general law that every longer schedule must improve accuracy.</p>
+<h4 id="decoder-and-mask-token-ablations">Decoder and mask-token ablations<a class="headerlink" href="#decoder-and-mask-token-ablations" title="Permanent link">🔗</a></h4>
+<p>A single Transformer-block decoder still reaches 84.8% after full fine-tuning. One block is the minimum needed for information to propagate between encoded visible tokens and mask tokens. A deeper decoder matters much more for linear probing: increasing decoder depth from one to eight blocks raises linear accuracy from 65.5% to 73.5%.</p>
+<p align="center"><a id="table-mae-ablation"></a>
+<img alt="MAE decoder, target, augmentation, and masking ablations" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/advantages.png">
+Table 1. MAE ablation experiments with ViT-L/16 on ImageNet-1K.
 <br></p>
-<p>Comparing to BEiT, MAE is reported to be more accurate and being simpler and faster (3.5× per epoch; see <a href=#tab:adv>Table 1.c</a>).</p>
-<p align=center><img alt="MAE ablation results \label{fig:adv}" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/sslcomp.png"><br>
-Table 2. MAE compared to remaining SSL solutions.
+<p>Keeping mask tokens out of the encoder raises linear-probe accuracy from 59.6% to 73.5%, a 13.9 percentage-point improvement, while fine-tuning rises from 84.2% to 84.9%. It also reduces total training FLOPs by 3.3 times. The associated wall-clock speedup is 2.8 times for the default ViT-L decoder and ranges from 3.5 to 4.1 times in the listed ViT-H or shallow-decoder settings.</p>
+<h4 id="comparison-with-other-self-supervised-methods">Comparison with other self-supervised methods<a class="headerlink" href="#comparison-with-other-self-supervised-methods" title="Permanent link">🔗</a></h4>
+<p align="center"><a id="table-imagenet-comparison"></a>
+<img alt="ImageNet comparison with other self-supervised methods" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/sslcomp.png"><br>
+Table 2. ImageNet-1K end-to-end fine-tuning results reported in the MAE paper.
 <br></p>
-<p>One last very interesting finding is study of <em><strong>partial</strong> fine-tuning</em> - i.e fine-tune the last several layers while freezing the others. From the <a href=#fig:partialft>Figure 6.</a>  MAE representations seems to be less linearly separable, but better than MoCo v3 while at least one block is tuned. However, they are stronger non-linear features and perform well when a non-linear head is tuned. The conclusion could be here that linear separability is not
-the sole metric for evaluating representation quality.</p>
-<p><img alt=" MAE partial fine-tuning. \label{fig:partialft}" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/partialft.png"></p>
-<p align=center>Figure 6. MAE partial fine-tuning vs MoCo.
+<p>For ViT-B, MAE reaches 83.6%, compared with 82.8% for DINO and 83.2% for both MoCo v3 and BEiT. For ViT-L, MAE reaches 85.9%, compared with 84.1% for MoCo v3 and 85.2% for BEiT; the table does not report DINO at this size. BEiT's discrete tokenizer was pretrained on 250 million DALL-E images, whereas MAE pretraining uses ImageNet-1K alone.</p>
+<p>These are end-to-end fine-tuning results. They do not establish that MAE features dominate every method under linear probing or every downstream protocol. Indeed, the paper emphasizes that MAE representations are less linearly separable than MoCo v3 representations.</p>
+<p>The 87.8% result uses ViT-H/14, 1600 epochs of ImageNet-1K pretraining, and fine-tuning at <span class="math">\(448\times448\)</span> resolution. MAE is also reported to be 3.5 times faster per pretraining epoch than BEiT.</p>
+<h4 id="partial-fine-tuning">Partial fine-tuning<a class="headerlink" href="#partial-fine-tuning" title="Permanent link">🔗</a></h4>
+<p>Partial fine-tuning updates only the final encoder blocks while freezing the earlier blocks. It provides a useful middle ground between linear probing and end-to-end fine-tuning.</p>
+<p><a id="figure-partial-finetuning"></a>
+<img alt="MAE partial fine-tuning compared with MoCo v3" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/partialft.png"></p>
+<p align="center">Figure 6. MAE and MoCo v3 accuracy as the number of fine-tuned ViT-L blocks increases.
 <br></p>
-<p>Authors claim that thanks to the  scaling benefits of MAE it can help to shift the general supervised paradigm for pre-training in computer vision to a more self-supervised trajectory.</p>
-<p>The masking of semantically insignificant information from image, as well as pixel-oriented processing - which is lower semantic
-level than common recognition tasks - seems to work with MAE, and non semantic reconstruction is reported to be more suitable for sparse semantic information of image modality. It is backed by the fact that despite not using such semantic information in processing strategy of the algorithm it is still reconstructing visual concepts that actually represent semantic information in form of visual concepts.</p>
-<h3 id=applications-classes-of-problem-is-the-algorithm-well-suited>Applications: classes of problem is the algorithm well suited<a class=headerlink href=#applications-classes-of-problem-is-the-algorithm-well-suited title="Permanent link">🔗</a></h3>
-<p>Algorithm is particularly suited for preparing visual representation pre-training that later can be used for computer vision downstream tasks with use of fine tuning.</p>
-<h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm>Common benchmark or example datasets used to demonstrate the algorithm<a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link">🔗</a></h3>
-<p>MAE evaluation on three tasks show not only its superiority to pre-trained alternatives, but also significant advantage by scaling up models.</p>
+<p>MAE is less accurate than MoCo v3 under linear probing, but becomes better when at least one Transformer block is fine-tuned. Fine-tuning one block raises MAE accuracy from 73.5% to 81.0%. The broader lesson is that linear separability is not the sole measure of representation quality; MAE learns strong features that benefit from a nonlinear adaptation.</p>
+<h3 id="what-the-reconstructions-mean">What the reconstructions mean<a class="headerlink" href="#what-the-reconstructions-mean" title="Permanent link">🔗</a></h3>
+<p>The masks are random, not selected because the removed patches are semantically insignificant. In fact, the paper notes that random patches are unlikely to form complete semantic segments. Likewise, raw pixels are not semantic entities.</p>
+<p>Nevertheless, MAE can produce plausible object- and scene-level reconstructions, including outputs that differ from the exact ground truth. The authors interpret this behavior as evidence that a rich latent representation has emerged. This is a hypothesis supported by qualitative reconstructions and downstream transfer results, not proof that the model explicitly represents named concepts.</p>
+<p>The authors argue that MAE's scaling behavior may help move computer-vision pretraining from a predominantly supervised paradigm toward greater use of self-supervision.</p>
+<h3 id="applications">Applications<a class="headerlink" href="#applications" title="Permanent link">🔗</a></h3>
+<p>MAE is suited to visual representation pretraining followed by:</p>
 <ul>
-<li><strong>Object detection &amp; segmentation (COCO)</strong>:
-Paper discusses results for transfer learning experiments with AP box and masked for ViT-base/Vit-large. MAE performs better than supervised pre-training in all configurations.</li>
+<li>image classification through linear probing or fine-tuning;</li>
+<li>object detection;</li>
+<li>instance segmentation;</li>
+<li>semantic segmentation; and</li>
+<li>transfer to fine-grained or scene-classification datasets.</li>
 </ul>
-<p align=center><img alt="MAE vs BEiT Object detection and segmentation \label{fig:adv}" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/objdetec.png"><br>
-Table 3. MAE vs BEiT Object detection and segmentation.
+<h3 id="benchmark-results">Benchmark results<a class="headerlink" href="#benchmark-results" title="Permanent link">🔗</a></h3>
+<p>The paper evaluates ImageNet-1K classification and several transfer tasks. Comparisons should be interpreted within each table's architecture, pretraining data, and fine-tuning protocol.</p>
+<h4 id="object-detection-and-instance-segmentation">Object detection and instance segmentation<a class="headerlink" href="#object-detection-and-instance-segmentation" title="Permanent link">🔗</a></h4>
+<p>The authors fine-tune a ViT-based Mask R-CNN with a feature pyramid network on COCO and report box AP for detection and mask AP for instance segmentation. MAE beats supervised ImageNet-1K pretraining in every listed ViT-B and ViT-L configuration.</p>
+<p align="center"><img alt="MAE object detection and instance segmentation results" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/objdetec.png"><br>
+Table 3. COCO object detection and instance segmentation results.
 <br></p>
-<p>The pixel-based MAE is sometimes at worst on par with the token-based BEiT, however MAE is much simpler and faster.</p>
-<ul>
-<li><strong>Semantic segmentation</strong>:
-MAE outperforms the token-based BEiT and improves even more over the ViT-L transferring results for supervised pre-training.</li>
-</ul>
-<p align=center><img alt="MAE vs BEiT Semantic segmentation. \label{fig:adv}" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/semsegm.png"><br>
-Table 4. MAE vs BEiT Semantic segmentation.
+<p>For ViT-L, MAE and BEiT both reach 53.3 box AP, while MAE reaches 47.2 mask AP versus BEiT's 47.1. The pixel-based MAE is therefore better than or effectively on par with token-based BEiT here, while avoiding dVAE tokenizer pretraining.</p>
+<h4 id="semantic-segmentation">Semantic segmentation<a class="headerlink" href="#semantic-segmentation" title="Permanent link">🔗</a></h4>
+<p>The paper evaluates semantic segmentation on ADE20K using UperNet.</p>
+<p align="center"><img alt="MAE and BEiT semantic-segmentation results" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/semsegm.png"><br>
+Table 4. ADE20K semantic segmentation results in mean intersection over union.
 <br></p>
-<h2 id=next-steps>Next steps<a class=headerlink href=#next-steps title="Permanent link">🔗</a></h2>
-<p>Future research could focus around performance study of:</p>
+<p>MAE reaches 48.1 mIoU with ViT-B and 53.6 with ViT-L. The ViT-L result is 3.7 points above supervised pretraining and 0.3 above BEiT.</p>
+<h4 id="classification-transfer">Classification transfer<a class="headerlink" href="#classification-transfer" title="Permanent link">🔗</a></h4>
+<p>The paper additionally reports transfer to iNaturalist 2017, 2018, and 2019, plus Places205 and Places365. These experiments show strong scaling with larger ViT models. At the time of publication, several results exceeded systems pretrained on much larger external datasets, although such system-level comparisons do not isolate pretraining method as the only variable.</p>
+<h3 id="further-research">Further research<a class="headerlink" href="#further-research" title="Permanent link">🔗</a></h3>
+<p>The paper already compares random, block-wise, and grid-wise masks and finds random sampling strongest. Natural extensions include:</p>
 <ul>
-<li>number of patches chosen in different mask sampling strategies (grid, uniform, crop-alike) at train time.</li>
-<li>dynamic / non fixed number of patches depending of training epoch</li>
+<li>evaluating additional structured or content-aware masking strategies;</li>
+<li>varying the number of visible patches dynamically during pretraining; and</li>
+<li>studying whether mask-ratio schedules change the balance between reconstruction quality, efficiency, and transfer performance.</li>
 </ul>
-<h3 id=useful-resources-for-learning-more-about-the-algorithm>Useful resources for learning more about the algorithm:<a class=headerlink href=#useful-resources-for-learning-more-about-the-algorithm title="Permanent link">🔗</a></h3>
+<p>These are proposed research directions, not claims evaluated in the MAE paper.</p>
+<h3 id="useful-resources">Useful resources<a class="headerlink" href="#useful-resources" title="Permanent link">🔗</a></h3>
 <ul>
-<li><a href="https://arxiv.org/abs/2111.06377">"Masked Autoencoders Are Scalable Vision Learners" Kaiming He et al.- ArXiv Paper - 2021</a></li>
-<li><a href="https://arxiv.org/abs/2006.07733">"Bootstrap your own latent: A new approach to self-supervised Learning"- Grill at al. ArXiv Paper - 2020</a></li>
-<li><a href="https://arxiv.org/abs/2002.05709">"A Simple Framework for Contrastive Learning of Visual Representations" - Chen et al. ArXiv Paper - 2020</a></li>
-<li><a href="https://arxiv.org/abs/1911.05722">"Momentum Contrast for Unsupervised Visual Representation Learning"  Kaiming He et al.- ArXiv Paper 2019</a></li>
+<li><a href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html">"Masked Autoencoders Are Scalable Vision Learners" - CVPR 2022 paper</a></li>
+<li><a href="https://github.com/facebookresearch/mae">Official MAE implementation</a></li>
+<li><a href="https://arxiv.org/abs/2111.06377">"Masked Autoencoders Are Scalable Vision Learners" - arXiv</a></li>
+<li><a href="https://arxiv.org/abs/2106.08254">"BEiT: BERT Pre-Training of Image Transformers"</a></li>
+<li><a href="https://arxiv.org/abs/2006.07733">"Bootstrap Your Own Latent: A New Approach to Self-Supervised Learning"</a></li>
+<li><a href="https://arxiv.org/abs/2002.05709">"A Simple Framework for Contrastive Learning of Visual Representations"</a></li>
+<li><a href="https://arxiv.org/abs/1911.05722">"Momentum Contrast for Unsupervised Visual Representation Learning"</a></li>
 </ul>
-<h3 id=footnotes>Footnotes:<a class=headerlink href=#footnotes title="Permanent link">🔗</a></h3><ol class=simple-footnotes><li id=sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1>It is worth mentioning that because the first author and the project lead of this paper - Kamming He - is actually also the first author of the  <a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning for Image Recognition</a>, as well as the <a href="https://arxiv.org/abs/1911.05722">Momentum Contrast for Unsupervised Visual Representation Learning</a> <a href=#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back class=simple-footnote-back>↩</a></li><li id=sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2> On the down sides it is worth mentioning that ViTs need to be trained a lot longer than ResNets - see <a href="https://arxiv.org/abs/2106.10270">How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers</a>, and that in general long training is good in <a href="https://arxiv.org/abs/2106.05237">Knowledge distillation: A good teacher is patient and consistent</a> <a href=#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back class=simple-footnote-back>↩</a></li></ol>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><ol class="simple-footnotes"><li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1">The first author and project lead of MAE, Kaiming He, was also the first author of <a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning for Image Recognition</a> and <a href="https://arxiv.org/abs/1911.05722">Momentum Contrast for Unsupervised Visual Representation Learning</a>. <a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back" class="simple-footnote-back">↩︎</a></li><li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2">Long ViT training schedules are discussed in <a href="https://arxiv.org/abs/2106.10270">How to Train Your ViT? Data, Augmentation, and Regularization in Vision Transformers</a>. A related perspective on long training appears in <a href="https://arxiv.org/abs/2106.05237">Knowledge Distillation: A Good Teacher Is Patient and Consistent</a>. These works provide context rather than direct evidence about MAE's mechanism. <a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back" class="simple-footnote-back">↩︎</a></li></ol>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
@@ -371,7 +485,7 @@ Table 4. MAE vs BEiT Semantic segmentation.
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">Masked autoencoder (MAE) for visual representation learning. Form the author of ResNet.</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modelling and model-free, offline RL</a></li>
   </ul>
 </li>
