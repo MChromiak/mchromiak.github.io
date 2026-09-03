@@ -131,7 +131,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2026-09-03T13:30:00+02:00"> Thu, 03 Sep 2026</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-03T14:00:00+02:00"> Thu, 03 Sep 2026</time>
             </span>
 
 
@@ -259,9 +259,10 @@ $$</div>
 <p>For video action recognition, the image backbone is still frozen, but a linear classifier is trained. The protocol averages features from eight frames for UCF-101 and Kinetics-400, and concatenates them for Something-Something v2 to retain temporal ordering. These results show that image features transfer to video classification; they do not mean that DINOv2 was pretrained to model video dynamics.</p>
 <h3 id="instance-retrieval">Instance retrieval<a class="headerlink" href="#instance-retrieval" title="Permanent link">🔗</a></h3>
 <p>Instance retrieval is genuinely non-parametric in the reported setup. Database images are ranked by cosine similarity to a query feature, without training a task-specific retrieval head. On Oxford-Hard, the strongest reported DINOv2 result improves by roughly 41 mAP points over the selected SSL baseline and 34 points over OpenCLIP.</p>
-<p align="center"><img alt="DINOv2 instance retrieval example" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinoV2_instance_retrieval.png">
+<p>The photograph on the right is the query. The numbered panels on the left are its ten highest-ranked database matches, ordered by similarity in the frozen DINOv2 feature space. Although the results vary in medium, color, pose, and background, all depict horses; several also preserve the side-on pose or a multi-horse composition. This is a qualitative example of cross-domain visual similarity, not by itself a quantitative retrieval result or proof that the model represents a symbolic concept of a horse.</p>
+<p align="center"><img alt="Query photograph of two horses beside ten ranked retrieved horse artworks" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinoV2_instance_retrieval.png">
 <br>
-Figure 3. Frozen DINOv2 image features can retrieve visually related artworks by nearest-neighbor similarity.</p>
+Figure 3. Instance-retrieval example. Right: a query photograph of a gray horse and a brown horse in a field. Left: ten retrieved horse images, ranked 1-10 by similarity in the frozen DINOv2 feature space. The matches span photographs, paintings, and line drawings while retaining the subject and some pose or composition cues.</p>
 <h3 id="semantic-segmentation">Semantic segmentation<a class="headerlink" href="#semantic-segmentation" title="Permanent link">🔗</a></h3>
 <p>The backbone remains frozen, but the segmentation predictor is trained with semantic labels. The paper evaluates:</p>
 <ul>
