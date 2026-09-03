@@ -1,0 +1,16 @@
+name: pelican_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - ghp-import==2.1.0
+      - pelican[markdown]==4.12.0
+      - pelican-i18n-subsites==1.0.0
+      - pelican-related-posts==1.0.0
+      - pelican-render-math==1.0.5
+      - pelican-simple-footnotes==1.0.3
+      - pelican-sitemap==1.2.2
+      - pelican-tag-cloud==1.0.1
+      - typogrify==2.1.0

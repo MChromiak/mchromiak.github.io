@@ -157,9 +157,14 @@ ADDTHIS_PROFILE = 'ra-59ea3c17b283c631'
 
 #=============================== PLUGINS =====================================
 
-#Reqired by theme pelican-bootstrap3
-PLUGIN_PATHS = ['../pelican-plugins']
-PLUGINS = ['i18n_subsites','related_posts','tag_cloud','simple_footnotes','pelican.plugins.render_math','sitemap']
+PLUGINS = [
+    'pelican.plugins.i18n_subsites',
+    'pelican.plugins.related_posts',
+    'pelican.plugins.tag_cloud',
+    'pelican.plugins.simple_footnotes',
+    'pelican.plugins.render_math',
+    'pelican.plugins.sitemap',
+]
 
 MARKDOWN = {
     'extension_configs': {
