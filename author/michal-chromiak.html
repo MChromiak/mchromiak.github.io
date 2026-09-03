@@ -203,7 +203,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2021-06-01T19:30:00+02:00"> Tue, 01 Jun 2021</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-02T19:02:00+02:00"> Wed, 02 Sep 2026</time>
             </span>
 
 
@@ -230,7 +230,7 @@
                   <div class="cover">
 <img src="https://mchromiak.github.io/articles/2021/Jun/01/img/DecisionTransformer-Cover.png" alt="article cover">                  </div>
                   <div class="sumtext">
-                    <p>Can we apply massive advancements of Transformer approach with its simplicity and scalability to Reinforcement Learning (RL)? Yes, but for that - one needs to approach RL as a sequence modeling problem. The <em>Decision Transformer</em> does that by abstracting RL as a <em>conditional sequence modeling</em> and using language modeling technique of casual masking of self-attention from GPT/BERT, enabling autoregressive generation of <em>trajectories</em> from the previous tokens in a sequence. The classical RL approach of fitting the <em>value functions</em>, or computing <em>policy gradients</em> (needs live correction; online), has been ditched in favor of masked Transformer yielding optimal <em>actions</em>. The Decision Transformer can match or outperform strong algorithms designed explicitly for offline RL with minimal modifications from standard language modeling architectures.</p>
+                    <p>Decision Transformer casts offline reinforcement learning (RL) as conditional sequence modeling. A causally masked GPT-style Transformer predicts each action from a desired return-to-go, the current state, and the recent trajectory. It avoids value-function bootstrapping and policy-gradient optimization during training, yet matches or exceeds several strong offline RL baselines on the benchmarks studied in the paper.</p>
 <p><small><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/#disqus_thread" >View comments</a>.</small></p>                    <a class="btn btn-default btn-xs" href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">more ...</a>
                   </div>
                 </div>
