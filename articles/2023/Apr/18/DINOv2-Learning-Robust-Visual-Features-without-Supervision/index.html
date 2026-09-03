@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects - Michał Chromiak's blog</title>
+    <title>🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -14,13 +14,13 @@
 
         <meta name="author" content="Michał Chromiak" />
         <meta name="keywords" content="Representation Learning,Self-Supervision (SSL),CV,ViT,GPT,WSL,Weak-supervision,Scalability" />
-        <meta name="description" content="MetaAI DINOv2 is a foundation model for computer vision. DINOv2 paper shows that existing pretraining methods, especially self-supervised methods, can produce all purpose visual features, (i.e., features that work across image distributions and tasks without finetuning) if trained on enough curated data from diverse sources. It turns out that the approach of DINOv2 can match patch-level features between images from different domains, poses and even objects that share similar semantic information. This exhibits the ability of DINO v2 model to transfer across domains and understand relations between similar parts of different objects. The Meta shows its strengths and wants to combine DINOv2 with large language models." />
+        <meta name="description" content="DINOv2 is a family of self-supervised Vision Transformer encoders trained on 142 million curated images without labels or captions in the pretraining objective. The paper combines image-level DINO and masked patch-level iBOT objectives with KoLeo regularization, large-scale data curation, efficient training, and distillation. Its frozen features transfer strongly across classification, retrieval, segmentation, and depth benchmarks, although most downstream evaluations still train a task-specific head." />
 
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects"/>
+        <meta property="og:title" content="🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects"/>
         <meta property="og:url" content="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/"/>
-        <meta property="og:description" content="MetaAI DINOv2 is a foundation model for computer vision. DINOv2 paper shows that existing pretraining methods, especially self-supervised methods, can produce all purpose visual features, (i.e., features that work across image distributions and tasks without finetuning) if trained on enough curated data from diverse sources. It turns out that the approach of DINOv2 can match patch-level features between images from different domains, poses and even objects that share similar semantic information. This exhibits the ability of DINO v2 model to transfer across domains and understand relations between similar parts of different objects. The Meta shows its strengths and wants to combine DINOv2 with large language models."/>
+        <meta property="og:description" content="DINOv2 is a family of self-supervised Vision Transformer encoders trained on 142 million curated images without labels or captions in the pretraining objective. The paper combines image-level DINO and masked patch-level iBOT objectives with KoLeo regularization, large-scale data curation, efficient training, and distillation. Its frozen features transfer strongly across classification, retrieval, segmentation, and depth benchmarks, although most downstream evaluations still train a task-specific head."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2023/Apr/18/img/DINOv2cover.png" />
 
         <meta property="article:published_time" content="2023-04-18" />
@@ -108,7 +108,7 @@
             <ol class="breadcrumb">
                 <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
                 <li><a href="https://mchromiak.github.io/category/computer-vision.html" title="Computer Vision">Computer Vision</a></li>
-                <li class="active">DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects</li>
+                <li class="active">🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects</li>
             </ol>
     <section id="content">
         <article>
@@ -116,8 +116,8 @@
                 <h1>
                     <a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/"
                        rel="bookmark"
-                       title="Permalink to DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects">
-                        DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects
+                       title="Permalink to 🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects">
+                        🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects
                     </a>
                 </h1>
             </header>
@@ -131,7 +131,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2023-04-19T11:07:00+02:00"> Wed, 19 Apr 2023</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-03T13:30:00+02:00"> Thu, 03 Sep 2026</time>
             </span>
 
 
@@ -161,180 +161,238 @@
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <blockquote>
-<p>This article is currently actively developed. Please stay tuned for the UPDATES on details of the DINOv2 paper. Thanks!</p>
-</blockquote>
-<p align="center"><img alt="DINOv2 Overview of data processing pipeline" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinov2_pipeline.png">
-Figure 1. DINO v2 - overview of data processing pipeline.
-<br></p>
-<h3 id="dinov2-learning-robust-visual-features-without-supervision-paper-explained">"DINOv2: Learning Robust Visual Features without Supervision" -  paper explained.<a class="headerlink" href="#dinov2-learning-robust-visual-features-without-supervision-paper-explained" title="Permanent link">🔗</a></h3>
-<p>In this article we will explain and discuss the paper on simple, effective, and scalable modification of DINO and iBOT.</p>
-<p><strong><a href="https://arxiv.org/abs/2304.07193">"DINOv2: Learning Robust Visual Features without Supervision"</a></strong>: ArXiv Apr, 18, 2023</p>
-<p>DINOv2 is a series of image encoders pretrained on large curated data with <strong>no supervision</strong>. DINOv2 are pretrained visual models, trained with different Vision Transformers (ViT) <a href="https://arxiv.org/abs/2010.11929">(Dosovitskiy et al., 2020)</a>. </p>
-<p>This paper represents the first use of SSL (self-supervised learning) techniques (<a href="../../../../2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners">MAE</a>,
-<a href="../../../../2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers">DINO</a> , <a href="https://arxiv.org/pdf/2103.01988.pdf">SEERv2</a>, <a href="https://arxiv.org/abs/2204.07141">MSN</a>, <a href="https://arxiv.org/abs/2106.09785">EsViT</a>, <a href="https://arxiv.org/abs/2203.14415">Mugs</a> and <a href="https://arxiv.org/abs/2111.07832">iBOT</a> ) on image data, resulting in visual features that exhibit similar, or even surpass the performance of weakly supervised (learning) approaches (<a href="https://arxiv.org/abs/2103.00020">CLIP</a>, <a href="https://github.com/mlfoundations/open_clip">OpenCLIP</a>, <a href="https://arxiv.org/abs/2201.08371">SWAG</a>) across a wide range of benchmarks / tasks. Moreover, these features can be obtained without the need for finetuning. The models developed in this study exhibit a few noteworthy properties, such as an understanding of object parts and scene geometry regardless of the image domains.</p>
-<script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
-<!-- webm is 95% smaller than gif  -->
-<video id="my-player" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="auto" autoplay loop muted>
- <source src="../img/dinoVSdino2.webm" type="video/webm">
- <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
-    </p>
-</video>
-
-<p align="center">Figure 2. DINO v1 Vs v2 comparison of segmentation precision. (<a href="https://github.com/facebookresearch/dinov2/blob/main/README.md">Source</a>).</p>
-<h4 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">🔗</a></h4>
+                <p align="center"><img alt="DINOv2 data-processing pipeline" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinov2_pipeline.png">
+<br>
+Figure 1. DINOv2 data-processing pipeline: embed, deduplicate, retrieve, and combine curated and uncurated images.</p>
+<h2 id="the-paper-in-one-sentence">The paper in one sentence<a class="headerlink" href="#the-paper-in-one-sentence" title="Permanent link">🔗</a></h2>
+<p>DINOv2 shows that an existing discriminative self-supervised recipe can produce unusually transferable image and patch features when it is trained with a large, carefully curated image collection and scaled with a stable, efficient implementation.</p>
+<p>The primary reference is <strong><a href="https://arxiv.org/abs/2304.07193">"DINOv2: Learning Robust Visual Features without Supervision"</a></strong> by Maxime Oquab and colleagues. It was submitted to arXiv on 14 April 2023, revised in February 2024, and published in <em>Transactions on Machine Learning Research</em> (TMLR) in 2024. The <a href="https://openreview.net/forum?id=a68SUt6zFt">OpenReview record</a> contains the publication history, and the authors provide the <a href="https://github.com/facebookresearch/dinov2">official implementation and checkpoints</a>.</p>
+<p>DINOv2 is not the first application of self-supervised learning to images. It builds directly on earlier methods including <a href="../../../../2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers">DINO</a>, <a href="https://arxiv.org/abs/2111.07832">iBOT</a>, <a href="../../../../2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners">MAE</a>, <a href="https://arxiv.org/abs/2202.08360">SEERv2</a>, <a href="https://arxiv.org/abs/2204.07141">MSN</a>, <a href="https://arxiv.org/abs/2106.09785">EsViT</a>, and <a href="https://arxiv.org/abs/2203.14415">Mugs</a>. The paper's narrower contribution is to close much of the benchmark gap between self-supervised features and openly available weakly supervised features such as <a href="https://arxiv.org/abs/2103.00020">CLIP</a>, <a href="https://github.com/mlfoundations/open_clip">OpenCLIP</a>, and <a href="https://arxiv.org/abs/2201.08371">SWAG</a>, while keeping the visual backbone useful in a frozen state.</p>
+<h3 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">🔗</a></h3>
 <ul>
-<li>DINOv2 family of models drastically improves over the previous state of the art in self-supervised learning (SSL), and reaches performance comparable with weakly-supervised features (WSL).</li>
-<li>DINOv2 delivers strong performance and <strong>does not require fine-tuning</strong>.</li>
-<li>
-<p>DINOv2 enables learning rich and robust visual features without supervision which are useful for both image-level visual tasks and pixel-level tasks. Tasks supported include image classification, instance retrieval, video understanding, depth estimation.</p>
-</li>
-<li>
-<p>Self-Supervised Learning enables DINOv2 to be used to create general, multipurpose backbones for many types of computer vision tasks and applications. The model generalizes well across domains without fine-tuning.</p>
-</li>
-<li>
-<p>Authors composed of a large-scale, highly-curated, and diverse pertaining dataset to train the models. The dataset includes 142 million images.</p>
-</li>
-<li>
-<p>Efforts dealing with the instability that arises from training larger models, including more efficient implementations that reduce things like memory usage and hardware requirements. </p>
-</li>
-<li>
-<p>DINOv2 pretrained models are released as:</p>
-<ul>
-<li>Pretraining code and recipe for Vision Transformer (ViT) models,</li>
-<li><a href="https://github.com/facebookresearch/dinov2/blob/main/MODEL_CARD.md#how-to-get-started-with-the-model">Checkpoints for ViT models available via PyTorch Hub</a>. </li>
-</ul>
-</li>
-<li>
-<p>Learn features directly from images without relying on text descriptions, which can lead to a better understanding of local information and can learn from any collection of images.</p>
-</li>
-<li>
-<p>The pretrained version of DINOv2 is already available and competes with CLIP and OpenCLIP on a wide array of tasks.  </p>
-</li>
+<li>DINOv2 is a family of ViT-S/14, ViT-B/14, ViT-L/14, and ViT-g/14 image encoders. The largest backbone has about 1.1 billion parameters.</li>
+<li>Pretraining uses images alone: no class labels or captions enter the DINOv2 learning objective.</li>
+<li>The core objective combines image-level DINO self-distillation, patch-level masked iBOT self-distillation, and a KoLeo feature-spreading regularizer.</li>
+<li>The 142-million-image LVD-142M training set is not an arbitrary web scrape. It is produced from a 1.2-billion-image pool using filtering, deduplication, curated seed datasets, and self-supervised image retrieval.</li>
+<li>Compared on the same hardware with the iBOT implementation, the DINOv2 implementation runs about 2 times faster and uses one third of the memory.</li>
+<li>Many evaluations freeze the backbone, but "frozen" does not mean that every downstream task is training-free. Classification, segmentation, and depth experiments commonly train a linear classifier, decoder, or adapter on top.</li>
+<li>Instance retrieval is the clearest training-free example: database images are ranked directly by cosine similarity between frozen image features.</li>
+<li>Patch features often align corresponding object regions across pose, style, domain, and even different object categories. This is compelling qualitative evidence, but it should not be interpreted as proof of human-like semantic understanding.</li>
 </ul>
 <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
-<video id="my-player" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="auto" autoplay loop muted>
- <source src="../img/vDinoV2_depth_estimation.webm" type="video/webm">
- <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video</a>
-    </p>
+<video id="dinov2-segmentation-comparison" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="metadata" autoplay loop muted>
+  <source src="../img/dinoVSdino2.webm" type="video/webm">
+  <p class="vjs-no-js">
+    To view this video, enable JavaScript and use a browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank" rel="noopener">supports HTML5 video</a>.
+  </p>
 </video>
 
-<h3 id="contribution-of-paper">Contribution of paper:<a class="headerlink" href="#contribution-of-paper" title="Permanent link">🔗</a></h3>
+<p align="center">Figure 2. Qualitative comparison of semantic-segmentation outputs obtained with DINO and DINOv2 features. This is a visual comparison, not a reported precision metric. (<a href="https://github.com/facebookresearch/dinov2/blob/main/README.md">Source</a>)</p>
+<h2 id="what-without-supervision-means">What "without supervision" means<a class="headerlink" href="#what-without-supervision-means" title="Permanent link">🔗</a></h2>
+<p>DINOv2 learns its backbone without image labels or paired text. That is different from CLIP-style pretraining, where captions provide a weak semantic signal. Avoiding text lets the objective retain local visual information that may never be mentioned in a caption, and it permits training on image collections that have no descriptions.</p>
+<p>There is an important qualification: the <strong>learning objective</strong> is label-free, but the <strong>data pipeline</strong> is curated. The final dataset is shaped by seed datasets, filtering rules, deduplication, and similarity retrieval. The results therefore do not show that the same feature quality will emerge from any uncurated image collection.</p>
+<h2 id="the-dinov2-learning-objective">The DINOv2 learning objective<a class="headerlink" href="#the-dinov2-learning-objective" title="Permanent link">🔗</a></h2>
+<p>DINOv2 is best understood as a teacher-student system operating at two spatial scales. A student network is optimized by gradient descent. The teacher has the same basic role as in DINO and is updated from an exponential moving average of the student. Different crops of the same source image provide related views.</p>
+<h3 id="image-level-dino-loss">Image-level DINO loss<a class="headerlink" href="#image-level-dino-loss" title="Permanent link">🔗</a></h3>
+<p>The class token from each network passes through its DINO projection head. After normalization, <span class="math">\(p_s\)</span> and <span class="math">\(p_t\)</span> denote the student's and teacher's probability vectors over learned prototype coordinates. The paper writes the cross-entropy term as:</p>
+<div class="math">$$
+L_{DINO} = -\sum p_t \log p_s.
+$$</div>
+<p>The summation over prototype coordinates and the comparisons between suitable teacher and student crops are implicit in this compact notation. The student learns to match the teacher's representation of another view of the same image.</p>
+<h3 id="patch-level-ibot-loss">Patch-level iBOT loss<a class="headerlink" href="#patch-level-ibot-loss" title="Permanent link">🔗</a></h3>
+<p>Some input patches are masked for the student but remain visible to the teacher. At each masked patch index <span class="math">\(i\)</span>, the student predicts the teacher's distribution for the corresponding visible patch. The paper writes:</p>
+<div class="math">$$
+L_{iBOT} = -\sum_i p_{ti} \log p_{si},
+$$</div>
+<p>where <span class="math">\(i\)</span> ranges over masked patch positions. DINOv2 uses separate learnable projection heads for the image-level DINO objective and the patch-level iBOT objective; unlike the original iBOT ablation, the authors found that untying these heads worked better at scale.</p>
+<h3 id="centering-and-koleo-regularization">Centering and KoLeo regularization<a class="headerlink" href="#centering-and-koleo-regularization" title="Permanent link">🔗</a></h3>
+<p>The teacher outputs use Sinkhorn-Knopp centering, run for three iterations in the reported recipe, while the student uses softmax normalization. This helps avoid representational collapse.</p>
+<p>DINOv2 also applies the KoLeo regularizer to spread class-token features within a batch. For <span class="math">\(n\)</span> feature vectors <span class="math">\((x_1,\ldots,x_n)\)</span>, the paper defines:</p>
+<div class="math">$$
+L_{\mathrm{KoLeo}}
+= -\frac{1}{n}\sum_{i=1}^{n}\log(d_{n,i}),
+$$</div>
+<p>with</p>
+<div class="math">$$
+d_{n,i} = \min_{j\neq i}\lVert x_i-x_j\rVert.
+$$</div>
+<p>The features are <span class="math">\(\ell_2\)</span>-normalized before this distance is computed. In the paper's ablation, KoLeo especially improves nearest-neighbor retrieval, while the masked iBOT term is important for dense prediction.</p>
+<h3 id="high-resolution-adaptation">High-resolution adaptation<a class="headerlink" href="#high-resolution-adaptation" title="Permanent link">🔗</a></h3>
+<p>Small objects can disappear at low resolution, but full high-resolution pretraining is expensive. The final recipe therefore includes a short adaptation stage at <span class="math">\(518\times518\)</span> pixels near the end of pretraining. This improves pixel-level transfer without paying the cost of high-resolution training throughout the run.</p>
+<h2 id="building-lvd-142m">Building LVD-142M<a class="headerlink" href="#building-lvd-142m" title="Permanent link">🔗</a></h2>
+<p>The training corpus contains 142 million images, but its construction is as important as its size:</p>
+<ol>
+<li>The authors collected a raw web pool and applied URL filtering, near-duplicate removal, NSFW filtering, and blurring of identifiable faces, yielding about 1.2 billion unique images.</li>
+<li>They removed near-duplicates of the test and validation images used in the paper's benchmarks.</li>
+<li>Curated sources included ImageNet-22k, the ImageNet-1k training split, Google Landmarks, and several fine-grained datasets.</li>
+<li>A self-supervised ViT-H/16 pretrained on ImageNet-22k embedded the images. Cosine similarity and k-means connected the uncurated pool to the curated sources.</li>
+<li>For a sufficiently large query dataset, the pipeline usually retrieved four nearest neighbors per query. Smaller sources used cluster-based sampling, with balancing limits.</li>
+</ol>
+<p>The pipeline uses image similarity rather than captions, hashtags, or class annotations. It also depends on the composition of the curated seed collections; "no metadata in the pipeline" should not be confused with "no curation choices."</p>
+<p>The paper reports that deduplication and retrieval used Faiss on 20 nodes, each with eight V100-32GB GPUs, and took less than two days to produce LVD-142M.</p>
+<h2 id="scaling-the-model-and-implementation">Scaling the model and implementation<a class="headerlink" href="#scaling-the-model-and-implementation" title="Permanent link">🔗</a></h2>
+<p>Scaling discriminative self-supervision exposed memory, numerical-stability, and throughput problems. The reported implementation addresses them with several complementary techniques:</p>
 <ul>
-<li>Reiterate on existing discriminative SSL solutions combining feature learning on image and patch level (see <a href="https://arxiv.org/abs/2111.07832">iBOT, Zhou et al., 2021)</a> from the perspective of larger dataset.</li>
-<li>
-<p>Learned patch embeddings:</p>
+<li><strong>Memory-efficient attention.</strong> The authors implemented a FlashAttention-style kernel (<a href="https://arxiv.org/abs/2205.14135">Dao et al., 2022</a>). To suit GPU kernels, ViT-g uses an embedding dimension of 1536 with 24 heads, or 64 dimensions per head. The resulting backbone has about 1.1 billion parameters.</li>
+<li><strong>Sequence packing.</strong> Global crops at resolution 224 and local crops at resolution 98 produce sequences of different lengths. DINOv2 concatenates them and uses a block-diagonal attention mask, making the computation equivalent to separate forwards while improving efficiency. The low-level components are provided by Meta's <a href="https://github.com/facebookresearch/xformers">xFormers</a> library.</li>
+<li><strong>Efficient stochastic depth.</strong> Rather than calculate every residual branch and mask selected results, the implementation skips computation for dropped residuals. With the reported drop rate of 40%, this saves both compute and memory.</li>
+<li><strong>Fully Sharded Data Parallel.</strong> FSDP shards the student, teacher, and AdamW optimizer states across GPUs. Model shards remain in <code>float32</code>; backbone weight broadcasts and gradient reductions use <code>float16</code>, while projection-head gradients are reduced in <code>float32</code> for stability.</li>
+</ul>
+<p>The frequently quoted efficiency result has a specific scope: <strong>on the same hardware and relative to the iBOT implementation</strong>, DINOv2 runs about <span class="math">\(2\times\)</span> faster while using <span class="math">\(1/3\)</span> of the memory. It is not a universal comparison with every self-supervised method or implementation.</p>
+<h3 id="distilling-the-smaller-models">Distilling the smaller models<a class="headerlink" href="#distilling-the-smaller-models" title="Permanent link">🔗</a></h3>
+<p>The ViT-g/14 model is trained from scratch. Smaller ViT-S/14, ViT-B/14, and ViT-L/14 models are distilled from the frozen ViT-g teacher rather than trained independently from scratch, following the general idea of <a href="https://arxiv.org/abs/1503.02531">knowledge distillation</a>.</p>
+<p>For this stage, the teacher is fixed, masking and stochastic depth are removed, the iBOT loss is applied on the two global crops, and an exponential moving average of the student becomes the released model. In the paper's ablation, the distilled ViT-L/14 beats a ViT-L/14 trained from scratch across all 12 reported benchmarks.</p>
+<h2 id="what-the-experiments-establish">What the experiments establish<a class="headerlink" href="#what-the-experiments-establish" title="Permanent link">🔗</a></h2>
+<p>The experiments cover image classification, domain generalization, fine-grained classification, video action recognition, instance retrieval, semantic segmentation, and monocular depth estimation. Comparisons should always be read together with the architecture, pretraining data, input resolution, and downstream evaluation protocol.</p>
+<h3 id="image-classification">Image classification<a class="headerlink" href="#image-classification" title="Permanent link">🔗</a></h3>
+<p>With a frozen backbone and a trained linear classifier at resolution 224, DINOv2 ViT-g/14 reaches 86.5% ImageNet-1k top-1 accuracy. In the same evaluation table:</p>
 <ul>
-<li>Model learnt to parse parts of objects even without being trained to do so.</li>
-<li>Components with same semantics (wing, head, ) are shared among objects of different classes. See below Figure </li>
+<li>iBOT ViT-L/16 reaches 82.3%, so the reported improvement over the previous SSL result is 4.2 percentage points;</li>
+<li>OpenCLIP ViT-G/14 reaches 86.2%; and</li>
+<li>EVA-CLIP ViT-g/14 reaches 86.4%.</li>
 </ul>
-<p align="center"><a name="fig:dinov2_segmentation"></a>
-  <img alt="Patch embeddings \label{fig:dinov2embeddingsfeatures}" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinov2_patch_embeddings.png">
-  Figure 1. Patch embeddings visualized with PCA.</p>
-</li>
-<li>
-<p>Larger model &amp; data sizes made authors to improve stability and acceleration of discriminative SSL methods resulting in 2x faster and with 3x less memory thus enabling 1) <strong>longer training</strong> and 2) <strong>larger batch sizes</strong>. Used techniques:</p>
+<p>Thus DINOv2 is competitive with, and narrowly ahead of, those weakly supervised baselines under this linear-evaluation protocol. It does not dominate every weakly supervised model on every dataset.</p>
+<p>Fine-tuning remains useful. Supervised end-to-end fine-tuning raises ViT-g/14 from 86.5% to 88.5% at resolution 224 and from 86.7% to 88.9% at resolution 448. The appropriate conclusion is that fine-tuning is <strong>optional for strong performance</strong>, not that it is ineffective or that downstream learning is unnecessary.</p>
+<h3 id="classification-beyond-imagenet-and-video">Classification beyond ImageNet and video<a class="headerlink" href="#classification-beyond-imagenet-and-video" title="Permanent link">🔗</a></h3>
+<p>The paper trains linear classifiers on frozen DINOv2 features for iNaturalist, Places205, and 12 additional transfer datasets. DINOv2 is particularly strong on fine-grained categories, but OpenCLIP remains better on some benchmarks such as SUN and Stanford Cars.</p>
+<p>For video action recognition, the image backbone is still frozen, but a linear classifier is trained. The protocol averages features from eight frames for UCF-101 and Kinetics-400, and concatenates them for Something-Something v2 to retain temporal ordering. These results show that image features transfer to video classification; they do not mean that DINOv2 was pretrained to model video dynamics.</p>
+<h3 id="instance-retrieval">Instance retrieval<a class="headerlink" href="#instance-retrieval" title="Permanent link">🔗</a></h3>
+<p>Instance retrieval is genuinely non-parametric in the reported setup. Database images are ranked by cosine similarity to a query feature, without training a task-specific retrieval head. On Oxford-Hard, the strongest reported DINOv2 result improves by roughly 41 mAP points over the selected SSL baseline and 34 points over OpenCLIP.</p>
+<p align="center"><img alt="DINOv2 instance retrieval example" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinoV2_instance_retrieval.png">
+<br>
+Figure 3. Frozen DINOv2 image features can retrieve visually related artworks by nearest-neighbor similarity.</p>
+<h3 id="semantic-segmentation">Semantic segmentation<a class="headerlink" href="#semantic-segmentation" title="Permanent link">🔗</a></h3>
+<p>The backbone remains frozen, but the segmentation predictor is trained with semantic labels. The paper evaluates:</p>
 <ul>
-<li>Fast and memory-efficient attention - improve compute efficiency - <a href="https://arxiv.org/abs/2205.14135">FlashAttention, Dao et al. 2022</a></li>
-<li>Nested tensors in self-attention from <a href="https://github.com/facebookresearch/xformers">Modular XFormers lib from MetaAI, 2022</a></li>
-<li>Efficient stochastic depth -  improve in compute efficiency and memory - modified <a href="">(Huang et al., 2016)</a> by skipping (instead of masking) computation of the dropped residuals</li>
-<li>Fully-Sharded Data Parallel (FSDP)- memory saving - split the model replicas across GPUs (more memory from more GPUs)<ul>
-<li>use of PyTorch FSDP $\rightarrow$ broadcasting weights and reducing gradients is done in <code>float16</code> precision for the backbone (instead <code>float32</code>)</li>
-<li>MLP heads gradients are reduced in <code>float32</code> to avoid training instabilities</li>
+<li>a linear layer on patch tokens;</li>
+<li>a stronger multiscale linear setup using the last four transformer layers, a larger input, and multiscale inference; and</li>
+<li>a trained ViT-Adapter plus Mask2Former head on top of the frozen backbone.</li>
 </ul>
-</li>
-<li>Model distillation <a href="https://arxiv.org/abs/1503.02531">(Hinton et al., 2015)</a><ul>
-<li>used for smaller models that are distilled from largest <em>ViT-g</em></li>
-<li>apply the iBOT loss on the two global crops</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>Automatic pipeline design that filter &amp; rebalance the dataset from collection of unstructured (no need for image metadata) images based only on:</p>
-<ul>
-<li>data similarity</li>
-<li>no manual annotation required</li>
-</ul>
-</li>
-<li>Provide collection of pretrained (with different ViT) visual models (DINOv2), trained on pipelined data. </li>
-<li>Show that with SSL learning transferable frozen features improves SSL SOTA  by a very large margin and is competitive with best weaikly-supervised models.</li>
-</ul>
-<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">🔗</a></h2>
-<p>The requirement for human annotations of images poses a constraint, limiting the quantity of data available for model training. However, self-supervised training using DINOv2 offers a promising solution, particularly for specialized application domains such as cellular imaging, by facilitating the creation of foundational models. Moreover, DINOv2's self-supervised learning approach aims at overcoming the constraints associated with text descriptions, rendering it a potent tool for computer vision. Additionally, the absence of the need for fine-tuning ensures that the backbone remains general, allowing for the simultaneous use of the same features across multiple tasks.</p>
-<!-- ### Objective, or goal for the algorithm -->
-<h3 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">🔗</a></h3>
-<p>DINOv2 represents an advanced approach to training computer vision models using self-supervised learning. This method enables the model to learn from a diverse range of image collections without necessitating labels or metadata. In contrast to conventional image-text pretraining techniques that rely on captions to comprehend image content, DINOv2's reliance on self-supervised learning obviates the need for textual descriptions. DINOv2 acquires the capability to anticipate the relationship between distinct elements of an image, which aids in comprehending and representing its underlying structure. As a result, the model can assimilate more detailed information regarding images, including spatial relationships and depth estimation.</p>
-<!-- ### The processing strategy of the algorithm
-### Metaphors, or analogies to other architectures describing the behavior of the algorithm
-### Heuristics or rules of thumb-->
+<p>The multiscale ViT-g/14 result reaches 53.0 mIoU on ADE20K, close to MAE with end-to-end UperNet fine-tuning at 53.6. The adapter/Mask2Former system reaches 60.2 mIoU while keeping 66% of the weights frozen, compared with the cited state of the art at 62.9. These are strong frozen-backbone results, but they are neither clustering nor training-free semantic segmentation.</p>
+<p align="center"><img alt="DINOv2 semantic-segmentation example" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinoV2_semantic_segm.png">
+<br>
+Figure 4. Semantic segmentation produced by a task-specific predictor operating on frozen DINOv2 features.</p>
+<h3 id="monocular-depth-estimation">Monocular depth estimation<a class="headerlink" href="#monocular-depth-estimation" title="Permanent link">🔗</a></h3>
+<p>Depth prediction also keeps the DINOv2 backbone frozen while training a downstream predictor. The paper compares a linear head over one transformer layer, a linear head over four layers, and a DPT decoder.</p>
+<p>With DPT, DINOv2 ViT-g/14 reports RMSE 0.279 on NYU Depth v2, 2.11 on KITTI, and 0.338 for transfer from NYU Depth v2 to SUN RGB-D. The reference results printed above the table are 0.330, 2.10, and 0.421 respectively. DINOv2 therefore improves the referenced NYU and transfer results and essentially matches, but does not beat, the referenced KITTI result. Lower RMSE is better.</p>
+<video id="dinov2-depth-estimation" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="metadata" autoplay loop muted>
+  <source src="../img/vDinoV2_depth_estimation.webm" type="video/webm">
+  <p class="vjs-no-js">
+    To view this video, enable JavaScript and use a browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank" rel="noopener">supports HTML5 video</a>.
+  </p>
+</video>
 
-<h2 id="applications-classes-of-problem-is-the-algorithm-well-suited">Applications: classes of problem is the algorithm well suited<a class="headerlink" href="#applications-classes-of-problem-is-the-algorithm-well-suited" title="Permanent link">🔗</a></h2>
-<p>DINOv2's robust predictive abilities render it well-suited for various computer vision applications, including classification, segmentation, and image retrieval. Notably, the features produced by DINOv2 outperform specialized state-of-the-art pipelines for depth estimation, both in-domain and out-of-domain. With its adaptability, DINOv2 can serve as a multipurpose backbone for diverse computer vision tasks, which can lead to the creation of foundational cell imagery models and subsequent biological discoveries.</p>
+<p align="center">Figure 5. Qualitative monocular-depth predictions obtained from DINOv2 features and a trained depth head.</p>
+<p align="center"><img alt="DINOv2 depth-estimation example" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinoV2_depth_estimation.png">
+<br>
+Figure 6. Frozen DINOv2 features support in-domain depth estimation and transfer between depth datasets when paired with a trained predictor.</p>
+<h2 id="what-the-patch-correspondences-mean">What the patch correspondences mean<a class="headerlink" href="#what-the-patch-correspondences-mean" title="Permanent link">🔗</a></h2>
+<p>The paper visualizes patch features with principal component analysis (PCA). It thresholds the first principal component to separate foreground from background, then maps three subsequent components to color channels. Similar colors frequently appear on corresponding regions across related images.</p>
+<p align="center"><img alt="DINOv2 patch features visualized with PCA" src="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/img/dinov2_patch_embeddings.png">
+<br>
+Figure 7. PCA visualization of DINOv2 patch features. Similar colors indicate aligned feature directions, not predefined semantic labels.</p>
+<p>For explicit patch matching, the authors compute Euclidean distances between patch features from two images, solve an assignment problem, and retain salient matches with non-maximum suppression. Examples connect wings to wings, heads to heads, and functionally similar regions across photographs, drawings, poses, and even different objects.</p>
+<p>This supports the claim that local DINOv2 features encode useful correspondences across domains. Terms such as "understands object parts" should remain shorthand for this measured behavior. PCA plots and selected matches alone do not prove symbolic, causal, or human-like understanding.</p>
+<h2 id="applications-and-appropriate-usage">Applications and appropriate usage<a class="headerlink" href="#applications-and-appropriate-usage" title="Permanent link">🔗</a></h2>
+<p>DINOv2 is well suited as a reusable visual backbone for:</p>
 <ul>
-<li><strong>Instance Retrieval</strong></li>
+<li>image and video classification with a trained probe;</li>
+<li>non-parametric instance retrieval;</li>
+<li>semantic segmentation with a trained linear head or decoder;</li>
+<li>monocular depth estimation with a trained head;</li>
+<li>object detection and other dense tasks using adapters or decoders; and</li>
+<li>specialized domains where labels or captions are scarce.</li>
 </ul>
-<p><img style="float: right;  width:300px" src=https://github.com/MChromiak/mchromiak.github.io/blob/master/articles/2023/Apr/18/img/dinoV2_instance_retrieval.png?raw=true></p>
-<p>
-Directly use frozen features to find art pieces similar to a given image from a large art collection. DINOv2 frozen features can readily be used to retrieve images similar to a query image using a non-parametric approach: database images are simply ranked according to the similarity of their features with those of the query image.
-</p>
+<p>Cellular imaging is a plausible example of the last category, but the paper does not demonstrate biological discovery or train a cellular foundation model. It should be presented as a potential application rather than an experimental result.</p>
+<h2 id="limitations-bias-and-cost">Limitations, bias, and cost<a class="headerlink" href="#limitations-bias-and-cost" title="Permanent link">🔗</a></h2>
+<p>The paper includes limitations that are essential to interpreting its foundation-model claims:</p>
 <ul>
-<li><strong>Semantic Segmentation</strong></li>
+<li><strong>Geographical and income bias remains.</strong> On Dollar Street, the ViT-g model has a 25.7-point performance gap between Africa and Europe and a 31.7-point gap between low- and high-income households. It improves on the selected SEERv2 baseline but remains biased toward wealthier households in Western regions.</li>
+<li><strong>The human-attribute analysis is limited.</strong> A linear classifier showed no clear harmful-label pattern across the evaluated gender, skin-tone, and age groups, but the authors explicitly state that a more thorough analysis could reveal additional flaws.</li>
+<li><strong>Training is expensive.</strong> Under the paper's standardized assumptions, reproducing one DINOv2-g run requires 22,016 A100 GPU-hours, about 9.7 MWh, and an estimated 3.7 tonnes of CO2 equivalent. The estimate covers GPU electricity and excludes hardware manufacturing and disposal.</li>
+<li><strong>Qualitative correspondences are not a complete semantics evaluation.</strong> Selected PCA and patch-matching examples establish an interesting property, not a general theory of object-part understanding.</li>
+<li><strong>The representation is not language-aligned.</strong> Because pretraining uses no text, DINOv2 does not by itself provide CLIP-style open-vocabulary labels. A separate supervised or language-alignment component is required when an application needs named concepts.</li>
 </ul>
-<p>
-<img style="float: right;  width:300px" src=https://github.com/MChromiak/mchromiak.github.io/blob/master/articles/2023/Apr/18/img/dinoV2_semantic_segm.png?raw=true>
-DINOv2 frozen features can readily be used in models predicting per-pixel object class in a single image. Competitive results without any fine-tuning on clustering an images into object classes. 
-</p>
+<h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">🔗</a></h2>
+<p>DINOv2's main achievement is not a new architectural block. It is a carefully integrated system: DINO and iBOT teacher-student objectives, KoLeo regularization, high-resolution adaptation, curated data at scale, an efficient distributed implementation, and distillation from a 1.1-billion-parameter ViT-g teacher.</p>
+<p>The resulting frozen representations are unusually versatile. They work for global classification, local dense prediction, cross-domain transfer, and nearest-neighbor retrieval. The correct scientific interpretation is that the <strong>backbone often transfers without being fine-tuned</strong>; most semantic downstream tasks still learn a task-specific readout.</p>
+<h2 id="future-research">Future research<a class="headerlink" href="#future-research" title="Permanent link">🔗</a></h2>
+<p>The authors propose that object-part and scene-geometry properties may continue to improve with model and data scale, drawing an analogy to emergent abilities in language models (<a href="https://arxiv.org/abs/2206.07682">Wei et al., 2022</a>). This is a research hypothesis, not a result established by the current scaling experiments.</p>
+<p>They also suggest connecting frozen visual features to a language-enabled system that can process them like tokens. That direction requires an additional alignment or multimodal training stage; it is not a capability of the original DINOv2 model itself.</p>
+<h2 id="useful-resources">Useful resources<a class="headerlink" href="#useful-resources" title="Permanent link">🔗</a></h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2304.07193">DINOv2 paper on arXiv</a></li>
+<li><a href="https://openreview.net/forum?id=a68SUt6zFt">DINOv2 publication record on OpenReview</a></li>
+<li><a href="https://github.com/facebookresearch/dinov2">Official Meta AI implementation</a></li>
+<li><a href="https://github.com/facebookresearch/dinov2/blob/main/MODEL_CARD.md#how-to-get-started-with-the-model">Official model card and PyTorch Hub checkpoints</a></li>
+<li><a href="https://ai.facebook.com/blog/dino-v2-computer-vision-self-supervised-learning/">Meta AI introduction to DINOv2</a></li>
+<li><a href="https://paperswithcode.com/paper/dinov2-learning-robust-visual-features">DINOv2 on Papers with Code</a></li>
+<li>Demos: <a href="https://dinov2.metademolab.com/demos?category=depth">depth estimation</a>, <a href="https://dinov2.metademolab.com/demos?category=segmentation">semantic segmentation</a>, and <a href="https://dinov2.metademolab.com/demos?category=retrieval">instance retrieval</a></li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
 
-<ul>
-<li><strong>Depth Estimation</strong></li>
-</ul>
-<p>
-<img style="float: right; width:300px" src=https://github.com/MChromiak/mchromiak.github.io/blob/master/articles/2023/Apr/18/img/dinoV2_depth_estimation.png?raw=true>
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
 
-DINOv2 frozen features can readily be used in models predicting per-pixel depth from a single image, both in and out-of-distribution.
-State-of-the-art results and strong generalization on estimating depth from a single image.
-</p>
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
 
-<!-- ### Common benchmark or example datasets used to demonstrate the algorithm -->
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
 
-<h2 id="conclusions">Conclusions:<a class="headerlink" href="#conclusions" title="Permanent link">🔗</a></h2>
-<p>Several obstacles were surmounted during the course of this study, including the development of a substantial and refined training dataset, optimization of the training algorithm and its implementation, and the design of an effective distillation pipeline.</p>
-<p>DINOv2 is capable of producing high-performance features that can serve as inputs for straightforward linear classifiers. This adaptability allows DINOv2 to function as a versatile backbone for numerous computer vision applications. Experiments indicates that the features produced by DINOv2 exhibit strong predictive capabilities on various tasks, including classification, segmentation, and image retrieval. Additionally, the findings demonstrate that DINOv2's features outperform specialized state-of-the-art pipelines for depth estimation, both in-domain and out-of-domain. This robust out-of-domain performance is attributed to the synergistic combination of self-supervised feature learning and the utilization of lightweight task-specific modules, such as linear classifiers. Lastly, the backbone remains general, as it avoids fine-tuning, and the same features can be employed simultaneously across various tasks.</p>
-<h2 id="future-research">Future research:<a class="headerlink" href="#future-research" title="Permanent link">🔗</a></h2>
-<ul>
-<li>
-<p>It is expected that understanding of object parts and scene geometry regardless of the image domains are just the initial set of properties that will grow with model scale and data similarly to instruction emergence in large language models [<a href="https://arxiv.org/abs/2206.07682">Wei J. et al. 2022</a>].</p>
-</li>
-<li>
-<p>The paper shows that visual features are compatible with classifiers as simple as linear layers - meaning the underlying information is readily available. This ability can be leverage to train a a language-enabled AI system that can process visual features as
-if they were word tokens, and extract the required information to ground the system.</p>
-</li>
-</ul>
-<h2 id="useful-resources-for-learning-more-about-the-algorithm">Useful resources for learning more about the algorithm:<a class="headerlink" href="#useful-resources-for-learning-more-about-the-algorithm" title="Permanent link">🔗</a></h2>
-<ul>
-<li>
-<p><a href="https://arxiv.org/abs/2111.06377">"DINOv2: Learning Robust Visual Features without Supervision" Oquab M. et al.- ArXiv Paper - CVPR 2023</a></p>
-</li>
-<li>
-<p>Demos:</p>
-<ul>
-<li><a href="https://dinov2.metademolab.com/demos?category=depth">Depth Estimation</a></li>
-<li><a href="https://dinov2.metademolab.com/demos?category=segmentation">Semantic Segmentation</a></li>
-<li><a href="https://dinov2.metademolab.com/demos?category=retrieval">Instance Retrieval</a></li>
-</ul>
-</li>
-<li>
-<p><a href="https://github.com/facebookresearch/dinov2">GitHub implementation from authors MetaAI</a></p>
-</li>
-<li><a href="https://ai.facebook.com/blog/dino-v2-computer-vision-self-supervised-learning/">"DINOv2: State-of-the-art computer vision models with self-supervised learning- April 17, 2023 MetaAI blog post on general DINOv2 idea and results</a></li>
-<li><a href="https://paperswithcode.com/paper/dinov2-learning-robust-visual-features">PapersWithCode</a></li>
-</ul>
-<h3 id="footnotes">Footnotes:<a class="headerlink" href="#footnotes" title="Permanent link">🔗</a></h3>
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
@@ -417,7 +475,7 @@ if they were word tokens, and extract the required information to ground the sys
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">🦕 DINO v2: Match and transfer features across domains and understand relations between similar parts of different objects</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/">Decision Transformer: Unifying sequence modelling and model-free, offline RL</a></li>
   </ul>
