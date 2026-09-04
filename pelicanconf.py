@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+from datetime import datetime
+
+CURRENT_YEAR = datetime.now().year
 
 AUTHOR = u'Micha\u0142 Chromiak'        
 SITENAME = u'Micha\u0142 Chromiak\'s blog'
@@ -70,28 +73,26 @@ AVATAR = 'static_files/img/me.png'
 ABOUT_ME = ' PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.'
 
 # Blogroll
-LINKS = (   ('ICLR Conf', 'http://www.iclr.cc'),
-            ('ICML Conf', 'http://icml.cc'),
-            ('NeurIPS Conf', 'https://nips.cc/'),
-            ('AI Frontiers', 'http://aifrontiers.com/'),
-            ('ML Glossary', 'https://developers.google.com/machine-learning/glossary/'),
+LINKS = (   ('ICLR', 'https://iclr.cc/'),
+            ('ICML', 'https://icml.cc/'),
+            ('NeurIPS', 'https://neurips.cc/'),
+            ('ML Glossary', 'https://developers.google.com/machine-learning/glossary'),
             ('Deep Dream Generator', 'https://deepdreamgenerator.com/'),
-            ('DeepArt Generator', 'https://deepart.io/'),
-            ('Stanford ML Group Andrew Ng', 'https://stanfordmlgroup.github.io/'),
-            ('AI•ON open ML collaboration', 'https://ai-on.org/'),
-            ('My old blog on Java an SE', 'http://java-hive.blogspot.com/'),
-            ('PhD', 'http://karpathy.github.io/2016/09/07/phd/'),
-            ('SemEval2017', 'http://alt.qcri.org/semeval2017/'),
-            ('Free CS courses', 'https://medium.freecodecamp.org/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c'),
+            ('Stanford ML Group', 'https://stanfordmlgroup.github.io/'),
+            ('A Survival Guide to a PhD', 'https://karpathy.github.io/2016/09/07/phd/'),
+            ('Java Hive (my earlier blog)', 'https://java-hive.blogspot.com/'),
+            ('AI Frontiers 2018 (archive)', 'https://aifrontiers.com/'),
+            ('SemEval 2017 (archive)', 'https://alt.qcri.org/semeval2017/'),
+            ('Free CS courses (2017 roundup)', 'https://www.freecodecamp.org/news/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c/'),
         )
 
 # Social widget
 SOCIAL = (('LinkedIn', 'https://www.linkedin.com/in/michal-chromiak'),
-         ('GitHub', 'https://github.com/MichalChromiak'),
-         ('Twitter', 'https://twitter.com/drChromiak'),
-         ('ResearchGate', 'https://www.researchgate.net/profile/Michal_Chromiak'),
+         ('GitHub', 'https://github.com/MChromiak'),
+         ('X (Twitter)', 'https://x.com/drChromiak', 'twitter'),
+         ('ResearchGate', 'https://www.researchgate.net/profile/Michal-Chromiak'),
          ('Google Scholar', 'https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en'),
-         ('RSS', 'localhost:8000/feeds/all.rss'),)
+         ('Feed (Atom)', 'https://mchromiak.github.io/feeds/all.atom.xml', 'rss'),)
 
 DEFAULT_PAGINATION = 10
 
