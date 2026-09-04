@@ -282,6 +282,7 @@ $$</div>
 <p>The result is a practical route to adapting larger models within a limited GPU-memory budget. The paper's strongest message is the combination: carefully chosen quantization and well-placed adapters can preserve strong task performance without the memory cost of updating the whole model.</p>
 <h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">🔗</a></h2>
 <p>For a different approach to training efficiency, see <a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a>. I-JEPA learns visual representations from unlabeled images; QLoRA adapts pretrained language models. The articles address different stages of learning, rather than two versions of the same method.</p>
+<p>For an architectural example built around dense matrix operations, see <a href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/">MLP-Mixer: How image patches communicate without attention</a>. MLP-Mixer is a vision backbone, whereas QLoRA is a memory-efficient way to adapt a pretrained language model; the connection is computational perspective, not task or method.</p>
 <h2 id="original-sources">Original sources<a class="headerlink" href="#original-sources" title="Permanent link">🔗</a></h2>
 <ul>
 <li>Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. <a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs</a>, 2023. This explanation follows the <a href="https://arxiv.org/html/2305.14314v1">original May 2023 version</a>.</li>
@@ -356,6 +357,7 @@ $$</div>
     <ul>
         <li><a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">LoRA: Fine-tuning a model by learning a small update</a></li>
         <li><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/">🌀 MLP-Mixer: How image patches communicate without attention</a></li>
     </ul>
 </section>
     <hr />
