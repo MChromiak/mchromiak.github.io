@@ -12,7 +12,6 @@ I hold a PhD in Computer Science from the [Institute of Fundamental Technologica
 
 My experience spans academic research and applied software development. Selected work includes:
 
-* **AI-supported ultrasound analysis.** Participation in the [UMCS–Netrix research collaboration](https://www.umcs.pl/pl/aktualnosci%2C37%2Csukces-umcs-i-netrix-s-a-7-mln-zl-na-innowacyjny-projekt%2C173392.chtm) to develop ultrasound-based monitoring of tongue movement for orthodontic and speech therapy.
 * **Object databases.** Contributions to the ODRA database prototype and research on the Stack-Based Approach to databases at the [Polish-Japanese Academy of Information Technology](https://pja.edu.pl/en/) during my doctoral studies.
 * **Geospatial software.** Development of an aerial-image georeferencing platform for the [Institute of Soil Science and Plant Cultivation (IUNG)](https://www.iung.pl/).
 * **Healthcare software.** Design of transaction-like behaviour on top of Elasticsearch for CompuGroup Medical.
