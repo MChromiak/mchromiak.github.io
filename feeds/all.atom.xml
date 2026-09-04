@@ -1,5 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/all.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2023-05-30T19:07:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>QLoRA: How to fine-tune large language models with less memory</title><link href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/" rel="alternate"/><published>2023-05-26T09:33:00+02:00</published><updated>2023-05-26T09:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-05-26:/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/</id><summary type="html">&lt;p&gt;QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/all.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2023-06-17T14:43:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>I-JEPA: Learning from images by predicting missing features</title><link href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/" rel="alternate"/><published>2023-06-17T14:43:00+02:00</published><updated>2023-06-17T14:43:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-06-17:/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/</id><summary type="html">&lt;p&gt;I-JEPA learns visual features by predicting the representations of hidden image regions, rather than reconstructing their pixels. This guide explains the context encoder, target encoder, predictor, and masking strategy, then examines what the paper's accuracy and efficiency results actually measure.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Imagine covering the head of a dog in a photograph. The visible body and surroundings give you clues about the hidden region. You may infer its shape and position without knowing the exact color of every pixel.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;I-JEPA turns that distinction into a learning task: predict useful features of a hidden region, rather than draw the missing pixels.&lt;/strong&gt; It learns from images without requiring class labels during pretraining. Afterward, its features can serve as inputs to models for tasks such as classification.&lt;/p&gt;
+&lt;p&gt;The name stands for &lt;em&gt;Image-based Joint-Embedding Predictive Architecture&lt;/em&gt;. Mahmoud Assran and colleagues introduced the method in a &lt;a href="https://arxiv.org/abs/2301.08243"&gt;paper first submitted in January 2023&lt;/a&gt;, later published at &lt;a href="https://openaccess.thecvf.com/content/CVPR2023/html/Assran_Self-Supervised_Learning_From_Images_With_a_Joint-Embedding_Predictive_Architecture_CVPR_2023_paper.html"&gt;CVPR 2023&lt;/a&gt;. Meta released the code and checkpoints in June. This article follows the paper's &lt;a href="https://arxiv.org/html/2301.08243v3"&gt;April 2023 revision&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="what-is-a-feature-if-it-is-not-a-pixel"&gt;What is a feature, if it is not a pixel?&lt;a class="headerlink" href="#what-is-a-feature-if-it-is-not-a-pixel" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A pixel records color at a particular location. An &lt;strong&gt;encoder&lt;/strong&gt; is a neural network that transforms pixels into an &lt;strong&gt;embedding&lt;/strong&gt;, a vector of learned numbers. Those numbers can make relationships between images easier to recognize: which shapes belong together, which regions look alike, or how an object relates to its surroundings.&lt;/p&gt;
+&lt;p&gt;An embedding is not a written description. I-JEPA does not receive a label such as "dog's head" for the hidden region, and no one assigns that meaning to a particular coordinate of its output. The training task shapes the representation; downstream evaluations test whether useful information has emerged.&lt;/p&gt;
+&lt;p&gt;Why predict embeddings? Reconstructing pixels rewards getting every visible detail right. A representation-learning task may benefit more from retaining object structure than from reproducing the exact texture of grass. I-JEPA lets a learned encoder provide the prediction targets instead of fixing those targets to raw pixels.&lt;/p&gt;
+&lt;p&gt;That choice alone is not enough. The model also needs a prediction problem that encourages it to use meaningful context. The architecture and the masks work together to create one.&lt;/p&gt;
+&lt;h2 id="follow-one-image-through-i-jepa"&gt;Follow one image through I-JEPA&lt;a class="headerlink" href="#follow-one-image-through-i-jepa" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;I-JEPA divides an image into a grid of &lt;strong&gt;patches&lt;/strong&gt;, small non-overlapping squares. Its encoders use Vision Transformers, which process these patches as a sequence and allow information to move between them through attention.&lt;/p&gt;
+&lt;p&gt;There are three networks with different jobs:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;The context encoder reads the visible patches.&lt;/strong&gt; Some regions are withheld. The encoder produces features for the patches it is allowed to see.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The target encoder reads the complete image.&lt;/strong&gt; It produces one representation per patch. The training targets are selected from these outputs at the locations of the withheld regions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The predictor fills in the missing features.&lt;/strong&gt; It receives the context features and position information telling it which region to predict. Its output is compared with the corresponding target-encoder features.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Jun/17/img/I-JEPA.png"&gt;&lt;img alt="I-JEPA training diagram: a context encoder processes visible patches, a shared predictor makes feature predictions at colored target positions, and a target encoder processes the complete image to provide the comparison targets." src="https://mchromiak.github.io/articles/2023/Jun/17/img/I-JEPA.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. The I-JEPA training architecture, from the paper's &lt;a href="https://arxiv.org/html/2301.08243v3#S3.F3"&gt;figure 3&lt;/a&gt;. Matching colors identify the same target region in the two branches. The repeated predictor boxes share their weights; they are not separately trained models.&lt;/p&gt;
+&lt;p&gt;The order of operations matters. &lt;strong&gt;Target regions are selected after the target encoder has processed the complete image.&lt;/strong&gt; A target feature can therefore incorporate information from elsewhere in that image. The context encoder, by contrast, never receives the hidden target patches as input.&lt;/p&gt;
+&lt;p&gt;The predictor also needs to know &lt;em&gt;where&lt;/em&gt; to predict. Otherwise, the same visible context could be used to ask about several different missing regions. I-JEPA supplies a shared learnable mask token at each requested position, with a positional embedding added to it. These tokens specify locations; they do not reveal the missing pixels. &lt;a href="https://arxiv.org/html/2301.08243v3#S3"&gt;Paper, section 3&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="how-the-networks-learn-together"&gt;How the networks learn together&lt;a class="headerlink" href="#how-the-networks-learn-together" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The prediction error updates the &lt;strong&gt;context encoder and predictor&lt;/strong&gt; through backpropagation. The &lt;strong&gt;target encoder&lt;/strong&gt; is updated differently: its weights track an exponential moving average of the context encoder's weights.&lt;/p&gt;
+&lt;p&gt;Think of the target encoder as a slowly changing reference. Each update retains most of its previous weights and adds a small contribution from the newly trained context encoder. The targets improve as training progresses, but do not chase each individual gradient update directly.&lt;/p&gt;
+&lt;p&gt;This design addresses a risk called &lt;strong&gt;representation collapse&lt;/strong&gt;. If every image produced the same vector, predicting that vector would be easy, but the representation would be useless. I-JEPA uses the asymmetry between the two branches, the predictor, and the moving-average target encoder to train without explicit negative-image pairs. The paper reports that the moving-average encoder is essential in its experiments; averaging alone is not a general mathematical guarantee against collapse.&lt;/p&gt;
+&lt;h2 id="why-the-mask-is-part-of-the-method"&gt;Why the mask is part of the method&lt;a class="headerlink" href="#why-the-mask-is-part-of-the-method" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Hiding a few isolated pixels can create a task solvable from nearby color and texture. Hiding almost everything can leave too little evidence to make a useful prediction. I-JEPA instead samples several substantial target regions while keeping context distributed around them.&lt;/p&gt;
+&lt;p&gt;Its default recipe is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sample &lt;strong&gt;four target blocks&lt;/strong&gt;, each covering roughly 15-20% of the image area, with aspect ratios between 0.75 and 1.5. Target blocks may overlap one another.&lt;/li&gt;
+&lt;li&gt;Sample a square &lt;strong&gt;context block&lt;/strong&gt; covering roughly 85-100% of the image area.&lt;/li&gt;
+&lt;li&gt;Remove from the context every patch that overlaps any target block.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The 85-100% figure describes the context block &lt;strong&gt;before&lt;/strong&gt; those removals. It is not the fraction of image patches actually passed to the context encoder. The remaining context can have several holes and be much sparser. Likewise, four 20% targets do not necessarily hide 80% of the image, because targets can overlap.&lt;/p&gt;
+&lt;p&gt;This gives the predictor a different problem from reconstructing scattered pixels: use evidence from visible regions to infer features across several larger missing regions. The paper's masking ablations show that replacing this strategy with random patches or simple quadrants sharply reduces performance in the tested low-label linear-probe setting. &lt;a href="https://arxiv.org/html/2301.08243v3#S3.F4"&gt;Paper, figure 4&lt;/a&gt; and &lt;a href="https://arxiv.org/html/2301.08243v3#S7.T6"&gt;table 6&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="does-no-hand-crafted-augmentations-mean-no-cropping"&gt;Does "no hand-crafted augmentations" mean no cropping?&lt;a class="headerlink" href="#does-no-hand-crafted-augmentations-mean-no-cropping" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;No. Here the distinction is between constructing multiple transformed views whose representations must agree and constructing a context-to-target prediction task within one image view.&lt;/p&gt;
+&lt;p&gt;The official I-JEPA pretraining configuration still uses &lt;strong&gt;random resized cropping and normalization&lt;/strong&gt;. Its default recipe disables color distortion, Gaussian blur, and horizontal flipping. The masks themselves are also deliberate design choices. I-JEPA reduces reliance on the multi-view augmentation recipe used by methods such as DINO; it does not eliminate preprocessing or all assumptions about images. &lt;a href="https://github.com/facebookresearch/ijepa/blob/main/src/transforms.py"&gt;Official transforms&lt;/a&gt;, &lt;a href="https://github.com/facebookresearch/ijepa/blob/main/configs/in1k_vith14_ep300.yaml"&gt;ViT-H/14 configuration&lt;/a&gt;.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;The prediction objective, with the paper's notation&lt;/summary&gt;
+&lt;p&gt;Let &lt;span class="math"&gt;\(M\)&lt;/span&gt; be the number of target blocks, normally four. For block &lt;span class="math"&gt;\(i\)&lt;/span&gt;, &lt;span class="math"&gt;\(B_i\)&lt;/span&gt; is the set of patch positions inside that block. The vector &lt;span class="math"&gt;\(\boldsymbol{s}_{y_j}\)&lt;/span&gt; is the target encoder's output for patch &lt;span class="math"&gt;\(j\)&lt;/span&gt;; &lt;span class="math"&gt;\(\hat{\boldsymbol{s}}_{y_j}\)&lt;/span&gt; is the predictor's estimate. The collections of vectors for a whole block are written &lt;span class="math"&gt;\(\boldsymbol{s}_y(i)\)&lt;/span&gt; and &lt;span class="math"&gt;\(\hat{\boldsymbol{s}}_y(i)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Section 3 writes the objective as follows, with the equality split across two lines here for readability:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\begin{aligned}
+&amp;amp;\frac{1}{M}\sum_{i=1}^{M} D\left(\hat{\boldsymbol{s}}_y(i),\boldsymbol{s}_y(i)\right)\\
+&amp;amp;\qquad=\frac{1}{M}\sum_{i=1}^{M}\sum_{j\in B_i}
+\left\lVert\hat{\boldsymbol{s}}_{y_j}-\boldsymbol{s}_{y_j}\right\rVert_2^2.
+\end{aligned}
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;Read the right-hand side from the inside out: take the difference between the predicted and target vectors, compute its squared Euclidean length, sum over the patches in a block, then average across the &lt;span class="math"&gt;\(M\)&lt;/span&gt; blocks. The paper's displayed expression has a block average and a patch sum; it does not include a separate division by the number of patches in each block.&lt;/p&gt;
+&lt;p&gt;The context encoder has parameters &lt;span class="math"&gt;\(\theta\)&lt;/span&gt;, the predictor has parameters &lt;span class="math"&gt;\(\phi\)&lt;/span&gt;, and the target encoder has parameters &lt;span class="math"&gt;\(\bar{\theta}\)&lt;/span&gt;. Only &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; and &lt;span class="math"&gt;\(\phi\)&lt;/span&gt; receive gradients from this objective. The moving-average update can be written as:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\bar{\theta}\leftarrow m\bar{\theta}+(1-m)\theta.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;This last equation spells out the update described in the paper's prose. The momentum &lt;span class="math"&gt;\(m\)&lt;/span&gt; starts at 0.996 and increases toward 1 during pretraining. A larger value retains more of the target encoder's previous weights. &lt;a href="https://arxiv.org/html/2301.08243v3#S3"&gt;Paper, section 3&lt;/a&gt; and &lt;a href="https://arxiv.org/html/2301.08243v3#A1.SS1"&gt;appendix A.1&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Paper versus implementation:&lt;/strong&gt; the released training code normalizes target features and uses &lt;code&gt;smooth_l1_loss&lt;/code&gt; with its default mean reduction, rather than the squared-L2 expression printed above. Both train feature prediction, but they are different numerical losses. The equation here follows the paper; reproducing the released checkpoints requires following the &lt;a href="https://github.com/facebookresearch/ijepa/blob/main/src/train.py"&gt;implementation&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="how-it-differs-from-mae-and-dino"&gt;How it differs from MAE and DINO&lt;a class="headerlink" href="#how-it-differs-from-mae-and-dino" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;All three methods learn from images without needing class labels during pretraining. What changes is the training question.&lt;/p&gt;
+&lt;div class="table-responsive"&gt;
+&lt;table class="table table-striped"&gt;
+&lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;Method&lt;/th&gt;&lt;th scope="col"&gt;Training question&lt;/th&gt;&lt;th scope="col"&gt;Prediction target&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;MAE&lt;/td&gt;&lt;td&gt;Can visible patches reconstruct the missing patches?&lt;/td&gt;&lt;td&gt;Pixel values, typically normalized within each patch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;DINO&lt;/td&gt;&lt;td&gt;Can a student match its teacher across different augmented views?&lt;/td&gt;&lt;td&gt;The teacher's output distribution over learned features&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;I-JEPA&lt;/td&gt;&lt;td&gt;Can visible context predict features at specified hidden positions?&lt;/td&gt;&lt;td&gt;Patch representations from the moving-average target encoder&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/img/i-JEPA_architecture.png"&gt;&lt;img alt="Three self-supervised architecture families: joint embedding compares encoded inputs; a generative architecture decodes a signal; a joint-embedding predictive architecture predicts an encoded target." src="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/img/i-JEPA_architecture.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. The paper's &lt;a href="https://arxiv.org/html/2301.08243v3#S0.F2"&gt;figure 2&lt;/a&gt; compares architecture families. In the right-hand panel, the predictor estimates a target representation rather than a target image. For I-JEPA, the conditioning information marked &lt;span class="math"&gt;\(z\)&lt;/span&gt; specifies the positions to predict.&lt;/p&gt;
+&lt;p&gt;The middle and right panels make the central difference visible: &lt;strong&gt;a decoder predicts the signal; I-JEPA's predictor predicts its representation&lt;/strong&gt;. A useful representation need not preserve every detail that a pixel reconstruction requires.&lt;/p&gt;
+&lt;p&gt;For the reconstruction side of this comparison, see the &lt;a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/"&gt;MAE article&lt;/a&gt;. The &lt;a href="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/"&gt;DINO article&lt;/a&gt; explains the teacher-student, multi-view approach.&lt;/p&gt;
+&lt;h2 id="what-happens-after-pretraining"&gt;What happens after pretraining?&lt;a class="headerlink" href="#what-happens-after-pretraining" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Pretraining produces features, not a ready-made classifier for every task. To evaluate those features, the paper uses the &lt;strong&gt;target encoder&lt;/strong&gt;, generally averaging its patch representations into an image-level vector.&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;linear probe&lt;/strong&gt; keeps the encoder frozen and trains a simple classifier on top of its features. This asks whether the representation already makes categories easy to separate. Labels are used to train that classifier, even though they were not used to pretrain the encoder.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Fine-tuning&lt;/strong&gt; also updates the encoder for the downstream task. It can adapt the representation more extensively, but answers a different question from linear probing. Keeping these protocols separate makes the results much easier to interpret.&lt;/p&gt;
+&lt;h3 id="classification-useful-features-with-fewer-pretraining-epochs"&gt;Classification: useful features with fewer pretraining epochs&lt;a class="headerlink" href="#classification-useful-features-with-fewer-pretraining-epochs" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The following results are from the paper's full-label ImageNet-1K &lt;strong&gt;linear evaluation&lt;/strong&gt;, where top-1 accuracy is the percentage of images assigned the correct highest-scoring class:&lt;/p&gt;
+&lt;div class="table-responsive"&gt;
+&lt;table class="table table-striped"&gt;
+&lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;Method and encoder&lt;/th&gt;&lt;th scope="col"&gt;Pretraining epochs&lt;/th&gt;&lt;th scope="col"&gt;Top-1 accuracy&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;MAE, ViT-H/14&lt;/td&gt;&lt;td&gt;1,600&lt;/td&gt;&lt;td&gt;77.2%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;I-JEPA, ViT-H/14&lt;/td&gt;&lt;td&gt;300&lt;/td&gt;&lt;td&gt;79.3%&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;I-JEPA, ViT-H/16 at 448-pixel resolution&lt;/td&gt;&lt;td&gt;300&lt;/td&gt;&lt;td&gt;81.1%&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;An epoch is one pass through the training dataset. ViT-H denotes the Huge model; &lt;code&gt;/14&lt;/code&gt; and &lt;code&gt;/16&lt;/code&gt; denote the patch width in pixels. The higher-resolution row processes a different patch grid, so it is not the same computation as the standard ViT-H/14 run.&lt;/p&gt;
+&lt;p&gt;The matched ViT-H/14 comparison is the clearest result: I-JEPA reaches higher linear-probe accuracy after substantially fewer pretraining epochs. That does not make it the winner over every model in the table: DINO's different ViT-B/8 configuration reaches 80.1%. &lt;a href="https://arxiv.org/html/2301.08243v3#S4.T1"&gt;Paper, table 1&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="low-label-learning-and-spatial-information"&gt;Low-label learning and spatial information&lt;a class="headerlink" href="#low-label-learning-and-spatial-information" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;With only &lt;strong&gt;1% of ImageNet's labels&lt;/strong&gt;, I-JEPA's ViT-H/14 reaches 73.3% accuracy, compared with 71.5% for MAE's ViT-H/14. This is a separate experiment: the I-JEPA encoder is fine-tuned, not frozen. The 448-pixel I-JEPA variant reaches 77.3%. These results support label-efficient adaptation, not a claim that all downstream tasks need no fine-tuning. &lt;a href="https://arxiv.org/html/2301.08243v3#S5.T2"&gt;Paper, table 2&lt;/a&gt; and &lt;a href="https://arxiv.org/html/2301.08243v3#A1.SS2"&gt;appendix A.2&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The paper also tests frozen features on CLEVR, a dataset of synthetic scenes. Its counting and distance tasks check whether the representation retains information beyond object category. I-JEPA scores 86.7 on counting and 72.4 on the distance task; MAE scores 90.5 and 72.4 respectively. I-JEPA therefore retains useful spatial information, but does not surpass MAE on both tasks. These benchmarks should not be read as a demonstration of dense, real-world depth maps. &lt;a href="https://arxiv.org/html/2301.08243v3#S6.T4"&gt;Paper, table 4&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="where-the-compute-savings-come-from"&gt;Where the compute savings come from&lt;a class="headerlink" href="#where-the-compute-savings-come-from" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Meta reports training the approximately &lt;strong&gt;632-million-parameter ViT-H/14 on 16 A100 GPUs in under 72 hours&lt;/strong&gt;. That is elapsed time for a multi-GPU run, not a single-GPU training budget. At 72 hours, 16 GPUs would account for 1,152 GPU-hours. &lt;a href="https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/"&gt;Meta's June 2023 announcement&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The efficiency comes from several places. The context encoder processes only visible patches. The predictor is narrower than the encoders. The target encoder processes one complete image view rather than a collection of separately augmented views. Most importantly, useful features emerge after fewer pretraining iterations in the reported comparisons.&lt;/p&gt;
+&lt;p&gt;There is still a cost to generating targets. Section 7 reports that an I-JEPA iteration is about 7% slower than the compared MAE setup; the saving comes from needing fewer iterations. The introduction reports more than a tenfold GPU-hour advantage over its ViT-H/14 MAE reference. That is a comparison of the reported training runs, not a universal tenfold speedup for any model or dataset. &lt;a href="https://arxiv.org/html/2301.08243v3#S1"&gt;Paper, section 1&lt;/a&gt; and &lt;a href="https://arxiv.org/html/2301.08243v3#S7"&gt;section 7&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The distinction is practical: making each training step cheaper and needing fewer steps are different routes to reducing the total bill.&lt;/p&gt;
+&lt;h2 id="what-does-it-mean-to-learn-a-world-model"&gt;What does it mean to learn a "world model"?&lt;a class="headerlink" href="#what-does-it-mean-to-learn-a-world-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Predicting a hidden region requires learning regularities: which parts tend to occur together, how shapes continue, and what the surrounding image makes plausible. That is the motivation behind connecting I-JEPA to learning through observation.&lt;/p&gt;
+&lt;p&gt;The evidence here is about &lt;strong&gt;spatial relationships in still images&lt;/strong&gt;. I-JEPA does not learn action-conditioned future states, plan a sequence of actions, or demonstrate general common-sense reasoning. The authors describe the predictor as a restricted kind of world model, not a completed model of how the physical world works.&lt;/p&gt;
+&lt;p&gt;The image-completion visualizations need one further distinction. I-JEPA itself outputs vectors. To make those vectors visible, the researchers freeze the pretrained model and train a &lt;strong&gt;separate generative decoder&lt;/strong&gt; to produce image samples from the predictor's representations. Structure shared across samples suggests what the representation captures; varying texture shows details it leaves unspecified. Those pictures are a diagnostic tool, not evidence that I-JEPA was trained to generate images. &lt;a href="https://arxiv.org/html/2301.08243v3#S8"&gt;Paper, section 8&lt;/a&gt;, &lt;a href="https://github.com/facebookresearch/ijepa#visualizations"&gt;official visualizations&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;I-JEPA changes both &lt;strong&gt;what the model predicts&lt;/strong&gt; and &lt;strong&gt;what it must use to make the prediction&lt;/strong&gt;. A learned target encoder supplies feature-space targets, while large missing regions and distributed context make the prediction task informative.&lt;/p&gt;
+&lt;p&gt;The result is a way to learn reusable visual features without pixel reconstruction or an elaborate multi-view augmentation recipe. The paper's strongest evidence is the quality of those features under clearly defined evaluations, together with the training effort needed to obtain them.&lt;/p&gt;
+&lt;h2 id="related-reading"&gt;Related reading&lt;a class="headerlink" href="#related-reading" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;I-JEPA addresses learning representations from unlabeled images. For a different stage of the machine-learning workflow, the &lt;a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"&gt;QLoRA article&lt;/a&gt; explains how to adapt an already pretrained language model using less GPU memory. The two articles explore different efficiency questions: learning useful features versus making task-specific fine-tuning more affordable.&lt;/p&gt;
+&lt;h2 id="original-sources"&gt;Original sources&lt;a class="headerlink" href="#original-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Assran et al., &lt;a href="https://arxiv.org/abs/2301.08243"&gt;Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture&lt;/a&gt;, CVPR 2023. The method, equations, and tables discussed here follow &lt;a href="https://arxiv.org/html/2301.08243v3"&gt;arXiv version 3&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/facebookresearch/ijepa"&gt;Official I-JEPA repository&lt;/a&gt;, with training code, configurations, and pretrained checkpoints.&lt;/li&gt;
+&lt;li&gt;Meta's &lt;a href="https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/"&gt;June 13, 2023 announcement&lt;/a&gt;, which places the work in the broader JEPA research program.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Both figures are reproduced from Assran et al.'s paper and retain their original content.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Self-Supervision"/><category term="SSL"/><category term="CV"/><category term="Optimization"/><category term="MAE"/><category term="I-JEPA"/><category term="MetaAI"/></entry><entry><title>QLoRA: How to fine-tune large language models with less memory</title><link href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/" rel="alternate"/><published>2023-05-26T09:33:00+02:00</published><updated>2023-05-26T09:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-05-26:/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/</id><summary type="html">&lt;p&gt;QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;QLoRA combines two ways to save memory: compress the pretrained model and train a small set of additional weights.&lt;/strong&gt; In their 2023 paper, Tim Dettmers and colleagues use this approach to fine-tune a 65-billion-parameter LLaMA model on a single 48 GB GPU. They also introduce Guanaco, a family of chatbots trained with QLoRA. &lt;a href="https://arxiv.org/html/2305.14314v1#S1"&gt;Paper, introduction&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The method is easiest to understand in two steps: first decide which weights need to change, then reduce the memory used by the weights that stay fixed.&lt;/p&gt;
 &lt;h2 id="why-fine-tuning-needs-so-much-memory"&gt;Why fine-tuning needs so much memory&lt;a class="headerlink" href="#why-fine-tuning-needs-so-much-memory" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
@@ -117,6 +298,8 @@ $$&lt;/div&gt;
 &lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;QLoRA makes fine-tuning more accessible by separating the large body of pretrained weights from the much smaller set of weights that must change. LoRA reduces the trainable part; NF4 and double quantization compress the frozen part; paged optimizers help handle temporary memory pressure.&lt;/p&gt;
 &lt;p&gt;The result is a practical route to adapting larger models within a limited GPU-memory budget. The paper's strongest message is the combination: carefully chosen quantization and well-placed adapters can preserve strong task performance without the memory cost of updating the whole model.&lt;/p&gt;
+&lt;h2 id="related-reading"&gt;Related reading&lt;a class="headerlink" href="#related-reading" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For a different approach to training efficiency, see &lt;a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/"&gt;I-JEPA: Learning from images by predicting missing features&lt;/a&gt;. I-JEPA learns visual representations from unlabeled images; QLoRA adapts pretrained language models. The articles address different stages of learning, rather than two versions of the same method.&lt;/p&gt;
 &lt;h2 id="original-sources"&gt;Original sources&lt;a class="headerlink" href="#original-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. &lt;a href="https://arxiv.org/abs/2305.14314"&gt;QLoRA: Efficient Finetuning of Quantized LLMs&lt;/a&gt;, 2023. This explanation follows the &lt;a href="https://arxiv.org/html/2305.14314v1"&gt;original May 2023 version&lt;/a&gt;.&lt;/li&gt;

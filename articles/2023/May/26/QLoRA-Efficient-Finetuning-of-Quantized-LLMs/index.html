@@ -280,6 +280,8 @@ $$</div>
 <h2 id="the-takeaway">The takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">🔗</a></h2>
 <p>QLoRA makes fine-tuning more accessible by separating the large body of pretrained weights from the much smaller set of weights that must change. LoRA reduces the trainable part; NF4 and double quantization compress the frozen part; paged optimizers help handle temporary memory pressure.</p>
 <p>The result is a practical route to adapting larger models within a limited GPU-memory budget. The paper's strongest message is the combination: carefully chosen quantization and well-placed adapters can preserve strong task performance without the memory cost of updating the whole model.</p>
+<h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">🔗</a></h2>
+<p>For a different approach to training efficiency, see <a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a>. I-JEPA learns visual representations from unlabeled images; QLoRA adapts pretrained language models. The articles address different stages of learning, rather than two versions of the same method.</p>
 <h2 id="original-sources">Original sources<a class="headerlink" href="#original-sources" title="Permanent link">🔗</a></h2>
 <ul>
 <li>Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. <a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs</a>, 2023. This explanation follows the <a href="https://arxiv.org/html/2305.14314v1">original May 2023 version</a>.</li>
@@ -353,6 +355,7 @@ $$</div>
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">LoRA: Fine-tuning a model by learning a small update</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
     </ul>
 </section>
     <hr />
@@ -428,9 +431,9 @@ $$</div>
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINOv2: How self-supervised visual features transfer across tasks</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/">CoLT5: Reading long documents with selective computation</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -453,6 +456,9 @@ $$</div>
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/self-supervision.html"><i class="fa fa-folder-open fa-lg"></i>Self-Supervision</a>
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
@@ -580,6 +586,11 @@ $$</div>
 <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/longt5.html">LongT5</a></li>
 <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/conditional-computation.html">Conditional Computation</a></li>
 <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/colt5.html">CoLT5</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/ssl.html">SSL</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/optimization.html">Optimization</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/mae.html">MAE</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/i-jepa.html">I-JEPA</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/metaai.html">MetaAI</a></li>
 </ul>
 </li>
 <!-- End Sidebar/Tag Cloud -->
@@ -629,6 +640,10 @@ $$</div>
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
+          </a>
+        </li>
         <li class="list-group-item">
           <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
           </a>
