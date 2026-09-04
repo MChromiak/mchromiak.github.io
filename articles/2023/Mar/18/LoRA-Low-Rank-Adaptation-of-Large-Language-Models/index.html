@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>LoRA: Fine-tuning a model by learning a small update - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
+
+    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+
+<link rel="canonical" href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="PEFT,Adapter,low-rank,LLM" />
+        <meta name="description" content="LoRA adapts a pretrained model by training small, low-rank updates while keeping its original weights fixed. This guide explains the two-matrix construction, the memory and storage savings, the conditions for merging adapters, and the connection to QLoRA." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="LoRA: Fine-tuning a model by learning a small update"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"/>
+        <meta property="og:description" content="LoRA adapts a pretrained model by training small, low-rank updates while keeping its original weights fixed. This guide explains the two-matrix construction, the memory and storage savings, the conditions for merging adapters, and the connection to QLoRA."/>
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2023/Mar/18/img/LoRA.png" />
+
+        <meta property="article:published_time" content="2023-03-18" />
+            <meta property="article:section" content="Optimization" />
+            <meta property="article:tag" content="PEFT" />
+            <meta property="article:tag" content="Adapter" />
+            <meta property="article:tag" content="low-rank" />
+            <meta property="article:tag" content="LLM" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
+        <meta property="twitter:image"
+              content="https://mchromiak.github.io/articles/2023/Mar/18/img/LoRA.png"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+        <link href="https://mchromiak.github.io/feeds/optimization.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog Optimization ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/optimization.html" title="Optimization">Optimization</a></li>
+                <li class="active">LoRA: Fine-tuning a model by learning a small update</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"
+                       rel="bookmark"
+                       title="Permalink to LoRA: Fine-tuning a model by learning a small update">
+                        LoRA: Fine-tuning a model by learning a small update
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2023-03-18T13:01:00+01:00"> Sat, 18 Mar 2023</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2023-03-18T13:01:00+01:00"> Sat, 18 Mar 2023</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://mchromiak.github.io/category/optimization.html">Optimization</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://mchromiak.github.io/tag/peft.html">PEFT</a>
+        /
+	<a href="https://mchromiak.github.io/tag/adapter.html">Adapter</a>
+        /
+	<a href="https://mchromiak.github.io/tag/low-rank.html">low-rank</a>
+        /
+	<a href="https://mchromiak.github.io/tag/llm.html">LLM</a>
+
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Suppose you want a language model to turn questions into database queries. It already knows a great deal about language, but it needs examples of the task and the kind of answer you expect. Fine-tuning can teach that behavior. The expensive part is allowing billions of existing weights to change and storing everything needed to update them.</p>
+<p><strong>LoRA keeps the pretrained weights fixed and learns a small adjustment alongside them.</strong> Instead of training a full-size update for each chosen weight matrix, it represents that update with two much smaller matrices. The model still uses all its pretrained weights; only the additional matrices are trained.</p>
+<p>Edward J. Hu and colleagues introduced <em>Low-Rank Adaptation</em> in June 2021, and the paper appeared at ICLR 2022. Its central question is practical: how much of full fine-tuning's performance can we retain while learning and storing far fewer task-specific parameters? <a href="https://arxiv.org/abs/2106.09685">Original paper</a>.</p>
+<h2 id="why-train-an-update-instead-of-the-whole-model">Why train an update instead of the whole model?<a class="headerlink" href="#why-train-an-update-instead-of-the-whole-model" title="Permanent link">🔗</a></h2>
+<p>A model's <strong>parameters</strong>, often called weights, are the numbers it learns during training. <strong>Full fine-tuning</strong> starts from a pretrained model and updates all of those parameters on a new dataset. It is not training from scratch, but it still requires gradients and optimizer state for the weights being updated.</p>
+<p><strong>Gradients</strong> indicate how the training loss changes with each parameter. An optimizer such as Adam also keeps running statistics to help choose the updates. These extra tensors can take much more memory than the final model checkpoint alone. Intermediate results, called <strong>activations</strong>, add another substantial cost.</p>
+<p>There is also a storage problem. If each task gets a complete fine-tuned copy of a large model, every new task adds another large checkpoint. LoRA separates what can be shared, the pretrained model, from what changes between tasks, the learned update.</p>
+<p>This makes LoRA a <strong>parameter-efficient fine-tuning (PEFT)</strong> method. Parameter-efficient means that relatively few parameters are trained; it does not mean the large base model disappears from memory.</p>
+<h2 id="two-paths-through-a-layer">Two paths through a layer<a class="headerlink" href="#two-paths-through-a-layer" title="Permanent link">🔗</a></h2>
+<p>A dense layer multiplies an input vector by a matrix of learned weights. LoRA adds a second path alongside that operation:</p>
+<ol>
+<li>The original matrix processes the input using its frozen weights.</li>
+<li>A small trainable matrix, called <span class="math">\(A\)</span>, maps the same input into a narrow intermediate space.</li>
+<li>Another trainable matrix, <span class="math">\(B\)</span>, maps that intermediate result back to the layer's output width.</li>
+<li>The layer adds the original result and the learned adjustment.</li>
+</ol>
+<p><a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/LoRA.png"><img alt="LoRA's two parallel paths: the input x passes through frozen pretrained weights W and through trainable matrices A and B; the two outputs are added to produce h. A starts randomly initialized and B starts at zero." src="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/LoRA.png"></a></p>
+<p align="center">Figure 1. The LoRA construction from Hu et al., <a href="https://arxiv.org/html/2106.09685v2#S1.F1">figure 1</a>. Read from bottom to top. The narrow width <span class="math">\(r\)</span> is the adapter rank. The figure uses a square weight matrix; the same idea works for rectangular matrices.</p>
+<p>The small matrices are often called a <strong>LoRA adapter</strong>. They learn together with the task's training objective. LoRA does not first compute a full fine-tuned model and then compress the difference: the small matrices are the parameters it trains from the start.</p>
+<h3 id="what-does-low-rank-mean">What does "low rank" mean?<a class="headerlink" href="#what-does-low-rank-mean" title="Permanent link">🔗</a></h3>
+<p>The rank of a matrix measures how many independent directions it can express. In LoRA, the narrow intermediate width limits the number of directions available to the <strong>update</strong>. If that width is 8, the update matrix has rank at most 8, even when the original layer has thousands of inputs and outputs.</p>
+<p>Crucially, <strong>the pretrained matrix is not forced to have low rank</strong>. It remains intact. The assumption is that adapting an already capable model to a particular task may need a much simpler change than learning the model in the first place.</p>
+<p>The authors draw motivation from work on the low <em>intrinsic dimensionality</em> of fine-tuning: some tasks can be learned by optimizing within a much smaller parameter space. LoRA turns that motivation into a specific constraint on individual weight updates. It is an empirical hypothesis about adaptation, not a proof that every useful update must be low-rank. <a href="https://arxiv.org/html/2106.09685v2#S4.SS1">Paper, section 4.1</a>; <a href="https://arxiv.org/abs/2012.13255">Aghajanyan et al.</a>.</p>
+<details class="dinov2-background">
+<summary>The algebra, with the paper's notation</summary>
+<p>Let the frozen weight matrix be <span class="math">\(W_0 \in \mathbb{R}^{d \times k}\)</span>. It maps an input <span class="math">\(x\)</span> with <span class="math">\(k\)</span> components to an output <span class="math">\(h\)</span> with <span class="math">\(d\)</span> components. LoRA represents the update as:</p>
+<p>
+<div class="math">$$
+\Delta W = BA,
+$$</div>
+</p>
+<p>where <span class="math">\(A \in \mathbb{R}^{r \times k}\)</span> and <span class="math">\(B \in \mathbb{R}^{d \times r}\)</span>, with <span class="math">\(r \ll \min(d,k)\)</span>. The product <span class="math">\(BA\)</span> has the same dimensions as <span class="math">\(W_0\)</span>, but rank at most <span class="math">\(r\)</span>.</p>
+<p>Equation (3) of the paper writes the modified forward pass as:</p>
+<p>
+<div class="math">$$
+h = W_0x + \Delta Wx = W_0x + BAx.
+$$</div>
+</p>
+<p>Immediately afterward, the paper specifies that the update contribution is scaled by <span class="math">\(\alpha/r\)</span>. Writing that scaling explicitly gives:</p>
+<p>
+<div class="math">$$
+h = W_0x + \frac{\alpha}{r}BAx.
+$$</div>
+</p>
+<p>Here, <span class="math">\(\alpha\)</span> controls the strength of the update relative to its rank. The paper holds <span class="math">\(\alpha\)</span> fixed when varying <span class="math">\(r\)</span> in this construction. Rank and scaling are related settings, but changing rank changes the space of possible updates, not just their size.</p>
+<p>The paper initializes <span class="math">\(A\)</span> with random Gaussian values and <span class="math">\(B\)</span> with zeros. Consequently, <span class="math">\(BA=0\)</span> initially: the adapter starts by adding nothing to the original layer. Training then learns a nonzero adjustment. <a href="https://arxiv.org/html/2106.09685v2#S4.SS1">Paper, section 4.1</a>.</p>
+</details>
+<h2 id="how-much-smaller-is-the-trainable-part">How much smaller is the trainable part?<a class="headerlink" href="#how-much-smaller-is-the-trainable-part" title="Permanent link">🔗</a></h2>
+<p>For a layer with <span class="math">\(k\)</span> inputs and <span class="math">\(d\)</span> outputs, full fine-tuning updates <span class="math">\(dk\)</span> matrix entries. LoRA trains <span class="math">\(rk+dr=r(k+d)\)</span> entries instead, excluding biases or any separately trained task head.</p>
+<p>Consider a 4,096-by-4,096 matrix and rank 8:</p>
+<div class="table-responsive">
+<table class="table table-striped">
+<thead><tr><th scope="col">Trainable component</th><th scope="col">Parameter count</th></tr></thead>
+<tbody>
+<tr><td>Full weight matrix</td><td>16,777,216</td></tr>
+<tr><td>LoRA matrix A, shape 8 by 4,096</td><td>32,768</td></tr>
+<tr><td>LoRA matrix B, shape 4,096 by 8</td><td>32,768</td></tr>
+<tr><td>Both LoRA matrices</td><td>65,536</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>That is <strong>256 times fewer trainable parameters for this matrix</strong>. The frozen 16.8 million weights are still present, and the model still computes with them. Total training memory also includes activations and temporary buffers, so it will not fall by the same factor.</p>
+<h3 id="a-training-step-with-frozen-weights">A training step with frozen weights<a class="headerlink" href="#a-training-step-with-frozen-weights" title="Permanent link">🔗</a></h3>
+<p>For our question-to-SQL example, training proceeds as follows:</p>
+<ol>
+<li>Run a question through the model. Each adapted layer adds its LoRA adjustment to the original computation.</li>
+<li>Compare the predicted output with the target SQL query and calculate a loss.</li>
+<li>Backpropagate through the computation to determine how the adapter matrices should change.</li>
+<li>Update the adapter parameters, leaving the pretrained weights fixed.</li>
+</ol>
+<p><strong>Frozen weights still participate in backpropagation.</strong> Their operations help determine the gradients needed by adapters earlier in the network. LoRA saves the work and storage associated with updating the frozen weights; it does not eliminate the backward pass through the model.</p>
+<h2 id="where-should-the-adapters-go">Where should the adapters go?<a class="headerlink" href="#where-should-the-adapters-go" title="Permanent link">🔗</a></h2>
+<p>Transformer attention uses projections called queries, keys, values, and an output projection. Queries and keys determine which positions attend to one another; values provide the information that attention combines.</p>
+<p>The original LoRA study concentrates on attention weights, usually the <strong>query and value projections</strong>, while leaving the feed-forward networks frozen. LoRA itself is not restricted to those locations. The choice determines where the model can learn adjustments, and it matters alongside rank.</p>
+<p>In the paper's GPT-3 experiment with an approximately 18-million-parameter budget, adapting both query and value matrices at rank 4 works better on WikiSQL than spending the same budget on query matrices alone at rank 8. This illustrates why distributing capacity across useful locations can matter more than increasing the rank at one location. <a href="https://arxiv.org/html/2106.09685v2#S7.SS1">Paper, sections 4.2 and 7.1</a>.</p>
+<h3 id="is-a-larger-rank-always-better">Is a larger rank always better?<a class="headerlink" href="#is-a-larger-rank-always-better" title="Permanent link">🔗</a></h3>
+<p>No. A larger rank allows a more expressive update and increases the number of trainable parameters, but does not guarantee better validation performance. On the paper's GPT-3 WikiSQL and MultiNLI experiments, query-and-value adapters already work well at very low ranks, including rank 1.</p>
+<p>That result is specific to those models and tasks. The authors explicitly caution that small ranks need not suffice for every dataset. Rank, placement, learning rate, and the training data should be evaluated together. A low-rank constraint can limit fitting capacity, but it does not by itself guarantee less overfitting. <a href="https://arxiv.org/html/2106.09685v2#S7.SS2">Paper, section 7.2</a>.</p>
+<h2 id="what-the-papers-results-establish">What the paper's results establish<a class="headerlink" href="#what-the-papers-results-establish" title="Permanent link">🔗</a></h2>
+<p>The experiments cover language understanding and generation using RoBERTa, DeBERTa, GPT-2, and GPT-3. They show that LoRA can match or exceed full fine-tuning on a range of tested tasks while training far fewer parameters. They do not establish that LoRA is always the best method for every adaptation problem.</p>
+<p>The GPT-3 175B results make the scale of the savings concrete:</p>
+<ul>
+<li><strong>Training memory:</strong> the paper reports a reduction from 1.2 TB to 350 GB in its setup.</li>
+<li><strong>Task-specific storage:</strong> with rank-4 query-and-value adapters, the stored update is about 35 MB instead of a roughly 350 GB full-model checkpoint. The base model is still required.</li>
+<li><strong>Training speed:</strong> the reported throughput rises from 32.5 to 43.1 tokens per second per V100 GPU, using the same number of model-parallel weight shards. That corresponds to about 25% less time for the same token workload, not a universal runtime guarantee.</li>
+</ul>
+<p>The approximately 10,000-fold reduction, or about 0.01% of the full parameter count, refers to the rank-4 storage example. It is not a fixed fraction for every LoRA configuration. <a href="https://arxiv.org/html/2106.09685v2#S4.SS2">Paper, section 4.2</a>.</p>
+<details class="dinov2-background">
+<summary>A closer look at the GPT-3 task scores</summary>
+<p>The following selection comes from the paper's table 4:</p>
+<div class="table-responsive">
+<table class="table table-striped">
+<thead>
+<tr>
+<th scope="col">Method</th>
+<th scope="col">Trainable parameters</th>
+<th scope="col">WikiSQL accuracy</th>
+<th scope="col">MNLI-m accuracy</th>
+<th scope="col">SAMSum ROUGE-L</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full fine-tuning</td>
+<td>175,255.8 million</td>
+<td>73.8%</td>
+<td>89.5%</td>
+<td>44.5</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>4.7 million</td>
+<td>73.4%</td>
+<td>91.7%</td>
+<td>45.9</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>37.7 million</td>
+<td>74.0%</td>
+<td>91.6%</td>
+<td>45.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>WikiSQL reports logical-form validation accuracy for question-to-SQL prediction, rather than execution accuracy. MNLI-m measures whether one sentence entails, contradicts, or is neutral with respect to another, on the matched validation set. SAMSum evaluates dialogue summaries; ROUGE-L measures overlap with reference summaries using the longest common subsequence.</p>
+<p>These are different metrics, not interchangeable measurements of general intelligence. The smaller LoRA configuration is slightly below full fine-tuning on WikiSQL, within the paper's stated typical fluctuation of about 0.5 percentage points, while exceeding it on the other two reported metrics. The point is competitive task performance with much less trainable state, not a claim of a win in every table cell. <a href="https://arxiv.org/html/2106.09685v2#S5.T4">Paper, table 4</a>.</p>
+</details>
+<h2 id="serving-models-and-switching-tasks">Serving models and switching tasks<a class="headerlink" href="#serving-models-and-switching-tasks" title="Permanent link">🔗</a></h2>
+<p>During training, LoRA has two computational paths. At deployment, their weights can be <strong>merged</strong>: add the learned update to the pretrained matrix once, then use the resulting matrix as an ordinary dense layer.</p>
+<p>With the paper's scaling made explicit, the merged matrix is:</p>
+<div class="math">$$
+W_{\mathrm{merged}} = W_0 + \frac{\alpha}{r}BA.
+$$</div>
+<p>This is the basis of the paper's <strong>no additional inference latency</strong> claim. After merging, there is no separate adapter computation at that layer. Keeping adapters separate can make task switching convenient, but retains the extra operations.</p>
+<p>Different tasks can share one base model and store separate small adapters. To switch a merged model between tasks, the paper describes subtracting the first update and adding the second. In practice, keeping the original base checkpoint also provides a clean starting point for each merge. Once weights are merged for one task, serving different adapters together in a batch requires additional handling; the original paper identifies this as a limitation. <a href="https://arxiv.org/html/2106.09685v2#S4.SS1">Paper, sections 4.1 and 4.2</a>.</p>
+<h3 id="does-freezing-prevent-catastrophic-forgetting">Does freezing prevent catastrophic forgetting?<a class="headerlink" href="#does-freezing-prevent-catastrophic-forgetting" title="Permanent link">🔗</a></h3>
+<p>Freezing preserves the original parameter values, so disabling the adapters recovers the base model's computation when no other parameters have been changed. That is useful when maintaining several task-specific versions.</p>
+<p>It does not guarantee that the <strong>adapted model</strong> retains every original capability. Its outputs depend on the adapters as well as the base weights, and the learned adjustment can harm performance on other tasks. Retention therefore needs evaluation alongside the new task's score. The original paper does not establish a general guarantee against catastrophic forgetting.</p>
+<h2 id="how-lora-fits-among-peft-methods">How LoRA fits among PEFT methods<a class="headerlink" href="#how-lora-fits-among-peft-methods" title="Permanent link">🔗</a></h2>
+<p>The taxonomy below places LoRA in a broader family of approaches:</p>
+<ul>
+<li><strong>Additive methods</strong> introduce trainable components, such as nonlinear adapter modules or learned soft prompts.</li>
+<li><strong>Selective methods</strong> update a subset of existing parameters, such as biases.</li>
+<li><strong>Reparameterization-based methods</strong>, including LoRA, express a trainable change through a more economical parameterization.</li>
+</ul>
+<p><a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/PEFT_taxonomy.png"><img alt="PEFT taxonomy showing overlapping additive, selective, and reparameterization-based methods; LoRA appears in the reparameterization group, while adapters and soft prompts occupy additive subgroups." src="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/PEFT_taxonomy.png"></a></p>
+<p align="center">Figure 2. Taxonomy reproduced from the 2023 survey <a href="https://arxiv.org/abs/2303.15647v1">Scaling Down to Scale Up</a>. The overlapping regions represent methods that combine ideas. This is a survey figure, not a figure from the original LoRA paper.</p>
+<p>The word <em>adapter</em> can cause confusion here. A LoRA adapter is a pair of matrices representing a weight update. The classic bottleneck adapters compared in the original paper insert additional layers with a nonlinearity. LoRA's linear update can be merged into the original matrix; those nonlinear modules generally cannot be absorbed in the same way.</p>
+<h2 id="from-lora-to-qlora">From LoRA to QLoRA<a class="headerlink" href="#from-lora-to-qlora" title="Permanent link">🔗</a></h2>
+<p>LoRA reduces the part of the model that must be trained. It leaves another large expense: storing the frozen base weights. <strong>QLoRA addresses that expense by storing the base model in four-bit form while training higher-precision LoRA adapters.</strong></p>
+<p>The distinction is simple: LoRA is a method for learning a compact update; QLoRA combines that method with quantization and additional memory-saving techniques. QLoRA is not merely LoRA with a smaller rank, and its placement experiments extend beyond the original LoRA paper's attention-focused study.</p>
+<p>Continue with <a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a> for NormalFloat, double quantization, paged optimizers, and the single-GPU results.</p>
+<h2 id="the-takeaway">The takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">🔗</a></h2>
+<p>LoRA does not make a large pretrained model small. It makes the <strong>task-specific change</strong> small. Two trainable matrices can provide a useful adjustment while the original model remains shared and fixed. The practical gains are fewer gradients and optimizer states, smaller task checkpoints, and ordinary inference computation when the update is merged.</p>
+<p>Its success depends on whether the chosen rank and adapter locations give the model enough freedom to learn the task. That is the trade-off to test: task quality against the memory, storage, and training cost of the update.</p>
+<h2 id="sources-and-implementation">Sources and implementation<a class="headerlink" href="#sources-and-implementation" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Hu et al., <a href="https://arxiv.org/abs/2106.09685">LoRA: Low-Rank Adaptation of Large Language Models</a>, first submitted in 2021 and published at ICLR 2022. This article follows <a href="https://arxiv.org/html/2106.09685v2">arXiv version 2</a>.</li>
+<li>Microsoft's official <a href="https://github.com/microsoft/LoRA">LoRA repository and loralib</a>, including examples for adding LoRA layers, saving adapter weights, and merging for inference. Its default setup trains only LoRA parameters; training biases is an explicit option.</li>
+<li>Aghajanyan et al., <a href="https://arxiv.org/abs/2012.13255">Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning</a>, the motivation cited by the LoRA authors.</li>
+<li>Lialin et al., <a href="https://arxiv.org/abs/2303.15647v1">Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning</a>, the source of the broader PEFT taxonomy.</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
+    </ul>
+</section>
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = 'https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://x.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> X (Twitter)</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal-Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> Feed (Atom)</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINOv2: How self-supervised visual features transfer across tasks</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/">CoLT5: Reading long documents with selective computation</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/optimization.html"><i class="fa fa-folder-open fa-lg"></i>Optimization</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://mchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group list-inline tagcloud" id="tags">
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/application.html">application</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/autoencoder.html">Autoencoder</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/basics.html">basics</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/cv.html">CV</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/gpt.html">GPT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/k-nn.html">k-NN</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/markov-decision-process.html">Markov Decision Process</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/mdp.html">MDP</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/reinforcement-learning.html">Reinforcement Learning</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/representation-learning.html">Representation Learning</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/rl.html">RL</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/scalability.html">Scalability</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/self-supervision-ssl.html">Self-Supervision (SSL)</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
+    </li>
+    <li class="list-group-item tag-2">
+      <a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/vision-transformer.html">Vision Transformer</a>
+    </li>
+    <li class="list-group-item tag-1">
+      <a href="https://mchromiak.github.io/tag/vit.html">ViT</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/weak-supervision.html">Weak-supervision</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/wsl.html">WSL</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
+    </li>
+      <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapters.html">Adapters</a></li>
+    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/low-rank.html">Low-Rank</a></li>
+    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/lora.html">LoRA</a></li>
+    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/qlora.html">QLoRA</a></li>
+  <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/peft.html">PEFT</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapter.html">Adapter</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/llm.html">LLM</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/t5.html">T5</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/longt5.html">LongT5</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/conditional-computation.html">Conditional Computation</a></li>
+<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/colt5.html">CoLT5</a></li>
+</ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="https://iclr.cc/" target="_blank">ICLR</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://icml.cc/" target="_blank">ICML</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://neurips.cc/" target="_blank">NeurIPS</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://karpathy.github.io/2016/09/07/phd/" target="_blank">A Survival Guide to a PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://java-hive.blogspot.com/" target="_blank">Java Hive (my earlier blog)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://aifrontiers.com/" target="_blank">AI Frontiers 2018 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://alt.qcri.org/semeval2017/" target="_blank">SemEval 2017 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://www.freecodecamp.org/news/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c/" target="_blank">Free CS courses (2017 roundup)</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Apr/index.html"><i class="fa fa-calendar fa-lg"></i>April 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Mar/index.html"><i class="fa fa-calendar fa-lg"></i>March 2023 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <div class="site-footer__content">
+        <p class="site-footer__copyright">&copy; <span data-current-year>2026</span> Michał Chromiak</p>
+          <div class="site-footer__license">Content licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, except where indicated otherwise.</div>
+      </div>
+      <a class="site-footer__top" href="#" aria-label="Back to top" title="Back to top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</footer>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+</body>
+</html>

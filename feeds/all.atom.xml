@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2023-05-30T19:07:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>QLoRA: How to fine-tune large language models with less memory</title><link href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/" rel="alternate"/><published>2023-05-26T09:33:00+02:00</published><updated>2023-05-26T09:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-05-26:/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/</id><summary type="html">&lt;p&gt;QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/all.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2023-05-30T19:07:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>QLoRA: How to fine-tune large language models with less memory</title><link href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/" rel="alternate"/><published>2023-05-26T09:33:00+02:00</published><updated>2023-05-26T09:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-05-26:/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/</id><summary type="html">&lt;p&gt;QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;QLoRA combines two ways to save memory: compress the pretrained model and train a small set of additional weights.&lt;/strong&gt; In their 2023 paper, Tim Dettmers and colleagues use this approach to fine-tune a 65-billion-parameter LLaMA model on a single 48 GB GPU. They also introduce Guanaco, a family of chatbots trained with QLoRA. &lt;a href="https://arxiv.org/html/2305.14314v1#S1"&gt;Paper, introduction&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The method is easiest to understand in two steps: first decide which weights need to change, then reduce the memory used by the weights that stay fixed.&lt;/p&gt;
 &lt;h2 id="why-fine-tuning-needs-so-much-memory"&gt;Why fine-tuning needs so much memory&lt;a class="headerlink" href="#why-fine-tuning-needs-so-much-memory" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
@@ -10,6 +10,7 @@
 &lt;p&gt;&lt;strong&gt;LoRA&lt;/strong&gt;, short for &lt;em&gt;Low-Rank Adaptation&lt;/em&gt;, keeps the pretrained weights &lt;strong&gt;frozen&lt;/strong&gt;: training does not update them. It adds small trainable components called &lt;strong&gt;adapters&lt;/strong&gt; alongside selected layers. Each layer combines its original computation with an adjustment learned by its adapter.&lt;/p&gt;
 &lt;p&gt;For example, when adapting a model to answer customer-support questions, the base model continues to supply its learned language capabilities. Training adjusts the adapters using the new examples. The resulting behavior depends on both parts, even though only the adapters change.&lt;/p&gt;
 &lt;p&gt;An adapter represents an update using two smaller matrices, or grids of numbers, instead of one full-size matrix. Their narrow intermediate dimension is the &lt;strong&gt;adapter rank&lt;/strong&gt;. This restriction greatly reduces the number of trainable parameters and the gradients and optimizer state associated with them. Ordinary LoRA still needs to keep the large base model in memory; QLoRA addresses that remaining cost.&lt;/p&gt;
+&lt;p&gt;For a fuller explanation of rank, adapter training, and merging updates for inference, see &lt;a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"&gt;LoRA: Fine-tuning a model by learning a small update&lt;/a&gt;.&lt;/p&gt;
 &lt;details class="dinov2-background"&gt;
 &lt;summary&gt;The algebra: How two small matrices change a layer&lt;/summary&gt;
 &lt;p&gt;The QLoRA paper writes the LoRA computation as follows in equation (3):&lt;/p&gt;
@@ -445,7 +446,413 @@ Figure 7. Each group pairs related source images with PCA-colored patch maps. Wi
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="GPT"/><category term="WSL"/><category term="Weak-supervision"/><category term="Scalability"/></entry><entry><title>🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</title><link href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/" rel="alternate"/><published>2021-11-14T11:18:00+01:00</published><updated>2021-12-26T11:18:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-11-14:/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/</id><summary type="html">&lt;p&gt;A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.&lt;/p&gt;</summary><content type="html">&lt;p align="center"&gt;&lt;img alt="MAE reconstructions for COCO validation images" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png"&gt;
+&lt;/script&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="GPT"/><category term="WSL"/><category term="Weak-supervision"/><category term="Scalability"/></entry><entry><title>CoLT5: Reading long documents with selective computation</title><link href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/" rel="alternate"/><published>2023-03-30T14:33:00+02:00</published><updated>2023-03-30T14:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-03-30:/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/</id><summary type="html">&lt;p&gt;CoLT5 processes every input token with lightweight layers and gives selected tokens additional, higher-capacity computation. This guide explains its learned routing, light and heavy branches, faster decoding, and experiments with inputs up to 64k tokens.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Suppose a model must answer a question about a lengthy report. It needs enough context to find the relevant evidence, but not every passage deserves the same amount of processing. Repeated headings, background material, and the sentence containing the answer all consume space in the input; their usefulness to the task can be very different.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CoLT5 gives every token a lightweight path through the encoder, then spends extra computation on selected tokens.&lt;/strong&gt; It learns which tokens to select separately at each layer and for each kind of operation. The aim is to improve the balance between answer quality and processing time, rather than simply making the model smaller.&lt;/p&gt;
+&lt;p&gt;Joshua Ainslie and colleagues introduced CoLT5, short for &lt;em&gt;Conditional LongT5&lt;/em&gt;, in March 2023. It builds on LongT5 with conditional computation in the encoder, multi-query cross-attention for faster decoding, and a UL2-style pretraining objective. Their experiments cover long-document question answering, summarization, and inference over contracts, with a separate study extending input length to 64k tokens. &lt;a href="https://arxiv.org/abs/2303.09752v1"&gt;Original paper&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="why-efficient-attention-is-only-part-of-the-problem"&gt;Why efficient attention is only part of the problem&lt;a class="headerlink" href="#why-efficient-attention-is-only-part-of-the-problem" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;token&lt;/strong&gt; is a chunk of text processed by the model. A token's &lt;strong&gt;representation&lt;/strong&gt; is the vector of numbers the network uses to describe it at a particular layer. In an encoder-decoder model such as T5, the &lt;strong&gt;encoder&lt;/strong&gt; builds representations of the input, and the &lt;strong&gt;decoder&lt;/strong&gt; uses them to generate an answer or summary.&lt;/p&gt;
+&lt;p&gt;Two operations do much of the encoder's work. &lt;strong&gt;Attention&lt;/strong&gt; lets token representations draw information from other positions. A &lt;strong&gt;feed-forward network&lt;/strong&gt;, also called an MLP, transforms each position's representation independently. Attention also needs learned projections that turn representations into queries, keys, and values.&lt;/p&gt;
+&lt;p&gt;Ordinary full attention compares every position with every other position, so the number of comparisons grows quadratically with input length. LongT5 reduces that cost using local attention and, in its transient-global variant, summaries of token blocks. But the feed-forward networks and attention projections still process every token. Once attention becomes cheaper, these operations can dominate the computational budget.&lt;/p&gt;
+&lt;p&gt;CoLT5 therefore asks a second question: &lt;strong&gt;can the expensive feed-forward and projection work also be concentrated on fewer tokens?&lt;/strong&gt; &lt;a href="https://arxiv.org/html/2303.09752v1#S2"&gt;Paper, section 2&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="one-light-path-for-everyone-extra-work-for-selected-tokens"&gt;One light path for everyone, extra work for selected tokens&lt;a class="headerlink" href="#one-light-path-for-everyone-extra-work-for-selected-tokens" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Each CoLT5 encoder layer has light and heavy branches for both attention and feed-forward processing:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Light branches process every token.&lt;/strong&gt; They maintain a representation for the full input using local attention and a narrower feed-forward network.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Heavy branches process selected tokens.&lt;/strong&gt; They add a wider feed-forward transformation or attention across selected positions from throughout the input.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Routers choose the tokens.&lt;/strong&gt; The choices depend on the current input representations and can change from one layer to the next.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/colt5-architecture.png"&gt;&lt;img alt="CoLT5 encoder-layer diagram: all tokens pass through light attention and a light MLP, while routers send selected query, key/value, and MLP tokens through the corresponding heavy branches." src="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/colt5-architecture.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. The CoLT5 encoder layer, reproduced from the paper's &lt;a href="https://arxiv.org/html/2303.09752v1#S1.F1"&gt;figure 1&lt;/a&gt;. The symbols &lt;span class="math"&gt;\(q\)&lt;/span&gt;, &lt;span class="math"&gt;\(v\)&lt;/span&gt;, and &lt;span class="math"&gt;\(m\)&lt;/span&gt; count routed attention queries, key/value tokens, and feed-forward tokens. The diagram reads from bottom to top.&lt;/p&gt;
+&lt;p&gt;Think of reading a report once for context and revisiting selected passages more carefully. The analogy has a limit: CoLT5 does not permanently discard the other passages or perform a single document-level selection. All tokens keep their light-path representations, and selection is repeated throughout the encoder.&lt;/p&gt;
+&lt;h3 id="routing-what-does-important-mean"&gt;Routing: What does "important" mean?&lt;a class="headerlink" href="#routing-what-does-important-mean" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;A router gives each token a score by comparing its current representation with a learned vector. It selects the highest-scoring positions within a chosen budget. Training teaches the router which selections help the overall task; it does not receive human labels declaring particular words important.&lt;/p&gt;
+&lt;p&gt;Each layer has &lt;strong&gt;three independent routers&lt;/strong&gt;: one for heavy feed-forward processing, one for heavy attention queries, and one for heavy attention keys and values. A token can therefore be useful for one operation without being selected for another.&lt;/p&gt;
+&lt;p&gt;This distinction matters when answering a question. Some positions may need information from elsewhere in the document; other positions may contain the evidence those positions need. CoLT5 can select these two groups separately. In the paper's TriviaQA analysis, question tokens and tokens matching the answer were more likely to receive heavy processing than other tokens, though routing is not a human-readable explanation of the model's reasoning. &lt;a href="https://arxiv.org/html/2303.09752v1#S3.SS1"&gt;Paper, sections 3.1 and 4.6&lt;/a&gt;.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;The routing scores and feed-forward update&lt;/summary&gt;
+&lt;p&gt;The paper denotes token &lt;span class="math"&gt;\(i\)&lt;/span&gt;'s representation by &lt;span class="math"&gt;\(X_i\)&lt;/span&gt; and a learned routing vector by &lt;span class="math"&gt;\(u\)&lt;/span&gt;. Its routing score is:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+s_i = X_i \cdot u.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;The dot product produces one score per token. A generalized softmax normalizes these scores so that their sum equals the target routing budget. The resulting normalized score is written &lt;span class="math"&gt;\(\tilde{s}_i\)&lt;/span&gt;. The router selects the top-scoring tokens, and the score weights their heavy-branch contribution. This weighting supplies a training signal for the routing vector; a hard selection alone would not do that.&lt;/p&gt;
+&lt;p&gt;Using the paper's notation, the feed-forward update is:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\begin{aligned}
+X_i ={}&amp;amp; X_i + \mathrm{FFd}_{\mathrm{Light}}(X_i) \\
+&amp;amp;+ \tilde{s}_i \cdot \mathrm{FFd}_{\mathrm{Heavy}}(X_i).
+\end{aligned}
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;This is an in-place update: the right-hand side uses the token's incoming representation. The first term preserves that representation, the second adds light processing, and the third adds the weighted heavy result. In this update, &lt;span class="math"&gt;\(\tilde{s}_i\)&lt;/span&gt; is set to zero for non-routed tokens. The implementation computes the heavy branch only for selected positions, rather than computing it everywhere and multiplying unwanted outputs by zero.&lt;/p&gt;
+&lt;p&gt;The paper uses an entropy-regularized optimization procedure from Qian et al. to normalize scores. Appendix C specifies 50 iterations and &lt;span class="math"&gt;\(\epsilon=1.0\)&lt;/span&gt;, and permits the top &lt;span class="math"&gt;\(9k/8\)&lt;/span&gt; tokens to have nonzero weight during training to improve the learning signal. This is a training detail beyond the simpler top-&lt;span class="math"&gt;\(k\)&lt;/span&gt; explanation above. &lt;a href="https://arxiv.org/html/2303.09752v1#S3.SS1"&gt;Paper, section 3.1&lt;/a&gt; and &lt;a href="https://arxiv.org/html/2303.09752v1#A3"&gt;appendix C&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h3 id="feed-forward-branches-wider-is-not-deeper"&gt;Feed-forward branches: Wider is not deeper&lt;a class="headerlink" href="#feed-forward-branches-wider-is-not-deeper" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The light feed-forward branch uses half the standard T5 hidden width, while the heavy branch uses roughly four times that width. The heavy branch is more capable per selected token, but only a small fraction of the input uses it.&lt;/p&gt;
+&lt;p&gt;The branches do &lt;strong&gt;not&lt;/strong&gt; achieve this by using different numbers of encoder layers. Corresponding CoLT5 and LongT5 models have the same layer count and model width. CoLT5 has more total parameters because it includes the additional heavy branch, yet accesses those parameters sparsely.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Model dimensions and a worked compute example&lt;/summary&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/CoLT5_branch_dims.png"&gt;&lt;img alt="Original hyperparameter table comparing LongT5 and CoLT5 Base, Large, and XL: corresponding models have equal layer counts and model dimensions, while CoLT5 splits feed-forward width and attention heads between light and heavy branches." src="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/CoLT5_branch_dims.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. Model configurations from the paper's &lt;a href="https://arxiv.org/html/2303.09752v1#S5.T7"&gt;table 7&lt;/a&gt;. The original image is linked at full size. Parameter count measures stored capacity, not how much computation is performed on each token.&lt;/p&gt;
+&lt;p&gt;For example, the Large models both have 24 layers and a model dimension of 1,024. LongT5-L uses feed-forward hidden width 2,816; CoLT5-L uses 1,408 in the light branch and 11,264 in the heavy branch.&lt;/p&gt;
+&lt;p&gt;For its simplified FLOP accounting, the paper writes the feed-forward cost as:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\mathrm{FLOPs}_{\mathrm{FFd}} = 8nr_Ld^2 + 8mr_Hd^2.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;Here, &lt;span class="math"&gt;\(n\)&lt;/span&gt; is input length, &lt;span class="math"&gt;\(m\)&lt;/span&gt; is the number of routed feed-forward tokens, &lt;span class="math"&gt;\(d\)&lt;/span&gt; is model dimension, and &lt;span class="math"&gt;\(r_L\)&lt;/span&gt; and &lt;span class="math"&gt;\(r_H\)&lt;/span&gt; are the light and heavy hidden-width ratios. Substituting the main experiment's ratios, &lt;span class="math"&gt;\(r_L=1/2\)&lt;/span&gt;, &lt;span class="math"&gt;\(r_H=4\)&lt;/span&gt;, and &lt;span class="math"&gt;\(m=n/16\)&lt;/span&gt;, gives:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\mathrm{FLOPs}_{\mathrm{FFd}} = 4nd^2 + 2nd^2 = 6nd^2.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;That is 75% of the standard &lt;span class="math"&gt;\(8nd^2\)&lt;/span&gt; feed-forward cost in this accounting. The heavy network is wider, but it runs on sufficiently few tokens to reduce the combined work. This is a component-level FLOP estimate, not a prediction of a 25% reduction in total running time. The paper counts each multiply-add as one FLOP. &lt;a href="https://arxiv.org/html/2303.09752v1#S3.SS1"&gt;Paper, sections 2 and 3.1&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h3 id="attention-branches-separate-who-asks-from-who-supplies-information"&gt;Attention branches: Separate who asks from who supplies information&lt;a class="headerlink" href="#attention-branches-separate-who-asks-from-who-supplies-information" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;An attention &lt;strong&gt;query&lt;/strong&gt; represents a position seeking information. &lt;strong&gt;Keys&lt;/strong&gt; are used to score possible matches, and &lt;strong&gt;values&lt;/strong&gt; supply the information combined into the output.&lt;/p&gt;
+&lt;p&gt;The light attention branch gives every token access to a local window. The heavy branch lets selected queries attend to a separately selected set of keys and values from across the input. Here, "global" means that the selected positions can be far apart; it does not mean that every token attends to every other token.&lt;/p&gt;
+&lt;p&gt;In the main 16k-input setup, the routing budgets are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1,024 tokens for the heavy feed-forward branch;&lt;/li&gt;
+&lt;li&gt;1,024 query tokens for heavy attention; and&lt;/li&gt;
+&lt;li&gt;2,048 key/value tokens for heavy attention.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The query and feed-forward budgets have the same size, but their routers need not choose the same positions. The key/value budget is twice as large, allowing a smaller group of queries to gather evidence from a larger group of source positions. The heavy attention results are added to the selected queries' light-path updates. &lt;a href="https://arxiv.org/html/2303.09752v1#S3.SS1"&gt;Paper, section 3.1&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="two-other-changes-complete-the-recipe"&gt;Two other changes complete the recipe&lt;a class="headerlink" href="#two-other-changes-complete-the-recipe" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;h3 id="multi-query-cross-attention-speeds-up-the-decoder"&gt;Multi-query cross-attention speeds up the decoder&lt;a class="headerlink" href="#multi-query-cross-attention-speeds-up-the-decoder" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Making the encoder cheaper does not automatically make answer generation fast. The decoder repeatedly reads the encoded document as it generates output tokens, and moving the keys and values through memory can become a bottleneck for long inputs.&lt;/p&gt;
+&lt;p&gt;CoLT5 uses &lt;strong&gt;multi-query attention (MQA)&lt;/strong&gt; in the decoder's cross-attention layers. Query heads remain separate, but share keys and values. This reduces the amount of key/value data that must be repeatedly read. MQA addresses decoder memory bandwidth, while conditional computation addresses encoder work; they solve different parts of the runtime problem. &lt;a href="https://arxiv.org/html/2303.09752v1#S3.SS2"&gt;Paper, section 3.2&lt;/a&gt;; &lt;a href="https://arxiv.org/abs/1911.02150"&gt;original MQA paper&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="ul2-supports-learning-from-examples-in-the-input"&gt;UL2 supports learning from examples in the input&lt;a class="headerlink" href="#ul2-supports-learning-from-examples-in-the-input" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;CoLT5 replaces LongT5's PEGASUS pretraining objective with a variant of &lt;strong&gt;UL2&lt;/strong&gt;, a mixture of text-reconstruction tasks. Its recipe combines prefix language modeling, which predicts a continuation, with span corruption, which reconstructs removed spans of different lengths.&lt;/p&gt;
+&lt;p&gt;This supports &lt;strong&gt;in-context learning&lt;/strong&gt;: the model receives examples of the desired task in its input, then responds to a new example without updating its weights. A longer input can accommodate more demonstrations as well as the document to be processed.&lt;/p&gt;
+&lt;p&gt;The paper tests this on Natural Questions and TriviaQA. For the 16k-context experiment, it first continues pretraining a CoLT5-Large model at that length for another 100,000 steps. The authors found that in-context learning did not reliably extend beyond the length used in training. Thus, the demonstration is not simply a 4k-trained model being handed a much longer prompt. &lt;a href="https://arxiv.org/html/2303.09752v1#S4.SS4"&gt;Paper, sections 3.3 and 4.4&lt;/a&gt;; &lt;a href="https://arxiv.org/abs/2205.05131"&gt;UL2 paper&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="what-the-experiments-show"&gt;What the experiments show&lt;a class="headerlink" href="#what-the-experiments-show" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;h3 id="quality-and-speed-at-roughly-16k-input-length"&gt;Quality and speed at roughly 16k input length&lt;a class="headerlink" href="#quality-and-speed-at-roughly-16k-input-length" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The main comparison uses 16,384 input tokens, except ContractNLI, which uses 8,192. It covers nine datasets: TriviaQA and arXiv, plus the seven tasks in SCROLLS. Those tasks span document question answering, summarization, and identifying whether a contract supports a given statement.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/colt5_longt5.png"&gt;&lt;img alt="Two plots comparing average task performance with inference and fine-tuning time: CoLT5 Large matches the LongT5 Large average with less time per sample, and CoLT5 XL improves the average while also running faster." src="https://mchromiak.github.io/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/img/colt5_longt5.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 3. The paper's &lt;a href="https://arxiv.org/html/2303.09752v1#S1.F2"&gt;figure 2&lt;/a&gt;, showing the main quality-speed comparison, not the separate 64k experiment. Higher and farther left is better. Batched timings are normalized per sample per TPUv4 chip; they are not single-request latency measurements. The LongT5 inference comparison includes MQA for a conservative baseline.&lt;/p&gt;
+&lt;p&gt;At Large size, both models have an average score of 45.3 across the reported tasks. CoLT5-XL reaches 47.4 versus 46.6 for LongT5-XL. CoLT5-Base is faster but has a lower average score, 42.4 versus 43.1. The improvement is therefore a better overall quality-speed trade-off, not a win on every task at every model size.&lt;/p&gt;
+&lt;p&gt;The paper reports 35-75% training speedups and 50-100% inference speedups for Large and XL in this comparison, beyond MQA's contribution. Its CoLT5-XL result was state of the art on the SCROLLS leaderboard at the time. The average combines different task metrics: answer F1, exact match, and ROUGE-based summarization scores. It is not a single accuracy percentage. &lt;a href="https://arxiv.org/html/2303.09752v1#S4.SS2"&gt;Paper, table 3 and section 4.2&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="the-64k-result-more-context-without-more-routed-tokens"&gt;The 64k result: More context without more routed tokens&lt;a class="headerlink" href="#the-64k-result-more-context-without-more-routed-tokens" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The long-input scaling study uses &lt;strong&gt;NarrativeQA&lt;/strong&gt;, where answering questions can require information from lengthy stories. The authors compare LongT5-Large and CoLT5-Large at increasing input lengths. CoLT5 achieves a better quality-speed trade-off and continues to gain answer F1 when its input grows from 32k to 64k.&lt;/p&gt;
+&lt;p&gt;For that last increase, the heavy routing budget stays fixed: 2,048 feed-forward tokens and queries, with 4,096 key/value tokens. The model sees twice as much input without doubling the number of heavy-branch tokens. Their fraction of the input therefore falls.&lt;/p&gt;
+&lt;p&gt;This supports the intuition that a longer document may contain proportionally fewer positions that need expensive processing. It does &lt;strong&gt;not&lt;/strong&gt; show that the absolute number of useful tokens must decrease, or that the total model runs in sublinear time. &lt;a href="https://arxiv.org/html/2303.09752v1#S4.SS3"&gt;Paper, section 4.3&lt;/a&gt;.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Does conditional attention remove quadratic scaling?&lt;/summary&gt;
+&lt;p&gt;Heavy attention compares &lt;span class="math"&gt;\(q\)&lt;/span&gt; selected queries with &lt;span class="math"&gt;\(v\)&lt;/span&gt; selected key/value positions, so its comparison work depends on &lt;span class="math"&gt;\(qv\)&lt;/span&gt;. With the main fixed fractions, &lt;span class="math"&gt;\(q=n/16\)&lt;/span&gt; and &lt;span class="math"&gt;\(v=n/8\)&lt;/span&gt;, their product is &lt;span class="math"&gt;\(n^2/128\)&lt;/span&gt;. This is a calculation of query-key pairs, not the paper's complete attention FLOP formula: projections, heads, and local attention also contribute.&lt;/p&gt;
+&lt;p&gt;The smaller fraction greatly reduces the quadratic term's coefficient, but does not eliminate it. With a fixed heavy routing budget, that part stops growing with input length. The light branches still process every token, and the routers still need to score the input. The 32k-to-64k result demonstrates useful scaling of a selected-token budget, not constant-time or sublinear processing of the entire document.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="what-the-ablations-teach-us"&gt;What the ablations teach us&lt;a class="headerlink" href="#what-the-ablations-teach-us" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The authors also change individual parts of the recipe to test their contribution:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Learned routing matters.&lt;/strong&gt; Selecting evenly spaced positions instead lowers the average score in the Base ablation from 42.5 to 40.5.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The routing budget trades speed for quality.&lt;/strong&gt; Raising the feed-forward/query budget from 512 to 1,024 helps; further increases show diminishing returns in the tested setup.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Not every query needs every key/value.&lt;/strong&gt; Letting selected queries attend to the entire input gives little average quality improvement at greater cost.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MQA is a deliberate trade-off.&lt;/strong&gt; Ordinary multi-head cross-attention gives a slightly higher average score in the ablation, but much slower inference.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;UL2 is not the source of every fine-tuning gain.&lt;/strong&gt; PEGASUS is slightly stronger on the fine-tuned task average in this ablation; UL2 is retained for its in-context-learning capability.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These results are useful when interpreting the architecture: routing, context length, decoder bandwidth, and the training objective affect different aspects of performance. &lt;a href="https://arxiv.org/html/2303.09752v1#S4.SS5"&gt;Paper, section 4.5&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="where-the-approach-is-useful"&gt;Where the approach is useful&lt;a class="headerlink" href="#where-the-approach-is-useful" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;CoLT5 is aimed at encoder-decoder tasks with long inputs: finding evidence in documents, summarizing reports or meetings, and answering questions about extended narratives. It is especially relevant when only part of the input needs costly global interactions, but retaining local representations of the rest remains useful.&lt;/p&gt;
+&lt;p&gt;The experiments suggest three practical questions for evaluating such a design: does extra context improve the task, how much quality is lost when the heavy-token budget shrinks, and is the runtime bottleneck in the encoder or decoder? Parameter count alone cannot answer them. CoLT5's heavy branches increase stored capacity, while conditional execution reduces the work applied to each example.&lt;/p&gt;
+&lt;h2 id="sources-and-implementation-notes"&gt;Sources and implementation notes&lt;a class="headerlink" href="#sources-and-implementation-notes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This explanation follows the &lt;a href="https://arxiv.org/abs/2303.09752v1"&gt;March 2023 CoLT5 paper&lt;/a&gt;. The authors describe an implementation using JAX, Flax, Flaxformer, and T5X. That implementation description should not be confused with a downloadable pretrained CoLT5 checkpoint.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/lucidrains/CoLT5-attention"&gt;Phil Wang's CoLT5-attention&lt;/a&gt; implements conditionally routed components in PyTorch. It is not an official release of the paper's complete trained models, and its README identifies implementation choices that differ from, or interpret gaps in, the paper.&lt;/p&gt;
+&lt;p&gt;For the routing background, the original CoLT5 paper cites &lt;a href="https://arxiv.org/abs/2211.01267"&gt;Qian et al., Multi-Vector Retrieval as Sparse Alignment&lt;/a&gt;. The community implementation also points to &lt;a href="https://arxiv.org/abs/2304.04947"&gt;Conditional Adapters (CoDA)&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1502.04759"&gt;Wright's coordinate-descent review&lt;/a&gt;. CoDA's arXiv submission came after CoLT5's original March release, so it is better treated here as related reading than as the original paper's stated source.&lt;/p&gt;
+&lt;p&gt;Other foundations are &lt;a href="https://arxiv.org/abs/2112.07916"&gt;LongT5&lt;/a&gt;, &lt;a href="https://github.com/google-research/text-to-text-transfer-transformer/blob/main/released_checkpoints.md#t511"&gt;T5.1.1&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1911.02150"&gt;multi-query attention&lt;/a&gt;, and &lt;a href="https://arxiv.org/abs/2205.05131"&gt;UL2&lt;/a&gt;. The figures reproduced from the CoLT5 paper are attributed to Ainslie et al.; the original preprint is distributed under &lt;a href="https://creativecommons.org/licenses/by/4.0/"&gt;CC BY 4.0&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;CoLT5 keeps a lightweight representation of the whole input while concentrating additional capacity on learned selections of tokens. Its separate routers distinguish positions that need information from positions that can supply it. Together with faster cross-attention and a suitable pretraining objective, this lets the model make better use of long documents within a given computation budget.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Optimization"/><category term="T5"/><category term="LongT5"/><category term="Conditional Computation"/><category term="CoLT5"/><category term="Transformer"/></entry><entry><title>LoRA: Fine-tuning a model by learning a small update</title><link href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/" rel="alternate"/><published>2023-03-18T13:01:00+01:00</published><updated>2023-03-18T13:01:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-03-18:/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/</id><summary type="html">&lt;p&gt;LoRA adapts a pretrained model by training small, low-rank updates while keeping its original weights fixed. This guide explains the two-matrix construction, the memory and storage savings, the conditions for merging adapters, and the connection to QLoRA.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Suppose you want a language model to turn questions into database queries. It already knows a great deal about language, but it needs examples of the task and the kind of answer you expect. Fine-tuning can teach that behavior. The expensive part is allowing billions of existing weights to change and storing everything needed to update them.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;LoRA keeps the pretrained weights fixed and learns a small adjustment alongside them.&lt;/strong&gt; Instead of training a full-size update for each chosen weight matrix, it represents that update with two much smaller matrices. The model still uses all its pretrained weights; only the additional matrices are trained.&lt;/p&gt;
+&lt;p&gt;Edward J. Hu and colleagues introduced &lt;em&gt;Low-Rank Adaptation&lt;/em&gt; in June 2021, and the paper appeared at ICLR 2022. Its central question is practical: how much of full fine-tuning's performance can we retain while learning and storing far fewer task-specific parameters? &lt;a href="https://arxiv.org/abs/2106.09685"&gt;Original paper&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="why-train-an-update-instead-of-the-whole-model"&gt;Why train an update instead of the whole model?&lt;a class="headerlink" href="#why-train-an-update-instead-of-the-whole-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A model's &lt;strong&gt;parameters&lt;/strong&gt;, often called weights, are the numbers it learns during training. &lt;strong&gt;Full fine-tuning&lt;/strong&gt; starts from a pretrained model and updates all of those parameters on a new dataset. It is not training from scratch, but it still requires gradients and optimizer state for the weights being updated.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Gradients&lt;/strong&gt; indicate how the training loss changes with each parameter. An optimizer such as Adam also keeps running statistics to help choose the updates. These extra tensors can take much more memory than the final model checkpoint alone. Intermediate results, called &lt;strong&gt;activations&lt;/strong&gt;, add another substantial cost.&lt;/p&gt;
+&lt;p&gt;There is also a storage problem. If each task gets a complete fine-tuned copy of a large model, every new task adds another large checkpoint. LoRA separates what can be shared, the pretrained model, from what changes between tasks, the learned update.&lt;/p&gt;
+&lt;p&gt;This makes LoRA a &lt;strong&gt;parameter-efficient fine-tuning (PEFT)&lt;/strong&gt; method. Parameter-efficient means that relatively few parameters are trained; it does not mean the large base model disappears from memory.&lt;/p&gt;
+&lt;h2 id="two-paths-through-a-layer"&gt;Two paths through a layer&lt;a class="headerlink" href="#two-paths-through-a-layer" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A dense layer multiplies an input vector by a matrix of learned weights. LoRA adds a second path alongside that operation:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The original matrix processes the input using its frozen weights.&lt;/li&gt;
+&lt;li&gt;A small trainable matrix, called &lt;span class="math"&gt;\(A\)&lt;/span&gt;, maps the same input into a narrow intermediate space.&lt;/li&gt;
+&lt;li&gt;Another trainable matrix, &lt;span class="math"&gt;\(B\)&lt;/span&gt;, maps that intermediate result back to the layer's output width.&lt;/li&gt;
+&lt;li&gt;The layer adds the original result and the learned adjustment.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/LoRA.png"&gt;&lt;img alt="LoRA's two parallel paths: the input x passes through frozen pretrained weights W and through trainable matrices A and B; the two outputs are added to produce h. A starts randomly initialized and B starts at zero." src="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/LoRA.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. The LoRA construction from Hu et al., &lt;a href="https://arxiv.org/html/2106.09685v2#S1.F1"&gt;figure 1&lt;/a&gt;. Read from bottom to top. The narrow width &lt;span class="math"&gt;\(r\)&lt;/span&gt; is the adapter rank. The figure uses a square weight matrix; the same idea works for rectangular matrices.&lt;/p&gt;
+&lt;p&gt;The small matrices are often called a &lt;strong&gt;LoRA adapter&lt;/strong&gt;. They learn together with the task's training objective. LoRA does not first compute a full fine-tuned model and then compress the difference: the small matrices are the parameters it trains from the start.&lt;/p&gt;
+&lt;h3 id="what-does-low-rank-mean"&gt;What does "low rank" mean?&lt;a class="headerlink" href="#what-does-low-rank-mean" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The rank of a matrix measures how many independent directions it can express. In LoRA, the narrow intermediate width limits the number of directions available to the &lt;strong&gt;update&lt;/strong&gt;. If that width is 8, the update matrix has rank at most 8, even when the original layer has thousands of inputs and outputs.&lt;/p&gt;
+&lt;p&gt;Crucially, &lt;strong&gt;the pretrained matrix is not forced to have low rank&lt;/strong&gt;. It remains intact. The assumption is that adapting an already capable model to a particular task may need a much simpler change than learning the model in the first place.&lt;/p&gt;
+&lt;p&gt;The authors draw motivation from work on the low &lt;em&gt;intrinsic dimensionality&lt;/em&gt; of fine-tuning: some tasks can be learned by optimizing within a much smaller parameter space. LoRA turns that motivation into a specific constraint on individual weight updates. It is an empirical hypothesis about adaptation, not a proof that every useful update must be low-rank. &lt;a href="https://arxiv.org/html/2106.09685v2#S4.SS1"&gt;Paper, section 4.1&lt;/a&gt;; &lt;a href="https://arxiv.org/abs/2012.13255"&gt;Aghajanyan et al.&lt;/a&gt;.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;The algebra, with the paper's notation&lt;/summary&gt;
+&lt;p&gt;Let the frozen weight matrix be &lt;span class="math"&gt;\(W_0 \in \mathbb{R}^{d \times k}\)&lt;/span&gt;. It maps an input &lt;span class="math"&gt;\(x\)&lt;/span&gt; with &lt;span class="math"&gt;\(k\)&lt;/span&gt; components to an output &lt;span class="math"&gt;\(h\)&lt;/span&gt; with &lt;span class="math"&gt;\(d\)&lt;/span&gt; components. LoRA represents the update as:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\Delta W = BA,
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(A \in \mathbb{R}^{r \times k}\)&lt;/span&gt; and &lt;span class="math"&gt;\(B \in \mathbb{R}^{d \times r}\)&lt;/span&gt;, with &lt;span class="math"&gt;\(r \ll \min(d,k)\)&lt;/span&gt;. The product &lt;span class="math"&gt;\(BA\)&lt;/span&gt; has the same dimensions as &lt;span class="math"&gt;\(W_0\)&lt;/span&gt;, but rank at most &lt;span class="math"&gt;\(r\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Equation (3) of the paper writes the modified forward pass as:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+h = W_0x + \Delta Wx = W_0x + BAx.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;Immediately afterward, the paper specifies that the update contribution is scaled by &lt;span class="math"&gt;\(\alpha/r\)&lt;/span&gt;. Writing that scaling explicitly gives:&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+h = W_0x + \frac{\alpha}{r}BAx.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;Here, &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; controls the strength of the update relative to its rank. The paper holds &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; fixed when varying &lt;span class="math"&gt;\(r\)&lt;/span&gt; in this construction. Rank and scaling are related settings, but changing rank changes the space of possible updates, not just their size.&lt;/p&gt;
+&lt;p&gt;The paper initializes &lt;span class="math"&gt;\(A\)&lt;/span&gt; with random Gaussian values and &lt;span class="math"&gt;\(B\)&lt;/span&gt; with zeros. Consequently, &lt;span class="math"&gt;\(BA=0\)&lt;/span&gt; initially: the adapter starts by adding nothing to the original layer. Training then learns a nonzero adjustment. &lt;a href="https://arxiv.org/html/2106.09685v2#S4.SS1"&gt;Paper, section 4.1&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="how-much-smaller-is-the-trainable-part"&gt;How much smaller is the trainable part?&lt;a class="headerlink" href="#how-much-smaller-is-the-trainable-part" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For a layer with &lt;span class="math"&gt;\(k\)&lt;/span&gt; inputs and &lt;span class="math"&gt;\(d\)&lt;/span&gt; outputs, full fine-tuning updates &lt;span class="math"&gt;\(dk\)&lt;/span&gt; matrix entries. LoRA trains &lt;span class="math"&gt;\(rk+dr=r(k+d)\)&lt;/span&gt; entries instead, excluding biases or any separately trained task head.&lt;/p&gt;
+&lt;p&gt;Consider a 4,096-by-4,096 matrix and rank 8:&lt;/p&gt;
+&lt;div class="table-responsive"&gt;
+&lt;table class="table table-striped"&gt;
+&lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;Trainable component&lt;/th&gt;&lt;th scope="col"&gt;Parameter count&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Full weight matrix&lt;/td&gt;&lt;td&gt;16,777,216&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;LoRA matrix A, shape 8 by 4,096&lt;/td&gt;&lt;td&gt;32,768&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;LoRA matrix B, shape 4,096 by 8&lt;/td&gt;&lt;td&gt;32,768&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;Both LoRA matrices&lt;/td&gt;&lt;td&gt;65,536&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That is &lt;strong&gt;256 times fewer trainable parameters for this matrix&lt;/strong&gt;. The frozen 16.8 million weights are still present, and the model still computes with them. Total training memory also includes activations and temporary buffers, so it will not fall by the same factor.&lt;/p&gt;
+&lt;h3 id="a-training-step-with-frozen-weights"&gt;A training step with frozen weights&lt;a class="headerlink" href="#a-training-step-with-frozen-weights" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;For our question-to-SQL example, training proceeds as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Run a question through the model. Each adapted layer adds its LoRA adjustment to the original computation.&lt;/li&gt;
+&lt;li&gt;Compare the predicted output with the target SQL query and calculate a loss.&lt;/li&gt;
+&lt;li&gt;Backpropagate through the computation to determine how the adapter matrices should change.&lt;/li&gt;
+&lt;li&gt;Update the adapter parameters, leaving the pretrained weights fixed.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Frozen weights still participate in backpropagation.&lt;/strong&gt; Their operations help determine the gradients needed by adapters earlier in the network. LoRA saves the work and storage associated with updating the frozen weights; it does not eliminate the backward pass through the model.&lt;/p&gt;
+&lt;h2 id="where-should-the-adapters-go"&gt;Where should the adapters go?&lt;a class="headerlink" href="#where-should-the-adapters-go" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Transformer attention uses projections called queries, keys, values, and an output projection. Queries and keys determine which positions attend to one another; values provide the information that attention combines.&lt;/p&gt;
+&lt;p&gt;The original LoRA study concentrates on attention weights, usually the &lt;strong&gt;query and value projections&lt;/strong&gt;, while leaving the feed-forward networks frozen. LoRA itself is not restricted to those locations. The choice determines where the model can learn adjustments, and it matters alongside rank.&lt;/p&gt;
+&lt;p&gt;In the paper's GPT-3 experiment with an approximately 18-million-parameter budget, adapting both query and value matrices at rank 4 works better on WikiSQL than spending the same budget on query matrices alone at rank 8. This illustrates why distributing capacity across useful locations can matter more than increasing the rank at one location. &lt;a href="https://arxiv.org/html/2106.09685v2#S7.SS1"&gt;Paper, sections 4.2 and 7.1&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="is-a-larger-rank-always-better"&gt;Is a larger rank always better?&lt;a class="headerlink" href="#is-a-larger-rank-always-better" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;No. A larger rank allows a more expressive update and increases the number of trainable parameters, but does not guarantee better validation performance. On the paper's GPT-3 WikiSQL and MultiNLI experiments, query-and-value adapters already work well at very low ranks, including rank 1.&lt;/p&gt;
+&lt;p&gt;That result is specific to those models and tasks. The authors explicitly caution that small ranks need not suffice for every dataset. Rank, placement, learning rate, and the training data should be evaluated together. A low-rank constraint can limit fitting capacity, but it does not by itself guarantee less overfitting. &lt;a href="https://arxiv.org/html/2106.09685v2#S7.SS2"&gt;Paper, section 7.2&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="what-the-papers-results-establish"&gt;What the paper's results establish&lt;a class="headerlink" href="#what-the-papers-results-establish" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The experiments cover language understanding and generation using RoBERTa, DeBERTa, GPT-2, and GPT-3. They show that LoRA can match or exceed full fine-tuning on a range of tested tasks while training far fewer parameters. They do not establish that LoRA is always the best method for every adaptation problem.&lt;/p&gt;
+&lt;p&gt;The GPT-3 175B results make the scale of the savings concrete:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Training memory:&lt;/strong&gt; the paper reports a reduction from 1.2 TB to 350 GB in its setup.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Task-specific storage:&lt;/strong&gt; with rank-4 query-and-value adapters, the stored update is about 35 MB instead of a roughly 350 GB full-model checkpoint. The base model is still required.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Training speed:&lt;/strong&gt; the reported throughput rises from 32.5 to 43.1 tokens per second per V100 GPU, using the same number of model-parallel weight shards. That corresponds to about 25% less time for the same token workload, not a universal runtime guarantee.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The approximately 10,000-fold reduction, or about 0.01% of the full parameter count, refers to the rank-4 storage example. It is not a fixed fraction for every LoRA configuration. &lt;a href="https://arxiv.org/html/2106.09685v2#S4.SS2"&gt;Paper, section 4.2&lt;/a&gt;.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;A closer look at the GPT-3 task scores&lt;/summary&gt;
+&lt;p&gt;The following selection comes from the paper's table 4:&lt;/p&gt;
+&lt;div class="table-responsive"&gt;
+&lt;table class="table table-striped"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th scope="col"&gt;Method&lt;/th&gt;
+&lt;th scope="col"&gt;Trainable parameters&lt;/th&gt;
+&lt;th scope="col"&gt;WikiSQL accuracy&lt;/th&gt;
+&lt;th scope="col"&gt;MNLI-m accuracy&lt;/th&gt;
+&lt;th scope="col"&gt;SAMSum ROUGE-L&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Full fine-tuning&lt;/td&gt;
+&lt;td&gt;175,255.8 million&lt;/td&gt;
+&lt;td&gt;73.8%&lt;/td&gt;
+&lt;td&gt;89.5%&lt;/td&gt;
+&lt;td&gt;44.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LoRA&lt;/td&gt;
+&lt;td&gt;4.7 million&lt;/td&gt;
+&lt;td&gt;73.4%&lt;/td&gt;
+&lt;td&gt;91.7%&lt;/td&gt;
+&lt;td&gt;45.9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LoRA&lt;/td&gt;
+&lt;td&gt;37.7 million&lt;/td&gt;
+&lt;td&gt;74.0%&lt;/td&gt;
+&lt;td&gt;91.6%&lt;/td&gt;
+&lt;td&gt;45.1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;p&gt;WikiSQL reports logical-form validation accuracy for question-to-SQL prediction, rather than execution accuracy. MNLI-m measures whether one sentence entails, contradicts, or is neutral with respect to another, on the matched validation set. SAMSum evaluates dialogue summaries; ROUGE-L measures overlap with reference summaries using the longest common subsequence.&lt;/p&gt;
+&lt;p&gt;These are different metrics, not interchangeable measurements of general intelligence. The smaller LoRA configuration is slightly below full fine-tuning on WikiSQL, within the paper's stated typical fluctuation of about 0.5 percentage points, while exceeding it on the other two reported metrics. The point is competitive task performance with much less trainable state, not a claim of a win in every table cell. &lt;a href="https://arxiv.org/html/2106.09685v2#S5.T4"&gt;Paper, table 4&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="serving-models-and-switching-tasks"&gt;Serving models and switching tasks&lt;a class="headerlink" href="#serving-models-and-switching-tasks" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;During training, LoRA has two computational paths. At deployment, their weights can be &lt;strong&gt;merged&lt;/strong&gt;: add the learned update to the pretrained matrix once, then use the resulting matrix as an ordinary dense layer.&lt;/p&gt;
+&lt;p&gt;With the paper's scaling made explicit, the merged matrix is:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+W_{\mathrm{merged}} = W_0 + \frac{\alpha}{r}BA.
+$$&lt;/div&gt;
+&lt;p&gt;This is the basis of the paper's &lt;strong&gt;no additional inference latency&lt;/strong&gt; claim. After merging, there is no separate adapter computation at that layer. Keeping adapters separate can make task switching convenient, but retains the extra operations.&lt;/p&gt;
+&lt;p&gt;Different tasks can share one base model and store separate small adapters. To switch a merged model between tasks, the paper describes subtracting the first update and adding the second. In practice, keeping the original base checkpoint also provides a clean starting point for each merge. Once weights are merged for one task, serving different adapters together in a batch requires additional handling; the original paper identifies this as a limitation. &lt;a href="https://arxiv.org/html/2106.09685v2#S4.SS1"&gt;Paper, sections 4.1 and 4.2&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="does-freezing-prevent-catastrophic-forgetting"&gt;Does freezing prevent catastrophic forgetting?&lt;a class="headerlink" href="#does-freezing-prevent-catastrophic-forgetting" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Freezing preserves the original parameter values, so disabling the adapters recovers the base model's computation when no other parameters have been changed. That is useful when maintaining several task-specific versions.&lt;/p&gt;
+&lt;p&gt;It does not guarantee that the &lt;strong&gt;adapted model&lt;/strong&gt; retains every original capability. Its outputs depend on the adapters as well as the base weights, and the learned adjustment can harm performance on other tasks. Retention therefore needs evaluation alongside the new task's score. The original paper does not establish a general guarantee against catastrophic forgetting.&lt;/p&gt;
+&lt;h2 id="how-lora-fits-among-peft-methods"&gt;How LoRA fits among PEFT methods&lt;a class="headerlink" href="#how-lora-fits-among-peft-methods" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The taxonomy below places LoRA in a broader family of approaches:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Additive methods&lt;/strong&gt; introduce trainable components, such as nonlinear adapter modules or learned soft prompts.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Selective methods&lt;/strong&gt; update a subset of existing parameters, such as biases.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reparameterization-based methods&lt;/strong&gt;, including LoRA, express a trainable change through a more economical parameterization.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/PEFT_taxonomy.png"&gt;&lt;img alt="PEFT taxonomy showing overlapping additive, selective, and reparameterization-based methods; LoRA appears in the reparameterization group, while adapters and soft prompts occupy additive subgroups." src="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/img/PEFT_taxonomy.png"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. Taxonomy reproduced from the 2023 survey &lt;a href="https://arxiv.org/abs/2303.15647v1"&gt;Scaling Down to Scale Up&lt;/a&gt;. The overlapping regions represent methods that combine ideas. This is a survey figure, not a figure from the original LoRA paper.&lt;/p&gt;
+&lt;p&gt;The word &lt;em&gt;adapter&lt;/em&gt; can cause confusion here. A LoRA adapter is a pair of matrices representing a weight update. The classic bottleneck adapters compared in the original paper insert additional layers with a nonlinearity. LoRA's linear update can be merged into the original matrix; those nonlinear modules generally cannot be absorbed in the same way.&lt;/p&gt;
+&lt;h2 id="from-lora-to-qlora"&gt;From LoRA to QLoRA&lt;a class="headerlink" href="#from-lora-to-qlora" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;LoRA reduces the part of the model that must be trained. It leaves another large expense: storing the frozen base weights. &lt;strong&gt;QLoRA addresses that expense by storing the base model in four-bit form while training higher-precision LoRA adapters.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The distinction is simple: LoRA is a method for learning a compact update; QLoRA combines that method with quantization and additional memory-saving techniques. QLoRA is not merely LoRA with a smaller rank, and its placement experiments extend beyond the original LoRA paper's attention-focused study.&lt;/p&gt;
+&lt;p&gt;Continue with &lt;a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"&gt;QLoRA: How to fine-tune large language models with less memory&lt;/a&gt; for NormalFloat, double quantization, paged optimizers, and the single-GPU results.&lt;/p&gt;
+&lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;LoRA does not make a large pretrained model small. It makes the &lt;strong&gt;task-specific change&lt;/strong&gt; small. Two trainable matrices can provide a useful adjustment while the original model remains shared and fixed. The practical gains are fewer gradients and optimizer states, smaller task checkpoints, and ordinary inference computation when the update is merged.&lt;/p&gt;
+&lt;p&gt;Its success depends on whether the chosen rank and adapter locations give the model enough freedom to learn the task. That is the trade-off to test: task quality against the memory, storage, and training cost of the update.&lt;/p&gt;
+&lt;h2 id="sources-and-implementation"&gt;Sources and implementation&lt;a class="headerlink" href="#sources-and-implementation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Hu et al., &lt;a href="https://arxiv.org/abs/2106.09685"&gt;LoRA: Low-Rank Adaptation of Large Language Models&lt;/a&gt;, first submitted in 2021 and published at ICLR 2022. This article follows &lt;a href="https://arxiv.org/html/2106.09685v2"&gt;arXiv version 2&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Microsoft's official &lt;a href="https://github.com/microsoft/LoRA"&gt;LoRA repository and loralib&lt;/a&gt;, including examples for adding LoRA layers, saving adapter weights, and merging for inference. Its default setup trains only LoRA parameters; training biases is an explicit option.&lt;/li&gt;
+&lt;li&gt;Aghajanyan et al., &lt;a href="https://arxiv.org/abs/2012.13255"&gt;Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning&lt;/a&gt;, the motivation cited by the LoRA authors.&lt;/li&gt;
+&lt;li&gt;Lialin et al., &lt;a href="https://arxiv.org/abs/2303.15647v1"&gt;Scaling Down to Scale Up: A Guide to Parameter-Efficient Fine-Tuning&lt;/a&gt;, the source of the broader PEFT taxonomy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Optimization"/><category term="PEFT"/><category term="Adapter"/><category term="low-rank"/><category term="LLM"/></entry><entry><title>🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</title><link href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/" rel="alternate"/><published>2021-11-14T11:18:00+01:00</published><updated>2021-12-26T11:18:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-11-14:/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/</id><summary type="html">&lt;p&gt;A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.&lt;/p&gt;</summary><content type="html">&lt;p align="center"&gt;&lt;img alt="MAE reconstructions for COCO validation images" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png"&gt;
 Figure 1. COCO validation images: masked input | MAE reconstruction | ground truth. The MAE model was pretrained on ImageNet-1K, not COCO.
 &lt;br&gt;&lt;/p&gt;
 &lt;h4 id="the-mae-scalable-learning-paper-explained"&gt;The MAE scalable-learning paper explained&lt;a class="headerlink" href="#the-mae-scalable-learning-paper-explained" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
