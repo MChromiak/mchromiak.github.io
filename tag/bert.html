@@ -7,6 +7,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
 
     <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
 

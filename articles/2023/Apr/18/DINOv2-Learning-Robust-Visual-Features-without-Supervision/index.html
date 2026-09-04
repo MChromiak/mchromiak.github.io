@@ -7,6 +7,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
 
     <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
 
@@ -131,7 +144,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2026-09-03T14:45:00+02:00"> Thu, 03 Sep 2026</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-04T08:45:00+02:00"> Fri, 04 Sep 2026</time>
             </span>
 
 
@@ -163,30 +176,57 @@
                 </div>
                 <p>Image classification needs a compact description of an entire image. Segmentation and depth estimation need a useful description at every patch. Retrieval needs features that place visually related images close together even when style, pose, or background changes.</p>
 <p>DINOv2 tackles these requirements with one Vision Transformer encoder. It combines image-level self-distillation, masked patch prediction, a feature-spreading regularizer, curated data, and engineering at scale. The released family spans ViT-S/14, ViT-B/14, ViT-L/14, and ViT-g/14; the largest backbone has about 1.1 billion parameters.</p>
-<p>Throughout this article, <strong>frozen</strong> means that downstream training does not change the encoder weights. A <strong>readout</strong> is the smaller task-specific component that turns the encoder's features into class predictions, segmentation masks, or depth estimates. The explanation assumes familiarity with transformer tokens, attention, probability distributions, and cross-entropy; it introduces the DINOv2-specific machinery as it appears.</p>
+<p>Throughout this article, <strong>frozen</strong> means that downstream training does not change the encoder weights. A <strong>readout</strong> is the smaller task-specific component that turns the encoder's features into class predictions, segmentation masks, or depth estimates.</p>
+<details class="dinov2-background">
+<summary>Background: From pixels to visual features</summary>
+<p>Imagine a photograph of a horse in a field. Its pixels describe colors and brightness. A <strong>visual feature vector</strong> is a list of numbers computed from those pixels by an <strong>encoder</strong>, the part of the network that produces representations. Training makes these numbers useful for comparing images or predicting their contents. Individual coordinates need not have names such as "horse" or "grass"; information can be distributed across many coordinates.</p>
+<p>A Vision Transformer divides the photograph into small <strong>patches</strong> and maps each patch to a numerical <strong>token</strong>. Attention lets tokens draw information from other tokens, so a patch representation can depend on the surrounding scene. The encoder produces local patch features as well as a whole-image summary.</p>
+<p>The training recipe gives these features three jobs: <strong>self-distillation</strong> asks different crops of the photograph to agree through a teacher and student; <strong>masked patch prediction</strong> asks the student to predict the teacher's features where patches were hidden, rather than repaint their pixels; a <strong>regularizer</strong> adds a constraint, such as discouraging different images from receiving nearly identical vectors. Data curation determines which photographs the model learns from.</p>
+</details>
 <h2 id="what-without-supervision-means">What "without supervision" means<a class="headerlink" href="#what-without-supervision-means" title="Permanent link">🔗</a></h2>
 <p>During pretraining, DINOv2 receives images, crops, and patch masks. It receives no class labels and no paired captions. This differs from CLIP-style pretraining, where text supplies a weak semantic signal. An image-only objective can retain local visual structure that a caption might omit, and it can use collections for which descriptions do not exist.</p>
 <p>The data is still curated. Seed datasets, filtering rules, deduplication, and similarity search determine which images enter the final corpus. These are separate claims: <strong>the training signal is label-free; the data pipeline is deliberately constructed</strong>.</p>
 <h2 id="the-training-signal-teacher-and-student">The training signal: teacher and student<a class="headerlink" href="#the-training-signal-teacher-and-student" title="Permanent link">🔗</a></h2>
 <p>DINOv2 trains a student network against a teacher network across different crops of the same source image. Gradient descent updates the student. An exponential moving average of the student updates the teacher, which provides slowly changing targets.</p>
 <p>Three terms give the representation complementary properties. The DINO term aligns whole-image representations across views. The iBOT term asks masked student patches to recover the teacher's local representation. KoLeo keeps image representations spread through feature space.</p>
+<details class="dinov2-background">
+<summary>Background: How can a teacher learn from its student?</summary>
+<p>During this pretraining stage, the teacher is not an independently trained expert. It starts as a copy of the student. Both process versions of the horse photograph, and a <strong>loss</strong> measures disagreement between their outputs.</p>
+<p><strong>Gradient descent</strong> uses derivatives to determine how small changes to the student's weights would change the loss, then adjusts those weights toward a lower loss. The teacher's output is held fixed during this calculation: gradients do not update the teacher.</p>
+<p>After the student update, the teacher moves a little toward the student's new weights. For an illustrative moving average, each teacher weight could become 99% of its previous value plus 1% of the corresponding student weight. Repeating this blends a history of student weights, with older contributions gradually fading. These percentages illustrate the operation, not the paper's training schedule.</p>
+<p>The teacher therefore changes more slowly than the student, giving it a steadier target. Repeated agreement across crops encourages features that survive changes in the input. Averaging alone is not enough: the balancing and regularization described below discourage the trivial solution of giving every image the same representation.</p>
+</details>
 <h3 id="image-level-dino-loss">Image-level DINO loss<a class="headerlink" href="#image-level-dino-loss" title="Permanent link">🔗</a></h3>
 <p>Each network uses a special class token to collect information from the whole crop. A small projection head maps that token to a probability distribution over learned prototypes: output coordinates that are learned during training rather than assigned class names. After normalization, <span class="math">\(p_s\)</span> and <span class="math">\(p_t\)</span> denote the student's and teacher's distributions. Their cross-entropy is:</p>
 <div class="math">$$
-L_{DINO} = -\sum p_t \log p_s.
+\mathcal{L}_{DINO} = -\sum p_t \log p_s.
 $$</div>
 <p>The compact equation leaves two sums implicit: one over prototype coordinates and another over the valid pairs of teacher and student crops. Minimizing it teaches the student which image-level information should remain stable across views.</p>
+<details class="dinov2-background">
+<summary>Background: What do prototypes and a lower loss mean?</summary>
+<p>The projection head compares the crop's features with learned directions called <strong>prototypes</strong>, then converts the scores to probabilities that add up to one. These prototypes are training coordinates, not predefined object classes. A high score for prototype A does not mean "80% probability of a horse."</p>
+<p>For a toy head with only three prototypes, suppose the teacher assigns the horse crop probabilities <strong>(0.8, 0.1, 0.1)</strong> over A, B, and C. A student that assigns <strong>(0.8, 0.1, 0.1)</strong> to another crop agrees with it. A student assigning <strong>(0.1, 0.8, 0.1)</strong> instead favors B and disagrees where the teacher places most of its weight.</p>
+<p>The cross-entropy equation quantifies that distinction. Each teacher probability weights the negative logarithm of the corresponding student probability. Using natural logarithms, the matching prediction has loss about <strong>0.64</strong>, while the mismatching one has loss about <strong>2.09</strong>. A smaller student probability on the teacher's preferred coordinate incurs a larger penalty. Matching a soft target need not give zero loss, because the teacher still spreads some probability across alternatives.</p>
+<p>The iBOT equation below uses the same comparison at masked patch positions: the student predicts a distribution over patch prototypes, not the hidden RGB pixels.</p>
+</details>
 <h3 id="patch-level-ibot-loss">Patch-level iBOT loss<a class="headerlink" href="#patch-level-ibot-loss" title="Permanent link">🔗</a></h3>
 <p>The image-level term does not directly require detailed patch features, so DINOv2 adds a local prediction task. Some patches are hidden from the student but remain visible to the teacher. At every masked position <span class="math">\(i\)</span>, the student predicts the teacher's distribution for the corresponding visible patch:</p>
 <div class="math">$$
-L_{iBOT} = -\sum_i p_{ti} \log p_{si},
+\mathcal{L}_{iBOT} = -\sum_i p_{ti} \log p_{si},
 $$</div>
 <p>where <span class="math">\(i\)</span> ranges over masked patch positions. DINOv2 gives the image-level DINO objective and patch-level iBOT objective separate learnable projection heads. The original iBOT ablation favored shared heads, but the DINOv2 experiments found separate heads more effective at this scale.</p>
 <h3 id="centering-and-koleo-regularization">Centering and KoLeo regularization<a class="headerlink" href="#centering-and-koleo-regularization" title="Permanent link">🔗</a></h3>
 <p>If every image mapped to the same feature, the matching losses would become useless. DINOv2 counters this collapse by normalizing the student with softmax and balancing the teacher's assignments with three iterations of the Sinkhorn-Knopp algorithm.</p>
+<details class="dinov2-background">
+<summary>Background: Why balance assignments across a batch?</summary>
+<p>Agreement alone permits an unhelpful shortcut: the teacher and student could assign every crop to prototype A, regardless of whether it contains a horse, a tree, or a building. They would agree without distinguishing the images. This is one form of <strong>collapse</strong>.</p>
+<p>Picture a table with one row per crop in a training batch and one column per prototype. Its entries represent assignment weights. <strong>Sinkhorn-Knopp</strong> alternately rescales rows and columns toward prescribed totals, balancing how much total weight the prototypes receive across the batch. The paper uses three iterations, so this is an approximate balancing procedure.</p>
+<p>Balancing the columns does not require every row to be uniform. One crop can strongly favor A and another B while overall prototype usage remains balanced. Nor does balancing assign human meanings to A and B. Teacher temperature controls how concentrated the assignments are; lower temperatures emphasize stronger scores. Concentration and batch-level balance work together rather than making every crop produce the same flat distribution.</p>
+<p>KoLeo addresses the geometry of the features themselves. Imagine normalized image vectors as points on a sphere. When nearest neighbors crowd together, the negative-log-distance penalty grows; spreading them out reduces it. This complements balancing the projection head's outputs.</p>
+</details>
 <p>DINOv2 also applies the KoLeo regularizer to spread class-token features within a batch. For <span class="math">\(n\)</span> feature vectors <span class="math">\((x_1,\ldots,x_n)\)</span>, the paper defines:</p>
 <div class="math">$$
-L_{\mathrm{KoLeo}}
+\mathcal{L}_{\mathrm{KoLeo}}
 = -\frac{1}{n}\sum_{i=1}^{n}\log(d_{n,i}),
 $$</div>
 <p>with</p>

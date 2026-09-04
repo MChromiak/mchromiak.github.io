@@ -7,6 +7,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
 
     <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
 
@@ -111,7 +124,7 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2026-09-03T14:45:00+02:00"> Thu, 03 Sep 2026</time>
+                <i class="fa fa-calendar"></i><time datetime="2026-09-04T08:45:00+02:00"> Fri, 04 Sep 2026</time>
             </span>
 
 

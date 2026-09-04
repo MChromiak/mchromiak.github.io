@@ -124,6 +124,37 @@ body{
   font-size: 16px;
   //margin-bottom: 1.5em;
 }
+
+.entry-content details.dinov2-background {
+  margin: 0 0 1.5em;
+  padding: 0.5em 1em;
+  border-left: 2px solid #b9cbd3;
+}
+
+.entry-content details.dinov2-background > summary {
+  display: list-item;
+  list-style: disclosure-closed inside;
+  cursor: pointer;
+  color: #247ba0;
+  font-family: 'Source Serif Pro', serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.entry-content details.dinov2-background[open] > summary {
+  list-style-type: disclosure-open;
+  margin-bottom: 1em;
+}
+
+.entry-content details.dinov2-background > summary:focus-visible {
+  outline: 2px solid #247ba0;
+  outline-offset: 4px;
+}
+
+.entry-content details.dinov2-background > p:last-child {
+  margin-bottom: 0;
+}
+
 .entry-content ol ul, li ul  {
   margin-bottom: 1.5em;
 }
