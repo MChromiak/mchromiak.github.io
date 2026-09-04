@@ -180,4 +180,309 @@ $$&lt;/div&gt;
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Self-Supervision"/><category term="SSL"/><category term="CV"/><category term="Optimization"/><category term="MAE"/><category term="I-JEPA"/><category term="MetaAI"/></entry></feed>
+&lt;/script&gt;</content><category term="Self-Supervision"/><category term="SSL"/><category term="CV"/><category term="Optimization"/><category term="MAE"/><category term="I-JEPA"/><category term="MetaAI"/></entry><entry><title>🦖 DINO: Self-supervised ViTs learn strong features and semantic structure</title><link href="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/" rel="alternate"/><published>2021-05-03T17:44:00+02:00</published><updated>2021-06-14T17:44:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-03:/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/</id><summary type="html">&lt;p&gt;Self-distillation with no labels (DINO) trains a student network to match an exponential-moving-average teacher across differently augmented views of the same image. Applied to Vision Transformers, it produces features that perform strongly with simple linear and k-nearest-neighbor classifiers. Its final-layer self-attention also reveals object boundaries without segmentation labels, although DINO is not itself a segmentation model.&lt;/p&gt;</summary><content type="html">&lt;h4 id="the-dino-paper-explained"&gt;The DINO paper explained&lt;a class="headerlink" href="#the-dino-paper-explained" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;This article reviews &lt;strong&gt;&lt;a href="https://openaccess.thecvf.com/content/ICCV2021/html/Caron_Emerging_Properties_in_Self-Supervised_Vision_Transformers_ICCV_2021_paper.html"&gt;Emerging Properties in Self-Supervised Vision Transformers&lt;/a&gt;&lt;/strong&gt; by Caron et al., published at ICCV 2021.&lt;/p&gt;
+&lt;p&gt;DINO stands for self-&lt;strong&gt;DI&lt;/strong&gt;stillation with &lt;strong&gt;NO&lt;/strong&gt; labels. It is a self-supervised representation-learning method: it learns from images without human-provided class labels. A student network is optimized by gradient descent to match a teacher network's output for another view of the same image. The teacher has the same architecture but is not trained by backpropagation; its weights are an exponential moving average (EMA) of the student's weights.&lt;/p&gt;
+&lt;p&gt;The method works with both convolutional networks and Vision Transformers (ViTs), but the paper's most interesting findings concern ViTs. DINO-trained ViTs provide strong image-level features and final-layer self-attention maps that often align with foreground objects and their boundaries.&lt;/p&gt;
+&lt;h4 id="tldr"&gt;TL;DR&lt;a class="headerlink" href="#tldr" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;DINO is a non-contrastive self-supervised method inspired by self-distillation and momentum-teacher methods such as BYOL and Mean Teacher. It is not simply a successor to SimCLR, MoCo, or BYOL.&lt;/li&gt;
+&lt;li&gt;The student and teacher use the same architecture but have different parameters.&lt;/li&gt;
+&lt;li&gt;The student processes all augmented views; the teacher processes only the two large global crops.&lt;/li&gt;
+&lt;li&gt;Training minimizes cross-entropy between the teacher's probability distribution for one view and the student's distribution for another view.&lt;/li&gt;
+&lt;li&gt;The teacher is updated with an EMA of the student and receives no gradients.&lt;/li&gt;
+&lt;li&gt;Centering and sharpening act in opposite directions and help prevent representation collapse in the presence of the momentum teacher.&lt;/li&gt;
+&lt;li&gt;DINO does not require negative pairs, a contrastive loss, a prediction head, a memory queue, or batch normalization when used with ViT.&lt;/li&gt;
+&lt;li&gt;A frozen DINO ViT-S/8 reaches &lt;strong&gt;78.3% ImageNet top-1 accuracy with weighted k-NN&lt;/strong&gt;. This is not zero-shot classification: the k-NN classifier uses labeled ImageNet training examples.&lt;/li&gt;
+&lt;li&gt;DINO ViT-B/8 reaches &lt;strong&gt;80.1% ImageNet top-1 accuracy in linear evaluation&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Smaller ViT patches improve the reported accuracy without increasing parameter count, but they substantially reduce throughput and increase compute and memory requirements.&lt;/li&gt;
+&lt;li&gt;ViT attention maps provide evidence of emergent object localization. They are not explicit semantic segmentation predictions and do not assign semantic classes to pixels.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dino_segmentation"&gt;&lt;/a&gt;
+&lt;img alt="Final-layer self-attention from a DINO ViT with 8 x 8 patches" src="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/img/dino-intro.png"&gt;
+Figure 1. Selected attention heads often focus on foreground objects and align with object boundaries. These are attention maps, not semantic segmentation masks. (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h3 id="what-problem-does-dino-address"&gt;What problem does DINO address?&lt;a class="headerlink" href="#what-problem-does-dino-address" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Supervised image classification compresses the training signal for an image into one label from a fixed vocabulary. Self-supervised learning instead constructs a learning objective from the data itself. The hope is that a model trained without class labels will retain visual information useful across many downstream tasks.&lt;/p&gt;
+&lt;p&gt;The paper asks what happens when modern self-supervised methods are applied to ViTs. Its central contribution is therefore not a claim that DINO universally replaces supervised ViT training. It is an empirical study showing that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;self-supervised ViTs can learn image representations that transfer well;&lt;/li&gt;
+&lt;li&gt;their frozen features work unusually well with a simple k-NN classifier; and&lt;/li&gt;
+&lt;li&gt;their final-layer class-token attention often exposes object layout and boundaries.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The authors also simplify the training recipe. DINO combines a momentum teacher, multi-crop augmentation, cross-view prediction, centering, and sharpening. Unlike many contrastive methods, it does not compare an image against explicit negative examples.&lt;/p&gt;
+&lt;h3 id="method"&gt;Method&lt;a class="headerlink" href="#method" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="multiple-views-of-one-image"&gt;Multiple views of one image&lt;a class="headerlink" href="#multiple-views-of-one-image" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;For each training image, DINO creates a set of augmented views:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;two &lt;strong&gt;global crops&lt;/strong&gt;, typically at resolution &lt;span class="math"&gt;\(224 \times 224\)&lt;/span&gt;; and&lt;/li&gt;
+&lt;li&gt;several &lt;strong&gt;local crops&lt;/strong&gt;, typically at resolution &lt;span class="math"&gt;\(96 \times 96\)&lt;/span&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The original implementation uses eight local crops by default. Color jitter, grayscale conversion, Gaussian blur, solarization, and horizontal flipping further alter the views.&lt;/p&gt;
+&lt;p&gt;This is not a reconstruction objective. Neither network is asked to reproduce the original pixels. Instead, the student must produce a similar high-level output for different crops of the same source image, including local crops that contain only part of the scene.&lt;/p&gt;
+&lt;h4 id="student-and-teacher"&gt;Student and teacher&lt;a class="headerlink" href="#student-and-teacher" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Let &lt;span class="math"&gt;\(g_{\theta_s}\)&lt;/span&gt; be the student and &lt;span class="math"&gt;\(g_{\theta_t}\)&lt;/span&gt; the teacher. They have the same backbone and projection-head architecture, but their parameters differ.&lt;/p&gt;
+&lt;p&gt;The student receives every global and local view. The teacher receives only the two global views. For an input view &lt;span class="math"&gt;\(x\)&lt;/span&gt;, the networks produce probability distributions over &lt;span class="math"&gt;\(K\)&lt;/span&gt; learned output dimensions:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P_s(x)^{(i)} =
+\frac{\exp(g_{\theta_s}(x)^{(i)} / \tau_s)}
+{\sum_{k=1}^{K} \exp(g_{\theta_s}(x)^{(k)} / \tau_s)}
+$$&lt;/div&gt;
+&lt;p&gt;and&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P_t(x)^{(i)} =
+\frac{\exp((g_{\theta_t}(x)^{(i)} - c^{(i)}) / \tau_t)}
+{\sum_{k=1}^{K} \exp((g_{\theta_t}(x)^{(k)} - c^{(k)}) / \tau_t)}.
+$$&lt;/div&gt;
+&lt;p&gt;Here, &lt;span class="math"&gt;\(c\)&lt;/span&gt; is the teacher-output center, while &lt;span class="math"&gt;\(\tau_s\)&lt;/span&gt; and &lt;span class="math"&gt;\(\tau_t\)&lt;/span&gt; are the student and teacher temperatures. These &lt;span class="math"&gt;\(K\)&lt;/span&gt; dimensions are learned targets, not human-defined classes.&lt;/p&gt;
+&lt;p&gt;For each teacher global view &lt;span class="math"&gt;\(x\)&lt;/span&gt;, the student is trained on every other view &lt;span class="math"&gt;\(x'\)&lt;/span&gt; of the same image:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+L =
+\sum_{x \in \{x_1^g, x_2^g\}}
+\sum_{\substack{x' \in V \\ x' \ne x}}
+H(P_t(x), P_s(x')),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(H(a,b)=-\sum_i a^{(i)}\log b^{(i)}\)&lt;/span&gt; is cross-entropy and &lt;span class="math"&gt;\(V\)&lt;/span&gt; contains all crops. The identical student-teacher view pair is excluded. Gradients flow only through the student.&lt;/p&gt;
+&lt;h4 id="momentum-teacher"&gt;Momentum teacher&lt;a class="headerlink" href="#momentum-teacher" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;After each student update, the teacher parameters are updated as:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\theta_t \leftarrow \lambda \theta_t + (1-\lambda)\theta_s.
+$$&lt;/div&gt;
+&lt;p&gt;The momentum coefficient &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt; follows a cosine schedule from 0.996 toward 1. This slowly changing teacher provides more stable targets than using the current student directly. In the paper's ViT-S/16 ablation, removing the momentum teacher causes collapse and yields only 0.1% k-NN and linear accuracy.&lt;/p&gt;
+&lt;h4 id="projection-head-and-downstream-features"&gt;Projection head and downstream features&lt;a class="headerlink" href="#projection-head-and-downstream-features" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The projection head is a three-layer multilayer perceptron with a 2048-dimensional hidden layer, followed by &lt;span class="math"&gt;\(\ell_2\)&lt;/span&gt; normalization and a weight-normalized fully connected layer. The self-supervised loss is applied to this head.&lt;/p&gt;
+&lt;p&gt;For downstream evaluation, the authors discard the projection head and use the frozen backbone representation. For ViTs, this representation is based on the class token.&lt;/p&gt;
+&lt;script src="https://vjs.zencdn.net/7.11.4/video.min.js"&gt;&lt;/script&gt;
+&lt;!-- webm is substantially smaller than the equivalent gif --&gt;
+&lt;video id="my-player" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="metadata" autoplay loop muted playsinline style="max-width: 100%; height: auto;"&gt;
+ &lt;source src="../img/dino.webm" type="video/webm"&gt;
+ &lt;p class="vjs-no-js"&gt;
+   To view this video, enable JavaScript or use a browser that supports
+   &lt;a href="https://videojs.com/html5-video-support/" target="_blank" rel="noopener"&gt;HTML5 video&lt;/a&gt;.
+ &lt;/p&gt;
+&lt;/video&gt;
+
+&lt;p align="center"&gt;Figure 2. DINO training overview. The student sees global and local crops; the EMA teacher sees global crops. (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h3 id="avoiding-collapse"&gt;Avoiding collapse&lt;a class="headerlink" href="#avoiding-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="what-is-representation-collapse"&gt;What is representation collapse?&lt;a class="headerlink" href="#what-is-representation-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;A collapsed network maps many or all inputs to the same output. Such a constant representation can make two augmented views agree perfectly while carrying no useful information about the image.&lt;/p&gt;
+&lt;p&gt;Contrastive approaches discourage this solution using negative examples. DINO instead combines a momentum teacher with two operations on the teacher output:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Centering&lt;/strong&gt; subtracts an EMA of the batch-average teacher logits. It prevents one output dimension from dominating, but by itself tends toward a uniform output distribution.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sharpening&lt;/strong&gt; uses a low teacher temperature to make the teacher distribution more selective. It counters uniform collapse, but by itself can encourage domination by a small number of dimensions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These effects balance each other. The paper is careful about the scope of this conclusion: centering and sharpening avoid collapse &lt;strong&gt;when used with the momentum teacher&lt;/strong&gt;. They are not demonstrated as a universal collapse-prevention recipe for arbitrary architectures.&lt;/p&gt;
+&lt;p&gt;The default student temperature is 0.1. For the teacher, the temperature is warmed from 0.04 to 0.07 during the first 30 epochs. The center is also updated by an EMA of teacher outputs.&lt;/p&gt;
+&lt;h3 id="what-emerges-in-a-dino-trained-vit"&gt;What emerges in a DINO-trained ViT?&lt;a class="headerlink" href="#what-emerges-in-a-dino-trained-vit" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="strong-frozen-features"&gt;Strong frozen features&lt;a class="headerlink" href="#strong-frozen-features" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The authors evaluate frozen representations in two main ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Linear evaluation:&lt;/strong&gt; train a supervised linear classifier on top of the frozen features.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Weighted k-NN evaluation:&lt;/strong&gt; store frozen features from the labeled ImageNet training set and classify each validation image by a weighted vote among its nearest stored features.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The second protocol is simple, but it is still supervised at evaluation time because it uses labels from the ImageNet training set. Calling it zero-shot would be incorrect.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Backbone&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Patch size&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;k-NN top-1&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Linear top-1&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ResNet-50&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;-&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;67.5%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;75.3%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-S&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(16 \times 16\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;74.5%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;77.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-S&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(8 \times 8\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;strong&gt;78.3%&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;79.7%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-B&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(16 \times 16\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;76.1%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;78.2%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-B&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(8 \times 8\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;77.4%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;strong&gt;80.1%&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The paper generally uses &lt;span class="math"&gt;\(k=20\)&lt;/span&gt; for weighted k-NN. On the same ViT-S/16 architecture, DINO reaches 77.0% linear accuracy, 3.5 percentage points above the reported SwAV result. Its 74.5% k-NN accuracy is 7.9 points above the best listed BYOL result.&lt;/p&gt;
+&lt;h4 id="smaller-patches-better-spatial-detail-higher-cost"&gt;Smaller patches: better spatial detail, higher cost&lt;a class="headerlink" href="#smaller-patches-better-spatial-detail-higher-cost" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Reducing the patch size gives the transformer more spatial tokens and improves the reported representation quality. It does not add learned parameters, but self-attention becomes more expensive as the number of tokens grows.&lt;/p&gt;
+&lt;p&gt;The paper reports throughput of roughly 1007 images/s for ViT-S/16, 180 images/s for ViT-S/8, and 44 images/s for ViT-S/5 under its measurement setup. Smaller patches therefore &lt;strong&gt;increase&lt;/strong&gt;, rather than reduce, running time and memory pressure.&lt;/p&gt;
+&lt;h4 id="emergent-object-localization"&gt;Emergent object localization&lt;a class="headerlink" href="#emergent-object-localization" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In a ViT, the final class token attends to patch tokens. DINO's final-layer attention heads often focus on coherent foreground regions. To quantify this, the authors threshold attention maps to retain 60% of their mass and compare them with object masks from PASCAL VOC 2012.&lt;/p&gt;
+&lt;p&gt;DINO ViT-S/8 reaches 44.7% Jaccard similarity, compared with 23.7% for supervised ViT-S/8 and 21.8% for a randomly initialized model. This is evidence that object layout emerges in the representation without segmentation labels.&lt;/p&gt;
+&lt;p&gt;There are important limits to the interpretation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Attention maps are not semantic segmentation outputs.&lt;/li&gt;
+&lt;li&gt;They do not assign a category to every pixel.&lt;/li&gt;
+&lt;li&gt;Different attention heads may focus on different objects or parts.&lt;/li&gt;
+&lt;li&gt;The evaluation measures overlap with foreground masks after thresholding; it does not establish a complete segmentation system.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="video-object-segmentation"&gt;Video object segmentation&lt;a class="headerlink" href="#video-object-segmentation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The paper also evaluates frozen patch features on DAVIS 2017. Labels are propagated between frames using nearest-neighbor matching; the backbone itself is not fine-tuned for video segmentation. DINO ViT-S/8 obtains 69.9 mean &lt;span class="math"&gt;\(J\&amp;amp;F\)&lt;/span&gt;, compared with 66.0 for supervised ViT-S/8. DINO ViT-B/8 reaches 71.4.&lt;/p&gt;
+&lt;p&gt;This experiment shows that local patch features encode useful correspondence. It does not mean that raw attention maps alone solve video instance segmentation.&lt;/p&gt;
+&lt;h3 id="ablation-study"&gt;Ablation study&lt;a class="headerlink" href="#ablation-study" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The ViT-S/16 ablation after 300 epochs clarifies which parts of DINO matter:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;k-NN top-1&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Linear top-1&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Default DINO&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;72.8%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;76.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Without momentum teacher&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;0.1%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;0.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Without multi-crop&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;67.9%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;72.5%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MSE instead of cross-entropy&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;52.6%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;62.4%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;With an added predictor&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;71.8%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;75.6%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The momentum teacher is essential in this setup, and multi-crop training provides a large improvement. Cross-entropy works substantially better than mean squared error. Unlike BYOL, DINO does not benefit from a separate predictor in this experiment.&lt;/p&gt;
+&lt;h3 id="what-dino-does-not-establish"&gt;What DINO does not establish&lt;a class="headerlink" href="#what-dino-does-not-establish" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The paper provides strong evidence for its tested architectures and benchmarks, but some broader conclusions would go beyond the experiments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DINO is not a universally superior replacement for supervised learning.&lt;/li&gt;
+&lt;li&gt;Its transfer results are strong but not uniformly better on every dataset. For example, supervised ViT-B/16 slightly exceeds DINO on iNaturalist 2018 in the paper's transfer table.&lt;/li&gt;
+&lt;li&gt;The learned output dimensions are not automatically named semantic categories.&lt;/li&gt;
+&lt;li&gt;k-NN evaluation is not zero-shot learning.&lt;/li&gt;
+&lt;li&gt;Attention visualization is evidence of localization, not a production-ready segmentation method.&lt;/li&gt;
+&lt;li&gt;The method still requires substantial compute, careful augmentation, and large-scale image data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="applications"&gt;Applications&lt;a class="headerlink" href="#applications" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;DINO representations are useful when labels are scarce or when a reusable visual encoder is needed. The paper demonstrates or motivates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;image classification with linear probing, k-NN, or fine-tuning;&lt;/li&gt;
+&lt;li&gt;image retrieval and copy detection;&lt;/li&gt;
+&lt;li&gt;transfer to classification datasets;&lt;/li&gt;
+&lt;li&gt;object discovery through attention analysis; and&lt;/li&gt;
+&lt;li&gt;video object segmentation through frozen-feature correspondence.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="relationship-to-other-methods"&gt;Relationship to other methods&lt;a class="headerlink" href="#relationship-to-other-methods" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;DINO belongs to a family of methods that learn by matching representations across image views.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SimCLR&lt;/strong&gt; uses a contrastive objective with in-batch negatives.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MoCo&lt;/strong&gt; uses a momentum encoder and a queue of negative examples.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BYOL&lt;/strong&gt; matches an online network to a momentum target network without negatives and uses a predictor.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SwAV&lt;/strong&gt; predicts cluster assignments between views and uses online clustering.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DINO&lt;/strong&gt; matches centered and sharpened teacher distributions using cross-entropy, a momentum teacher, and multi-crop views, without negatives or a predictor.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DINO can train ResNet-50 as well as ViTs. The paper's distinctive observations, however, are the strong k-NN behavior and emergent spatial structure of self-supervised ViT features.&lt;/p&gt;
+&lt;h3 id="useful-resources"&gt;Useful resources&lt;a class="headerlink" href="#useful-resources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://openaccess.thecvf.com/content/ICCV2021/html/Caron_Emerging_Properties_in_Self-Supervised_Vision_Transformers_ICCV_2021_paper.html"&gt;ICCV 2021 paper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2104.14294"&gt;DINO on arXiv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/facebookresearch/dino"&gt;Official PyTorch implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ai.meta.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training/"&gt;DINO and PAWS overview&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2006.07733"&gt;BYOL: Bootstrap Your Own Latent&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1703.01780"&gt;Mean Teacher&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1911.05722"&gt;MoCo: Momentum Contrast&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/"&gt;DINOv2 explained&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="terminology"&gt;Terminology&lt;a class="headerlink" href="#terminology" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="knowledge-distillation"&gt;Knowledge distillation&lt;a class="headerlink" href="#knowledge-distillation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Knowledge distillation trains a student model to match outputs produced by a teacher. In conventional distillation, the teacher is often a larger, already trained network and the goal may be model compression.&lt;/p&gt;
+&lt;p&gt;DINO uses &lt;strong&gt;self-distillation&lt;/strong&gt; differently: teacher and student have the same architecture, and the teacher is created continuously as an EMA of the student. There is no separately pretrained teacher and no class-label supervision. The term describes the direction of the learning target, not compression into a smaller model.&lt;/p&gt;
+&lt;h4 id="representation-collapse"&gt;Representation collapse&lt;a class="headerlink" href="#representation-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Representation collapse occurs when a network maps different inputs to the same or nearly the same output. Agreement between views then becomes trivial but the features cease to distinguish images. DINO avoids this outcome through the combined training dynamics of its stop-gradient momentum teacher, centering, and sharpening.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Self-Supervision"/><category term="Representation Learning"/><category term="Transformer"/><category term="CV"/><category term="Vision Transformer"/><category term="ViT"/><category term="Self-Supervision (SSL)"/><category term="k-NN"/></entry></feed>
