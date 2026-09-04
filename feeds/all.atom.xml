@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2026-09-04T08:45:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>DINOv2: How self-supervised visual features transfer across tasks</title><link href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/" rel="alternate"/><published>2023-04-18T19:07:00+02:00</published><updated>2026-09-04T08:45:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-04-18:/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/</id><summary type="html">&lt;p&gt;DINOv2 trains Vision Transformer encoders on 142 million curated images without using labels or captions in its pretraining objective. This guide explains how image-level self-distillation, masked patch prediction, feature-spreading regularization, data curation, and distillation combine to produce features that transfer across classification, retrieval, segmentation, and depth estimation.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Image classification needs a compact description of an entire image. Segmentation and depth estimation need a useful description at every patch. Retrieval needs features that place visually related images close together even when style, pose, or background changes.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>https://mchromiak.github.io/</id><updated>2023-05-30T19:07:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>DINOv2: How self-supervised visual features transfer across tasks</title><link href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/" rel="alternate"/><published>2023-04-18T19:07:00+02:00</published><updated>2023-05-30T19:07:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-04-18:/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/</id><summary type="html">&lt;p&gt;DINOv2 trains Vision Transformer encoders on 142 million curated images without using labels or captions in its pretraining objective. This guide explains how image-level self-distillation, masked patch prediction, feature-spreading regularization, data curation, and distillation combine to produce features that transfer across classification, retrieval, segmentation, and depth estimation.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Image classification needs a compact description of an entire image. Segmentation and depth estimation need a useful description at every patch. Retrieval needs features that place visually related images close together even when style, pose, or background changes.&lt;/p&gt;
 &lt;p&gt;DINOv2 tackles these requirements with one Vision Transformer encoder. It combines image-level self-distillation, masked patch prediction, a feature-spreading regularizer, curated data, and engineering at scale. The released family spans ViT-S/14, ViT-B/14, ViT-L/14, and ViT-g/14; the largest backbone has about 1.1 billion parameters.&lt;/p&gt;
 &lt;p&gt;Throughout this article, &lt;strong&gt;frozen&lt;/strong&gt; means that downstream training does not change the encoder weights. A &lt;strong&gt;readout&lt;/strong&gt; is the smaller task-specific component that turns the encoder's features into class predictions, segmentation masks, or depth estimates.&lt;/p&gt;
 &lt;details class="dinov2-background"&gt;
@@ -262,7 +262,7 @@ Figure 7. Each group pairs related source images with PCA-colored patch maps. Wi
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="GPT"/><category term="WSL"/><category term="Weak-supervision"/><category term="Scalability"/></entry><entry><title>🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</title><link href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/" rel="alternate"/><published>2021-11-14T11:18:00+01:00</published><updated>2026-09-03T10:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-11-14:/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/</id><summary type="html">&lt;p&gt;A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.&lt;/p&gt;</summary><content type="html">&lt;p align="center"&gt;&lt;img alt="MAE reconstructions for COCO validation images" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png"&gt;
+&lt;/script&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="GPT"/><category term="WSL"/><category term="Weak-supervision"/><category term="Scalability"/></entry><entry><title>🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</title><link href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/" rel="alternate"/><published>2021-11-14T11:18:00+01:00</published><updated>2021-12-26T11:18:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-11-14:/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/</id><summary type="html">&lt;p&gt;A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.&lt;/p&gt;</summary><content type="html">&lt;p align="center"&gt;&lt;img alt="MAE reconstructions for COCO validation images" src="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/img/HeaderCoCoResults.png"&gt;
 Figure 1. COCO validation images: masked input | MAE reconstruction | ground truth. The MAE model was pretrained on ImageNet-1K, not COCO.
 &lt;br&gt;&lt;/p&gt;
 &lt;h4 id="the-mae-scalable-learning-paper-explained"&gt;The MAE scalable-learning paper explained&lt;a class="headerlink" href="#the-mae-scalable-learning-paper-explained" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
@@ -503,150 +503,230 @@ Table 4. ADE20K semantic segmentation results in mean intersection over union.
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1"&gt;The first author and project lead of MAE, Kaiming He, was also the first author of &lt;a href="https://arxiv.org/abs/1512.03385"&gt;Deep Residual Learning for Image Recognition&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1911.05722"&gt;Momentum Contrast for Unsupervised Visual Representation Learning&lt;/a&gt;. &lt;a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2"&gt;Long ViT training schedules are discussed in &lt;a href="https://arxiv.org/abs/2106.10270"&gt;How to Train Your ViT? Data, Augmentation, and Regularization in Vision Transformers&lt;/a&gt;. A related perspective on long training appears in &lt;a href="https://arxiv.org/abs/2106.05237"&gt;Knowledge Distillation: A Good Teacher Is Patient and Consistent&lt;/a&gt;. These works provide context rather than direct evidence about MAE's mechanism. &lt;a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="BERT"/><category term="GPT"/><category term="Autoencoder"/><category term="Scalability"/></entry><entry><title>Decision Transformer: Unifying sequence modelling and model-free, offline RL</title><link href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/" rel="alternate"></link><published>2021-06-01T19:30:00+02:00</published><updated>2021-06-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-06-01:/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/</id><summary type="html">&lt;p&gt;Can we apply massive advancements of Transformer approach with its simplicity and scalability to Reinforcement Learning (RL)? Yes, but for that - one needs to approach RL as a sequence modeling problem. The &lt;em&gt;Decision Transformer&lt;/em&gt; does that by abstracting RL as a &lt;em&gt;conditional sequence modeling&lt;/em&gt; and using language modeling technique of casual masking of self-attention from GPT/BERT, enabling autoregressive generation of &lt;em&gt;trajectories&lt;/em&gt; from the previous tokens in a sequence. The classical RL approach of fitting the &lt;em&gt;value functions&lt;/em&gt;, or computing &lt;em&gt;policy gradients&lt;/em&gt; (needs live correction; online), has been ditched in favor of masked Transformer yielding optimal &lt;em&gt;actions&lt;/em&gt;. The Decision Transformer can match or outperform strong algorithms designed explicitly for offline RL with minimal modifications from standard language modeling architectures.&lt;/p&gt;</summary><content type="html">&lt;h4 id=the-decision-transformer-paper-explained&gt;The Decision Transformer paper explained.&lt;a class=headerlink href=#the-decision-transformer-paper-explained title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In this article we will explain and discuss the paper:&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a href="https://arxiv.org/abs/2106.01345"&gt;"Decision Transformer: Reinforcement Learning via Sequence Modeling"&lt;/a&gt;&lt;/strong&gt;: by Chen L. et al, ArXiv&lt;/p&gt;
-&lt;p&gt;that explores application of transformers to model sequential decision making problems - formalized as Reinforcement Learning (RL). By training a language model on a training dataset of random walk trajectories, it can figure out optimal trajectories by just conditioning on a large reward.&lt;/p&gt;
-&lt;p align=center&gt;&lt;img alt="Illustrative example of finding shortest path for a fixed graph (left) posed as reinforcement learning. Training dataset consists of random walk trajectories and their per-node returns-to-go (middle). \label{fig:dtgraph}" src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/DT_OptimalGraphPath.png"&gt;
-Figure 1. Conditioned on a starting state and generating largest possible return at each node, Decision Transformer sequences optimal paths.  (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
-&lt;h4 id=tldr&gt;TL;DR&lt;a class=headerlink href=#tldr title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1"&gt;The first author and project lead of MAE, Kaiming He, was also the first author of &lt;a href="https://arxiv.org/abs/1512.03385"&gt;Deep Residual Learning for Image Recognition&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1911.05722"&gt;Momentum Contrast for Unsupervised Visual Representation Learning&lt;/a&gt;. &lt;a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;li id="sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2"&gt;Long ViT training schedules are discussed in &lt;a href="https://arxiv.org/abs/2106.10270"&gt;How to Train Your ViT? Data, Augmentation, and Regularization in Vision Transformers&lt;/a&gt;. A related perspective on long training appears in &lt;a href="https://arxiv.org/abs/2106.05237"&gt;Knowledge Distillation: A Good Teacher Is Patient and Consistent&lt;/a&gt;. These works provide context rather than direct evidence about MAE's mechanism. &lt;a href="#sf-Masked-Autoencoders-Are-Scalable-Vision-Learners-2-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Self-Supervision (SSL)"/><category term="CV"/><category term="ViT"/><category term="BERT"/><category term="GPT"/><category term="Autoencoder"/><category term="Scalability"/></entry><entry><title>Decision Transformer: Unifying sequence modelling and model-free, offline RL</title><link href="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/" rel="alternate"/><published>2021-06-01T19:30:00+02:00</published><updated>2021-07-13T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-06-01:/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/</id><summary type="html">&lt;p&gt;Decision Transformer casts offline reinforcement learning (RL) as conditional sequence modeling. A causally masked GPT-style Transformer predicts each action from a desired return-to-go, the current state, and the recent trajectory. It avoids value-function bootstrapping and policy-gradient optimization during training, yet matches or exceeds several strong offline RL baselines on the benchmarks studied in the paper.&lt;/p&gt;</summary><content type="html">&lt;h4 id="the-decision-transformer-paper-explained"&gt;The Decision Transformer paper explained&lt;a class="headerlink" href="#the-decision-transformer-paper-explained" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;This article explains and discusses the paper:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href="https://arxiv.org/abs/2106.01345"&gt;"Decision Transformer: Reinforcement Learning via Sequence Modeling"&lt;/a&gt;&lt;/strong&gt; by Chen et al.&lt;/p&gt;
+&lt;p&gt;The paper explores whether a Transformer can solve sequential decision-making problems with a supervised sequence-modeling objective instead of conventional temporal-difference or policy-gradient objectives. The graph example below uses random-walk trajectories to illustrate the idea. The main Atari and continuous-control experiments use different offline datasets, described later in this article.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;img alt="A fixed graph posed as a reinforcement-learning problem (left), random-walk training trajectories with returns-to-go (middle), and the path generated by Decision Transformer (right)." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/DT_OptimalGraphPath.png"&gt;
+Figure 1. Conditioned on a starting state and the highest feasible return-to-go, Decision Transformer generates an optimal path. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h4 id="tldr"&gt;TL;DR&lt;a class="headerlink" href="#tldr" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;ul&gt;
-&lt;li&gt;The idea is simple. 1) Each modality (return, state, or action) is passed into an embedding network (convolutional encoder for images, linear layer for continuous states). 2) embeddings are processed by an autoregressive transformer model, trained to predict the next action given the previous tokens using a linear output layer.&lt;/li&gt;
-&lt;li&gt;Instead of training policy in a  a RL way, authors aim at sequence modeling objective, with use of sequence modeling algorithm, based on Transformer (the Transformer is not crucial here and could be replaced by any other autoregressive sequence modeling algorithm such as LSTM)&lt;/li&gt;
-&lt;li&gt;The algorithm is looking for &lt;em&gt;actions&lt;/em&gt; conditioning based on the future (autoregressive) desired &lt;em&gt;reward&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;Presented algorithm requires more work/memorizing/learn by the network to get the &lt;em&gt;action&lt;/em&gt; for a given &lt;em&gt;reward&lt;/em&gt; (two inputs: state and reward), comparing to classical RL where the &lt;em&gt;action&lt;/em&gt; is the output based on the maximized &lt;em&gt;reward&lt;/em&gt; for a &lt;em&gt;policy&lt;/em&gt;. One input: &lt;em&gt;state&lt;/em&gt;, to train the &lt;em&gt;policy&lt;/em&gt;. However, authors tested how transformers can cope with this approach minding recent advancements in sequence modeling.&lt;/li&gt;
-&lt;li&gt;Decision Transformer is based on &lt;a href="../../../May/01/RL-Primer/#what-is-offline-rl"&gt;offline RL&lt;/a&gt; to learn form historical sequence of (reward, state, action) tuples to output &lt;em&gt;action&lt;/em&gt;, based on imitation of similar past &lt;em&gt;reward&lt;/em&gt; and &lt;em&gt;state&lt;/em&gt; inputs and &lt;em&gt;action&lt;/em&gt; outputs.&lt;/li&gt;
-&lt;li&gt;Solution is learning about sequence evolution in a training dataset by learning from agents' past behaviors for similar inputs: &lt;em&gt;state&lt;/em&gt;  and the presently required &lt;em&gt;reward&lt;/em&gt;, to output an &lt;em&gt;action&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Limitation:&lt;/strong&gt; If the &lt;em&gt;credit assignment&lt;/em&gt; needs to happen longer than within one context. Thus, when relevant &lt;em&gt;action&lt;/em&gt; for the &lt;em&gt;reward&lt;/em&gt; is outside of the sequence that the Transformer attends to it will fail - as it would be out of the context.&lt;/li&gt;
+&lt;li&gt;Each return-to-go, state, and action is mapped to an embedding. Continuous states use a linear projection, while visual states use a convolutional encoder. A causally masked GPT model processes the interleaved tokens and predicts actions with a linear output head.&lt;/li&gt;
+&lt;li&gt;Training is supervised action prediction on a fixed dataset of trajectories. The model does not learn a Q-function, apply Bellman backups, or optimize policy gradients.&lt;/li&gt;
+&lt;li&gt;At timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt;, the model predicts an action conditioned on a desired cumulative return-to-go &lt;span class="math"&gt;\(\hat{R}_t\)&lt;/span&gt;, the current state, and up to &lt;span class="math"&gt;\(K-1\)&lt;/span&gt; previous timesteps. It is not conditioned on an immediate future reward.&lt;/li&gt;
+&lt;li&gt;During evaluation, the user supplies an initial target return. After every action, the achieved reward is subtracted from the remaining target and the new state is appended to the context.&lt;/li&gt;
+&lt;li&gt;Decision Transformer is evaluated in the &lt;a href="../../../May/01/RL-Primer/#what-is-offline-rl"&gt;offline RL&lt;/a&gt; setting: it learns only from a fixed dataset and does not explore the environment during training.&lt;/li&gt;
+&lt;li&gt;Its performance depends on dataset coverage, the feasibility of the requested return, and how much relevant history is available in the context. A finite context limits direct access to older events, but it does not by itself imply failure or make dynamic programming mandatory.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id=contribution-of-paper&gt;Contribution of paper:&lt;a class=headerlink href=#contribution-of-paper title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;h4 id="contributions-of-the-paper"&gt;Contributions of the paper&lt;a class="headerlink" href="#contributions-of-the-paper" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;ul&gt;
-&lt;li&gt;use the GPT architecture to autoregressively model trajectories&lt;/li&gt;
-&lt;li&gt;bypass the need for bootstrapping (one of "deadly triad"&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1 class=simple-footnote title="When one tries to combine time difference (TD) learning (or Bootstrapping), off-policy learning, and function approximations (such as Deep Neural Network), instabilities and divergence may arise."&gt;1&lt;/a&gt;&lt;/sup&gt;) by applying transformer models on collected experience using sequence modeling objective&lt;/li&gt;
-&lt;li&gt;enable to avoid discounting factor for future rewards used in TD thus, avoid inducing undesired short-range behaviors&lt;/li&gt;
-&lt;li&gt;bridge sequence modeling and transformers with RL&lt;/li&gt;
-&lt;li&gt;test if sequence modeling can perform policy optimization by evaluating Decision Transformer on offline RL benchmarks in Atari, OpenAI Gym, and Key-to-Door environments&lt;/li&gt;
-&lt;li&gt;DecisionTransformer (&lt;strong&gt;without&lt;/strong&gt; dynamic programming) match, or exceeds performance of SOTA model-free offline RL: &lt;a href="https://arxiv.org/abs/2006.04779"&gt;Conservative Q-Learing (CQL)&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1907.04543"&gt;Random Ensemble Mixture (REM)&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1710.10044"&gt;Quantile Regression Deep Q-Network (QR-DQN)&lt;/a&gt; or behavioral cloning (BC)&lt;/li&gt;
+&lt;li&gt;Use a GPT architecture to model sequences of returns-to-go, states, and actions, while training only the action-prediction objective used by the standard DT agent.&lt;/li&gt;
+&lt;li&gt;Avoid value-function bootstrapping&lt;sup id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back"&gt;&lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1" class="simple-footnote" title='The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning.'&gt;1&lt;/a&gt;&lt;/sup&gt; and the associated Bellman-backup machinery.&lt;/li&gt;
+&lt;li&gt;Use undiscounted returns-to-go in the reported formulation, avoiding the short-horizon preference that discounting can introduce.&lt;/li&gt;
+&lt;li&gt;Evaluate conditional sequence modeling on offline Atari, OpenAI Gym/D4RL, and Key-to-Door tasks.&lt;/li&gt;
+&lt;li&gt;Show competitive aggregate performance without dynamic programming: DT is competitive with &lt;a href="https://arxiv.org/abs/2006.04779"&gt;Conservative Q-Learning (CQL)&lt;/a&gt; and generally stronger than &lt;a href="https://arxiv.org/abs/1907.04543"&gt;Random Ensemble Mixture (REM)&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1710.10044"&gt;Quantile Regression DQN (QR-DQN)&lt;/a&gt;, and standard behavior cloning on the Atari tasks studied. Results vary by environment and should not be read as universal dominance.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=intro&gt;Intro&lt;a class=headerlink href=#intro title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;In contrast to supervised learning, where the agent that imitates actions will (by definition) learn at its best to be on pair with the input data (trainer), the Reinforcement Learning can learn how to be much better like in case of AlphaGo (Go), AlphaStar (StarCraft II), AlphaZero (Chess) or OpenAI Five (Dota2).&lt;/p&gt;
-&lt;p&gt;Transformer framework is known of its performance, scalability and simplicity, as well as its generic approach. The level of abstraction that is available via transformer framework reduces the &lt;em&gt;inductive bias&lt;/em&gt; and thus, is more flexible and effective in multiple applications relying more on the data than on assumed, hand designed concepts. As this has already been proven in NLP with GPT and BERT models and Computer Vision with Vision Transformer (ViT), authors have adapted transformers to the realm of Reinforcement Learning (RL).&lt;/p&gt;
-&lt;p&gt;If you are already familiar with RL terms used in the intro you might want to go directly to the &lt;a href=#motivation&gt;Decision Transformer paper motivation explained&lt;/a&gt;. For more explanation of the terms referred in the paper please see &lt;a href="../../../May/01/RL-Primer"&gt;prerequisite RL knowledge&lt;/a&gt; section.&lt;/p&gt;
-&lt;h3 id=motivation&gt;Motivation&lt;a class=headerlink href=#motivation title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Transformer framework has proven to be very efficient in multiple applications in NLP and CV by modeling high-dimensional distributions of semantic concepts at scale.
-Due to natural consequence of transformer nature, the input should be in form of a sequence thus, in case of &lt;em&gt;Decision Transformer&lt;/em&gt; the RL has been casted as conditional sequence modeling. Specifically, the sequence modeling (with transformers) for policy optimization in RL is adapted by the Decision Transformer as a strong algorithmic paradigm.&lt;/p&gt;
-&lt;p&gt;One very interesting motivation for using transformers is that they can perform &lt;a href="../../../May/01/RL-Primer/#what-is-credit-assignment"&gt;credit assignment&lt;/a&gt; directly via self-attention, in contrast to Bellman backups which slowly propagate rewards and are prone to “distractor” signals. This might help transformers to work with sparse, or distracting rewards. It even made Decision Transformer (DT) to outperform RL baseline for tasks requiring long term credit assignment due to the usage of long contexts. The DT aims to avoid any inductive bias for credit assignment, e.g. by explicitly learning the reward function or a critic, in favor of natural emergence of such properties thanks to transformer approach.&lt;/p&gt;
-&lt;h3 id=objective-or-goal-for-the-algorithm&gt;Objective, or goal for the algorithm&lt;a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The goal is to investigate if generative trajectory modeling – i.e. modeling the joint distribution of the sequence of states, actions, and rewards – can serve as a replacement for conventional RL algorithms.&lt;/p&gt;
-&lt;h3 id=the-processing-strategy-of-the-algorithm&gt;The processing strategy of the algorithm&lt;a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The classic RL is focused on maximizing the reward for a state, by finding an action that actually will maximize the reward. Conversely, the key aspect of DT is to condition on future desired reward. Consequently, algorithm has additional - reward - input, along with the state. This way it is expected not only to maximize, but to fit to the actual reward value. That however, requires more learning/memorization. This is where transformers have proven to work particularly well for sequence modeling. Natural consequence of this design decision is to use the offline RL. This is why the paper is focused on the world of &lt;a href="../../../May/01/RL-Primer/#what-is-model-free-rl"&gt;model-free&lt;/a&gt; and &lt;a href="../../../May/01/RL-Primer/#what-is-offline-rl"&gt;offline RL&lt;/a&gt; algorithms.&lt;/p&gt;
-&lt;p&gt;The tasks expects to find the right action for a given state and reward. The offline nature allows the Transformer to look into historical (offline, training dataset) data to find the same state with similar history and about the same reward for future action. From such past experience, similar action will be deduced &lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2 class=simple-footnote title="Similarly to behavioral cloning which maximizes the reward based on expert demonstrations.[\ref]. This way based on the past sequence experiences,"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a name=fig:DT&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="intro"&gt;Intro&lt;a class="headerlink" href="#intro" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Supervised imitation learning fits actions observed in a dataset, whereas conventional RL explicitly optimizes expected return through interaction or value/policy optimization. This distinction does not place a strict ceiling on supervised models: they can generalize across demonstrations, and return-conditioned models may compose patterns in ways that outperform individual trajectories in the dataset. The graph shortest-path example in this paper is an illustration of such policy improvement from suboptimal data.&lt;/p&gt;
+&lt;p&gt;Transformers are known for scalable sequence modeling with comparatively weak domain-specific assumptions. After their success in language and vision, the authors ask whether a GPT-style causal Transformer can also represent policies over trajectories. BERT is part of the broader motivation in the paper, but DT itself uses GPT-style causal masking, not BERT's bidirectional masked-language-model objective.&lt;/p&gt;
+&lt;p&gt;If you are already familiar with the RL terms used in this introduction, you may want to go directly to the &lt;a href="#motivation"&gt;Decision Transformer paper motivation&lt;/a&gt;. For explanations of the terminology used in the paper, see the &lt;a href="../../../May/01/RL-Primer"&gt;prerequisite RL knowledge&lt;/a&gt; section.&lt;/p&gt;
+&lt;h3 id="motivation"&gt;Motivation&lt;a class="headerlink" href="#motivation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Transformers have proven effective at modeling high-dimensional sequence distributions in language and vision. Decision Transformer applies the same machinery to trajectories, casting policy learning as conditional sequence modeling.&lt;/p&gt;
+&lt;p&gt;One motivation is that self-attention provides short information paths between events within the context. This can help the model learn state-return associations without propagating value estimates through repeated Bellman backups, particularly with delayed or distracting rewards. The Key-to-Door experiment supports this hypothesis, but it does not prove that attention completes causal &lt;a href="../../../May/01/RL-Primer/#what-is-credit-assignment"&gt;credit assignment&lt;/a&gt; in one step. DT still has important inductive biases: causal ordering, return conditioning, a finite context, and supervised action prediction.&lt;/p&gt;
+&lt;h3 id="objective-of-the-algorithm"&gt;Objective of the algorithm&lt;a class="headerlink" href="#objective-of-the-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The broad research question is whether generative trajectory modeling can replace conventional RL objectives. In the standard DT implementation, however, the optimized objective is narrower: predict actions from returns-to-go, states, and previous actions. The authors report that predicting states or returns-to-go is not required for good control performance.&lt;/p&gt;
+&lt;h3 id="the-processing-strategy-of-the-algorithm"&gt;The processing strategy of the algorithm&lt;a class="headerlink" href="#the-processing-strategy-of-the-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Conventional RL algorithms often learn a value function or optimize a parameterized policy to maximize expected return. DT instead learns a return-conditioned policy from a fixed dataset. At timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt;, it models an action distribution of the form&lt;/p&gt;
+&lt;div class="math"&gt;$$
+p(a_t \mid \hat{R}_t, s_{t-K+1:t}, a_{t-K+1:t-1}),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\hat{R}_t\)&lt;/span&gt; is the desired return-to-go and &lt;span class="math"&gt;\(K\)&lt;/span&gt; is the context length. The model learns statistical regularities across the dataset; it does not search for an identical historical state-reward pair or copy one stored action. Conditioning can distinguish behaviors with different performance levels even when their states overlap.&lt;/p&gt;
+&lt;p&gt;&lt;a name="fig:DT"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;script src="https://vjs.zencdn.net/7.11.4/video.min.js"&gt;&lt;/script&gt;
-&lt;video id=my-player class="video-js vjs-theme-sea vjs-big-play-centered" controls preload=auto autoplay loop="" muted="" width=640 height=800&gt;
+&lt;video id="my-player" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="auto" autoplay loop="" muted="" width="640" height="800"&gt;
  &lt;source src="../img/dt.webm" type="video/webm"&gt;
- &lt;p class=vjs-no-js&gt;
+ &lt;p class="vjs-no-js"&gt;
       To view this video please enable JavaScript, and consider upgrading to a web browser that
-      &lt;a href="https://videojs.com/html5-video-support/" target=_blank&gt; supports HTML5 video&lt;/a&gt;
+      &lt;a href="https://videojs.com/html5-video-support/" target="_blank"&gt; supports HTML5 video&lt;/a&gt;
     &lt;/p&gt;
 &lt;/video&gt;
-&lt;p align=center&gt;Figure 2. Decision Transformer overview (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;the Transformer outputs an &lt;em&gt;action&lt;/em&gt; that agents (in the past) ended up with, for same &lt;em&gt;state&lt;/em&gt;, while getting similar &lt;em&gt;reward&lt;/em&gt;. Such &lt;em&gt;action&lt;/em&gt; is  what agent is expected to get in current timestep. (See &lt;a href=#fig:DT&gt;Figure 2.&lt;/a&gt;).&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. Decision Transformer overview (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Given the target return, current state, and recent trajectory, the Transformer predicts the current action. During training, the target action is known from the offline trajectory. During evaluation, the predicted action is executed in the environment and the resulting state and reward are appended to the sequence. See &lt;a href="#fig:DT"&gt;Figure 2&lt;/a&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The major drawback of this approach is that it is limited to the context sequence length. Thus, in case when agent commenced action more aligned for current state-reward condition, but which is outside of the context (self-attended input of Transformer) - the sequence model will not be able to infer about that, as it only attends to tokens within the limited length context.&lt;/p&gt;
+&lt;p&gt;A finite context limits which past events the model can inspect directly. Whether this causes a failure depends on the environment: the current state may already summarize the relevant past, while partially observable tasks may require a longer context or an explicit memory mechanism.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Therefore, the DT is better for credit assignment for longer distances than the LSTMs (see &lt;a href=#the-considerations-of-the-DT&gt;more&lt;/a&gt;), but the drawback is that it still does not allow to ditch the classical RL dynamic programming methods, as the are still suitable for the longer-than-context learning problems.&lt;/p&gt;
-&lt;p&gt;Another important aspect to note is that with minimal modifications to transformer, DT models trajectories autoregressively.  The goal here is to be able to conditionally generate actions at test time, based on &lt;strong&gt;future&lt;/strong&gt; desired &lt;em&gt;returns&lt;/em&gt; $\hat{R}$ (using modeled rewards) rather than past &lt;em&gt;rewards&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;A &lt;em&gt;trajectory&lt;/em&gt; - $\tau$ - is made of sequence of states, actions and rewards at given timesteps: $\tau = (s_0, a_0. r_0, s_1, a_1, r_1, \ldots, s_T, a_T, r_T)$ The return of a trajectory at $t$ timestep, is the sum of future rewards of the trajectory starting from $t$: $R_t = \sum_{t'=t}^T r_{t'}$ (without discount factor&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3 class=simple-footnote title="The discount factor $\gamma$ presence (in eg CQL) in the return calculation is a design decision for the problem formulation and it enables stability of the solution at price of discounting more of the future distant rewards than the closer ones in an episode."&gt;3&lt;/a&gt;&lt;/sup&gt;).&lt;/p&gt;
-&lt;p&gt;The goal of offline RL is to learn a policy which maximizes the &lt;strong&gt;expected return&lt;/strong&gt; $\mathbb{E}[\sum_{t=1}^T r_t]$ in an  Markov Decision Process (MDP).
-However, the DT instead of feeding rewards $R$ directly, uses (future) &lt;em&gt;returns-to-go&lt;/em&gt; $\hat{R}$. Therefore, the trajectory becomes: $\tau = (\hat{R}_1, s_1, a_1.  \hat{R}_2, s_2, a_2,  \ldots, \hat{R}_T, s_T, a_T)$.
-After executing the generated action for the current state, algorithm decrement the target return by the achieved reward and repeat until episode termination.&lt;/p&gt;
-&lt;p&gt;The input of the architecture is a state that is encoded with DQN encoder with linear layer to project to the embedding dimension followed by layer normalization. To obtain token embeddings, a linear layer is learned for each modality (return-to-go, state, or action), which projects raw inputs to the embedding dimension. The linear layer is replaced with convolution encoder for environments with visual inputs.
-An embedding for each timestep is learned and added to each token –  this is different from the standard positional embedding used by transformers, as one timestep corresponds to three tokens (one for each modality: return-to-go, state, or action). The tokens are then processed by a GPT model, which predicts future action tokens via autoregressive modeling.&lt;/p&gt;
-&lt;p&gt;The training use a dataset of offline trajectories. Samples minibatches of sequence length K are used from dataset. TThe prediction head corresponding to the input token $s_t$ is trained to predict $a_t$ either with cross-entropy for discrete actions, or mean-squared for continuous actions while the loses are averaged.  &lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:DTalgo&gt;&lt;/a&gt;
+&lt;p&gt;The paper demonstrates an advantage over CQL on the long-horizon Key-to-Door task when the whole episode fits in context. It does not compare DT directly with an LSTM, and finite context does not imply that dynamic programming is required for every longer-horizon problem.&lt;/p&gt;
+&lt;p&gt;With minimal modifications to a GPT architecture, DT models actions autoregressively. At test time it conditions on a &lt;strong&gt;desired return-to-go&lt;/strong&gt; &lt;span class="math"&gt;\(\hat{R}\)&lt;/span&gt; rather than an immediate future reward. This target is supplied by the user; the standard action-only DT does not first predict or model the future rewards.&lt;/p&gt;
+&lt;p&gt;A trajectory &lt;span class="math"&gt;\(\tau\)&lt;/span&gt; is a sequence of states, actions, and rewards:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T, a_T, r_T).
+$$&lt;/div&gt;
+&lt;p&gt;The return-to-go at timestep &lt;span class="math"&gt;\(t\)&lt;/span&gt; is the sum of rewards from that timestep onward:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\hat{R}_t = \sum_{t'=t}^{T} r_{t'}.
+$$&lt;/div&gt;
+&lt;p&gt;The paper uses undiscounted returns-to-go. Discounting is a modeling choice that changes the effective planning horizon and can also help define finite objectives in continuing tasks; it should not be described merely as a stability device.&lt;/p&gt;
+&lt;p&gt;The goal of offline RL is to learn a policy that maximizes expected return &lt;span class="math"&gt;\(\mathbb{E}[\sum_{t=1}^{T} r_t]\)&lt;/span&gt; in a Markov Decision Process (MDP), using only a fixed dataset. DT represents each trajectory as&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\tau = (\hat{R}_1, s_1, a_1, \hat{R}_2, s_2, a_2, \ldots, \hat{R}_T, s_T, a_T).
+$$&lt;/div&gt;
+&lt;p&gt;After executing the generated action, the algorithm subtracts the achieved reward from the target return and repeats until the episode terminates.&lt;/p&gt;
+&lt;p&gt;For vector observations, a learned linear layer projects each modality (return-to-go, state, and action) to the embedding dimension, followed by layer normalization. For visual observations such as Atari frames, a convolutional encoder replaces the linear state projection.&lt;/p&gt;
+&lt;p&gt;A learned episodic timestep embedding is added to all three modality tokens at that timestep. This differs from assigning an independent position to every token: one environment timestep corresponds to the return-to-go, state, and action tokens. The interleaved tokens are processed by a causally masked GPT model.&lt;/p&gt;
+&lt;p&gt;Training samples minibatches of length &lt;span class="math"&gt;\(K\)&lt;/span&gt; from the offline trajectories. The prediction head at the state token &lt;span class="math"&gt;\(s_t\)&lt;/span&gt; is trained to predict &lt;span class="math"&gt;\(a_t\)&lt;/span&gt;, using cross-entropy for discrete actions or mean-squared error for continuous actions. Losses are averaged across timesteps. The standard agent does not need auxiliary state or return-prediction losses.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:DTalgo"&gt;&lt;/a&gt;
 &lt;img alt="Decision Transformer Pseudocode (for continuous actions)" src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/DT_algo.png"&gt;
 Figure 3. Decision Transformer Pseudocode (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm&gt;Metaphors, or analogies to other architectures describing the behavior of the algorithm&lt;a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;There are two main approaches for offline learning that are compared to Decision Transformer: &lt;em&gt;Behavioral Cloning&lt;/em&gt; (BC) and &lt;em&gt;Conservative Q-Learning&lt;/em&gt; (CQL). The BC is to simply mimic behavior in episodes that has lead to good rewards.&lt;/p&gt;
-&lt;p&gt;CQL limits the tendency of Q-functions in the offline setting to overestimate the Q-value that results from certain actions.&lt;/p&gt;
-&lt;h4 id=the-considerations-of-the-dt&gt;The considerations of the DT&lt;a class=headerlink href=#the-considerations-of-the-dt title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;An important aspect that should be mentioned about DT is related to its offline learning nature. That is, the high dependency on the dataset that is picked as the training set of episodes. In the paper, the dataset is based on experience of DQN high performing agent, as an active reinforcement learner. This way the source episodes in dataset are not a random demonstrations, but are more of a set of &lt;strong&gt;expert&lt;/strong&gt; demonstrations.&lt;/p&gt;
-&lt;p&gt;Additionally, DT is a sequence model and not an RL model. Interestingly, the transformer part of DT, could be replaced with any other autoregressive sequence modeling architecture such as LSTM.  In which case the past (state, action, reward) tuples can get propagated as a hidden representation, one step at a time, while producing next action (or a Q-value in case of Q-learning) that results with a certain reward.&lt;/p&gt;
-&lt;p&gt;The LSTMs finds the decisive action that lead to the expected result (during training) in a sequence of actions. As we are looking for this most meaningful actions to gain the expected final state, it is not the last action  in the sequence of state changing actions, that might be the best. The goal of RL is to assign the highest reward to this most meaningful action in an episode. This way in future this actions will be favored.&lt;/p&gt;
-&lt;p&gt;For LSTMs this requires to go back though the episode sequence of states (and actions) deeper with Back Propagation Though Time (BPTT)&lt;sup id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4-back&gt;&lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4 class=simple-footnote title=" one trains recurrent neural networks by unrolling the network into a virtual feed forward network, and applying the backpropagation algorithm to that. This method is called Back-Propagation-Through-Time (BPTT), as it requires propagation of gradients backwards in time."&gt;4&lt;/a&gt;&lt;/sup&gt; which limits how far back the error is propagated (to at most the length of the trajectory) because it is computationally expensive, as the number of timesteps increase in LSTM (as a RNN variant).&lt;/p&gt;
-&lt;p&gt;Therefore, it is a very hard (esp. in architectures like RNN/LSTM) task to do the long-range time credit assignments.&lt;/p&gt;
-&lt;p&gt;To solve this problem a &lt;a href="https://www.sciencedirect.com/science/article/pii/B9781558601413500304"&gt;dynamic programming&lt;/a&gt; is used in RL.  Therefore, instead of having to just learn from the reward and assign it to an action, each timestep will output not only an &lt;em&gt;action&lt;/em&gt;, but also a &lt;em&gt;value&lt;/em&gt; (similarly as Q-function already returns a value in Q-learning). The algorithm that does this is called Temporal Difference learning.&lt;/p&gt;
-&lt;p&gt;The &lt;em&gt;value&lt;/em&gt; is the expected/estimated return (final reward in the future) of the episode, starting from the given state, and following till the final state (return) is reached. This way, the final return prediction is not the only learning signal, but also this gives predictions of future reward values for the next actions in each of the intermediate, consecutive states in the path that leads to the final return state. In other words, at each state the  &lt;em&gt;value function&lt;/em&gt; not only tries to predict the final return (which is really noisy for states that are far from return), but also train the value function to predict all the values from states that are between the current state and the final one in an episode. Thus, trying to predict the output of the value function.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Bellman (aka backup / update) operator - operation of updating the value of state $s$ from the value of other states that could be potentially reached from state $s$.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Bellman equation for the &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;V-function&lt;/a&gt; (State-Value) simplifies computation:&lt;/p&gt;
-&lt;p&gt;\begin{equation}
-v^\pi (s)=  \mathbb{E_\pi}[R_{t+1} + \gamma  v(S_{t+1})| S_t = s]
-\end{equation}&lt;/p&gt;
-&lt;p&gt;Bellman equation decomposes the V-function into two parts, the immediate reward - $R_{t+1}$ - plus the discounted future values of successor states. This equation simplifies the computation of the value function. This way, rather than summing over multiple time steps, we find the optimal solution of a complex problem by breaking it down into simpler, recursive subproblems and utilizing the fact that finding their optimal solution to the overall problem depends upon the optimal solution to its subproblems. Which make it a &lt;em&gt;dynamic programming&lt;/em&gt; algorithm similarly to the &lt;a href="../../../May/01/RL-Primer/#temporal-difference-td-learning"&gt;Temporal Difference&lt;/a&gt; approach,&lt;/p&gt;
-&lt;p&gt;It works similarly in terms of the &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;Q-function&lt;/a&gt; (State-Action value function) in Q-learning, where this approach is formalized with the Bellman's recurrence equation.&lt;/p&gt;
-&lt;p&gt;\begin{equation}
-q_\pi (s,a) = \mathbb{E_\pi}[R_{t+1} + \gamma q_\pi (S_{t+1}, A_{t+1})| S_t=s, A_t=a]
-\end{equation}&lt;/p&gt;
-&lt;p&gt;Here, State-Action Value of a state can be decomposed into the immediate reward we get on performing a certain action in state $s$ and moving to another state  $s_{t+1}$, plus the discounted value of the state-action value of the state $s_{t+1}$ with respect to the some action $a$ our agent will take from that state on-wards.&lt;/p&gt;
-&lt;p&gt;In RL we use the TD learning and Q-functions to allow &lt;em&gt;credit assignment&lt;/em&gt; for long time ranges.&lt;/p&gt;
-&lt;p&gt;However, as the DT is a sequence modeling problem there is no need for &lt;em&gt;dynamic programming&lt;/em&gt; techniques such as Temporal Difference (TD) to be applied. This is due to the Transformer nature, that enables to attend (route information) from any sequence element to any other sequence element in a single step. Therefore, technically the &lt;em&gt;credit assignment&lt;/em&gt; can be done in a single step - but under one crucial condition: &lt;strong&gt;as as long as if it fits into context&lt;/strong&gt;.&lt;/p&gt;
-&lt;h5 id=limitations&gt;Limitations&lt;a class=headerlink href=#limitations title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
-&lt;p&gt;The limitation of this &lt;em&gt;credit assignment&lt;/em&gt; approach is that this works only for a given length of Transformer input sequence (context). If one would like to predict correlations and do the &lt;em&gt;credit assignment&lt;/em&gt; across longer spans, than the Transformer input sequence (as a context), still the &lt;em&gt;dynamic programming&lt;/em&gt; would be required.&lt;/p&gt;
-&lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb&lt;a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The DT has been tested on the Atari dataset. The &lt;a href=#fig:dtatari&gt;Figure 4.&lt;/a&gt; show that DT outperformed remaining algorithms on most of the games however, with high standard deviation.&lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:dtatari&gt;&lt;/a&gt;
+&lt;h3 id="comparisons-with-offline-rl-and-imitation-learning"&gt;Comparisons with offline RL and imitation learning&lt;a class="headerlink" href="#comparisons-with-offline-rl-and-imitation-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The paper uses two main families of comparison:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Behavior cloning (BC)&lt;/strong&gt; learns to reproduce actions from the selected dataset with a supervised objective. Standard BC is reward-agnostic; it does not select only successful episodes. The paper separately introduces Percentile Behavior Cloning (%BC), which trains on the top &lt;span class="math"&gt;\(X\%\)&lt;/span&gt; of timesteps ranked by episode return.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Conservative Q-Learning (CQL)&lt;/strong&gt; is a temporal-difference method designed for offline RL. It learns conservative Q-values to reduce overestimation of actions that are poorly represented in the fixed dataset.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="dataset-dependence"&gt;Dataset dependence&lt;a class="headerlink" href="#dataset-dependence" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;DT is an offline RL policy trained with a sequence-modeling loss. Like every offline method, it depends strongly on the quality and coverage of its dataset, but the paper does not use one universal set of expert demonstrations:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Atari:&lt;/strong&gt; 500,000 transitions, or 1% of the DQN replay dataset, collected throughout online DQN training.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI Gym/D4RL:&lt;/strong&gt; medium, medium-replay, and medium-expert datasets. These contain different mixtures of policy quality, including replay-buffer data and explicit medium/expert mixtures.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Key-to-Door:&lt;/strong&gt; 1,000 or 10,000 trajectories generated by random actions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Graph shortest path:&lt;/strong&gt; 1,000 random-walk trajectories used as an illustrative experiment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Transformer is the architecture tested by the paper. Another causal sequence model, such as an LSTM, could implement a related return-conditioned policy, but the paper does not present an LSTM comparison. It is therefore not justified to claim that DT is empirically better than LSTMs for long-range credit assignment.&lt;/p&gt;
+&lt;h4 id="credit-assignment-bellman-backups-and-attention"&gt;Credit assignment, Bellman backups, and attention&lt;a class="headerlink" href="#credit-assignment-bellman-backups-and-attention" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The environment supplies rewards; an RL algorithm does not assign a larger reward to whichever action it considers important. &lt;em&gt;Credit assignment&lt;/em&gt; is the learning problem of determining how earlier decisions contributed to later return.&lt;/p&gt;
+&lt;p&gt;Many value-based RL algorithms address this with temporal-difference (TD) learning. The &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;state-value function&lt;/a&gt; for a policy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; satisfies the Bellman expectation equation&lt;/p&gt;
+&lt;div class="math"&gt;\begin{equation}
+v^\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma v^\pi(S_{t+1}) \mid S_t=s].
+\end{equation}&lt;/div&gt;
+&lt;p&gt;Similarly, the &lt;a href="../../../May/01/RL-Primer/#value-functions"&gt;state-action value function&lt;/a&gt; satisfies&lt;/p&gt;
+&lt;div class="math"&gt;\begin{equation}
+q^\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma q^\pi(S_{t+1},A_{t+1}) \mid S_t=s,A_t=a].
+\end{equation}&lt;/div&gt;
+&lt;p&gt;Dynamic programming computes such recurrences using a known model or exhaustive expectations. &lt;a href="../../../May/01/RL-Primer/#temporal-difference-td-learning"&gt;TD learning&lt;/a&gt; instead bootstraps from sampled transitions and current value estimates. The ideas are related, but TD learning is not simply another name for dynamic programming, and an RL agent need not output both an action and a value at every timestep.&lt;/p&gt;
+&lt;p&gt;DT does not train a value function or apply Bellman backups. Its supervised action loss can associate earlier states and actions with hindsight returns through attention and gradient-based training. Self-attention creates a short path between tokens inside the context, but learning a useful association still requires optimization and data; it is not completed in a single step.&lt;/p&gt;
+&lt;h5 id="limitations"&gt;Limitations&lt;a class="headerlink" href="#limitations" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;p&gt;DT can directly attend only to the most recent &lt;span class="math"&gt;\(K\)&lt;/span&gt; timesteps. This matters when older observations contain information that is absent from the current state, as in partially observable tasks. Possible responses include a larger context, recurrence or memory, state estimation, or a different architecture. Dynamic programming is one alternative family of methods, not a mathematical requirement whenever a trajectory exceeds &lt;span class="math"&gt;\(K\)&lt;/span&gt;.&lt;/p&gt;
+&lt;h3 id="heuristics-or-rules-of-thumb"&gt;Heuristics or rules of thumb&lt;a class="headerlink" href="#heuristics-or-rules-of-thumb" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;DT was evaluated on four Atari games using 1% of the DQN replay dataset. It outperforms CQL on Breakout and Seaquest, trails CQL slightly on Pong, and trails it substantially on Qbert. It generally outperforms REM, QR-DQN, and standard BC, but several DT estimates have high variance across three seeds.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dtatari"&gt;&lt;/a&gt;
 &lt;img alt="Gamer-normalized scores for the 1% DQN-replay Atari dataset. We report the mean and variance across 3 seeds. Best mean scores are highlighted in bold. Decision Transformer (DT) performs comparably to CQL on 3 out of 4 games, and outperforms other baselines." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_atari.png"&gt;
-Figure 4. Decision Transformer Pseudocode (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;The lower standard deviation and also mostly better results, comparing  to CQL, are presented for OpenAI Gym considering the continuous control tasks from the D4RL benchmark.&lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:dt_openai&gt;&lt;/a&gt;
+Figure 4. Gamer-normalized Atari scores for DT and the offline RL and behavior-cloning baselines. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;For continuous control, the paper evaluates D4RL locomotion tasks and a separate sparse-reward Reacher task. DT achieves the highest score on a majority of the reported tasks and the highest average, while CQL or other baselines remain better on several individual settings. Most baseline values are imported as point estimates from earlier papers, so their standard deviations cannot be compared directly with DT's reported variation.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dt_openai"&gt;&lt;/a&gt;
 &lt;img alt="DT results for D4RL datasets." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_openaigym.png"&gt;
-Figure 5. Decision Transformer (DT) outperforms conventional RL algorithms on almost all tasks. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;Additionally, comparing to behavioral (see &lt;a href=#fig:dt_bc&gt;Figure 6.&lt;/a&gt;) cloning trained on set percent of the experience 10, 25, 40, 100 percent. The results show that BC can give better performance than DT if the choice will select certain percentage not necessarily picking the best &lt;em&gt;trajectories&lt;/em&gt;. To find the right percentage additional hyper-parameter search i requires, while DT is just one run solution.&lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:dt_bc&gt;&lt;/a&gt;
+Figure 5. Results on the D4RL datasets and Reacher. DT has the highest average but is not best on every task. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;To test whether DT merely clones high-return behavior, the authors introduce Percentile Behavior Cloning (%BC). It trains separate BC models on the top 10%, 25%, 40%, or 100% of timesteps, ranked by their trajectory return. With plentiful D4RL data, the best %BC model can match or beat DT on some tasks. With the much smaller Atari dataset, DT is generally stronger because it can train on all trajectories while using the return token to distinguish their behavior.&lt;/p&gt;
+&lt;p&gt;This is an analysis baseline rather than a practical selection procedure: choosing the best percentile requires environment rollouts. Both methods introduce a choice: %BC needs the percentile &lt;span class="math"&gt;\(X\)&lt;/span&gt;, while DT needs a target return. The paper argues that desired return is usually the more interpretable control variable.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dt_bc"&gt;&lt;/a&gt;
 &lt;img alt="DT vs BC." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_bc.png"&gt;
 Figure 6. Comparison between Decision Transformer (DT) and Percentile Behavior Cloning (%BC). (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;However, one should note that in each of the experiments the DT hyperparameters are different. For instance, whenever a task is a sparse reward task, the context length is increased to limit the impact of the context boundary limitation as described in previous &lt;a href=#limitations&gt;sections&lt;/a&gt;. To confirm this Table 5 in the paper shows that the longer the context the better performance DT achieves.&lt;/p&gt;
-&lt;p&gt;Additionally, in experiments such as the game of Pong, where the reward is known to be at max 21, this fact has been used to condition on the reward of 20 (see Table 8 of the appendix). Therefore, the fact of knowing the reward seems very important to setup the hperparameters correctly for DT.&lt;/p&gt;
-&lt;p&gt;The limitation of DT seems to be that you need to know the reward that task is aiming for and according to Figure 4. of the paper putting arbitrary large value for reward is not possible. From that graph, when the green line of expected oracle is aligned with the blue line of the DT outcome, this means that the reward is as expected. However, soon after the received reward is higher than the one observed from the training dataset performance drops.  &lt;/p&gt;
-&lt;h4 id=key-to-door&gt;Key-to-Door&lt;a class=headerlink href=#key-to-door title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;One final example is the &lt;em&gt;Key-to-Door&lt;/em&gt; environment, where the use of Transformer with longer context is proving being appropriate for long-term credit assignment.
-This however is only limited to the size/length of the context. Interestingly, authors have used entire episode length as the context.&lt;/p&gt;
+&lt;p&gt;The context length is task-dependent: the Atari experiments use &lt;span class="math"&gt;\(K=30\)&lt;/span&gt;, except Pong with &lt;span class="math"&gt;\(K=50\)&lt;/span&gt;, and Key-to-Door uses the whole episode. The Atari ablation compares the normal context against &lt;span class="math"&gt;\(K=1\)&lt;/span&gt; and shows that history improves performance. It does not establish that performance increases monotonically with every longer context.&lt;/p&gt;
+&lt;p&gt;Target-return selection is also task-dependent. For example, Pong is evaluated with a target return of 20, close to its maximum game score. This illustrates that DT needs a meaningful performance target, not that the exact maximum reward must always be known.&lt;/p&gt;
+&lt;p&gt;Figure 4 in the paper varies the target return and compares it with the realized evaluation return. The two are strongly correlated on the reported tasks. Unrealistically large targets are not guaranteed to work, especially outside the dataset's behavioral support, but the boundary is not absolute: Seaquest sometimes extrapolates above the best episode return in its training data.&lt;/p&gt;
+&lt;h4 id="key-to-door"&gt;Key-to-Door&lt;a class="headerlink" href="#key-to-door" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The &lt;em&gt;Key-to-Door&lt;/em&gt; environment tests long-term credit assignment with the entire episode available as context. Unlike the Atari and D4RL datasets, its training trajectories are generated by random actions.&lt;/p&gt;
 &lt;p&gt;The process has three phases:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;agent is placed in a room with a key&lt;/li&gt;
-&lt;li&gt;agent is placed in an empty room ("distractor" room to allow to forget the information from the first room)&lt;/li&gt;
-&lt;li&gt;agent is placed in a room with a door&lt;/li&gt;
+&lt;li&gt;The agent is placed in a room containing a key.&lt;/li&gt;
+&lt;li&gt;It then enters an empty distractor room.&lt;/li&gt;
+&lt;li&gt;Finally, it enters a room containing a door.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The agent receives a binary reward when reaching the door in the third phase, but only if it picked up the key in the first phase. This problem is difficult for credit assignment because credit must be propagated from the beginning to the end of the episode, skipping over actions taken in the middle.&lt;/p&gt;
-&lt;p&gt;The &lt;a href=#fig:dt_ktd&gt;Figure 7.&lt;/a&gt; shows that with the DT, if the agent does not pick up the key in the first room, it already knows in second room that the game is lost due to being within the context of Transformer's attention. This knowledge is from the past offline episodes where not picking the key means that the game is lost.&lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:dt_ktd&gt;&lt;/a&gt;
-&lt;img alt=key-to-door. src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_ktd.png"&gt;
-Figure 7. Comparison between Decision Transformer (DT) and Percentile Behavior Cloning (%BC). (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;h3 id=what-classes-of-problem-is-the-algorithm-well&gt;What classes of problem is the algorithm well ?&lt;a class=headerlink href=#what-classes-of-problem-is-the-algorithm-well title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;According to the test results, as long as the context length of the Decision Transformer matches the task expectation, the solutions behaves better than other methods like CQL or BC. However, to achieve this, one needs to know the length of the context in form of a hyperparameter.&lt;/p&gt;
-&lt;p&gt;Additionally, for the sake of the performance, knowing the maximum reward is also important.&lt;/p&gt;
-&lt;h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm&gt;Common benchmark or example datasets used to demonstrate the algorithm&lt;a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Decision Transformer can match the performance of well-studied and specialized TD learning algorithms developed for these settings.&lt;/p&gt;
-&lt;p align=center&gt;&lt;a name=fig:dt_perf&gt;&lt;/a&gt;
-&lt;img alt="DT performance comparison." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_perf.png"&gt;
-Figure 8. Results comparin DT to TD learning (CQL) and behavior cloning across Atari, OpenAI Gym, and Minigrid. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;As DT is based on a offline mode, a very important part of offline RL is how do we pick this fixed dataset to model upon. Here it is based on DQN expert learner, so the results are good and far from being random.&lt;/p&gt;
-&lt;p&gt;In the paper authors compare DT to two approaches that are used in offline RL setup:&lt;/p&gt;
+&lt;p&gt;With 1,000 random trajectories, DT reaches a 71.8% success rate compared with 13.1% for CQL; with 10,000 trajectories, DT reaches 94.6% and %BC reaches 95.1%. These results support the value of hindsight return information, while also showing that DT does not uniformly beat %BC.&lt;/p&gt;
+&lt;p&gt;For the analysis in &lt;a href="#fig:dt_ktd"&gt;Figure 7&lt;/a&gt;, the authors modify DT to predict return tokens in addition to actions. This critic variant lowers its predicted success probability after observing that the key was not collected and attends strongly to pivotal events. The figure therefore analyzes a modified return-predicting model, not the standard action-only DT.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dt_ktd"&gt;&lt;/a&gt;
+&lt;img alt="key-to-door." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_ktd.png"&gt;
+Figure 7. Predicted return probability and attention weights for the modified DT critic in Key-to-Door. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h3 id="what-classes-of-problems-suit-the-algorithm"&gt;What classes of problems suit the algorithm?&lt;a class="headerlink" href="#what-classes-of-problems-suit-the-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The paper suggests that DT is a promising fit when:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Behavioral Cloning&lt;/em&gt; (BC) where the agent tries to mimic those agents from the dataset, which have gained high rewards for their actions.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Q-Learning&lt;/em&gt; (actually a &lt;em&gt;Conservative Q-Learning&lt;/em&gt;) (CQL). Q-learning is a classic RL algorithm which uses Q-function to estimate Q-values, along the possible state and action space, to maximize the total reward. The Conservative Q-learning (CQL) is more of a pessimistic approach, that helps to mitigate the tendency of Q-function to overestimate the Q-values that one gets from certain actions.&lt;/li&gt;
+&lt;li&gt;a sufficiently broad offline dataset is available;&lt;/li&gt;
+&lt;li&gt;return is a meaningful way to prompt different behavior;&lt;/li&gt;
+&lt;li&gt;relevant history can be represented in the model's context; and&lt;/li&gt;
+&lt;li&gt;supervised sequence-model training is operationally simpler than maintaining a value-learning pipeline.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=useful-resources-for-learning-more-about-the-algorithm&gt;Useful resources for learning more about the algorithm:&lt;a class=headerlink href=#useful-resources-for-learning-more-about-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Important limitations remain. DT cannot explore during offline training, may produce unreliable behavior for unsupported states or infeasible target returns, and requires the context length and target return to be selected. These constraints do not yield a guarantee that DT will beat CQL or BC on a new task.&lt;/p&gt;
+&lt;h3 id="common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm"&gt;Common benchmark or example datasets used to demonstrate the algorithm&lt;a class="headerlink" href="#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Across the reported Atari, continuous-control, and Key-to-Door benchmarks, DT is competitive in aggregate with specialized TD-learning methods, but the winner depends on the environment and dataset.&lt;/p&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dt_perf"&gt;&lt;/a&gt;
+&lt;img alt="DT performance comparison." src="https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/img/dt_perf.png"&gt;
+Figure 8. Aggregate comparison of DT, TD learning (CQL), and behavior cloning across Atari, OpenAI Gym, and the Minigrid-based Key-to-Door task. (&lt;a href="https://arxiv.org/abs/2106.01345"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Dataset construction is central to interpreting these results. Atari uses a small sample from a DQN agent's complete training replay, D4RL includes medium and mixed-quality policies, and Key-to-Door uses random actions. The experiments therefore cover several data-quality regimes rather than a single expert dataset.&lt;/p&gt;
+&lt;p&gt;The paper compares DT with two broad approaches used in offline RL:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Behavioral Cloning&lt;/em&gt; (BC), which predicts the dataset actions without using reward. The separate %BC analysis restricts training to high-return subsets.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Conservative Q-Learning&lt;/em&gt; (CQL), which estimates conservative Q-values to reduce the offline tendency to overvalue actions outside the dataset distribution.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="useful-resources-for-learning-more-about-the-algorithm"&gt;Useful resources for learning more about the algorithm:&lt;a class="headerlink" href="#useful-resources-for-learning-more-about-the-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://arxiv.org/abs/2106.01345"&gt;ArXiv Paper&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/kzl/decision-transformer"&gt;GitHub implementation&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
 
-&lt;h3 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1&gt;When one tries to combine &lt;em&gt;time difference&lt;/em&gt; (TD) learning (or Bootstrapping), off-policy learning, and function approximations (such as Deep Neural Network), instabilities and divergence may arise. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2&gt;Similarly to behavioral cloning which maximizes the reward based on expert demonstrations.[\ref]. This way based on the past sequence experiences, &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3&gt;The &lt;em&gt;discount&lt;/em&gt; factor $\gamma$ presence (in eg CQL) in the return calculation is a design decision for the problem formulation and it enables stability of the solution at price of discounting more of the future distant rewards than the closer ones in an episode. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4&gt; one trains recurrent neural networks by unrolling the network into a virtual feed forward network, and applying the backpropagation algorithm to that. This method is called Back-Propagation-Through-Time (BPTT), as it requires propagation of gradients backwards in time. &lt;a href=#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-4-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"></category><category term="Transformer"></category><category term="Reinforcement Learning"></category><category term="RL"></category><category term="MDP"></category><category term="Markov Decision Process"></category></entry><entry><title>MLP-Mixer: MLP is all you need... again? ...</title><link href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/" rel="alternate"></link><published>2021-05-05T15:54:00+02:00</published><updated>2021-05-05T15:54:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-05:/articles/2021/May/05/MLP-Mixer/</id><summary type="html">&lt;p&gt;Let's try to answer the question: is it enough to have the FFN MLP, with matrix multiplication routines and scalar non-linearities to compete with modern architectures such as ViT or CNNs? No need for convolution, attention? It sounds that we have been here in the past. However, does it mean that the researchers are lost and go rounding in circles? It turns out that what has changes along the way is the increase in the scale of the resources and the data which originally helped ML and especially DL flourish past 5-7 years ago. We will discuss the paper which proves that MLP based solutions can replace CNN and attention based Transformers with comparable scores at image classification benchmarks and at pre-training/inference costs similar to SOTA models.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="MLP-Mixer general architecture" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/Mixer.png"&gt;
+&lt;h3 id="footnotes"&gt;Footnotes:&lt;a class="headerlink" href="#footnotes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1"&gt;The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning. &lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"/><category term="Transformer"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>MLP-Mixer: MLP is all you need... again? ...</title><link href="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/" rel="alternate"></link><published>2021-05-05T15:54:00+02:00</published><updated>2021-05-05T15:54:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-05:/articles/2021/May/05/MLP-Mixer/</id><summary type="html">&lt;p&gt;Let's try to answer the question: is it enough to have the FFN MLP, with matrix multiplication routines and scalar non-linearities to compete with modern architectures such as ViT or CNNs? No need for convolution, attention? It sounds that we have been here in the past. However, does it mean that the researchers are lost and go rounding in circles? It turns out that what has changes along the way is the increase in the scale of the resources and the data which originally helped ML and especially DL flourish past 5-7 years ago. We will discuss the paper which proves that MLP based solutions can replace CNN and attention based Transformers with comparable scores at image classification benchmarks and at pre-training/inference costs similar to SOTA models.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="MLP-Mixer general architecture" src="https://mchromiak.github.io/articles/2021/May/05/MLP-Mixer/img/Mixer.png"&gt;
 &lt;br&gt;&lt;/p&gt;
 &lt;h4 id=tldr&gt;TL:DR&lt;a class=headerlink href=#tldr title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;&lt;strong&gt;MLP is all you need to get adequately comparable results to SOTA CNNs and Transformer - while reaching linear complexity in number of input pixels. Conversely to CNNs, MLP is not localized as its filter spans entire spatial area&lt;/strong&gt;&lt;/p&gt;
@@ -762,152 +842,312 @@ Authors have tested downstream tasks such as:&lt;/p&gt;
 &lt;li&gt;Oxford Flowers-102 (2k examples, 102 classes) and also evaluate on the&lt;/li&gt;
 &lt;li&gt;Visual Task Adaptation Benchmark (VTAB-1k), which consists of 19 diverse datasets, each with 1k training examples.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h4 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-MLP-Mixer-1&gt; One interesting question is what would happen with even bigger training sets than the ones used in experiments? Would Mixer supersede remaining SOTA architectures? &lt;a href=#sf-MLP-Mixer-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-2&gt;Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention. &lt;a href=#sf-MLP-Mixer-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-3&gt;One can also refer to one of the non-typical designs, of other combinations such as &lt;a href="https://arxiv.org/abs/1909.03205"&gt;isotropic ResNets&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/2102.12122"&gt;pyramidal ViTs&lt;/a&gt;. &lt;a href=#sf-MLP-Mixer-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-4&gt;One of the authors has actually also coauthored that ViT paper. &lt;a href=#sf-MLP-Mixer-4-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"></category><category term="MLP"></category><category term="Transformer"></category><category term="CV"></category><category term="ViT"></category></entry><entry><title>DINO: Improving supervised ViT with richer learning signal from self-supervision</title><link href="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/" rel="alternate"></link><published>2021-05-03T17:44:00+02:00</published><updated>2021-11-19T09:44:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-03:/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/</id><summary type="html">&lt;p&gt;Self-&lt;strong&gt;DI&lt;/strong&gt;stillation with &lt;strong&gt;NO&lt;/strong&gt; labels (DINO) is a self-supervised method based on Vision Transformer (ViT) from Facebook AI with the ability to learn representation from unlabeled data. The architecture is able to learn automatically class-specific features, allowing the unsupervised object segmentation. The paper claims that the self-supervised methods adapted to ViT not only works very well, but one can also observe that the self-supervised ViT features contain explicit semantic segmentation information of an image, which is not that clear in case of supervised ViT, nor with convnets.  The benefit of such observation is that such features are also very good k-NN classifiers. The performance results are reported to be highly dependent on two SSL approaches: the momentum teacher and multicrop training. In this blog post we will explain the details on what DINO is all about.&lt;/p&gt;</summary><content type="html">&lt;h4 id=the-dino-paper-explained&gt;The "Dino" paper explained.&lt;a class=headerlink href=#the-dino-paper-explained title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In this article we will explain and discuss the paper on emerging explicit features for semantic information of an image:&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a href="https://arxiv.org/abs/2104.14294"&gt;"Emerging Properties in Self-Supervised Vision Transformers&lt;/a&gt;&lt;/strong&gt;: ArXiv&lt;/p&gt;
-&lt;p&gt;Architecture is based on pair of networks that learn to predict each others output. While the student network is trained by gradient descent with the cross-entropy loss function, the teacher network is updated with an exponentially moving average &lt;code&gt;ema&lt;/code&gt; of the student network weights. Avoiding collapse is achieved by the use of &lt;em&gt;centering&lt;/em&gt; and &lt;em&gt;sharpening&lt;/em&gt;. Unexpectedly, the learned self-attention maps of the final layer learns class-specific features helping the unsupervised object segmentations.&lt;/p&gt;
-&lt;h4 id=tldr&gt;TL;DR&lt;a class=headerlink href=#tldr title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;h4 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-MLP-Mixer-1&gt; One interesting question is what would happen with even bigger training sets than the ones used in experiments? Would Mixer supersede remaining SOTA architectures? &lt;a href=#sf-MLP-Mixer-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-2&gt;Tying parameters across channels is less common with contrast to previous solutions based on CNNs and self-attention. &lt;a href=#sf-MLP-Mixer-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-3&gt;One can also refer to one of the non-typical designs, of other combinations such as &lt;a href="https://arxiv.org/abs/1909.03205"&gt;isotropic ResNets&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/2102.12122"&gt;pyramidal ViTs&lt;/a&gt;. &lt;a href=#sf-MLP-Mixer-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-MLP-Mixer-4&gt;One of the authors has actually also coauthored that ViT paper. &lt;a href=#sf-MLP-Mixer-4-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"></category><category term="MLP"></category><category term="Transformer"></category><category term="CV"></category><category term="ViT"></category></entry><entry><title>DINO: Self-supervised ViTs learn strong features and semantic structure</title><link href="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/" rel="alternate"/><published>2021-05-03T17:44:00+02:00</published><updated>2021-06-14T17:44:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-03:/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/</id><summary type="html">&lt;p&gt;Self-distillation with no labels (DINO) trains a student network to match an exponential-moving-average teacher across differently augmented views of the same image. Applied to Vision Transformers, it produces features that perform strongly with simple linear and k-nearest-neighbor classifiers. Its final-layer self-attention also reveals object boundaries without segmentation labels, although DINO is not itself a segmentation model.&lt;/p&gt;</summary><content type="html">&lt;h4 id="the-dino-paper-explained"&gt;The DINO paper explained&lt;a class="headerlink" href="#the-dino-paper-explained" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;This article reviews &lt;strong&gt;&lt;a href="https://openaccess.thecvf.com/content/ICCV2021/html/Caron_Emerging_Properties_in_Self-Supervised_Vision_Transformers_ICCV_2021_paper.html"&gt;Emerging Properties in Self-Supervised Vision Transformers&lt;/a&gt;&lt;/strong&gt; by Caron et al., published at ICCV 2021.&lt;/p&gt;
+&lt;p&gt;DINO stands for self-&lt;strong&gt;DI&lt;/strong&gt;stillation with &lt;strong&gt;NO&lt;/strong&gt; labels. It is a self-supervised representation-learning method: it learns from images without human-provided class labels. A student network is optimized by gradient descent to match a teacher network's output for another view of the same image. The teacher has the same architecture but is not trained by backpropagation; its weights are an exponential moving average (EMA) of the student's weights.&lt;/p&gt;
+&lt;p&gt;The method works with both convolutional networks and Vision Transformers (ViTs), but the paper's most interesting findings concern ViTs. DINO-trained ViTs provide strong image-level features and final-layer self-attention maps that often align with foreground objects and their boundaries.&lt;/p&gt;
+&lt;h4 id="tldr"&gt;TL;DR&lt;a class="headerlink" href="#tldr" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;ul&gt;
-&lt;li&gt;DINO seems like a evolutionary successor for solutions such as SimCLR, MoCO or the most recent BYOL.&lt;/li&gt;
-&lt;li&gt;Conversely to convnets, or supervised ViT - image attention maps/features of SSL ViT (self-&lt;strong&gt;DI&lt;/strong&gt;stillation with &lt;strong&gt;NO&lt;/strong&gt; labels -DINO), contain &lt;strong&gt;explicit&lt;/strong&gt; image segmentation map. See &lt;a href=#fig:dino_segmentation&gt;Figure 1.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Student&lt;/em&gt; and &lt;em&gt;Teacher&lt;/em&gt; networks both have the same architecture -- just with different parameters&lt;/li&gt;
-&lt;li&gt;SSL ViT features becomes a very good &lt;em&gt;k-NN&lt;/em&gt; classifier -- thanks to momentum encoder and multi-crop augmentation.&lt;/li&gt;
-&lt;li&gt;Dino directly predicts the output of a teacher network -- built with a momentum encoder — by using a standard cross-entropy loss.&lt;/li&gt;
-&lt;li&gt;Comparing to remaining self-supervised learning (SSL) solutions, the most important observations are:&lt;ul&gt;
-&lt;li&gt;Usage of the &lt;em&gt;student-teacher&lt;/em&gt; which is the self-distillation element, using momentum teacher with centering and sharpening.&lt;/li&gt;
-&lt;li&gt;Can use only centering and sharpening to avoid collapse.&lt;/li&gt;
-&lt;li&gt;Not using contrastive learning, batch norm, nor negative samples.&lt;/li&gt;
+&lt;li&gt;DINO is a non-contrastive self-supervised method inspired by self-distillation and momentum-teacher methods such as BYOL and Mean Teacher. It is not simply a successor to SimCLR, MoCo, or BYOL.&lt;/li&gt;
+&lt;li&gt;The student and teacher use the same architecture but have different parameters.&lt;/li&gt;
+&lt;li&gt;The student processes all augmented views; the teacher processes only the two large global crops.&lt;/li&gt;
+&lt;li&gt;Training minimizes cross-entropy between the teacher's probability distribution for one view and the student's distribution for another view.&lt;/li&gt;
+&lt;li&gt;The teacher is updated with an EMA of the student and receives no gradients.&lt;/li&gt;
+&lt;li&gt;Centering and sharpening act in opposite directions and help prevent representation collapse in the presence of the momentum teacher.&lt;/li&gt;
+&lt;li&gt;DINO does not require negative pairs, a contrastive loss, a prediction head, a memory queue, or batch normalization when used with ViT.&lt;/li&gt;
+&lt;li&gt;A frozen DINO ViT-S/8 reaches &lt;strong&gt;78.3% ImageNet top-1 accuracy with weighted k-NN&lt;/strong&gt;. This is not zero-shot classification: the k-NN classifier uses labeled ImageNet training examples.&lt;/li&gt;
+&lt;li&gt;DINO ViT-B/8 reaches &lt;strong&gt;80.1% ImageNet top-1 accuracy in linear evaluation&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Smaller ViT patches improve the reported accuracy without increasing parameter count, but they substantially reduce throughput and increase compute and memory requirements.&lt;/li&gt;
+&lt;li&gt;ViT attention maps provide evidence of emergent object localization. They are not explicit semantic segmentation predictions and do not assign semantic classes to pixels.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;DINO as a SSL framework works flexibly with ViT and convnets (paper uses ResNet-50).&lt;/li&gt;
-&lt;li&gt;For ViT with DINO, the smaller the patch (&amp;lt;16) the better performance, and without additional parameters.&lt;/li&gt;
-&lt;li&gt;DINO achieves 80.1% top-1 on ImageNet in linear evaluation with ViT-Base&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Applications:&lt;/strong&gt;&lt;ul&gt;
-&lt;li&gt;classification, zero-shoot learning, self-attention maps are competitive for video instance segmentation, image copy detection etc. (&lt;a href=#applications-classes-of-problem-is-the-algorithm-well-suited&gt;See more&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p align=center&gt;&lt;a name=fig:dino_segmentation&gt;&lt;/a&gt;
-&lt;img alt="Self-attention from a Vision Transformer with 8 × 8 patches trained with no supervision \label{fig:dinofeatures}" src="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/img/dino-intro.png"&gt;
-Figure 1. Object attention maps available explicitly from SSL ViT's features  (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;h4 id=contribution-of-paper&gt;Contribution of paper:&lt;a class=headerlink href=#contribution-of-paper title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p align="center"&gt;&lt;a name="fig:dino_segmentation"&gt;&lt;/a&gt;
+&lt;img alt="Final-layer self-attention from a DINO ViT with 8 x 8 patches" src="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/img/dino-intro.png"&gt;
+Figure 1. Selected attention heads often focus on foreground objects and align with object boundaries. These are attention maps, not semantic segmentation masks. (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h3 id="what-problem-does-dino-address"&gt;What problem does DINO address?&lt;a class="headerlink" href="#what-problem-does-dino-address" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Supervised image classification compresses the training signal for an image into one label from a fixed vocabulary. Self-supervised learning instead constructs a learning objective from the data itself. The hope is that a model trained without class labels will retain visual information useful across many downstream tasks.&lt;/p&gt;
+&lt;p&gt;The paper asks what happens when modern self-supervised methods are applied to ViTs. Its central contribution is therefore not a claim that DINO universally replaces supervised ViT training. It is an empirical study showing that:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Paper follows the general strategy of eliminating &lt;em&gt;contrastive learning&lt;/em&gt; from SSL - as advised in &lt;a href="https://ai.facebook.com/blog/self-supervised-learning-the-dark-matter-of-intelligence/"&gt;"Self-supervised learning: The dark matter of intelligence"&lt;/a&gt; by Yann LeCun  &lt;/li&gt;
-&lt;li&gt;Authors investigate impact of self-supervised pre-training on ViT features with following results.&lt;ul&gt;
-&lt;li&gt;Self-supervised ViT match and even outperforms convnets for poorly labeled data sets.&lt;/li&gt;
-&lt;li&gt;Self-supervised ViT's &lt;strong&gt;features&lt;/strong&gt; contain &lt;strong&gt;explicit scene layout and object boundaries&lt;/strong&gt; (self-attention modules of last block) (See &lt;a href=#fig:dino_segmentation&gt;Figure 1.&lt;/a&gt;). (Such presence of segmentation masks is known to be shared across different SSL methods).&lt;/li&gt;
+&lt;li&gt;self-supervised ViTs can learn image representations that transfer well;&lt;/li&gt;
+&lt;li&gt;their frozen features work unusually well with a simple k-NN classifier; and&lt;/li&gt;
+&lt;li&gt;their final-layer class-token attention often exposes object layout and boundaries.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Self-supervised ViT's &lt;strong&gt;features&lt;/strong&gt; performs especially well for $k$-NN achieving 78.3% top-1 accuracy on ImageNet without fine-tuning, linear classifier nor data augmentation, but based only on &lt;em&gt;momentum encoder&lt;/em&gt; and &lt;em&gt;multi-crop augmentation&lt;/em&gt;.&lt;/li&gt;
-&lt;li&gt;Smaller image patches ($8\times8$) in ViT increase the quality of resulting features and improve performance (reduce running time, but with larger usage of memory - lower throughput) without adding additional parameters.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;iframe width=860 height=504 src="https://www.youtube.com/embed/8I1RelnsgMw" title="YouTube video player" frameborder=0 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""&gt;&lt;/iframe&gt;
-
-&lt;hr&gt;
-
-&lt;h3 id=objective-or-goal-for-the-algorithm&gt;Objective, or goal for the algorithm&lt;a class=headerlink href=#objective-or-goal-for-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The goal of the paper is to investigate how the supervision in vision Transformers impact their performance. As the supervision for image level tasks reduces some rich visual information by flattening it to predefined set of object concept, using self-supervised approach (similarly to what BERT/GPT do in the pre-training phase in NLP domain), for ViT and convnets provides better performance eliminating need for past developments in the field like predictor (BYOL), contrastive loss (momentum contrast), or advanced normalization (contrasting cluster assignments). DINO+ViT has also outperformed SSL systems based on convnets.    &lt;/p&gt;
-&lt;h3 id=motivation&gt;Motivation&lt;a class=headerlink href=#motivation title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The &lt;em&gt;representation learning&lt;/em&gt; (aka &lt;em&gt;feature learning&lt;/em&gt;) is a task of learning the data representation out of a raw data that later can be used for a set of detailed tasks with only small modification - fine tuning - of the previously learned feature representation. Till now, the core of this area has been based on ResNets. DINO tends to improve this process for a self-supervised image representation learning by using specific double network setup, based on &lt;em&gt;BYOL&lt;/em&gt; approach.&lt;/p&gt;
-&lt;p&gt;Inspiration for DINO research comes from the effectiveness of self-supervised pre-training procedures in Transformer based architectures, such as BERT (pre-training phase for language modeling in NLP domain) and GPT (language modeling), that enrich learning signal comparing to the supervised variant of predicting single label per sentence. Same situation is with supervised image categorization where entire rich image visual information is reduced to single concept selected from set of categories of objects.&lt;/p&gt;
-&lt;p&gt;As ViTs has clearly proven to outperform convnets for poorly labeled datasets DINO tries to investigate how this particular property can justify the transformers' demand for computation and large data volumes.&lt;/p&gt;
-&lt;h3 id=intro&gt;Intro&lt;a class=headerlink href=#intro title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Since 2017 when Transformer architecture was first introduced (&lt;a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer: Attention is all you need - Explained&lt;/a&gt;), it has dominated research trends not only in NLP, but (as of 2020/21) also in computer vision tasks. The paper is based on most recent advancement with &lt;a href=""&gt;Vision Transformer (ViT)&lt;/a&gt; from Google AI, but there were more research also from Facebook AI such as the &lt;a href=""&gt;$DE$tection $TR$ansformer (DETR)&lt;/a&gt; or &lt;a href=""&gt;$D$ata-$e$fficient $i$mage $T$ransformers (DeiT)&lt;/a&gt; (the DeiT implementation is actually followed in DINO research).&lt;/p&gt;
-&lt;h6 id=representation-learning-task&gt;Representation learning task&lt;a class=headerlink href=#representation-learning-task title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h6&gt;
-&lt;p&gt;The image &lt;em&gt;representation learning&lt;/em&gt; is a task of feeding an input (here an image) through a function (most commonly a ResNet-50) to get best latent vector representation of an image. The quality of the learned representation should be at a level allowing to solve multiple downstream vision tasks. Hence, it is useful to create a representation based on large dataset and then use &lt;em&gt;transfer learning&lt;/em&gt; for other tasks with not as much data. By adapting pre-trained architecture (already trained on large dataset), for a task with small dataset, one can commence fine tuning on the pre-trained model to solve a downstream task with much smaller dataset.&lt;/p&gt;
-&lt;p&gt;The &lt;em&gt;self-&lt;strong&gt;DI&lt;/strong&gt;stillation with &lt;strong&gt;NO&lt;/strong&gt; labels&lt;/em&gt; (DINO) approach to train ViT for representation learning task has been discussed in the paper with very extensive experiments and ablation study.&lt;/p&gt;
-&lt;p&gt;Initially prevalent role of Transformer-based solutions in NLP has been recently adapted (ViT) with success into the computer vision (CV) domain. However, until now, this evolution in many cases has assumed the supervised training strategy for vision tasks.&lt;/p&gt;
-&lt;p&gt;The supervised ViT architecture is an alternative to convnets in visual recognition tasks, however it is also more demanding in terms of:&lt;/p&gt;
+&lt;p&gt;The authors also simplify the training recipe. DINO combines a momentum teacher, multi-crop augmentation, cross-view prediction, centering, and sharpening. Unlike many contrastive methods, it does not compare an image against explicit negative examples.&lt;/p&gt;
+&lt;h3 id="method"&gt;Method&lt;a class="headerlink" href="#method" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="multiple-views-of-one-image"&gt;Multiple views of one image&lt;a class="headerlink" href="#multiple-views-of-one-image" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;For each training image, DINO creates a set of augmented views:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;computation power,&lt;/li&gt;
-&lt;li&gt;size of the training data&lt;/li&gt;
+&lt;li&gt;two &lt;strong&gt;global crops&lt;/strong&gt;, typically at resolution &lt;span class="math"&gt;\(224 \times 224\)&lt;/span&gt;; and&lt;/li&gt;
+&lt;li&gt;several &lt;strong&gt;local crops&lt;/strong&gt;, typically at resolution &lt;span class="math"&gt;\(96 \times 96\)&lt;/span&gt;.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Additionally, till now the class-specific, unique features properties were not being clearly exhibited.  &lt;/p&gt;
-&lt;p&gt;The transformers in vision applications has become a prominent alternative to convnets, but the question rise: &lt;em&gt;is this success due to the supervised nature of the pre-straining phase&lt;/em&gt;?&lt;/p&gt;
-&lt;p&gt;To answer this question, one approach is to couple ViTs with a self-supervised architecture, that would replace completely supervised pre-training in vision tasks, and that is what paper is actually exploring.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Notes on Self-Supervised (no labels) Learning (SSL):&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;SSL is a method of representation learning where supervised task  is created out of the unlabeled data.&lt;/li&gt;
-&lt;li&gt;In contrast to "completely" &lt;em&gt;unsupervised&lt;/em&gt; setting, the SSL uses information from the dataset itself to construct pseudo-labels.&lt;/li&gt;
-&lt;li&gt;In SSL the supervision is induced by self-supervised tasks rather than preset prior knowledge.&lt;/li&gt;
-&lt;li&gt;Large-scale labeled data sets are not required for human learning as we learn spontaneously, thus the SSL has a great potential to replace the supervised learning in terms of &lt;strong&gt;representation learning&lt;/strong&gt;. That is because in general, human learning is more a &lt;strong&gt;Few-Shot Learning&lt;/strong&gt;, where we actually have a small amounts of annotated data.&lt;/li&gt;
-&lt;li&gt;&lt;a href=#label:ssl&gt;More on SSL from Yann LeCun: "Self-supervised learning: The dark matter of intelligence"&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In general, the quest of SSL is to find clever solution that would allow to extract relevant features out of unlabeled data. Let's investigate how DINO approaches this challenge.&lt;/p&gt;
-&lt;h3 id=the-processing-strategy-of-the-algorithm&gt;The processing strategy of the algorithm&lt;a class=headerlink href=#the-processing-strategy-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The main techniques applied in DINO are the &lt;strong&gt;self-supervised learning (SSL), self-training&lt;/strong&gt; and &lt;strong&gt;knowledge distillation&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;The image dataset has no labels in this case thus, DINO uses the data &lt;strong&gt;augmentation&lt;/strong&gt; / adjustment to create tuples of images: (&lt;em&gt;original_image&lt;/em&gt;, &lt;em&gt;distorted_image&lt;/em&gt;) for kind of compare-and-contrast to help learn similarity features. The second element of the pair is distorted / noised, meaning it has some kind of alteration that decreases the amount of its visual - (&lt;strong&gt;non-semantic&lt;/strong&gt;) - information, but only to the degree that it is still possible to claim that both images shows the same thing. Now, the architecture needs to learn to ignore those augmentations (without knowing anything about the augmentation / noise technique - i.e. flipping, cropping, solarization etc.) of the image, by learning only the original image representation.&lt;/p&gt;
-&lt;p&gt;The key is to craft an augmentations technique that would &lt;strong&gt;preserve&lt;/strong&gt; the semantic information of an image within its augmented version. For instance, the random cropping or horizontal flipping change pixels, but retain the semantics thus, allowing to learn predictable representation.&lt;/p&gt;
-&lt;p&gt;In contrast to supervised learning, where the image-level supervision reduces the information form the image to a single concept (e.g.label) from a predefined set of object categories, DINO allows representation information to emerge and be particularly useful (e.g. in k-NN).&lt;/p&gt;
-&lt;p&gt;Conversely to prior solutions based on discrimination between all images in a dataset, that does not scale well with number of images - DINO uses representations from &lt;a href=#label:mean&gt;"mean"&lt;/a&gt; &lt;em&gt;teacher network&lt;/em&gt; &lt;sup id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-1-back&gt;&lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-1 class=simple-footnote title="As a response to Temporal Ensembling (maintains an exponential moving average - ema - of label predictions on each training example, while penalizing predictions that are inconsistent with this target) that change targets only once per epoch (unwieldy when learning large datasets).Mean Teacher,  averages model weights instead of label predictions. As an additional benefit, Mean Teacher improves test accuracy and enables training with fewer labels than Temporal Ensembling"&gt;1&lt;/a&gt;&lt;/sup&gt;- built as a &lt;a href=#label:moco&gt;&lt;em&gt;momentum encoder&lt;/em&gt;&lt;/a&gt; (MoCo - Momentum Contrast).&lt;/p&gt;
-&lt;p&gt;In terms of self-supervised learning, DINO is modeled based on metric-learning formulation called &lt;a href=#label:byol&gt;BYOL&lt;/a&gt; that trains features by matching them to representations obtained with a teacher network  (&lt;em&gt;momentum encoder&lt;/em&gt;). However, DINO operates with different similarity matching loss than BYOL- the cross-entropy loss - and same architecture of &lt;em&gt;student&lt;/em&gt; and the &lt;em&gt;teacher&lt;/em&gt; network. Additionally DINO present clear solution to prevent &lt;a href=#avoiding-collapse&gt;&lt;em&gt;collapsing&lt;/em&gt;&lt;/a&gt; (i.e. prevents learning of degenerated, trivial - e.g. constant - solutions, only for the sake of minimizing the cost).&lt;/p&gt;
-&lt;p&gt;DINO is a SSL referred in the paper as a form of a &lt;em&gt;Mean Teacher&lt;/em&gt;&lt;sup id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-2-back&gt;&lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-2 class=simple-footnote title="A method that averages model weights instead of label predictions. See paper: Tarvainen et al. Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results"&gt;2&lt;/a&gt;&lt;/sup&gt;!!!!!!!!!!!! self-distillation with no labels.&lt;/p&gt;
+&lt;p&gt;The original implementation uses eight local crops by default. Color jitter, grayscale conversion, Gaussian blur, solarization, and horizontal flipping further alter the views.&lt;/p&gt;
+&lt;p&gt;This is not a reconstruction objective. Neither network is asked to reproduce the original pixels. Instead, the student must produce a similar high-level output for different crops of the same source image, including local crops that contain only part of the scene.&lt;/p&gt;
+&lt;h4 id="student-and-teacher"&gt;Student and teacher&lt;a class="headerlink" href="#student-and-teacher" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Let &lt;span class="math"&gt;\(g_{\theta_s}\)&lt;/span&gt; be the student and &lt;span class="math"&gt;\(g_{\theta_t}\)&lt;/span&gt; the teacher. They have the same backbone and projection-head architecture, but their parameters differ.&lt;/p&gt;
+&lt;p&gt;The student receives every global and local view. The teacher receives only the two global views. For an input view &lt;span class="math"&gt;\(x\)&lt;/span&gt;, the networks produce probability distributions over &lt;span class="math"&gt;\(K\)&lt;/span&gt; learned output dimensions:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P_s(x)^{(i)} =
+\frac{\exp(g_{\theta_s}(x)^{(i)} / \tau_s)}
+{\sum_{k=1}^{K} \exp(g_{\theta_s}(x)^{(k)} / \tau_s)}
+$$&lt;/div&gt;
+&lt;p&gt;and&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P_t(x)^{(i)} =
+\frac{\exp((g_{\theta_t}(x)^{(i)} - c^{(i)}) / \tau_t)}
+{\sum_{k=1}^{K} \exp((g_{\theta_t}(x)^{(k)} - c^{(k)}) / \tau_t)}.
+$$&lt;/div&gt;
+&lt;p&gt;Here, &lt;span class="math"&gt;\(c\)&lt;/span&gt; is the teacher-output center, while &lt;span class="math"&gt;\(\tau_s\)&lt;/span&gt; and &lt;span class="math"&gt;\(\tau_t\)&lt;/span&gt; are the student and teacher temperatures. These &lt;span class="math"&gt;\(K\)&lt;/span&gt; dimensions are learned targets, not human-defined classes.&lt;/p&gt;
+&lt;p&gt;For each teacher global view &lt;span class="math"&gt;\(x\)&lt;/span&gt;, the student is trained on every other view &lt;span class="math"&gt;\(x'\)&lt;/span&gt; of the same image:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+L =
+\sum_{x \in \{x_1^g, x_2^g\}}
+\sum_{\substack{x' \in V \\ x' \ne x}}
+H(P_t(x), P_s(x')),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(H(a,b)=-\sum_i a^{(i)}\log b^{(i)}\)&lt;/span&gt; is cross-entropy and &lt;span class="math"&gt;\(V\)&lt;/span&gt; contains all crops. The identical student-teacher view pair is excluded. Gradients flow only through the student.&lt;/p&gt;
+&lt;h4 id="momentum-teacher"&gt;Momentum teacher&lt;a class="headerlink" href="#momentum-teacher" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;After each student update, the teacher parameters are updated as:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\theta_t \leftarrow \lambda \theta_t + (1-\lambda)\theta_s.
+$$&lt;/div&gt;
+&lt;p&gt;The momentum coefficient &lt;span class="math"&gt;\(\lambda\)&lt;/span&gt; follows a cosine schedule from 0.996 toward 1. This slowly changing teacher provides more stable targets than using the current student directly. In the paper's ViT-S/16 ablation, removing the momentum teacher causes collapse and yields only 0.1% k-NN and linear accuracy.&lt;/p&gt;
+&lt;h4 id="projection-head-and-downstream-features"&gt;Projection head and downstream features&lt;a class="headerlink" href="#projection-head-and-downstream-features" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The projection head is a three-layer multilayer perceptron with a 2048-dimensional hidden layer, followed by &lt;span class="math"&gt;\(\ell_2\)&lt;/span&gt; normalization and a weight-normalized fully connected layer. The self-supervised loss is applied to this head.&lt;/p&gt;
+&lt;p&gt;For downstream evaluation, the authors discard the projection head and use the frozen backbone representation. For ViTs, this representation is based on the class token.&lt;/p&gt;
 &lt;script src="https://vjs.zencdn.net/7.11.4/video.min.js"&gt;&lt;/script&gt;
-&lt;!-- webm is 95% smaller than gif  --&gt;
-&lt;video id=my-player class="video-js vjs-theme-sea vjs-big-play-centered" controls preload=auto autoplay loop="" muted=""&gt;
+&lt;!-- webm is substantially smaller than the equivalent gif --&gt;
+&lt;video id="my-player" class="video-js vjs-theme-sea vjs-big-play-centered" controls preload="metadata" autoplay loop muted playsinline style="max-width: 100%; height: auto;"&gt;
  &lt;source src="../img/dino.webm" type="video/webm"&gt;
- &lt;p class=vjs-no-js&gt;
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      &lt;a href="https://videojs.com/html5-video-support/" target=_blank&gt; supports HTML5 video&lt;/a&gt;
-    &lt;/p&gt;
+ &lt;p class="vjs-no-js"&gt;
+   To view this video, enable JavaScript or use a browser that supports
+   &lt;a href="https://videojs.com/html5-video-support/" target="_blank" rel="noopener"&gt;HTML5 video&lt;/a&gt;.
+ &lt;/p&gt;
 &lt;/video&gt;
 
-&lt;!-- apng is smaller 50% than gif --&gt;
-&lt;!-- ![DiNo]({attach}img/dino.apng) --&gt;
-&lt;p align=center&gt;Figure 2. DINO overview (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;).&lt;/p&gt;
-&lt;h4 id=momentum-teacher&gt;Momentum teacher&lt;a class=headerlink href=#momentum-teacher title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;The DINO student and teacher have the same architecture where, the teacher is also built dynamically during training from the past iterations of the &lt;em&gt;student&lt;/em&gt; network. This way distillation is applied as a self-supervised objective during training to the teacher's parameters by distilling from the &lt;em&gt;exponential moving average&lt;/em&gt; (&lt;code&gt;ema&lt;/code&gt;) of the student parameters.&lt;/p&gt;
-&lt;h4 id=avoiding-collapse&gt;Avoiding collapse&lt;a class=headerlink href=#avoiding-collapse title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;One of the main advantages of DINO (similarly to BYOL) is that there is no need for negative samples to avoid &lt;a href=#what-is-collapse&gt;collapse&lt;/a&gt;. While some general approaches include contrastive loss, clustering constraints, predictor or batch normalizations, DINO is only using  &lt;em&gt;centering&lt;/em&gt; and &lt;em&gt;sharpening&lt;/em&gt; of the &lt;em&gt;momentum teacher&lt;/em&gt; outputs. Both solutions (&lt;em&gt;centering&lt;/em&gt; and &lt;em&gt;sharpening&lt;/em&gt;) having opposite characteristics, tends to balance each other effect at the same time assuring collapse avoidance.&lt;/p&gt;
-&lt;h4 id=centering&gt;Centering&lt;a class=headerlink href=#centering title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Centering prevents one dimension dominance while  paper&lt;/p&gt;
-&lt;h4 id=sharpening&gt;Sharpening&lt;a class=headerlink href=#sharpening title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;h3 id=metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm&gt;Metaphors, or analogies to other architectures describing the behavior of the algorithm&lt;a class=headerlink href=#metaphors-or-analogies-to-other-architectures-describing-the-behavior-of-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=heuristics-or-rules-of-thumb&gt;Heuristics or rules of thumb&lt;a class=headerlink href=#heuristics-or-rules-of-thumb title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=is-dino-a-gan&gt;Is DINO a GAN?&lt;a class=headerlink href=#is-dino-a-gan title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=applications-classes-of-problem-is-the-algorithm-well-suited&gt;Applications: classes of problem is the algorithm well suited&lt;a class=headerlink href=#applications-classes-of-problem-is-the-algorithm-well-suited title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The representations that are produced thanks to DINO are very useful for multiple scenarios, e.g.:&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. DINO training overview. The student sees global and local crops; the EMA teacher sees global crops. (&lt;a href="https://github.com/facebookresearch/dino"&gt;Source&lt;/a&gt;)&lt;/p&gt;
+&lt;h3 id="avoiding-collapse"&gt;Avoiding collapse&lt;a class="headerlink" href="#avoiding-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="what-is-representation-collapse"&gt;What is representation collapse?&lt;a class="headerlink" href="#what-is-representation-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;A collapsed network maps many or all inputs to the same output. Such a constant representation can make two augmented views agree perfectly while carrying no useful information about the image.&lt;/p&gt;
+&lt;p&gt;Contrastive approaches discourage this solution using negative examples. DINO instead combines a momentum teacher with two operations on the teacher output:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Fine-tuning of linear classifiers on top of such representation with very good results of image classification.&lt;/li&gt;
-&lt;li&gt;Image retrieval, as similar images get clustered together&lt;/li&gt;
-&lt;li&gt;Zero-shoot classification by simply doing k-NN classifier in such feature DISPLAY_CATEGORIES_ON_MENU&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Centering&lt;/strong&gt; subtracts an EMA of the batch-average teacher logits. It prevents one output dimension from dominating, but by itself tends toward a uniform output distribution.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sharpening&lt;/strong&gt; uses a low teacher temperature to make the teacher distribution more selective. It counters uniform collapse, but by itself can encourage domination by a small number of dimensions.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm&gt;Common benchmark or example datasets used to demonstrate the algorithm&lt;a class=headerlink href=#common-benchmark-or-example-datasets-used-to-demonstrate-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;h3 id=succession-following-improving-solutions&gt;Succession / Following / Improving solutions.&lt;a class=headerlink href=#succession-following-improving-solutions title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;These effects balance each other. The paper is careful about the scope of this conclusion: centering and sharpening avoid collapse &lt;strong&gt;when used with the momentum teacher&lt;/strong&gt;. They are not demonstrated as a universal collapse-prevention recipe for arbitrary architectures.&lt;/p&gt;
+&lt;p&gt;The default student temperature is 0.1. For the teacher, the temperature is warmed from 0.04 to 0.07 during the first 30 epochs. The center is also updated by an EMA of teacher outputs.&lt;/p&gt;
+&lt;h3 id="what-emerges-in-a-dino-trained-vit"&gt;What emerges in a DINO-trained ViT?&lt;a class="headerlink" href="#what-emerges-in-a-dino-trained-vit" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="strong-frozen-features"&gt;Strong frozen features&lt;a class="headerlink" href="#strong-frozen-features" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The authors evaluate frozen representations in two main ways:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Evolution: &lt;a href="../../../Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/"&gt;MAE: Masked Autoencoders Are Scalable Vision Learners&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Linear evaluation:&lt;/strong&gt; train a supervised linear classifier on top of the frozen features.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Weighted k-NN evaluation:&lt;/strong&gt; store frozen features from the labeled ImageNet training set and classify each validation image by a weighted vote among its nearest stored features.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=useful-resources-for-learning-more-about-the-algorithm&gt;Useful resources for learning more about the algorithm:&lt;a class=headerlink href=#useful-resources-for-learning-more-about-the-algorithm title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The second protocol is simple, but it is still supervised at evaluation time because it uses labels from the ImageNet training set. Calling it zero-shot would be incorrect.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Backbone&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Patch size&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;k-NN top-1&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Linear top-1&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ResNet-50&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;-&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;67.5%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;75.3%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-S&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(16 \times 16\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;74.5%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;77.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-S&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(8 \times 8\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;strong&gt;78.3%&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;79.7%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-B&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(16 \times 16\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;76.1%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;78.2%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ViT-B&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;span class="math"&gt;\(8 \times 8\)&lt;/span&gt;&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;77.4%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;&lt;strong&gt;80.1%&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The paper generally uses &lt;span class="math"&gt;\(k=20\)&lt;/span&gt; for weighted k-NN. On the same ViT-S/16 architecture, DINO reaches 77.0% linear accuracy, 3.5 percentage points above the reported SwAV result. Its 74.5% k-NN accuracy is 7.9 points above the best listed BYOL result.&lt;/p&gt;
+&lt;h4 id="smaller-patches-better-spatial-detail-higher-cost"&gt;Smaller patches: better spatial detail, higher cost&lt;a class="headerlink" href="#smaller-patches-better-spatial-detail-higher-cost" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Reducing the patch size gives the transformer more spatial tokens and improves the reported representation quality. It does not add learned parameters, but self-attention becomes more expensive as the number of tokens grows.&lt;/p&gt;
+&lt;p&gt;The paper reports throughput of roughly 1007 images/s for ViT-S/16, 180 images/s for ViT-S/8, and 44 images/s for ViT-S/5 under its measurement setup. Smaller patches therefore &lt;strong&gt;increase&lt;/strong&gt;, rather than reduce, running time and memory pressure.&lt;/p&gt;
+&lt;h4 id="emergent-object-localization"&gt;Emergent object localization&lt;a class="headerlink" href="#emergent-object-localization" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;In a ViT, the final class token attends to patch tokens. DINO's final-layer attention heads often focus on coherent foreground regions. To quantify this, the authors threshold attention maps to retain 60% of their mass and compare them with object masks from PASCAL VOC 2012.&lt;/p&gt;
+&lt;p&gt;DINO ViT-S/8 reaches 44.7% Jaccard similarity, compared with 23.7% for supervised ViT-S/8 and 21.8% for a randomly initialized model. This is evidence that object layout emerges in the representation without segmentation labels.&lt;/p&gt;
+&lt;p&gt;There are important limits to the interpretation:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://arxiv.org/abs/2104.14294"&gt;Emerging Properties in Self-Supervised Vision Transformers: ArXiv Paper&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.arxiv-vanity.com/papers/2104.14294/"&gt;ArXiv-Vanity Web version of ArXiv Paper&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://ai.facebook.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training"&gt;Facebook AI blog post on DINO and PAWS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/facebookresearch/dino"&gt;GitHub with PyTorch implementation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:ssl&gt;&lt;/a&gt;&lt;a href="https://ai.facebook.com/blog/self-supervised-learning-the-dark-matter-of-intelligence/"&gt;Facebook blog post from Yann LeCun: "Self-supervised learning: The dark matter of intelligence"&lt;/a&gt; March 4, 2021&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:distill&gt;&lt;/a&gt; Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. &lt;a href="https://arxiv.org/abs/1503.02531"&gt;Distilling the knowledge in a neural network.&lt;/a&gt; preprint arXiv:1503.02531, 2015&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:contrastive&gt;&lt;/a&gt;&lt;a href="https://arxiv.org/abs/1807.03748"&gt;Representation Learning with Contrastive Predictive Coding&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:moco&gt;&lt;/a&gt;&lt;a href="https://arxiv.org/abs/1911.05722"&gt;Momentum contrast for unsupervised visual representation learning.&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:byol&gt;&lt;/a&gt;&lt;a href="https://arxiv.org/abs/2006.07733"&gt;BYOL ArXiv Paper: "Bootstrap your own latent: A new approach to self-supervised Learning"&lt;/a&gt;, 2020&lt;/li&gt;
-&lt;li&gt;&lt;a name=label:mean&gt;&lt;/a&gt;&lt;a href="https://arxiv.org/abs/1703.01780"&gt;ArXiv Paper: "Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results."&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=""&gt;SimCLR&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Attention maps are not semantic segmentation outputs.&lt;/li&gt;
+&lt;li&gt;They do not assign a category to every pixel.&lt;/li&gt;
+&lt;li&gt;Different attention heads may focus on different objects or parts.&lt;/li&gt;
+&lt;li&gt;The evaluation measures overlap with foreground masks after thresholding; it does not establish a complete segmentation system.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;hr&gt;
-&lt;h2 id=appendix-elaborate-on-terminology&gt;Appendix - elaborate on terminology&lt;a class=headerlink href=#appendix-elaborate-on-terminology title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;DINO is based on numerous concepts that can be cryptic for a reader new to the topic. Those ideas are not specific to DINO and has been present in the field for a while. To help you read and refer to this article I have prepared a clarification appendix for concepts that DINO has embraced. Thus, shedding more light on the DINO background and at the same time keep the main article concise.&lt;/p&gt;
-&lt;h4 id=what-is-a-knowledge-distillation&gt;What is a knowledge distillation?&lt;a class=headerlink href=#what-is-a-knowledge-distillation title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;The intuition behind knowledge distillation is similar to general concept of elarning in machine learning. Once you find the right parameters you save them and apply in future. In general, starting from something that has already been working instead of starting from scratch.&lt;/p&gt;
-&lt;p&gt;It all started with &lt;strong&gt;self-training&lt;/strong&gt; that used small set of initial annotations (label assignments) for a large set of unlabeled instances. The annotations can be with &lt;em&gt;hard&lt;/em&gt; (a one-hot distribution), or &lt;em&gt;soft&lt;/em&gt; (a continuous distribution) labels.&lt;/p&gt;
-&lt;p&gt;In short, knowledge distillation is process of learning of the &lt;em&gt;student&lt;/em&gt; model to match a &lt;em&gt;teacher&lt;/em&gt; model predictions. This way distillation means to compress the knowledge into a smaller &lt;em&gt;student&lt;/em&gt; model, that would be comparable to the &lt;em&gt;teacher&lt;/em&gt; model. (See a paper from &lt;a href=#label:distill&gt;G.Hinton et al.&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;The &lt;em&gt;teacher&lt;/em&gt; is usually a big model that is used to produce a smaller &lt;em&gt;student&lt;/em&gt; model. Such a &lt;strong&gt;distilled&lt;/strong&gt; &lt;em&gt;student&lt;/em&gt; model is more effective than a adequate &lt;em&gt;student&lt;/em&gt; model which would yield as a result of training from scratch.&lt;/p&gt;
-&lt;h4 id=what-is-collapse&gt;What is Collapse?&lt;a class=headerlink href=#what-is-collapse title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;The term &lt;em&gt;collapse&lt;/em&gt; refers to the state of network that maps everything to the same representation, so every time it would return success. For instance, a representation that is constant across views is always fully predictive of itself as everything feed through it will be treated the same - all is the same. In such case, learning a constant representation for any image $h=constant$ would minimize the error, but would not help to learn the representation. Collapse is therefore a trivial solution that should be avoided.&lt;/p&gt;
-&lt;p&gt;The &lt;em&gt;discriminative contrastive learning&lt;/em&gt; methods used negative sample approach to overcome the collapse. Negative samples are the ones that prevents the solution from &lt;strong&gt;collapse&lt;/strong&gt; by contrasting. Therefore, this type of training aims to reduce the distance (compare) between representations of different augmented views of the same image (‘positive pairs’), and increasing the distance (contrast) between representations of augmented views from different images (‘negative pairs’).
-Challenge with such approach, is that it is very fragile, The problem is two fold. First, for positive pairs, it is important to pick the right augmentation (e.g. random cropping) method to create the second image of positive pair. Choosing the right augmentation has great impact on the quality of learned representation.  Secondly, in case of negative sample image, the retrieval of negative samples is a challenge. They are ought to be picked carefully&lt;sup id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-3-back&gt;&lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-3 class=simple-footnote title="Retrieving negative samples is complex in terms of picking the right set of negative samples (should they be uniformly sampled?, should we buffer them?, what should be their order?, should we first start out with only easy examples of a task and then gradually increase the task difficulty (curriculum learning) ). It often either relies on large batch sizes, memory banks or customized mining strategies"&gt;3&lt;/a&gt;&lt;/sup&gt; as they are critically impacting the performance of the representation learning.&lt;/p&gt;
-&lt;p&gt;As contrastive methods often require comparing each example with many other examples to work well, BYOL proposed to get rid of the negative samples at all. In turn, BYOL can be assumed to avoid collapse most probably due to specific initialization, followed by the small-step learning to avoid moving out from local minimum to optimal (but undesired) solution in form of constant - &lt;em&gt;collapse&lt;/em&gt;. Therefore, for BYOL the choice of right augmentation would boil down to try and error procedure which would be a drawback due to tedious additional effort.&lt;/p&gt;
-&lt;p&gt;As a side note it is worth mentioning about the &lt;em&gt;Contrastive Learning&lt;/em&gt; (CL) and &lt;a href=#label:contrastive&gt;negative sample mechanisms&lt;/a&gt;.&lt;/p&gt;
-&lt;h3 id=footnotes&gt;Footnotes:&lt;a class=headerlink href=#footnotes title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;&lt;ol class=simple-footnotes&gt;&lt;li id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-1&gt;As a response to &lt;em&gt;Temporal Ensembling&lt;/em&gt; (maintains an exponential moving average - &lt;code&gt;ema&lt;/code&gt; - of label predictions on each training example, while penalizing predictions that are inconsistent with this target) that change targets only once per epoch (unwieldy when learning large datasets).&lt;em&gt;Mean Teacher&lt;/em&gt;,  averages &lt;em&gt;model weights&lt;/em&gt; instead of label predictions. As an additional benefit, Mean Teacher improves test accuracy and enables training with fewer labels than Temporal Ensembling &lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-1-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-2&gt;A method that averages model weights instead of label predictions. See paper: Tarvainen et al. &lt;a href="https://arxiv.org/abs/1703.01780"&gt;Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results&lt;/a&gt; &lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-2-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;li id=sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-3&gt;Retrieving negative samples is complex in terms of picking the right set of negative samples (should they be uniformly sampled?, should we buffer them?, what should be their order?, should we first start out with only easy examples of a task and then gradually increase the task difficulty (curriculum learning) ). It often either relies on large batch sizes, memory banks or customized mining strategies &lt;a href=#sf-DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers-3-back class=simple-footnote-back&gt;↩&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Computer Vision"></category><category term="Representation Learning"></category><category term="Transformer"></category><category term="CV"></category><category term="Vision Transformer"></category><category term="ViT"></category><category term="Self-Supervision (SSL)"></category><category term="k-NN"></category></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"></link><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
+&lt;h4 id="video-object-segmentation"&gt;Video object segmentation&lt;a class="headerlink" href="#video-object-segmentation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;The paper also evaluates frozen patch features on DAVIS 2017. Labels are propagated between frames using nearest-neighbor matching; the backbone itself is not fine-tuned for video segmentation. DINO ViT-S/8 obtains 69.9 mean &lt;span class="math"&gt;\(J\&amp;amp;F\)&lt;/span&gt;, compared with 66.0 for supervised ViT-S/8. DINO ViT-B/8 reaches 71.4.&lt;/p&gt;
+&lt;p&gt;This experiment shows that local patch features encode useful correspondence. It does not mean that raw attention maps alone solve video instance segmentation.&lt;/p&gt;
+&lt;h3 id="ablation-study"&gt;Ablation study&lt;a class="headerlink" href="#ablation-study" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The ViT-S/16 ablation after 300 epochs clarifies which parts of DINO matter:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;k-NN top-1&lt;/th&gt;
+&lt;th style="text-align: right;"&gt;Linear top-1&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Default DINO&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;72.8%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;76.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Without momentum teacher&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;0.1%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;0.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Without multi-crop&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;67.9%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;72.5%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MSE instead of cross-entropy&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;52.6%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;62.4%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;With an added predictor&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;71.8%&lt;/td&gt;
+&lt;td style="text-align: right;"&gt;75.6%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The momentum teacher is essential in this setup, and multi-crop training provides a large improvement. Cross-entropy works substantially better than mean squared error. Unlike BYOL, DINO does not benefit from a separate predictor in this experiment.&lt;/p&gt;
+&lt;h3 id="what-dino-does-not-establish"&gt;What DINO does not establish&lt;a class="headerlink" href="#what-dino-does-not-establish" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The paper provides strong evidence for its tested architectures and benchmarks, but some broader conclusions would go beyond the experiments:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DINO is not a universally superior replacement for supervised learning.&lt;/li&gt;
+&lt;li&gt;Its transfer results are strong but not uniformly better on every dataset. For example, supervised ViT-B/16 slightly exceeds DINO on iNaturalist 2018 in the paper's transfer table.&lt;/li&gt;
+&lt;li&gt;The learned output dimensions are not automatically named semantic categories.&lt;/li&gt;
+&lt;li&gt;k-NN evaluation is not zero-shot learning.&lt;/li&gt;
+&lt;li&gt;Attention visualization is evidence of localization, not a production-ready segmentation method.&lt;/li&gt;
+&lt;li&gt;The method still requires substantial compute, careful augmentation, and large-scale image data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="applications"&gt;Applications&lt;a class="headerlink" href="#applications" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;DINO representations are useful when labels are scarce or when a reusable visual encoder is needed. The paper demonstrates or motivates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;image classification with linear probing, k-NN, or fine-tuning;&lt;/li&gt;
+&lt;li&gt;image retrieval and copy detection;&lt;/li&gt;
+&lt;li&gt;transfer to classification datasets;&lt;/li&gt;
+&lt;li&gt;object discovery through attention analysis; and&lt;/li&gt;
+&lt;li&gt;video object segmentation through frozen-feature correspondence.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="relationship-to-other-methods"&gt;Relationship to other methods&lt;a class="headerlink" href="#relationship-to-other-methods" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;DINO belongs to a family of methods that learn by matching representations across image views.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SimCLR&lt;/strong&gt; uses a contrastive objective with in-batch negatives.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MoCo&lt;/strong&gt; uses a momentum encoder and a queue of negative examples.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BYOL&lt;/strong&gt; matches an online network to a momentum target network without negatives and uses a predictor.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SwAV&lt;/strong&gt; predicts cluster assignments between views and uses online clustering.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DINO&lt;/strong&gt; matches centered and sharpened teacher distributions using cross-entropy, a momentum teacher, and multi-crop views, without negatives or a predictor.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;DINO can train ResNet-50 as well as ViTs. The paper's distinctive observations, however, are the strong k-NN behavior and emergent spatial structure of self-supervised ViT features.&lt;/p&gt;
+&lt;h3 id="useful-resources"&gt;Useful resources&lt;a class="headerlink" href="#useful-resources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://openaccess.thecvf.com/content/ICCV2021/html/Caron_Emerging_Properties_in_Self-Supervised_Vision_Transformers_ICCV_2021_paper.html"&gt;ICCV 2021 paper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2104.14294"&gt;DINO on arXiv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/facebookresearch/dino"&gt;Official PyTorch implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ai.meta.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training/"&gt;DINO and PAWS overview&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2006.07733"&gt;BYOL: Bootstrap Your Own Latent&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1703.01780"&gt;Mean Teacher&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/1911.05722"&gt;MoCo: Momentum Contrast&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/"&gt;DINOv2 explained&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="terminology"&gt;Terminology&lt;a class="headerlink" href="#terminology" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;h4 id="knowledge-distillation"&gt;Knowledge distillation&lt;a class="headerlink" href="#knowledge-distillation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Knowledge distillation trains a student model to match outputs produced by a teacher. In conventional distillation, the teacher is often a larger, already trained network and the goal may be model compression.&lt;/p&gt;
+&lt;p&gt;DINO uses &lt;strong&gt;self-distillation&lt;/strong&gt; differently: teacher and student have the same architecture, and the teacher is created continuously as an EMA of the student. There is no separately pretrained teacher and no class-label supervision. The term describes the direction of the learning target, not compression into a smaller model.&lt;/p&gt;
+&lt;h4 id="representation-collapse"&gt;Representation collapse&lt;a class="headerlink" href="#representation-collapse" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Representation collapse occurs when a network maps different inputs to the same or nearly the same output. Agreement between views then becomes trivial but the features cease to distinguish images. DINO avoids this outcome through the combined training dynamics of its stop-gradient momentum teacher, centering, and sharpening.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Computer Vision"/><category term="Representation Learning"/><category term="Transformer"/><category term="CV"/><category term="Vision Transformer"/><category term="ViT"/><category term="Self-Supervision (SSL)"/><category term="k-NN"/></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"></link><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
 &lt;h3 id="prerequisite-rl-knowledge"&gt;Prerequisite RL knowledge&lt;a class="headerlink" href="#prerequisite-rl-knowledge" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Here are explained some of the main terms that this paper uses to motivate its goal. Form more details please refer to free online book from &lt;a href="http://incompleteideas.net/book/the-book.html"&gt;Richard S. Sutton
 and Andrew G. Barto Second &lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt; Edition MIT Press, Cambridge, MA, 2018&lt;/a&gt;&lt;/p&gt;

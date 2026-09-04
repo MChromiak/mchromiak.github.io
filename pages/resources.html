@@ -26,13 +26,13 @@
 <link rel="canonical" href="https://mchromiak.github.io/pages/resources.html">
 
         <meta name="author" content="Michał Chromiak" />
-        <meta name="description" content="Interesting articles and research papers form DL/ML area are exponentially flourishing. Here I will link to some interesting articles online that I find interesting. My blog articles are here 2021-06🔗 NLP Course from huggingFace🔗 Google:Machine Learning Crash Course with TensorFlow APIs🔗 2017-11🔗 An introduction to Generative Adversarial Networks …" />
+        <meta name="description" content="An annotated collection of machine-learning papers, technical articles, and implementations, organised by research topic." />
 
     <meta property="og:site_name" content="Michał Chromiak's blog" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Resources"/>
     <meta property="og:url" content="https://mchromiak.github.io/pages/resources.html"/>
-    <meta property="og:description" content="Interesting articles and research papers form DL/ML area are exponentially flourishing. Here I will link to some interesting articles online that I find interesting. My blog articles are here 2021-06🔗 NLP Course from huggingFace🔗 Google:Machine Learning Crash Course with TensorFlow APIs🔗 2017-11🔗 An introduction to Generative Adversarial Networks …" />
+    <meta property="og:description" content="An annotated collection of machine-learning papers, technical articles, and implementations, organised by research topic." />
         <meta property="og:image"
               content="https://mchromiak.github.io/static_files/img/Avatar.png"/>
 
@@ -108,115 +108,63 @@
         <li class="active">Resources</li>
     </ol>
     <section id="content" class="body">
-        <h1 class="entry-title">Resources</h1>
+        <h1 class="entry-title">Papers and research notes</h1>
         
         <div class="entry-content">
-            <p>Interesting articles and research papers form DL/ML area are exponentially flourishing. Here I will link to some interesting articles online that I find interesting. My blog articles are <a href="../../">here</a></p>
-<h5 id="2021-06"><strong>2021-06</strong><a class="headerlink" href="#2021-06" title="Permanent link">🔗</a></h5>
+            <div class="resource-notes">
+<p>Papers and technical articles worth returning to, with short notes on the ideas they introduce. Most of this collection comes from 2015–2018: a useful record of developments in deep learning, rather than a list of today's best-performing methods.</p>
+<p>For a broad selection of courses, books, and tools, visit <a href="https://mchromiak.github.io/pages/links.html">Learning and research links</a>. For explanations on this blog, start with the <a href="https://mchromiak.github.io/pages/categorisation.html">topic guide</a>.</p>
+<p><a href="#training-and-evaluation">Training</a> · <a href="#vision-and-generative-models">Vision</a> · <a href="#language-and-attention">Language</a> · <a href="#learning-algorithms-and-hierarchies">Learning algorithms</a> · <a href="#interpretability-and-information">Interpretability</a> · <a href="#tutorials-and-lectures">Tutorials</a> · <a href="#career-perspectives">Career perspectives</a></p>
+<h2 id="training-and-evaluation">Training and evaluation<a class="headerlink" href="#training-and-evaluation" title="Permanent link">🔗</a></h2>
 <ul>
-<li>
-<h5 id="nlp-course-from-huggingface"><a href="https://huggingface.co/course/chapter1/2?fw=pt">NLP Course from huggingFace</a><a class="headerlink" href="#nlp-course-from-huggingface" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="googlemachine-learning-crash-course-with-tensorflow-apis"><a href="https://developers.google.com/machine-learning/crash-course">Google:Machine Learning Crash Course with TensorFlow APIs</a><a class="headerlink" href="#googlemachine-learning-crash-course-with-tensorflow-apis" title="Permanent link">🔗</a></h5>
-</li>
+<li><strong><a href="https://arxiv.org/abs/1609.04747">An overview of gradient descent optimization algorithms</a></strong> (2016). Sebastian Ruder explains gradient-descent variants, momentum, adaptive learning rates, and parallel training. A starting point for understanding what an optimiser changes about the learning process.</li>
+<li><strong><a href="https://arxiv.org/abs/1607.06450">Layer Normalization</a></strong> (2016). Computes normalisation statistics across a layer's activations for an individual example, rather than across a minibatch. The paper develops the method for recurrent networks as well as other settings.</li>
+<li><strong><a href="https://arxiv.org/abs/1701.06548">Regularizing Neural Networks by Penalizing Confident Output Distributions</a></strong> (2017). Adds a penalty for overly concentrated output probabilities. Useful for understanding how confidence penalties and label smoothing can regularise a classifier.</li>
+<li><strong><a href="https://arxiv.org/abs/1711.00489">Don't Decay the Learning Rate, Increase the Batch Size</a></strong> (2017). Studies increasing batch size as an alternative to reducing the learning rate. The reported experiments achieve similar learning curves with fewer parameter updates, connecting optimisation noise with opportunities for parallel computation.</li>
+<li><strong><a href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation in Neural Language Models</a></strong> (2017). Carefully tuned and regularised LSTMs outperform several newer recurrent architectures in the study. The lasting lesson is about experimental design: architecture comparisons need comparable tuning effort and strong baselines.</li>
+<li><strong><a href="https://arxiv.org/abs/1711.10337">Are GANs Created Equal? A Large-Scale Study</a></strong> (2017 preprint; 2018 conference paper). Many of the tested generative adversarial networks reach similar scores with sufficient tuning and random restarts. The comparison shows why evaluation metrics and tuning budgets belong in any report of model quality.</li>
+<li><strong><a href="https://arxiv.org/abs/1703.09039">Efficient Processing of Deep Neural Networks: A Tutorial and Survey</a></strong> (2017). Explains how computation, data movement, memory, and hardware design affect neural-network efficiency. A foundation for understanding performance beyond a model's parameter count.</li>
 </ul>
-<h5 id="2017-11"><strong>2017-11</strong><a class="headerlink" href="#2017-11" title="Permanent link">🔗</a></h5>
+<h2 id="vision-and-generative-models">Vision and generative models<a class="headerlink" href="#vision-and-generative-models" title="Permanent link">🔗</a></h2>
 <ul>
-<li>
-<h5 id="an-introduction-to-generative-adversarial-networks-with-code-in-tensorflow"><a href="http://blog.aylien.com/introduction-generative-adversarial-networks-code-tensorflow/">An introduction to Generative Adversarial Networks (with code in TensorFlow)</a><a class="headerlink" href="#an-introduction-to-generative-adversarial-networks-with-code-in-tensorflow" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="deep-image-prior"><a href="https://dmitryulyanov.github.io/deep_image_prior">Deep Image Prior</a><a class="headerlink" href="#deep-image-prior" title="Permanent link">🔗</a></h5>
-"Deep Image Prior": super-resolution, inpainting, denoising without learning on a dataset and pretrained networks. Comparable results to learned methods.</li>
-<li>
-<h5 id="distilling-a-neural-network-into-a-soft-decision-tree"><a href="https://arxiv.org/abs/1711.09784">Distilling a Neural Network Into a Soft Decision Tree</a><a class="headerlink" href="#distilling-a-neural-network-into-a-soft-decision-tree" title="Permanent link">🔗</a></h5>
-G. Hinton  describe a way of using a trained neural net to create a type of soft decision tree that generalizes better than one learned directly from the training data.</li>
-<li>
-<h5 id="are-gans-created-equal-a-large-scale-study"><a href="https://arxiv.org/abs/1711.10337">Are GANs Created Equal? A Large-Scale Study</a><a class="headerlink" href="#are-gans-created-equal-a-large-scale-study" title="Permanent link">🔗</a></h5>
-This study shows that many papers over the last year or so were just observing sampling error, not true improvement. Some totally new GAN structures like StackGAN, Progressive GAN, CycleGAN, etc., are real advances, but this exhaustive empirical study shows that several of the new loss functions for basic GANs perform about the same as the original GAN loss.</li>
-<li>
-<h5 id="stargan"><a href="https://github.com/yunjey/StarGAN">StarGAN </a><a class="headerlink" href="#stargan" title="Permanent link">🔗</a></h5>
-StarGAN: learning one model that translates between <em>multiple</em> domains without supervision (previous works were about translating between two domains without supervision)</li>
-<li>
-<h5 id="career-how-to-build-a-portfolio-as-a-machine-learningdata-science-engineer-in-industry"><a href="https://www.reddit.com/r/MachineLearning/comments/7dzh87/d_how_to_build_a_portfolio_as_a_machine/">Career-- How to build a Portfolio as a Machine Learning/Data Science Engineer in industry ?</a><a class="headerlink" href="#career-how-to-build-a-portfolio-as-a-machine-learningdata-science-engineer-in-industry" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="basics-an-overview-of-gradient-descent-optimization-algorithms"><a href="http://ruder.io/optimizing-gradient-descent/">Basics-- An overview of gradient descent optimization algorithms</a><a class="headerlink" href="#basics-an-overview-of-gradient-descent-optimization-algorithms" title="Permanent link">🔗</a></h5>
-GD variants, challenges, GD optimization algorithms, SGD Parallelizing and distributing, SGD optimizations</li>
-<li>
-<h5 id="business-questions-engineers-should-ask-when-interviewing-at-mlai-companies"><a href="https://medium.com/@danielgross/seven-questions-to-ask-when-interviewing-for-an-ml-job-1963ccee3a19">Business questions engineers should ask when interviewing at ML/AI companies</a><a class="headerlink" href="#business-questions-engineers-should-ask-when-interviewing-at-mlai-companies" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="on-the-state-of-the-art-of-evaluation-in-neural-language-models"><a href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation in Neural Language Models</a><a class="headerlink" href="#on-the-state-of-the-art-of-evaluation-in-neural-language-models" title="Permanent link">🔗</a></h5>
-"Regularisation methods with large-scale automatic black-box hyperparameter tuning and arrive at surprising conclusion that standard LSTM architectures, when properly regularised, outperform more recent models"</li>
-<li>
-<h5 id="a-regularized-framework-for-sparse-and-structured-neural-attention-github-code"><a href="https://arxiv.org/abs/1705.07704">A Regularized Framework for Sparse and Structured Neural Attention</a> <a href="https://github.com/vene/sparse-structured-attention">GitHub code</a><a class="headerlink" href="#a-regularized-framework-for-sparse-and-structured-neural-attention-github-code" title="Permanent link">🔗</a></h5>
-Framework for sparse and structured attention, building upon a smoothed max operator</li>
-<li>
-<h5 id="whats-wrong-with-convolutional-neural-networks-by-geoffrey-hinton-redditquora">What's wrong with convolutional neural networks? By Geoffrey Hinton <a href="https://www.reddit.com/r/MachineLearning/comments/6upe7d/r_what_is_wrong_with_convolutional_neural_nets/">Reddit</a>,<a href="https://www.quora.com/Whats-wrong-with-convolutional-neural-networks">Quora</a><a class="headerlink" href="#whats-wrong-with-convolutional-neural-networks-by-geoffrey-hinton-redditquora" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="dynamic-routing-between-capsules-matrix-capsules-with-em-routing-a-keras-implementation-of-capsnet-in-nips2017-paper-dynamic-routing-between-capsules"><a href="https://arxiv.org/abs/1710.09829">Dynamic Routing Between Capsules</a>, <a href="https://openreview.net/forum?id=HJWLfGWRb&amp;noteId=HJWLfGWRb">Matrix capsules with EM routing</a>, <a href="https://github.com/XifengGuo/CapsNet-Keras">A Keras implementation of CapsNet in NIPS2017 paper "Dynamic Routing Between Capsules</a><a class="headerlink" href="#dynamic-routing-between-capsules-matrix-capsules-with-em-routing-a-keras-implementation-of-capsnet-in-nips2017-paper-dynamic-routing-between-capsules" title="Permanent link">🔗</a></h5>
-A <strong>capsule</strong> is a group of neurons whose outputs represent different properties of the same entity.</li>
-<li>
-<h5 id="regularizing-neural-networks-by-penalizing-confident-output-distributions"><a href="https://arxiv.org/abs/1701.06548">Regularizing Neural Networks by Penalizing Confident Output Distributions</a><a class="headerlink" href="#regularizing-neural-networks-by-penalizing-confident-output-distributions" title="Permanent link">🔗</a></h5>
-Penalizing low entropy output distributions, acts as a strong regularizer in supervised learning.</li>
-<li>
-<h5 id="dont-decay-the-learning-rate-increase-the-batch-size"><a href="https://arxiv.org/abs/1711.00489">Don't Decay the Learning Rate, Increase the Batch Size</a><a class="headerlink" href="#dont-decay-the-learning-rate-increase-the-batch-size" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="layer-normalization"><a href="https://arxiv.org/abs/1607.06450">Layer Normalization</a><a class="headerlink" href="#layer-normalization" title="Permanent link">🔗</a></h5>
-One way to reduce the training time is to normalize the activities of the neurons.</li>
+<li><strong><a href="https://arxiv.org/abs/1711.10925">Deep Image Prior</a></strong> (2017). Fits a randomly initialised convolutional network to a single image for tasks including denoising, super-resolution, and inpainting. It needs neither a separate training dataset nor pretrained weights, but it still optimises the network for each image. The architecture itself supplies a useful bias towards image structure. <a href="https://dmitryulyanov.github.io/deep_image_prior">Project page and examples</a>.</li>
+<li><strong><a href="https://arxiv.org/abs/1711.09020">StarGAN</a></strong> (2017). Uses one model to translate images among multiple domains, such as facial attributes or expressions. Training uses unpaired images together with domain or attribute labels; unpaired translation is not the same as learning without supervision. <a href="https://github.com/yunjey/stargan">Official implementation</a>.</li>
+<li><strong><a href="https://arxiv.org/abs/1710.09829">Dynamic Routing Between Capsules</a></strong> (2017). Represents an entity, such as an object part, with a vector of properties. Routing strengthens connections when lower-level capsules agree about a higher-level entity. <a href="https://openreview.net/forum?id=HJWLfGWRb">Matrix capsules with EM routing</a> (2018) develops a related approach using pose matrices. A <a href="https://github.com/XifengGuo/CapsNet-Keras">community Keras implementation</a> accompanies the earlier dynamic-routing paper.</li>
+<li><strong><a href="https://arxiv.org/abs/1710.08864">One pixel attack for fooling deep neural networks</a></strong> (2017). Uses differential evolution to search for single-pixel changes that alter an image classifier's prediction. The experiments demonstrate adversarial vulnerability under a tightly constrained perturbation budget.</li>
 </ul>
-<h5 id="2017-10"><strong>2017-10</strong><a class="headerlink" href="#2017-10" title="Permanent link">🔗</a></h5>
+<h2 id="language-and-attention">Language and attention<a class="headerlink" href="#language-and-attention" title="Permanent link">🔗</a></h2>
 <ul>
-<li>
-<h5 id="one-pixel-attack-for-fooling-deep-neural-networks"><a href="https://arxiv.org/abs/1701.06548">One pixel attack for fooling deep neural networks</a><a class="headerlink" href="#one-pixel-attack-for-fooling-deep-neural-networks" title="Permanent link">🔗</a></h5>
-<p>Authors prove that single pixel change can induce DNN to classify image incorrectly.</p>
-</li>
-<li>
-<h5 id="efficient-processing-of-deep-neural-networks-a-tutorial-and-survey-rate45"><a href="https://arxiv.org/abs/1703.09039">Efficient Processing of Deep Neural Networks: A Tutorial and Survey</a> Rate:[4/5]<a class="headerlink" href="#efficient-processing-of-deep-neural-networks-a-tutorial-and-survey-rate45" title="Permanent link">🔗</a></h5>
-<p>Recommended by A.Karpathy, comprehensive tutorial and survey about the recent advances towards the goal of enabling efficient processing of DNNs.</p>
-</li>
-<li>
-<h5 id="learning-to-optimize-with-reinforcement-learning"><a href="http://bair.berkeley.edu/blog/2017/09/12/learning-to-optimize-with-rl/">Learning to Optimize with Reinforcement Learning</a><a class="headerlink" href="#learning-to-optimize-with-reinforcement-learning" title="Permanent link">🔗</a></h5>
-<p>Can we learn ML algorithms instead instead designing manually?</p>
-</li>
-<li>
-<h5 id="introducing-hybrid-lda2vec-algorithmwhen-word2vec-is-enough-part-1-part-2"><a href="http://multithreaded.stitchfix.com/blog/2016/05/27/lda2vec/#topic=38&amp;lambda=1&amp;term=">Introducing Hybrid lda2vec Algorithm</a>,<a href="http://multithreaded.stitchfix.com/blog/2017/10/18/stop-using-word2vec/">When word2vec is enough. Part 1</a>, <a href="http://multithreaded.stitchfix.com/blog/2017/10/25/word-tensors/">Part 2</a><a class="headerlink" href="#introducing-hybrid-lda2vec-algorithmwhen-word2vec-is-enough-part-1-part-2" title="Permanent link">🔗</a></h5>
-<p><strong>Lda2vec</strong> algorithm. A neural network is not always required to find word vectors. (<a href="https://github.com/cemoody/lda2vec">lda2vec: Tools for interpreting natural language</a>,<a href="https://github.com/ahwillia/tensortools">tensor decompositions</a>, <a href="https://github.com/meereeum/lda2vec-tf">lda2vec-tf</a>)</p>
-</li>
-<li>
-<h5 id="learning-a-hierarchy"><a href="https://blog.openai.com/learning-a-hierarchy/">Learning a Hierarchy</a><a class="headerlink" href="#learning-a-hierarchy" title="Permanent link">🔗</a></h5>
-<p>Learning a hierarchical policy to solve mazes by <a href="https://www.openai.com/">OpenAI</a> <a href="https://github.com/openai/mlsh">@GitHub</a> <a href="https://arxiv.org/abs/1710.09767">ArXiv</a></p>
-</li>
-<li>
-<h5 id="googles-neural-machine-translation-system-bridging-the-gap-between-human-and-machine-translation"><a href="https://arxiv.org/abs/1609.08144">Google's Neural Machine Translation System: Bridging the Gap between Human and Machine Translation</a><a class="headerlink" href="#googles-neural-machine-translation-system-bridging-the-gap-between-human-and-machine-translation" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="automl-deeper-than-deep"><a href="https://research.googleblog.com/2017/05/using-machine-learning-to-explore.html">AutoML - deeper than deep?</a><a class="headerlink" href="#automl-deeper-than-deep" title="Permanent link">🔗</a></h5>
-</li>
-<li>
-<h5 id="deep-learning-dlss-and-reinforcement-learning-rlss-summer-school-montreal-2017"><a href="http://videolectures.net/deeplearning2017_montreal/">Deep Learning (DLSS) and Reinforcement Learning (RLSS) Summer School, Montreal 2017</a><a class="headerlink" href="#deep-learning-dlss-and-reinforcement-learning-rlss-summer-school-montreal-2017" title="Permanent link">🔗</a></h5>
+<li><strong><a href="https://arxiv.org/abs/1609.08144">Google's Neural Machine Translation System</a></strong> (2016). Describes a large-scale translation system built around deep LSTMs, attention, and wordpiece units. A useful account of neural translation before transformers, including the engineering needed to make the system practical.</li>
+<li><strong><a href="https://arxiv.org/abs/1705.07704">A Regularized Framework for Sparse and Structured Neural Attention</a></strong> (2017). Builds attention mechanisms that can concentrate on a subset of inputs or on structured groups, such as contiguous text segments. It connects attention to regularised optimisation. <a href="https://github.com/vene/sparse-structured-attention">Authors' implementation</a>.</li>
+<li><strong><a href="https://arxiv.org/abs/1506.03134">Pointer Networks</a></strong> (2015). Uses attention to select positions in an input sequence as outputs, instead of choosing from a fixed vocabulary. This lets the output choices vary with input length, as needed in ordering and combinatorial problems.</li>
+<li><strong><a href="https://multithreaded.stitchfix.com/blog/2016/05/27/lda2vec/">Introducing our Hybrid lda2vec Algorithm</a></strong> (2016). Chris Moody combines word embeddings with interpretable document-topic mixtures. Supporting code includes the <a href="https://github.com/cemoody/lda2vec">original lda2vec repository</a> and a <a href="https://github.com/meereeum/lda2vec-tf">community TensorFlow port</a>.</li>
+<li><strong><a href="https://multithreaded.stitchfix.com/blog/2017/10/18/stop-using-word2vec/">Stop Using word2vec</a></strong> and <strong><a href="https://multithreaded.stitchfix.com/blog/2017/10/25/word-tensors/">Word Tensors</a></strong> (2017). Explore count-based word representations, matrix factorisation, and higher-order co-occurrence structure. They offer alternatives to neural embedding training, not a universal rule against word2vec. For a separate implementation reference on tensor decomposition, see <a href="https://github.com/ahwillia/tensortools">tensortools</a>.</li>
+</ul>
+<h2 id="learning-algorithms-and-hierarchies">Learning algorithms and hierarchies<a class="headerlink" href="#learning-algorithms-and-hierarchies" title="Permanent link">🔗</a></h2>
 <ul>
-<li>Good introduction videos + slides for DL and RL</li>
+<li><strong><a href="https://arxiv.org/abs/1606.01885">Learning to Optimize</a></strong> (2016) and <strong><a href="https://arxiv.org/abs/1703.00441">Learning to Optimize Neural Nets</a></strong> (2017). Ke Li and Jitendra Malik treat an optimiser as a policy that can be learned through reinforcement learning. The second paper explores this approach for training shallow neural networks. These papers provide the technical background for the <a href="https://bair.berkeley.edu/blog/2017/09/12/learning-to-optimize-with-rl/">BAIR article on learning to optimise</a>.</li>
+<li><strong><a href="https://arxiv.org/abs/1710.09767">Meta Learning Shared Hierarchies</a></strong> (2017). Learns reusable behaviours shared across tasks, with a task-specific policy choosing among them. The aim is to adapt to new tasks using those behaviours rather than learning every action from scratch. <a href="https://github.com/openai/mlsh">Authors' code</a>.</li>
+<li><strong><a href="https://research.google/blog/using-machine-learning-to-explore-neural-network-architecture/">Using Machine Learning to Explore Neural Network Architecture</a></strong> (2017). Google Research's explanation of early neural architecture search: a controller proposes architectures and learns from their evaluated performance. Useful context for separating the search procedure from the networks it produces.</li>
 </ul>
-</li>
-</ul>
-<h5 id="2017-09"><strong>2017-09</strong><a class="headerlink" href="#2017-09" title="Permanent link">🔗</a></h5>
+<h2 id="interpretability-and-information">Interpretability and information<a class="headerlink" href="#interpretability-and-information" title="Permanent link">🔗</a></h2>
 <ul>
-<li>
-<h5 id="information-bottleneck-new-theory-cracks-open-the-black-box-of-deep-learning"><strong>Information bottleneck:</strong> <a href="https://www.quantamagazine.org/new-theory-cracks-open-the-black-box-of-deep-learning-20170921/?utm_campaign=Revue%20newsletter&amp;utm_medium=Newsletter&amp;utm_source=The%20Wild%20Week%20in%20AI">New Theory Cracks Open the Black Box of Deep Learning</a><a class="headerlink" href="#information-bottleneck-new-theory-cracks-open-the-black-box-of-deep-learning" title="Permanent link">🔗</a></h5>
+<li><strong><a href="https://arxiv.org/abs/1711.09784">Distilling a Neural Network Into a Soft Decision Tree</a></strong> (2017). Nicholas Frosst and Geoffrey Hinton transfer predictions from a trained network into a tree with probabilistic decisions. The tree offers a more inspectable decision structure; its predictions approximate the teacher rather than exposing the teacher's internal reasoning.</li>
+<li><strong><a href="https://arxiv.org/abs/1703.00810">Opening the Black Box of Deep Neural Networks via Information</a></strong> (2017). Investigates learning through the information that intermediate representations retain about inputs and targets. Its proposed fitting-and-compression account prompted substantial debate. Pair it with <a href="https://research.ibm.com/publications/on-the-information-bottleneck-theory-of-deep-learning--1">Saxe and colleagues' follow-up analysis</a>, which challenges the generality of the compression explanation. The original <a href="https://www.quantamagazine.org/new-theory-cracks-open-the-black-box-of-deep-learning-20170921/">Quanta article</a> provides an accessible account of the proposal.</li>
+<li><strong><a href="https://arxiv.org/abs/1612.00410">Deep Variational Information Bottleneck</a></strong> (2016). Turns the information-bottleneck principle into a trainable objective using a variational approximation. This is a method for learning representations that balance prediction and compression, distinct from the claim that ordinary neural-network training necessarily follows such a process.</li>
+</ul>
+<h2 id="tutorials-and-lectures">Tutorials and lectures<a class="headerlink" href="#tutorials-and-lectures" title="Permanent link">🔗</a></h2>
 <ul>
-<li>Paper: <a href="https://arxiv.org/abs/1703.00810">ArXiv</a></li>
-<li>Parameterizing the Bottleneck <a href="https://research.google.com/pubs/pub45903.html">Google DeepVIB</a></li>
+<li><strong><a href="https://developers.google.com/machine-learning/crash-course">Google Machine Learning Crash Course</a></strong>: an introduction to core concepts, model evaluation, and practical machine learning.</li>
+<li><strong><a href="https://huggingface.co/learn/llm-course/chapter1/1">Hugging Face LLM Course</a></strong>: the expanded successor to the NLP course originally linked here. Covers transformer models, tokenisation, datasets, and fine-tuning; assumes Python knowledge and some deep-learning background.</li>
+<li><strong><a href="https://www.tensorflow.org/tutorials/generative/dcgan">TensorFlow's DCGAN tutorial</a></strong>: a worked example of training a generator and discriminator to produce images. Replaces the unavailable AYLIEN introduction to GANs.</li>
+<li><strong><a href="https://videolectures.net/deeplearning2017_montreal/">Montreal Deep Learning and Reinforcement Learning Summer School, 2017</a></strong>: a historical collection of lectures and presentations. Software examples should be read in the context of their original versions.</li>
 </ul>
-</li>
-<li>
-<h5 id="pointer-networks">Pointer Networks<a class="headerlink" href="#pointer-networks" title="Permanent link">🔗</a></h5>
-</li>
+<h2 id="career-perspectives">Career perspectives<a class="headerlink" href="#career-perspectives" title="Permanent link">🔗</a></h2>
+<ul>
+<li><strong><a href="https://www.reddit.com/r/MachineLearning/comments/7dzh87/d_how_to_build_a_portfolio_as_a_machine/">Building a machine-learning portfolio</a></strong>: a 2017 community discussion about presenting projects and demonstrating practical skills.</li>
+<li><strong><a href="https://medium.com/@danielgross/seven-questions-to-ask-when-interviewing-for-an-ml-job-1963ccee3a19">Seven questions to ask when interviewing for an ML job</a></strong>: Daniel Gross's perspective on evaluating an employer's use of machine learning. These are discussion prompts, separate from the research evidence above.</li>
 </ul>
+</div>
         </div>
     </section>
         </div>

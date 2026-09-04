@@ -47,7 +47,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://mchromiak.github.io/pages/categorisation.html</loc>
-<lastmod>2023-05-29T19:14:57-00:00</lastmod>
+<lastmod>2026-09-04T07:52:15-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -61,35 +61,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://mchromiak.github.io/pages/links.html</loc>
-<lastmod>2023-05-29T19:14:57-00:00</lastmod>
+<lastmod>2026-09-04T07:52:15-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://mchromiak.github.io/pages/resources.html</loc>
-<lastmod>2023-05-29T19:14:57-00:00</lastmod>
+<lastmod>2026-09-04T07:52:15-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/</loc>
-<lastmod>2026-09-04T08:45:00+02:00</lastmod>
+<lastmod>2023-05-30T19:07:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/</loc>
-<lastmod>2021-11-14T11:18:00+01:00</lastmod>
+<lastmod>2021-12-26T11:18:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://mchromiak.github.io/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/</loc>
-<lastmod>2021-06-01T19:30:00+02:00</lastmod>
+<lastmod>2021-07-13T19:30:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -103,7 +103,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/</loc>
-<lastmod>2021-11-19T09:44:00+01:00</lastmod>
+<lastmod>2021-06-14T17:44:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
