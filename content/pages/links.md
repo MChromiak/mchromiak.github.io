@@ -1,177 +1,79 @@
 Title: Links
+Heading: Learning and research links
+Summary: Selected courses, books, research blogs, tools, and datasets for studying machine learning, with older material clearly identified.
 Comments: enabled
 
-Here are a bunch of pages that brings me, new ideas everyday. If you are looking for organized learn plan see my [ML-DOJO on GitHUB](https://github.com/ml-dojo)
+<div class="link-directory" markdown="1">
 
-* ##### [First things first](https://www.quora.com/topic/Machine-Learning) and [FAQ](https://www.quora.com/topic/Machine-Learning/faq)
- Some of the Quora's well asked and answered question.
+A collection of resources for learning machine learning, understanding research papers, and putting ideas into practice. For reading paths through this blog, see the [topic guide]({filename}/pages/categorisation.md). My [ML Dojo repositories](https://github.com/ml-dojo) collect additional learning material and code.
 
-* ##### [Arxiv](https://arxiv.org/list/stat.ML/recent)
-e-print service in many interesting fields with ML among them.
+**A good starting point:** choose [fast.ai](https://course.fast.ai/) for a practical introduction if you already write code, or Michael Nielsen's [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) for a gradual explanation of the fundamentals.
 
-* #####  [GitXiv](http://gitxiv.com/)
- Here the papers from arXiv are being materialized in form of Github implementations.
+[Courses](#courses) · [Books](#books) · [Research and explanations](#research-and-explanations) · [Tools and datasets](#tools-and-datasets) · [Communities](#communities) · [Historical material](#historical-material)
 
- * #####  [What is a Tensor?](https://www.physicsforums.com/insights/what-is-a-tensor)
- Physics explain starting from what is actually a number.
+## Courses
 
- * #####  [r/ReproducibleML](https://www.physicsforums.com/insights/what-is-a-tensor)
- A Reddit with links to Arxiv papers joined with their implementations. A way to organize, encourage, and evaluate implementations of machine learning papers.
+- **[Practical Deep Learning for Coders](https://course.fast.ai/)**: fast.ai's project-led course for people with programming experience. It introduces working models before unpacking how they learn; you do not need to own a GPU to begin.
+- **[Kaggle Learn](https://www.kaggle.com/learn)**: short, exercise-based introductions to Python, data handling, and machine learning.
+- **[Harvard CS109: Data Science](https://cs109.org/)**: data analysis, statistical modelling, and machine learning. The course site links to the introductory and advanced courses and earlier editions.
+- **[Stanford CS221: Artificial Intelligence](https://stanford-cs221.github.io/spring2026/)**: a broader foundation in AI, including search, reasoning, learning, and decision-making. This link points to the Spring 2026 course.
+- **[Stanford CS229: Machine Learning](https://cs229.stanford.edu/)**: a mathematical treatment of learning algorithms. Best approached with some linear algebra, probability, and calculus.
+- **[Stanford CS231n: Deep Learning for Computer Vision](https://cs231n.stanford.edu/)**: neural-network methods for visual recognition. The [course notes](https://cs231n.github.io/) are also useful as a standalone reference.
+- **[Stanford CS224n: Natural Language Processing with Deep Learning](https://web.stanford.edu/class/cs224n/)**: representations, neural models, and learning methods for language.
+- **[Berkeley CS188: Introduction to Artificial Intelligence](https://inst.eecs.berkeley.edu/~cs188/)**: core AI ideas with programming projects.
+- **[Berkeley CS285: Deep Reinforcement Learning](https://rail.eecs.berkeley.edu/deeprlcourse/)**: an advanced course on learning to act, including policy optimisation and model-based methods.
 
-* ##### [Colah's blog](http://colah.github.io/)
- Christopher Olah blog explains comprehensively on neural and convolution networks.
+## Books
 
-* ##### Andrej Karpathy [Medium blog 2017](https://medium.com/@karpathy), [blog 2016](http://karpathy.github.io)
- Andrej Karpathy present the academia point of view and elaborates on NN.
+- **[Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)**, Michael Nielsen: an online introduction that develops neural networks, backpropagation, and learning from examples step by step.
+- **[Deep Learning](https://www.deeplearningbook.org/)**, Ian Goodfellow, Yoshua Bengio, and Aaron Courville: a substantial reference on mathematical foundations and neural-network methods. The 2016 book is freely available online; it predates the transformer era.
+- **[Deep Learning with Python, third edition](https://www.manning.com/books/deep-learning-with-python-third-edition)**, François Chollet and Matthew Watson: practical deep learning with Python and Keras. The publisher's page includes the contents and sample material.
+- **[Natural Language Processing with Python](https://www.nltk.org/book/)**, Steven Bird, Ewan Klein, and Edward Loper: working with text, corpora, and language analysis using NLTK. The online version is updated for Python 3.
+- **[Foundations of Statistical Natural Language Processing](https://nlp.stanford.edu/fsnlp/)**, Christopher Manning and Hinrich Schütze: a 1999 reference on statistical approaches to language. Its companion site provides supporting material and sample chapters.
 
-* #####  [Efficient Processing of Deep Neural Networks: A Tutorial and Survey](https://arxiv.org/abs/1703.09039)
- as of 2017. Great tutorial.
+## Research and explanations
 
-* ##### [Kaggle wiki](https://www.kaggle.com/wiki/Home)
-Nice wiki page from Kaggle on what a data science and ML are.
+- **[arXiv: machine learning](https://arxiv.org/list/cs.LG/recent)** and **[statistical machine learning](https://arxiv.org/list/stat.ML/recent)**: recent preprints. An arXiv posting is not itself evidence of peer review; use the paper's publication record when that distinction matters.
+- **[Christopher Olah's blog](https://colah.github.io/)**: visual and mathematical explanations of neural networks and representations.
+- **[Andrej Karpathy's blog](https://karpathy.github.io/)**: essays and technical explanations about neural networks, training, and research practice.
+- **[Berkeley Artificial Intelligence Research blog](https://bair.berkeley.edu/blog/)**: research explained by the people doing it, with links to papers and project pages.
+- **[Google's Machine Learning Glossary](https://developers.google.com/machine-learning/glossary)**: a reference for unfamiliar terminology.
+- **[Efficient Processing of Deep Neural Networks: A Tutorial and Survey](https://arxiv.org/abs/1703.09039)**: a 2017 survey of the computation, memory, and hardware considerations behind efficient neural networks. Useful background rather than a guide to the latest accelerators.
+- **[Data Science Blogs](https://github.com/rushter/data-science-blogs)**: a directory for discovering additional technical writers and research groups.
 
-* ##### [Berkeley Artificial Intelligence Research (BAIR) blog](http://bair.berkeley.edu/blog/)
-Research blog from Berkeley.
+## Tools and datasets
 
-* ##### [Convolutional NN for vision](http://cs231n.github.io/)
-Some of the material for CNN on vision.
+- **[Jupyter nbviewer](https://nbviewer.org/)**: share a rendered view of a notebook without asking readers to install Jupyter. It displays notebook output rather than running a live kernel.
+- **[Awesome Machine Learning](https://github.com/josephmisiti/awesome-machine-learning)**: a directory of libraries and software organised by programming language. Useful for discovery; check a project's own documentation before adopting it.
+- **[NVIDIA Technical Blog](https://developer.nvidia.com/blog/)**: implementation and performance articles on GPU computing and AI.
+- **[Deeplearning4j documentation](https://deeplearning4j.konduit.ai/)**: neural-network tooling for the Java ecosystem.
+- **[Apple ARKit](https://developer.apple.com/documentation/ARKit)**: documentation for building augmented-reality applications on Apple platforms.
+- **[Kaggle Datasets](https://www.kaggle.com/datasets)**: datasets across a wide range of subjects, often accompanied by exploratory notebooks.
+- **[Linguistic Data Consortium catalogue](https://catalog.ldc.upenn.edu/)**: language and speech resources. Availability and licensing vary by collection.
+- **[Nasdaq Data Link](https://data.nasdaq.com/)**, formerly Quandl: financial, economic, and alternative data. Check the access terms for the particular dataset you need.
 
-* ##### [Deeplearning4J](https://deeplearning4j.org/documentation)
-Useful introduction to Deep Learning and Neural Nets
+For any dataset, check its licence, provenance, and train/test split before using it in an experiment.
 
-* ##### [DeepLearning on GPU](https://developer.nvidia.com/deep-learning) -  [Useful DL blogposts](https://devblogs.nvidia.com/parallelforall/tag/deep-learning/)
-On DeepLearning from NVidia. Useful posts on topic and framework e.g. Keras, Tehano, Caffe etc.
+## Communities
 
-* ##### [DeepLearning Glossary](http://www.wildml.com/deep-learning-glossary/)
-Glossary explaining the terms of modern DL.
+- **[r/learnmachinelearning](https://www.reddit.com/r/learnmachinelearning/)**: questions and discussion about learning the subject.
+- **[r/MachineLearning](https://www.reddit.com/r/MachineLearning/)**: research papers, projects, and technical discussion.
+- **[r/ReproducibleML](https://www.reddit.com/r/ReproducibleML/)**: discussions and links focused on reproducing machine-learning work.
+- **[r/textdatamining](https://www.reddit.com/r/textdatamining/)**: text analysis and natural-language processing.
+- **[r/dataisbeautiful](https://www.reddit.com/r/dataisbeautiful/)**: examples and discussion of data visualisation.
 
-* ##### Awesome List: [Most Cited Deep Learning Papers](https://github.com/terryum/awesome-deep-learning-papers/blob/master/README.md#new-papers)
-A curated list of the most cited deep learning papers (since 2012).
+## Historical material
 
-* ##### [Deep Learning Papers Reading Roadmap](https://github.com/songrotek/Deep-Learning-Papers-Reading-Roadmap)
+These links preserve useful material from earlier versions of this list. They are most useful for tracing how ideas developed; code examples may depend on older software.
 
-* ##### Awesome List: [Awesome Machine Learning](https://github.com/josephmisiti/awesome-machine-learnings)
-A curated list of awesome machine learning **frameworks, libraries and software** (by language).
+- **[Harvard CS109, 2015 materials](https://github.com/cs109/2015)**: the repository of lectures, assignments, and notebooks from the earlier data-science course.
+- **[Stanford CS231n, 2017 lectures](https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv)**: a recorded introduction to neural networks for vision.
+- **[Stanford CS20SI](https://web.stanford.edu/class/cs20si/syllabus.html)**: the TensorFlow-era course on deep learning for research.
+- **[TensorFlow Neural Machine Translation tutorial](https://github.com/tensorflow/nmt)**: an archived implementation of sequence-to-sequence translation, useful alongside papers from that period.
+- **[Deep Learning Papers Reading Roadmap](https://github.com/floodsung/Deep-Learning-Papers-Reading-Roadmap)** and **[Highly Cited Deep Learning Papers](https://github.com/terryum/awesome-deep-learning-papers)**: reading lists centred on earlier deep-learning literature, not rankings of current research.
+- **[Denny Britz's paper notes](https://github.com/dennybritz/deeplearning-papernotes/)** and **[aleju's paper summaries](https://github.com/aleju/papers)**: examples of concise research notes.
+- **[Machine Learning Cheat Sheet](https://github.com/soulmachine/machine-learning-cheat-sheet)**: equations and diagrams for revisiting classical methods.
+- **[Awesome TensorFlow](https://github.com/jtoy/awesome-tensorflow)**: a collection of TensorFlow projects and learning resources.
+- **[MathBox](https://github.com/unconed/mathbox)** and **[Drawing in Jupyter](https://github.com/uclnlp/egal)**: experiments in mathematical visualisation and notebook-based drawing.
 
-* ##### [Neural Machine Translation (seq2seq)](https://github.com/tensorflow/nmt)
-Technical tutorial on how to build NMT.
-
-* ##### [Practical Deep Learning For Coders](http://course.fast.ai/start.html)
-Course on ML requires Nvidia GPU uses Amazon Web Services (AWS).
-
-* ##### [Reddit r/learnmachinelearning](https://www.reddit.com/r/learnmachinelearning/)
-
-* ##### [Reddit r/MachineLearning/](https://www.reddit.com/r/MachineLearning/)
-
-* ##### [Reddit r/textdatamining/ focused on NLP](https://www.reddit.com/r/textdatamining/)
-
-* ##### [Reddit r/dataisbeautiful/ ](https://www.reddit.com/r/dataisbeautiful/)
-Reddit on data visualizations. Specific data and artistic endeavors.
-
-* ##### [List of Data science blogs](https://github.com/rushter/data-science-blogs)
-A curated list of data science blogs.
-
-### Academic courses:
-* #### [Harvard CS109: Data Science ](http://cs109.github.io/2015/) and GitHub [notebooks](https://github.com/cs109), [slides](https://github.com/cs109/2015).
-The course is using Python for all programming assignments and projects.
-* #### Stanford:
-    * [CS221: Artificial Intelligence: Principles and Techniques](http://web.stanford.edu/class/cs221/)
-      Foundational principles of ML.
-    * [CS229: Machine Learning](http://cs229.stanford.edu/) Broad introduction to machine learning and statistical pattern recognition
-    * [CS231n: Convolutional Neural Networks for Visual Recognition](http://cs231n.stanford.edu/) its
-        * [Youtube, 2016](https://www.youtube.com/playlist?list=PLwQyV9I_3POsyBPRNUU_ryNfXzgfkiw2p)
-        * [Youtube, 2017](https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv)      
-    * [CS 20SI: Tensorflow for Deep Learning Research](https://web.stanford.edu/class/cs20si/syllabus.html)
-          Stanford course on Tensorflow.
-    * [CS 224n: Natural Language Processing with Deep Learning](http://web.stanford.edu/class/cs224n/)
-      Stanford course on DeepNLP [Pythorch implementation](https://github.com/DSKSD/DeepNLP-models-Pytorch?utm_campaign=Revue%20newsletter&utm_medium=Newsletter&utm_source=NLP%20News#references)
-* #### Berkeley:
-    * [CS188: Intro to AI -- Course Materials](http://ai.berkeley.edu/home.html) and [blog](https://ml.berkeley.edu/blog/)
-      UC Berkeley's introductory artificial intelligence course
-    * [CS 189: Notes](https://ml.berkeley.edu/blog/cs189-notes/) related to [Berkeley Artificial Intelligence Research (BAIR) laboratory](http://bair.berkeley.edu/) ML community at UC Berkeley website.
-    * [CS 294: Deep Reinforcement Learning](http://rll.berkeley.edu/deeprlcourse/) and [Youtube version](https://youtu.be/8jQIKgTzQd4)
-
-* #### [UC Toronto CSC 321 by Geoffrey Hinton](http://www.cs.toronto.edu/~tijmen/csc321)
-Course form 2014
-* #### [MIT 6.S094: Deep Learning for Self-Driving Cars](https://selfdrivingcars.mit.edu/)
-
-### YouTube content:
-
-* ##### [Stanford CS231n Winter 2016](https://www.youtube.com/playlist?list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC) and [Reddit related discussions](https://www.reddit.com/r/cs231n/)
-Video of Stanford course and its related Reddit posts.
-* ##### [The Math of Intelligence](https://www.youtube.com/playlist?list=PL2-dafEMk2A7mu0bSksCGMJEmeddU_H4D)
-One of the best IMHO course on youtube.
-
-* ##### [Deep Learning Fundamentals (PlayList)](https://www.youtube.com/playlist?list=PL_SSujepRkqy0QhD4RK_3VCd2O5valQit)
-Essential topics in deep learning for beginners
-
-* ##### [Deep Learning with Keras (PlayList)](https://www.youtube.com/playlist?list=PL_SSujepRkqyjjbWnXQBzKXXm86UQ53Ic)
-Step-by-step tutorials for getting started with deep learning using Python and Keras
-
-### What people read:
-* ##### [Denny Blitz (@Google)](https://github.com/dennybritz/deeplearning-papernotes/)
-Summaries and notes on Deep Learning research papers
-* ##### [ShortScience.org](http://www.shortscience.org/)
-Short summaries of research papers.
-* ##### [Shorts of papers](https://github.com/aleju/papers)
-Short summaries of some research papers.
-* ##### [Good papers](https://github.com/hoangcuong2011/Good-Papers)
-
-
-### Books
-* ##### [DeepLearning Book ](http://www.deeplearningbook.org/)
-by I. Goodfellow and Y. Bengio and A. Courville
-
-* ##### [Foundations of Statistical Natural Language Processing](https://nlp.stanford.edu/fsnlp/)
-by Ch. Manning and H. Schütze; Scroll bottom to see list of courses that uses this book.
-* ##### [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)
-Michael A. Nielsen, "Neural Networks and Deep Learning", Determination Press, 2015
-
-* ##### [Machine learning cheat sheet](https://github.com/soulmachine/machine-learning-cheat-sheet)
-This cheat sheet contains many classical equations and diagrams on machine learning, which will help you quickly recall knowledge and ideas on machine learning.
-
-* ##### [Natural Language Processing with Python](http://www.nltk.org/book/)
-By creator of Keras Francois Chollet
-
-* ##### [Deep Learning with Python](https://livebook.manning.com/#!/book/deep-learning-with-python/chapter-1/v-6/1)
-Online book with Python examples from NLTK
-
-### Tools:
-
-A set of handy helpers.
-
-* ##### [NBViewer](https://nbviewer.jupyter.org/)
-The interactive features of the Jupyter notebook, such as custom JavaScript plots, will not work in your repository on GitHub. To view your Jupyter notebook with JavaScript content rendered or to share your notebook files with others you can use nbviewer.
-
-* ##### [TensorFlow AwesomeList](https://github.com/jtoy/awesome-tensorflow)
-A curated list of awesome TensorFlow experiments, libraries, and projects.
-
-* ##### [Apple's ARKit](https://developer.apple.com/arkit/) and [Showcase](http://www.madewitharkit.com/post/166751998274/realistic-ar-brush-texture-paintings-with-deep) .
-Amazing framework that allows you to easily create unparalleled augmented reality experiences for iPhone and iPad
-
-* ##### [Best-websites-a-programmer-should-visit](https://github.com/sdmg15/Best-websites-a-programmer-should-visit)
-
-* ##### [Drawing in Jupyter](https://github.com/uclmr/egal)
-* ##### [MathBox2: Drawing 3D in Jupyter](https://github.com/unconed/mathbox) and [live Jupyter example](https://nbviewer.jupyter.org/github/znah/mathbox/blob/jupyter/examples/notebooks/mathbox.ipynb)
-
-* ##### [Librarian for arXiv | Fermat's Library](https://chrome.google.com/webstore/detail/librarian-for-arxiv-ferma/ddoflfjcbemgfgpgbnlmaedfkpkfffbm)
-Chrome plugin extracting references and BibTex form articles.
-
-### Sources of datasets
-
-* ##### [Quandl](https://www.quandl.com/search?query=)
-A website with free / premium datasets to test ML. Quandl API can be used with Python pip package (`pip install Quandl`)
-
-* ##### [Linguistic Data Consortium (LDC)](https://catalog.ldc.upenn.edu/)
-Open consortium of universities, libraries, corporations and government research laboratories that creates and distributes a wide array of language resources
-
-* ##### [Ranking of the BEST dataset solutions](http://rodrigob.github.io/are_we_there_yet/build/)
-Online, crowd sourced list of known result one some of the “major” visual classification, detection, and pose estimation datasets.
-
-### Generators
-
-* ##### [Deep Dream Generator](https://deepdreamgenerator.com/)
-Many interesting filters. Requires logging in and waiting. Many options.
-
-* ##### [DeepArt Generator](https://deepart.io/)
-No login required. Fewer filters than Deep dream Generator. Few second wait for result.
+</div>

@@ -1,72 +1,83 @@
 Title: Categorisation
+Heading: Topics and reading guide
+Summary: Find a starting point in machine learning, explore the blog by topic, and understand how tasks, learning methods, and models fit together.
 
-Note: *If you find any issues with this type of ML techniques taxonomy, please let me know what you think.*
+<div class="topic-guide" markdown="1">
 
-Due to explosion of ML techniques and approaches it is always nice to get the sense on how it all relates to each other. Defining the hierarchy always help to build a decent mind map on where exactly to correlate specific idea. This setup is how the categories are considered along blog posts.
+This blog explores how machine-learning methods work and what research papers tell us about them. Start with a topic below, or follow a short reading path from the fundamentals to a particular method.
 
-Almost all value (in terms of monetizing, better products etc.) in MODERN (as of fall 2017) ML industry is driven by three first general categories (that I will also use for articles across this blog):
+## Browse by topic
 
-#### **Categories:**
-  1. **General DL** (fully connected - FC; densely connected)
-  1. **Sequence Models** ( 1D sequences; eg. RNN, LSTM, GRU, attention models)
-  1. **Computer Vision** ( 2D/3D models; eg. CNN, ViTs)
-  1. **Reinforcement Learning** (RL) 
-  1. **Optimization** Tips and tricks used to optimize learning process and fine-tuning LLMs.
+- **[Computer vision](/category/computer-vision.html)**: learning from images, with articles on visual representations, vision transformers, and self-supervised learning.
+- **[Sequence models](/category/sequence-models.html)**: language modelling, attention, and transformers for processing and generating sequences.
+- **[Reinforcement learning](/category/reinforcement-learning.html)**: learning to make decisions, from rewards and value functions to policies learned from recorded experience.
+- **[ML Dojo](/category/ml-dojo.html)**: introductions and practical explanations for building a foundation in machine learning.
+- **[Applications](/category/applications.html)**: examples of machine learning applied to problems beyond benchmark datasets.
 
-  1. **ML** (e.g. supervised learning, reinforced learning, Sparse coding, Slow Feature Analysis (SFA), Independent Component Analysis (ICA) etc.)
-  1.  **ML Dojo** (jap. 道場 dōjō)  This category will be used for content with coding tasks and learning tools.
+Categories group articles by their main subject. [Tags](/tags.html) connect ideas across those groups: a transformer can process text or images, and self-supervised learning can be used in either domain. General machine learning, deep learning, optimisation, and fine-tuning are cross-cutting topics rather than separate branches of a single hierarchy.
 
-  1. **Applications** inspiring and interesting news on how ML has been applied for another area of our lives.
+## Where to start
 
-  1. **Other** This category is not strictly ML related and covers some interesting topics that I have encountered.
+**Neural networks and language.** Begin with the [Neural Networks Primer]({filename}/articles/2017/Sep/01/2017_09_01_PrimerNN.md), then read [Neural Language Modelling]({filename}/articles/2017/Nov/30/2017_11_30_Explaining-Language-Modeling.md). Continue to [Attention Is All You Need]({filename}/articles/2017/Sep/12/2017_09_12_Transformer-Attention-is-all-you-need.md) for the transformer architecture.
 
-This is how *Kaggle* sees [Statistical and Machine Learning Algorithms](https://www.kaggle.com/wiki/Algorithms)
-The theoretical view and classification of ML algorithms is something like the hierarchy below.
+**Learning visual features without manual labels.** With neural-network basics in place, compare [DINO]({filename}/articles/2021/May/03/2021_05_03_Dino.md), which learns by matching predictions across image views, with [Masked Autoencoders]({filename}/articles/2021/Nov/14/2021_11_14_Masked-Autoencoders-Saclable-Vision-Learnenrs.md), which learn by reconstructing missing image content. Then read [DINOv2]({filename}/articles/2023/Apr/18/2023_04_18_Dinov2.md) to see how this line of work scales to reusable visual features.
 
-* #### **Problems**
+**Learning to make decisions.** Start with the [Reinforcement Learning Primer]({filename}/articles/2021/May/01/RL_primer.md). Once rewards, policies, and value functions are familiar, [Decision Transformer]({filename}/articles/2021/Jun/01/2021_06_01_DecisionTransformer_RL2seq.md) introduces an approach that models sequences of returns, states, and actions.
 
-    **Tags:** Classification, Clustering, Regression, Anomaly detection, Association rules, Reinforcement learning, Structured prediction, Feature engineering Feature learning, Online learning, Semi-supervised learning, Unsupervised learning, Learning to rank, Grammar induction, Pattern recognition
+## How the ideas fit together
 
-###Taxonomy:
-* #### **Supervised learning**
-    **Tags:** classification • regression •  Decision trees  • Ensembles (Bagging, Boosting, Random forest) •  k-NN  • Linear regression  • Naive Bayes  • Neural networks •  Logistic regression  • Perceptron  • Relevance vector machine (RVM)  • Support vector machine (SVM)
+A method is easier to understand when we separate four questions:
 
-    * #### **UnSupervised learning** considered as *tag*, not a category
-    Depending, if the desired output is already known algorithm is often also referred to as "Unsupervised". However, it is hard to put a clear distinction on what is unsupervised in terms of classifying groups of approaches. Therefore we tag algorithms that are part of some category, but additionally are considered Unsupervised. E.g.
+1. **What is the task?** Classification predicts a category; regression predicts a numerical value; clustering groups similar examples. Other tasks include detecting anomalies, ranking results, generating content, and predicting structured outputs such as a sequence of labels.
+2. **Where does the learning signal come from?** Supervised learning uses supplied targets. Unsupervised learning looks for structure without supplied target labels. Self-supervised learning creates training targets from the data itself, for example by hiding part of an image and predicting it. Semi-supervised learning combines labelled and unlabelled examples. Reinforcement learning uses rewards to learn decisions over time.
+3. **What kind of model is used?** Linear models, decision trees, probabilistic models, and neural networks provide different ways to represent relationships in data. Within neural networks, fully connected layers, convolutions, recurrence, and attention are building blocks, not separate definitions of learning.
+4. **How is it trained or adapted?** Optimisation determines how parameters are updated. Online learning updates a model as examples arrive; fine-tuning adapts a pretrained model. Feature engineering designs the input representation, while representation learning learns useful features from data.
 
-        * **Clustering**:     k-means, Hierarchical Cluster Analysis (HCA)
-        * **Neural Networks** Hebbian Learning, Generative Adversarial Networks (GAN)
-        * **Mixture models**  Expectation-maximization (EM), Gaussian mixture model, Multivariate Gaussian mixture model, Categorical mixture model
+For example, DINOv2 uses a **vision transformer** as its model and **self-supervision** for pretraining. Its features can then support different tasks, including **classification** and **segmentation**, with supervised training of a task-specific predictor. These labels describe different parts of the same system.
 
-* #### **Clustering**
+## Methods and terminology
 
-    **Tags:** BIRCH Hierarchical  • k-means  • Expectation-maximization (EM)  • DBSCAN  • OPTICS  • Mean-shift
+<details class="topic-reference" markdown="1">
+<summary>Prediction, clustering, and anomaly detection</summary>
 
-* #### **Anomaly detection**
+**Prediction.** Common methods include linear regression, logistic regression, naive Bayes, nearest-neighbour methods (k-NN), decision trees, support vector machines (SVMs), relevance vector machines (RVMs), and neural networks. Their variants support different tasks; logistic regression, for example, is a classification method despite its name. Ensembles combine predictors through approaches such as bagging and boosting; random forests are ensembles of decision trees.
 
-    **Tags:** k-NN  • Local outlier factor
+**Clustering.** Examples include k-means, hierarchical clustering, BIRCH, DBSCAN, OPTICS, and mean shift. They differ in how they define a group, from proximity to a centre to connected regions of high density. Gaussian mixture models, including multivariate ones, describe data through a weighted combination of distributions; categorical mixtures serve a similar role for categorical observations. Expectation-maximisation (EM) is a fitting procedure used for mixture models, not a model in its own right.
 
-* #### **Dimensionality reduction**
+**Anomaly detection.** Neighbour-distance scores and Local Outlier Factor identify observations that are unusual relative to a reference dataset or their local neighbourhood.
 
-    **Tags:** Factor analysis • CCA • ICA • LDA • NMF • PCA • t-SNE
+**Related tasks.** Association-rule mining looks for recurring co-occurrences; learning to rank orders candidates by relevance; grammar induction seeks grammatical structure from examples. Pattern recognition is a broader term covering the discovery and use of regularities in data.
 
-* #### **Structured prediction**
+For implementations and examples, see the scikit-learn guides to [supervised learning](https://scikit-learn.org/stable/supervised_learning.html), [clustering](https://scikit-learn.org/stable/modules/clustering.html), and [mixture models](https://scikit-learn.org/stable/modules/mixture.html).
 
-    **Tags:** Graphical models (Bayes net, CRF, HMM)
+</details>
 
-* #### **Neural nets**
+<details class="topic-reference" markdown="1">
+<summary>Representations, neural networks, and structured models</summary>
 
-    **Tags:** Autoencoder  • Deep learning  • Multilayer perceptron  • RNN  • Restricted Boltzmann machine  • SOM  • Convolutional Neural Network(CNN) • Generative Adversarial Networks (GAN)
+**Representations and dimensionality reduction.** Principal component analysis (PCA), independent component analysis (ICA), factor analysis, non-negative matrix factorisation (NMF), and sparse coding offer different ways to express data through a smaller or more structured set of components. Slow feature analysis (SFA) learns features that vary slowly over time. Canonical correlation analysis (CCA) finds correlated projections of paired variable sets. Linear discriminant analysis (LDA) uses class labels when finding discriminative projections. t-SNE is commonly used for low-dimensional visualisation.
 
-* #### **Reinforcement Learning**
+**Neural networks.** Examples range from the perceptron and multilayer perceptron (MLP) to convolutional neural networks (CNNs), recurrent neural networks (RNNs), and transformers. Long short-term memory (LSTM) and gated recurrent unit (GRU) networks are recurrent variants; vision transformers (ViTs) apply transformer models to visual inputs. Deep learning refers to learning with multilayer neural networks, not just fully connected networks.
 
-    **Tags:** Q-Learning • SARSA • Temporal Difference (TD)
+Autoencoders learn through reconstruction. Generative adversarial networks (GANs) train a generator against a discriminator. Restricted Boltzmann machines are probabilistic models, and self-organising maps (SOMs) learn a topology-preserving mapping. Hebbian learning describes a family of connection-update rules rather than one architecture.
 
+**Structured models.** Bayesian networks, conditional random fields (CRFs), and hidden Markov models (HMMs) represent dependencies among variables. They can support structured prediction when outputs are related, as in sequence labelling.
 
-* #### **Theory**
+The scikit-learn documentation gives further examples of [decomposition methods](https://scikit-learn.org/stable/modules/decomposition.html), [CCA](https://scikit-learn.org/stable/modules/cross_decomposition.html#canonical-correlation-analysis), and [supervised dimensionality reduction with LDA](https://scikit-learn.org/stable/modules/lda_qda.html#dimensionality-reduction-using-linear-discriminant-analysis).
 
-    **Tags:** Bias-variance dilemma  • Computational learning theory  • Empirical risk minimization  • Occam learning  • PAC  learning  • Statistical learning  • VC theory
+</details>
 
-* #### **Machine learning venues**
+<details class="topic-reference" markdown="1">
+<summary>Reinforcement learning and learning theory</summary>
 
-    [NIPS](https://nips.cc) [ICML](icml.cc) ML [JMLR](www.jmlr.org) [ICLR](http://www.iclr.cc) [ArXiv:cs.LG](https://arxiv.org/list/cs.LG/recent)
+**Reinforcement learning.** Temporal-difference (TD) learning updates value estimates using rewards and other value estimates. Q-learning and SARSA are TD control methods: they learn action values that help determine which action to take. The [Reinforcement Learning Primer]({filename}/articles/2021/May/01/RL_primer.md) introduces the underlying concepts.
+
+**Learning theory.** Statistical and computational learning theory study what can be learned, from how much data, and under which assumptions. Topics include the bias-variance trade-off, empirical risk minimisation, Occam-style arguments for simpler explanations, probably approximately correct (PAC) learning, and Vapnik-Chervonenkis (VC) theory. These are tools for reasoning about learning and generalisation, rather than application categories.
+
+</details>
+
+## Follow the research
+
+[NeurIPS](https://neurips.cc/), [ICML](https://icml.cc/), and [ICLR](https://iclr.cc/) are major machine-learning conferences. [JMLR](https://www.jmlr.org/) is a research journal. The [machine-learning listings on arXiv](https://arxiv.org/list/cs.LG/recent) provide access to preprints; an arXiv posting alone does not indicate peer review.
+
+</div>

@@ -163,6 +163,55 @@ body{
   margin-top: 0.65em;
 }
 
+.topic-guide li + li {
+  margin-top: 0.65em;
+}
+
+.link-directory li,
+.resource-notes li {
+  line-height: 1.6;
+}
+
+.link-directory li + li,
+.resource-notes li + li {
+  margin-top: 0.75em;
+}
+
+.link-directory h2,
+.resource-notes h2 {
+  scroll-margin-top: 70px;
+}
+
+.topic-guide details.topic-reference {
+  margin-bottom: 1em;
+  padding: 0.6em 1em;
+  border-left: 2px solid #b9cbd3;
+}
+
+.topic-guide details.topic-reference > summary {
+  display: list-item;
+  list-style: disclosure-closed inside;
+  cursor: pointer;
+  color: #247ba0;
+  font-family: 'Source Serif Pro', serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.topic-guide details.topic-reference[open] > summary {
+  list-style-type: disclosure-open;
+  margin-bottom: 1em;
+}
+
+.topic-guide details.topic-reference > summary:focus-visible {
+  outline: 2px solid #247ba0;
+  outline-offset: 4px;
+}
+
+.topic-guide details.topic-reference > p:last-child {
+  margin-bottom: 0;
+}
+
 .entry-content img{
   border: 1px solid #bbb;
   border-radius: 3px;
