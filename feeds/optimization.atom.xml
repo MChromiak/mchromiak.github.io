@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Optimization</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/optimization.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2023-05-26T09:33:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>QLoRA: How to fine-tune large language models with less memory</title><link href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/" rel="alternate"/><published>2023-05-26T09:33:00+02:00</published><updated>2023-05-26T09:33:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2023-05-26:/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/</id><summary type="html">&lt;p&gt;QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;QLoRA combines two ways to save memory: compress the pretrained model and train a small set of additional weights.&lt;/strong&gt; In their 2023 paper, Tim Dettmers and colleagues use this approach to fine-tune a 65-billion-parameter LLaMA model on a single 48 GB GPU. They also introduce Guanaco, a family of chatbots trained with QLoRA. &lt;a href="https://arxiv.org/html/2305.14314v1#S1"&gt;Paper, introduction&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The method is easiest to understand in two steps: first decide which weights need to change, then reduce the memory used by the weights that stay fixed.&lt;/p&gt;
+&lt;h2 id="why-fine-tuning-needs-so-much-memory"&gt;Why fine-tuning needs so much memory&lt;a class="headerlink" href="#why-fine-tuning-needs-so-much-memory" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A pretrained model's &lt;strong&gt;weights&lt;/strong&gt;, also called parameters, are the numbers it learned during its original training. &lt;strong&gt;Fine-tuning&lt;/strong&gt; adapts those numbers, or adds trainable ones, using examples of the behavior we want. For instruction tuning, an example might pair a question with a useful answer.&lt;/p&gt;
+&lt;p&gt;In &lt;strong&gt;full fine-tuning&lt;/strong&gt;, all the model's weights can change. Training also stores &lt;strong&gt;gradients&lt;/strong&gt;, which indicate how to adjust trainable weights, and &lt;strong&gt;optimizer state&lt;/strong&gt;, the running statistics an optimizer uses to choose those adjustments. &lt;strong&gt;Activations&lt;/strong&gt;, the intermediate results produced as inputs pass through the network, require memory too.&lt;/p&gt;
+&lt;p&gt;The paper estimates that conventional 16-bit fine-tuning of LLaMA 65B requires more than 780 GB of GPU memory. That is a training-memory estimate, not just the size of the model's weights. QLoRA reduces several parts of this memory budget together. &lt;a href="https://arxiv.org/html/2305.14314v1#S2"&gt;Paper, sections 1 and 2&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="lora-learn-a-small-update-instead-of-rewriting-the-model"&gt;LoRA: Learn a small update instead of rewriting the model&lt;a class="headerlink" href="#lora-learn-a-small-update-instead-of-rewriting-the-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;LoRA&lt;/strong&gt;, short for &lt;em&gt;Low-Rank Adaptation&lt;/em&gt;, keeps the pretrained weights &lt;strong&gt;frozen&lt;/strong&gt;: training does not update them. It adds small trainable components called &lt;strong&gt;adapters&lt;/strong&gt; alongside selected layers. Each layer combines its original computation with an adjustment learned by its adapter.&lt;/p&gt;
+&lt;p&gt;For example, when adapting a model to answer customer-support questions, the base model continues to supply its learned language capabilities. Training adjusts the adapters using the new examples. The resulting behavior depends on both parts, even though only the adapters change.&lt;/p&gt;
+&lt;p&gt;An adapter represents an update using two smaller matrices, or grids of numbers, instead of one full-size matrix. Their narrow intermediate dimension is the &lt;strong&gt;adapter rank&lt;/strong&gt;. This restriction greatly reduces the number of trainable parameters and the gradients and optimizer state associated with them. Ordinary LoRA still needs to keep the large base model in memory; QLoRA addresses that remaining cost.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;The algebra: How two small matrices change a layer&lt;/summary&gt;
+&lt;p&gt;The QLoRA paper writes the LoRA computation as follows in equation (3):&lt;/p&gt;
+&lt;p&gt;
+&lt;div class="math"&gt;$$
+\mathbf{Y} = \mathbf{X}\mathbf{W} + s\mathbf{X}\mathbf{L}_1\mathbf{L}_2.
+$$&lt;/div&gt;
+&lt;/p&gt;
+&lt;p&gt;Here, &lt;span class="math"&gt;\(\mathbf{X}\)&lt;/span&gt; is the layer's input and &lt;span class="math"&gt;\(\mathbf{Y}\)&lt;/span&gt; its output. The frozen matrix &lt;span class="math"&gt;\(\mathbf{W}\)&lt;/span&gt; has shape &lt;span class="math"&gt;\(h \times o\)&lt;/span&gt;, where &lt;span class="math"&gt;\(h\)&lt;/span&gt; and &lt;span class="math"&gt;\(o\)&lt;/span&gt; are the input and output widths. The trainable matrices &lt;span class="math"&gt;\(\mathbf{L}_1\)&lt;/span&gt; and &lt;span class="math"&gt;\(\mathbf{L}_2\)&lt;/span&gt; have shapes &lt;span class="math"&gt;\(h \times r\)&lt;/span&gt; and &lt;span class="math"&gt;\(r \times o\)&lt;/span&gt;. Their product has the same shape as &lt;span class="math"&gt;\(\mathbf{W}\)&lt;/span&gt;, but rank at most &lt;span class="math"&gt;\(r\)&lt;/span&gt;. The scalar &lt;span class="math"&gt;\(s\)&lt;/span&gt; controls the size of the adapter's contribution.&lt;/p&gt;
+&lt;p&gt;For an illustrative layer with input and output widths of 4,096 and rank 8, the two adapter matrices contain 65,536 parameters in total. A full 4,096-by-4,096 weight matrix contains 16,777,216. The adapter therefore uses 256 times fewer trainable parameters for this layer. This is a count of parameters, not a prediction of the total GPU-memory saving.&lt;/p&gt;
+&lt;p&gt;In QLoRA, the base matrix is stored in quantized form and reconstructed approximately for computation. The adapters remain higher precision. The paper's equations (5) and (6) give the full expression, including the reconstruction of quantization scales. &lt;a href="https://arxiv.org/html/2305.14314v1#S3"&gt;Paper, sections 2 and 3&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;p&gt;&lt;img alt="Diagram comparing full fine-tuning, LoRA, and QLoRA: full fine-tuning updates the base model; LoRA trains adapters; QLoRA also compresses the base model and pages optimizer state to CPU memory." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/QLoRA.png"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. The paper's comparison of the three methods. Blue arrows show parameter updates, green arrows show gradient flow, and pink arrows show movement of optimizer state between GPU and CPU memory. In LoRA and QLoRA, gradients pass through the base model's computation to train the adapters, while the base weights stay fixed. Source: Dettmers et al., &lt;a href="https://arxiv.org/html/2305.14314v1#S1.F1"&gt;figure 1&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="what-qlora-adds"&gt;What QLoRA adds&lt;a class="headerlink" href="#what-qlora-adds" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;QLoRA builds on LoRA with three memory-saving components. Each addresses a different cost: storing the weights, storing the information needed to reconstruct those weights, and handling temporary peaks during training.&lt;/p&gt;
+&lt;h3 id="1-normalfloat-store-the-base-weights-in-4-bits"&gt;1. NormalFloat: Store the base weights in 4 bits&lt;a class="headerlink" href="#1-normalfloat-store-the-base-weights-in-4-bits" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Quantization&lt;/strong&gt; replaces high-precision numbers with a smaller set of representable values. Four bits provide 16 possible codes. Each stored weight selects one of those codes, which maps to an approximate numerical value.&lt;/p&gt;
+&lt;p&gt;QLoRA introduces &lt;strong&gt;4-bit NormalFloat (NF4)&lt;/strong&gt;, whose representable values are arranged for a zero-centered normal distribution: a bell-shaped distribution with most values near zero. It places more of its limited precision in that crowded region, where many pretrained weights lie, rather than spacing all values evenly.&lt;/p&gt;
+&lt;p&gt;The weights are divided into small blocks, each with its own scaling factor. This lets the same set of NF4 values represent blocks with different numerical ranges. The paper finds that NF4 performs better than the other 4-bit formats it tests.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Four-bit storage does not mean four-bit arithmetic throughout training.&lt;/strong&gt; When the model uses a group of quantized weights, it dequantizes them into a computation format, usually 16-bit BFloat16 (BF16), before matrix multiplication. Dequantization reconstructs an approximation; it does not recover the exact original weights. The adapters learn while operating alongside that approximation. &lt;a href="https://arxiv.org/html/2305.14314v1#S3"&gt;Paper, sections 3 and 4&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="2-double-quantization-compress-the-scales-too"&gt;2. Double quantization: Compress the scales too&lt;a class="headerlink" href="#2-double-quantization-compress-the-scales-too" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The scaling factors also occupy memory. If every block of 64 weights has a 32-bit scale, that scale adds half a bit per weight. Across billions of weights, this overhead is substantial.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Double quantization&lt;/strong&gt; quantizes these scaling factors as well. The paper uses 8-bit values for the first set of scales, with higher-precision scales shared across larger groups. This reduces the scale overhead from 0.5 to approximately 0.127 bits per weight, saving about 0.37 bits per parameter, or roughly 3 GB for a 65B model.&lt;/p&gt;
+&lt;p&gt;The second quantization therefore targets the scales, not a second round of four-bit compression applied directly to the model weights. &lt;a href="https://arxiv.org/html/2305.14314v1#S3"&gt;Paper, section 3&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="3-paged-optimizers-make-room-for-temporary-memory-peaks"&gt;3. Paged optimizers: Make room for temporary memory peaks&lt;a class="headerlink" href="#3-paged-optimizers-make-room-for-temporary-memory-peaks" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;A training run can fit in memory most of the time and still fail on a batch containing long sequences. The extra intermediate calculations create a temporary peak.&lt;/p&gt;
+&lt;p&gt;QLoRA's &lt;strong&gt;paged optimizers&lt;/strong&gt; use NVIDIA unified memory to move optimizer state between GPU memory and CPU RAM as needed. When GPU memory is under pressure, some of that state can reside in CPU RAM; it returns when the optimizer needs it. This helps accommodate peaks without reserving enough GPU memory for all optimizer state at all times.&lt;/p&gt;
+&lt;p&gt;Paging works alongside &lt;strong&gt;gradient checkpointing&lt;/strong&gt;, which saves activation memory by recomputing some intermediate results during the backward pass. Neither technique removes the need to budget for sequence length and batch size. &lt;a href="https://arxiv.org/html/2305.14314v1#S3"&gt;Paper, sections 3 and 4&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="one-training-step-from-input-to-update"&gt;One training step, from input to update&lt;a class="headerlink" href="#one-training-step-from-input-to-update" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Putting the pieces together, a QLoRA training step works like this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Run the examples through the model.&lt;/strong&gt; Quantized base weights are dequantized as needed for computation, and the adapters contribute their learned adjustments.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Measure the prediction error.&lt;/strong&gt; The model predicts tokens, the chunks of text it processes. A loss measures how well those predictions match the training targets.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Backpropagate through the computation.&lt;/strong&gt; Gradients pass through the frozen model's operations to determine how the adapter weights should change.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Update the adapters.&lt;/strong&gt; The base weights stay fixed. Paged optimizer state can move between CPU and GPU memory when needed.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This explains how a frozen model can participate in training: its computations influence the adapter gradients, even though training never updates its own weights.&lt;/p&gt;
+&lt;h2 id="what-the-experiments-establish"&gt;What the experiments establish&lt;a class="headerlink" href="#what-the-experiments-establish" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The authors compare QLoRA with both full 16-bit fine-tuning and 16-bit LoRA. On the evaluated tasks, QLoRA broadly matches these baselines while using much less memory. The comparison depends on scale: the largest LLaMA experiments, from 7B to 65B, compare against &lt;strong&gt;16-bit LoRA&lt;/strong&gt;, not full fine-tuning of every weight at every size.&lt;/p&gt;
+&lt;p&gt;Those LLaMA experiments use &lt;strong&gt;MMLU&lt;/strong&gt;, a multiple-choice benchmark spanning 57 subjects. Table 4 reports mean accuracy of 53.1% for NF4 with double quantization and 53.0% for the 16-bit adapter baseline, averaged across the tested model sizes and tuning datasets. Individual settings vary, but the overall result is close.&lt;/p&gt;
+&lt;p&gt;Adapter placement matters too. The paper finds that applying LoRA across all linear layers in the transformer blocks is important for matching full fine-tuning in its LLaMA 7B experiment. Adding adapters only to the query and value projections in attention does not achieve the same result. &lt;a href="https://arxiv.org/html/2305.14314v1#S4"&gt;Paper, section 4&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="guanaco-and-the-single-gpu-results"&gt;Guanaco and the single-GPU results&lt;a class="headerlink" href="#guanaco-and-the-single-gpu-results" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;QLoRA is the training method; Guanaco is a family of models trained with it.&lt;/strong&gt; The authors build Guanaco by instruction-tuning LLaMA on OpenAssistant's OASST1 conversation data. They use supervised learning, without a reinforcement-learning stage.&lt;/p&gt;
+&lt;p&gt;The original release reports two particularly useful hardware reference points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Guanaco 33B:&lt;/strong&gt; fine-tuning on a single 24 GB GPU, with a reported run taking less than 12 hours.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Guanaco 65B:&lt;/strong&gt; fine-tuning on a single 48 GB GPU, with a reported run taking about 24 hours.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These are results for the authors' training recipe, not fixed runtimes for arbitrary datasets and sequence lengths. They show how the memory reductions make much larger models accessible on a single GPU. &lt;a href="https://arxiv.org/html/2305.14314v1#S1"&gt;Paper, introduction and section 4&lt;/a&gt;; &lt;a href="https://github.com/artidoro/qlora"&gt;authors' implementation&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="what-993-of-chatgpt-means"&gt;What "99.3% of ChatGPT" means&lt;a class="headerlink" href="#what-993-of-chatgpt-means" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The widely repeated figure comes from Guanaco 65B's score relative to the 2023 ChatGPT baseline in the paper's &lt;strong&gt;Vicuna benchmark evaluation&lt;/strong&gt;. GPT-4 scored responses to 80 prompts; the authors expressed Guanaco's score as a percentage of ChatGPT's and averaged over both response orders to reduce ordering bias. The resulting 99.3% is a relative score under that evaluation, not a measurement of 99.3% of ChatGPT's overall capabilities.&lt;/p&gt;
+&lt;p&gt;The paper also compares human and model-based judgments and examines failures that aggregate scores miss. Its broader lesson is that the evaluation should match the intended use: strong performance on a multiple-choice knowledge benchmark need not imply equally strong conversational answers. Training-data suitability matters as well as size. &lt;a href="https://arxiv.org/html/2305.14314v1#S5"&gt;Paper, sections 5 and 6&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="a-closer-look-design-choices-and-memory-costs"&gt;A closer look: Design choices and memory costs&lt;a class="headerlink" href="#a-closer-look-design-choices-and-memory-costs" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The following comparisons show where the gains come from. The first tests adapter placement; the second tests number formats; the worked example separates weight storage from the rest of the training budget.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Why does adapter placement matter?&lt;/summary&gt;
+&lt;p&gt;The paper compares several ways to fine-tune LLaMA 7B on Alpaca. &lt;strong&gt;Attention layers&lt;/strong&gt; combine information from different positions in the text. &lt;strong&gt;Feed-forward layers&lt;/strong&gt;, abbreviated FFN, transform the representation at each position. Adapters can be added to either group or both.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-adapter-placement.svg"&gt;&lt;img alt="Paper figure 2: QLoRA with adapters across all linear transformer-block layers achieves higher ROUGE-L than feed-forward-only or attention-only placement, and is comparable to the tuned 16-bit baseline." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-adapter-placement.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. Adapter-placement comparison from Dettmers et al., &lt;a href="https://arxiv.org/html/2305.14314v1#S4.F2"&gt;figure 2&lt;/a&gt;. The original figure is linked at full size.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How to read it.&lt;/strong&gt; Each dot is a run with a different random seed. The vertical axis is ROUGE-L, a measure of overlap between generated and reference answers based on their longest common subsequence. Higher is better on this metric. Blue dots use four-bit base weights; orange dots show the 16-bit full-fine-tuning baselines.&lt;/p&gt;
+&lt;p&gt;QLoRA-All places adapters across all linear layers in the transformer blocks. It scores above the FFN-only and attention-only variants and is comparable to the authors' tuned full-fine-tuning baseline, labeled "Alpaca (ours)." The lower Stanford-Alpaca results also show why tuning the baseline matters: outperforming a weak training setup would be less convincing.&lt;/p&gt;
+&lt;p&gt;The useful distinction is &lt;strong&gt;where the model can learn an adjustment&lt;/strong&gt;, not just how few parameters it updates. This experiment supports broad adapter coverage in this setup; ROUGE-L alone does not establish general chatbot quality. &lt;a href="https://arxiv.org/html/2305.14314v1#S4"&gt;Paper, section 4&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;What do NF4 and double quantization each contribute?&lt;/summary&gt;
+&lt;p&gt;The paper also isolates the effect of the number format by evaluating quantized LLaMA models. Here, &lt;strong&gt;zero-shot&lt;/strong&gt; means the evaluation supplies no worked examples in the prompt. This comparison tests the quantized models, rather than Guanaco's instruction-tuned conversational behavior.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-quantization-comparison.svg"&gt;&lt;img alt="Paper figure 3: NormalFloat gives higher mean zero-shot accuracy than regular four-bit floating point; adding double quantization moves results toward lower total model bits with similar accuracy." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-quantization-comparison.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 3. Quantization comparison from Dettmers et al., &lt;a href="https://arxiv.org/html/2305.14314v1#S4.F3"&gt;figure 3&lt;/a&gt;. The original figure is linked at full size.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How to read it.&lt;/strong&gt; The horizontal axis is total model bits on a logarithmic scale; farther left means less storage. The vertical axis is mean accuracy across five benchmarks: WinoGrande, HellaSwag, PIQA, ARC-Easy, and ARC-Challenge. Higher means better performance on that collection of tasks.&lt;/p&gt;
+&lt;p&gt;The orange NormalFloat curve sits above the blue ordinary-float curve. Both use four-bit weight codes, but choosing the representable values differently changes the error introduced by quantization. The green NormalFloat-plus-DQ curve stays close to the orange curve while shifting left: compressing the scales saves storage with little change in accuracy here.&lt;/p&gt;
+&lt;p&gt;The two components therefore do different jobs. &lt;strong&gt;NF4 improves the representation of the weights; double quantization reduces the overhead of their scales.&lt;/strong&gt; These results explain the choice of quantization scheme. The fine-tuning comparisons in table 4 address the separate question of how well the models perform after adapter training. &lt;a href="https://arxiv.org/html/2305.14314v1#S4"&gt;Paper, section 4&lt;/a&gt;.&lt;/p&gt;
+&lt;/details&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;A worked memory budget for 65 billion weights&lt;/summary&gt;
+&lt;p&gt;Start with an idealized model containing exactly 65 billion weights. A byte contains eight bits, so storing every weight in 16 bits requires 130 GB. Four bits per weight reduces that to 32.5 GB. These calculations use decimal gigabytes and count only the stored weight values.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;What is stored&lt;/th&gt;
+&lt;th&gt;Approximate size&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Weight values at 16 bits each&lt;/td&gt;
+&lt;td&gt;130 GB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Weight values at 4 bits each&lt;/td&gt;
+&lt;td&gt;32.5 GB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Four-bit values plus the paper's double-quantized scale overhead&lt;/td&gt;
+&lt;td&gt;33.5 GB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The last row adds approximately 0.127 bits per weight for scales, using the paper's block sizes: 64 weights per first-level block and 256 scales per second-level block. That contributes about 1 GB across 65 billion weights. Without double quantization, the 0.5-bit scale overhead would contribute about 4.1 GB instead. This is where the roughly 3 GB saving comes from. &lt;a href="https://arxiv.org/html/2305.14314v1#S3"&gt;Paper, section 3&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The 33.5 GB estimate is not the total training requirement.&lt;/strong&gt; A real run also needs adapters, their gradients and optimizer state, activations, temporary computation buffers, and any parameters kept at higher precision. Sequence length and batch size affect several of these costs. Gradient checkpointing reduces saved activations through recomputation; paging lets some optimizer state reside in CPU RAM when GPU memory is tight.&lt;/p&gt;
+&lt;p&gt;This calculation explains how the frozen weights can fit within the paper's 48 GB training setup while leaving some room for the rest. It is an illustrative storage budget, not a reproduction of the authors' measured peak memory. Their &lt;a href="https://arxiv.org/html/2305.14314v1#A7"&gt;appendix G&lt;/a&gt; examines the memory footprint in more detail.&lt;/p&gt;
+&lt;/details&gt;
+&lt;p&gt;Figures 2 and 3 are reproduced unmodified from the original paper by Dettmers et al., distributed under &lt;a href="https://creativecommons.org/licenses/by/4.0/"&gt;CC BY 4.0&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;QLoRA makes fine-tuning more accessible by separating the large body of pretrained weights from the much smaller set of weights that must change. LoRA reduces the trainable part; NF4 and double quantization compress the frozen part; paged optimizers help handle temporary memory pressure.&lt;/p&gt;
+&lt;p&gt;The result is a practical route to adapting larger models within a limited GPU-memory budget. The paper's strongest message is the combination: carefully chosen quantization and well-placed adapters can preserve strong task performance without the memory cost of updating the whole model.&lt;/p&gt;
+&lt;h2 id="original-sources"&gt;Original sources&lt;a class="headerlink" href="#original-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. &lt;a href="https://arxiv.org/abs/2305.14314"&gt;QLoRA: Efficient Finetuning of Quantized LLMs&lt;/a&gt;, 2023. This explanation follows the &lt;a href="https://arxiv.org/html/2305.14314v1"&gt;original May 2023 version&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/artidoro/qlora"&gt;QLoRA code and Guanaco model information&lt;/a&gt;, maintained by the authors.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Optimization"/><category term="Adapters"/><category term="Low-Rank"/><category term="LoRA"/><category term="QLoRA"/></entry></feed>

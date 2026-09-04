@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>QLoRA: How to fine-tune large language models with less memory - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
+
+    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+
+<link rel="canonical" href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="Adapters,Low-Rank,LoRA,QLoRA" />
+        <meta name="description" content="QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="QLoRA: How to fine-tune large language models with less memory"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"/>
+        <meta property="og:description" content="QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context."/>
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2023/May/26/img/QLoRA_cover.png" />
+
+        <meta property="article:published_time" content="2023-05-26" />
+            <meta property="article:section" content="Optimization" />
+            <meta property="article:tag" content="Adapters" />
+            <meta property="article:tag" content="Low-Rank" />
+            <meta property="article:tag" content="LoRA" />
+            <meta property="article:tag" content="QLoRA" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
+        <meta property="twitter:image"
+              content="https://mchromiak.github.io/articles/2023/May/26/img/QLoRA_cover.png"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+        <link href="https://mchromiak.github.io/feeds/optimization.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog Optimization ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/optimization.html" title="Optimization">Optimization</a></li>
+                <li class="active">QLoRA: How to fine-tune large language models with less memory</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"
+                       rel="bookmark"
+                       title="Permalink to QLoRA: How to fine-tune large language models with less memory">
+                        QLoRA: How to fine-tune large language models with less memory
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2023-05-26T09:33:00+02:00"> Fri, 26 May 2023</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2023-05-26T09:33:00+02:00"> Fri, 26 May 2023</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://mchromiak.github.io/category/optimization.html">Optimization</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://mchromiak.github.io/tag/adapters.html">Adapters</a>
+        /
+	<a href="https://mchromiak.github.io/tag/low-rank.html">Low-Rank</a>
+        /
+	<a href="https://mchromiak.github.io/tag/lora.html">LoRA</a>
+        /
+	<a href="https://mchromiak.github.io/tag/qlora.html">QLoRA</a>
+
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>Adapting a language model to a new task usually costs much more GPU memory than simply running it. Training needs room for the model, intermediate calculations, and the information used to update its weights. For a model with billions of parameters, those extra costs can put fine-tuning out of reach even when inference fits.</p>
+<p><strong>QLoRA combines two ways to save memory: compress the pretrained model and train a small set of additional weights.</strong> In their 2023 paper, Tim Dettmers and colleagues use this approach to fine-tune a 65-billion-parameter LLaMA model on a single 48 GB GPU. They also introduce Guanaco, a family of chatbots trained with QLoRA. <a href="https://arxiv.org/html/2305.14314v1#S1">Paper, introduction</a>.</p>
+<p>The method is easiest to understand in two steps: first decide which weights need to change, then reduce the memory used by the weights that stay fixed.</p>
+<h2 id="why-fine-tuning-needs-so-much-memory">Why fine-tuning needs so much memory<a class="headerlink" href="#why-fine-tuning-needs-so-much-memory" title="Permanent link">🔗</a></h2>
+<p>A pretrained model's <strong>weights</strong>, also called parameters, are the numbers it learned during its original training. <strong>Fine-tuning</strong> adapts those numbers, or adds trainable ones, using examples of the behavior we want. For instruction tuning, an example might pair a question with a useful answer.</p>
+<p>In <strong>full fine-tuning</strong>, all the model's weights can change. Training also stores <strong>gradients</strong>, which indicate how to adjust trainable weights, and <strong>optimizer state</strong>, the running statistics an optimizer uses to choose those adjustments. <strong>Activations</strong>, the intermediate results produced as inputs pass through the network, require memory too.</p>
+<p>The paper estimates that conventional 16-bit fine-tuning of LLaMA 65B requires more than 780 GB of GPU memory. That is a training-memory estimate, not just the size of the model's weights. QLoRA reduces several parts of this memory budget together. <a href="https://arxiv.org/html/2305.14314v1#S2">Paper, sections 1 and 2</a>.</p>
+<h2 id="lora-learn-a-small-update-instead-of-rewriting-the-model">LoRA: Learn a small update instead of rewriting the model<a class="headerlink" href="#lora-learn-a-small-update-instead-of-rewriting-the-model" title="Permanent link">🔗</a></h2>
+<p><strong>LoRA</strong>, short for <em>Low-Rank Adaptation</em>, keeps the pretrained weights <strong>frozen</strong>: training does not update them. It adds small trainable components called <strong>adapters</strong> alongside selected layers. Each layer combines its original computation with an adjustment learned by its adapter.</p>
+<p>For example, when adapting a model to answer customer-support questions, the base model continues to supply its learned language capabilities. Training adjusts the adapters using the new examples. The resulting behavior depends on both parts, even though only the adapters change.</p>
+<p>An adapter represents an update using two smaller matrices, or grids of numbers, instead of one full-size matrix. Their narrow intermediate dimension is the <strong>adapter rank</strong>. This restriction greatly reduces the number of trainable parameters and the gradients and optimizer state associated with them. Ordinary LoRA still needs to keep the large base model in memory; QLoRA addresses that remaining cost.</p>
+<details class="dinov2-background">
+<summary>The algebra: How two small matrices change a layer</summary>
+<p>The QLoRA paper writes the LoRA computation as follows in equation (3):</p>
+<p>
+<div class="math">$$
+\mathbf{Y} = \mathbf{X}\mathbf{W} + s\mathbf{X}\mathbf{L}_1\mathbf{L}_2.
+$$</div>
+</p>
+<p>Here, <span class="math">\(\mathbf{X}\)</span> is the layer's input and <span class="math">\(\mathbf{Y}\)</span> its output. The frozen matrix <span class="math">\(\mathbf{W}\)</span> has shape <span class="math">\(h \times o\)</span>, where <span class="math">\(h\)</span> and <span class="math">\(o\)</span> are the input and output widths. The trainable matrices <span class="math">\(\mathbf{L}_1\)</span> and <span class="math">\(\mathbf{L}_2\)</span> have shapes <span class="math">\(h \times r\)</span> and <span class="math">\(r \times o\)</span>. Their product has the same shape as <span class="math">\(\mathbf{W}\)</span>, but rank at most <span class="math">\(r\)</span>. The scalar <span class="math">\(s\)</span> controls the size of the adapter's contribution.</p>
+<p>For an illustrative layer with input and output widths of 4,096 and rank 8, the two adapter matrices contain 65,536 parameters in total. A full 4,096-by-4,096 weight matrix contains 16,777,216. The adapter therefore uses 256 times fewer trainable parameters for this layer. This is a count of parameters, not a prediction of the total GPU-memory saving.</p>
+<p>In QLoRA, the base matrix is stored in quantized form and reconstructed approximately for computation. The adapters remain higher precision. The paper's equations (5) and (6) give the full expression, including the reconstruction of quantization scales. <a href="https://arxiv.org/html/2305.14314v1#S3">Paper, sections 2 and 3</a>.</p>
+</details>
+<p><img alt="Diagram comparing full fine-tuning, LoRA, and QLoRA: full fine-tuning updates the base model; LoRA trains adapters; QLoRA also compresses the base model and pages optimizer state to CPU memory." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/QLoRA.png"></p>
+<p align="center">Figure 1. The paper's comparison of the three methods. Blue arrows show parameter updates, green arrows show gradient flow, and pink arrows show movement of optimizer state between GPU and CPU memory. In LoRA and QLoRA, gradients pass through the base model's computation to train the adapters, while the base weights stay fixed. Source: Dettmers et al., <a href="https://arxiv.org/html/2305.14314v1#S1.F1">figure 1</a>.</p>
+<h2 id="what-qlora-adds">What QLoRA adds<a class="headerlink" href="#what-qlora-adds" title="Permanent link">🔗</a></h2>
+<p>QLoRA builds on LoRA with three memory-saving components. Each addresses a different cost: storing the weights, storing the information needed to reconstruct those weights, and handling temporary peaks during training.</p>
+<h3 id="1-normalfloat-store-the-base-weights-in-4-bits">1. NormalFloat: Store the base weights in 4 bits<a class="headerlink" href="#1-normalfloat-store-the-base-weights-in-4-bits" title="Permanent link">🔗</a></h3>
+<p><strong>Quantization</strong> replaces high-precision numbers with a smaller set of representable values. Four bits provide 16 possible codes. Each stored weight selects one of those codes, which maps to an approximate numerical value.</p>
+<p>QLoRA introduces <strong>4-bit NormalFloat (NF4)</strong>, whose representable values are arranged for a zero-centered normal distribution: a bell-shaped distribution with most values near zero. It places more of its limited precision in that crowded region, where many pretrained weights lie, rather than spacing all values evenly.</p>
+<p>The weights are divided into small blocks, each with its own scaling factor. This lets the same set of NF4 values represent blocks with different numerical ranges. The paper finds that NF4 performs better than the other 4-bit formats it tests.</p>
+<p><strong>Four-bit storage does not mean four-bit arithmetic throughout training.</strong> When the model uses a group of quantized weights, it dequantizes them into a computation format, usually 16-bit BFloat16 (BF16), before matrix multiplication. Dequantization reconstructs an approximation; it does not recover the exact original weights. The adapters learn while operating alongside that approximation. <a href="https://arxiv.org/html/2305.14314v1#S3">Paper, sections 3 and 4</a>.</p>
+<h3 id="2-double-quantization-compress-the-scales-too">2. Double quantization: Compress the scales too<a class="headerlink" href="#2-double-quantization-compress-the-scales-too" title="Permanent link">🔗</a></h3>
+<p>The scaling factors also occupy memory. If every block of 64 weights has a 32-bit scale, that scale adds half a bit per weight. Across billions of weights, this overhead is substantial.</p>
+<p><strong>Double quantization</strong> quantizes these scaling factors as well. The paper uses 8-bit values for the first set of scales, with higher-precision scales shared across larger groups. This reduces the scale overhead from 0.5 to approximately 0.127 bits per weight, saving about 0.37 bits per parameter, or roughly 3 GB for a 65B model.</p>
+<p>The second quantization therefore targets the scales, not a second round of four-bit compression applied directly to the model weights. <a href="https://arxiv.org/html/2305.14314v1#S3">Paper, section 3</a>.</p>
+<h3 id="3-paged-optimizers-make-room-for-temporary-memory-peaks">3. Paged optimizers: Make room for temporary memory peaks<a class="headerlink" href="#3-paged-optimizers-make-room-for-temporary-memory-peaks" title="Permanent link">🔗</a></h3>
+<p>A training run can fit in memory most of the time and still fail on a batch containing long sequences. The extra intermediate calculations create a temporary peak.</p>
+<p>QLoRA's <strong>paged optimizers</strong> use NVIDIA unified memory to move optimizer state between GPU memory and CPU RAM as needed. When GPU memory is under pressure, some of that state can reside in CPU RAM; it returns when the optimizer needs it. This helps accommodate peaks without reserving enough GPU memory for all optimizer state at all times.</p>
+<p>Paging works alongside <strong>gradient checkpointing</strong>, which saves activation memory by recomputing some intermediate results during the backward pass. Neither technique removes the need to budget for sequence length and batch size. <a href="https://arxiv.org/html/2305.14314v1#S3">Paper, sections 3 and 4</a>.</p>
+<h2 id="one-training-step-from-input-to-update">One training step, from input to update<a class="headerlink" href="#one-training-step-from-input-to-update" title="Permanent link">🔗</a></h2>
+<p>Putting the pieces together, a QLoRA training step works like this:</p>
+<ol>
+<li><strong>Run the examples through the model.</strong> Quantized base weights are dequantized as needed for computation, and the adapters contribute their learned adjustments.</li>
+<li><strong>Measure the prediction error.</strong> The model predicts tokens, the chunks of text it processes. A loss measures how well those predictions match the training targets.</li>
+<li><strong>Backpropagate through the computation.</strong> Gradients pass through the frozen model's operations to determine how the adapter weights should change.</li>
+<li><strong>Update the adapters.</strong> The base weights stay fixed. Paged optimizer state can move between CPU and GPU memory when needed.</li>
+</ol>
+<p>This explains how a frozen model can participate in training: its computations influence the adapter gradients, even though training never updates its own weights.</p>
+<h2 id="what-the-experiments-establish">What the experiments establish<a class="headerlink" href="#what-the-experiments-establish" title="Permanent link">🔗</a></h2>
+<p>The authors compare QLoRA with both full 16-bit fine-tuning and 16-bit LoRA. On the evaluated tasks, QLoRA broadly matches these baselines while using much less memory. The comparison depends on scale: the largest LLaMA experiments, from 7B to 65B, compare against <strong>16-bit LoRA</strong>, not full fine-tuning of every weight at every size.</p>
+<p>Those LLaMA experiments use <strong>MMLU</strong>, a multiple-choice benchmark spanning 57 subjects. Table 4 reports mean accuracy of 53.1% for NF4 with double quantization and 53.0% for the 16-bit adapter baseline, averaged across the tested model sizes and tuning datasets. Individual settings vary, but the overall result is close.</p>
+<p>Adapter placement matters too. The paper finds that applying LoRA across all linear layers in the transformer blocks is important for matching full fine-tuning in its LLaMA 7B experiment. Adding adapters only to the query and value projections in attention does not achieve the same result. <a href="https://arxiv.org/html/2305.14314v1#S4">Paper, section 4</a>.</p>
+<h3 id="guanaco-and-the-single-gpu-results">Guanaco and the single-GPU results<a class="headerlink" href="#guanaco-and-the-single-gpu-results" title="Permanent link">🔗</a></h3>
+<p><strong>QLoRA is the training method; Guanaco is a family of models trained with it.</strong> The authors build Guanaco by instruction-tuning LLaMA on OpenAssistant's OASST1 conversation data. They use supervised learning, without a reinforcement-learning stage.</p>
+<p>The original release reports two particularly useful hardware reference points:</p>
+<ul>
+<li><strong>Guanaco 33B:</strong> fine-tuning on a single 24 GB GPU, with a reported run taking less than 12 hours.</li>
+<li><strong>Guanaco 65B:</strong> fine-tuning on a single 48 GB GPU, with a reported run taking about 24 hours.</li>
+</ul>
+<p>These are results for the authors' training recipe, not fixed runtimes for arbitrary datasets and sequence lengths. They show how the memory reductions make much larger models accessible on a single GPU. <a href="https://arxiv.org/html/2305.14314v1#S1">Paper, introduction and section 4</a>; <a href="https://github.com/artidoro/qlora">authors' implementation</a>.</p>
+<h3 id="what-993-of-chatgpt-means">What "99.3% of ChatGPT" means<a class="headerlink" href="#what-993-of-chatgpt-means" title="Permanent link">🔗</a></h3>
+<p>The widely repeated figure comes from Guanaco 65B's score relative to the 2023 ChatGPT baseline in the paper's <strong>Vicuna benchmark evaluation</strong>. GPT-4 scored responses to 80 prompts; the authors expressed Guanaco's score as a percentage of ChatGPT's and averaged over both response orders to reduce ordering bias. The resulting 99.3% is a relative score under that evaluation, not a measurement of 99.3% of ChatGPT's overall capabilities.</p>
+<p>The paper also compares human and model-based judgments and examines failures that aggregate scores miss. Its broader lesson is that the evaluation should match the intended use: strong performance on a multiple-choice knowledge benchmark need not imply equally strong conversational answers. Training-data suitability matters as well as size. <a href="https://arxiv.org/html/2305.14314v1#S5">Paper, sections 5 and 6</a>.</p>
+<h2 id="a-closer-look-design-choices-and-memory-costs">A closer look: Design choices and memory costs<a class="headerlink" href="#a-closer-look-design-choices-and-memory-costs" title="Permanent link">🔗</a></h2>
+<p>The following comparisons show where the gains come from. The first tests adapter placement; the second tests number formats; the worked example separates weight storage from the rest of the training budget.</p>
+<details class="dinov2-background">
+<summary>Why does adapter placement matter?</summary>
+<p>The paper compares several ways to fine-tune LLaMA 7B on Alpaca. <strong>Attention layers</strong> combine information from different positions in the text. <strong>Feed-forward layers</strong>, abbreviated FFN, transform the representation at each position. Adapters can be added to either group or both.</p>
+<p><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-adapter-placement.svg"><img alt="Paper figure 2: QLoRA with adapters across all linear transformer-block layers achieves higher ROUGE-L than feed-forward-only or attention-only placement, and is comparable to the tuned 16-bit baseline." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-adapter-placement.svg"></a></p>
+<p align="center">Figure 2. Adapter-placement comparison from Dettmers et al., <a href="https://arxiv.org/html/2305.14314v1#S4.F2">figure 2</a>. The original figure is linked at full size.</p>
+<p><strong>How to read it.</strong> Each dot is a run with a different random seed. The vertical axis is ROUGE-L, a measure of overlap between generated and reference answers based on their longest common subsequence. Higher is better on this metric. Blue dots use four-bit base weights; orange dots show the 16-bit full-fine-tuning baselines.</p>
+<p>QLoRA-All places adapters across all linear layers in the transformer blocks. It scores above the FFN-only and attention-only variants and is comparable to the authors' tuned full-fine-tuning baseline, labeled "Alpaca (ours)." The lower Stanford-Alpaca results also show why tuning the baseline matters: outperforming a weak training setup would be less convincing.</p>
+<p>The useful distinction is <strong>where the model can learn an adjustment</strong>, not just how few parameters it updates. This experiment supports broad adapter coverage in this setup; ROUGE-L alone does not establish general chatbot quality. <a href="https://arxiv.org/html/2305.14314v1#S4">Paper, section 4</a>.</p>
+</details>
+<details class="dinov2-background">
+<summary>What do NF4 and double quantization each contribute?</summary>
+<p>The paper also isolates the effect of the number format by evaluating quantized LLaMA models. Here, <strong>zero-shot</strong> means the evaluation supplies no worked examples in the prompt. This comparison tests the quantized models, rather than Guanaco's instruction-tuned conversational behavior.</p>
+<p><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-quantization-comparison.svg"><img alt="Paper figure 3: NormalFloat gives higher mean zero-shot accuracy than regular four-bit floating point; adding double quantization moves results toward lower total model bits with similar accuracy." src="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/img/qlora-quantization-comparison.svg"></a></p>
+<p align="center">Figure 3. Quantization comparison from Dettmers et al., <a href="https://arxiv.org/html/2305.14314v1#S4.F3">figure 3</a>. The original figure is linked at full size.</p>
+<p><strong>How to read it.</strong> The horizontal axis is total model bits on a logarithmic scale; farther left means less storage. The vertical axis is mean accuracy across five benchmarks: WinoGrande, HellaSwag, PIQA, ARC-Easy, and ARC-Challenge. Higher means better performance on that collection of tasks.</p>
+<p>The orange NormalFloat curve sits above the blue ordinary-float curve. Both use four-bit weight codes, but choosing the representable values differently changes the error introduced by quantization. The green NormalFloat-plus-DQ curve stays close to the orange curve while shifting left: compressing the scales saves storage with little change in accuracy here.</p>
+<p>The two components therefore do different jobs. <strong>NF4 improves the representation of the weights; double quantization reduces the overhead of their scales.</strong> These results explain the choice of quantization scheme. The fine-tuning comparisons in table 4 address the separate question of how well the models perform after adapter training. <a href="https://arxiv.org/html/2305.14314v1#S4">Paper, section 4</a>.</p>
+</details>
+<details class="dinov2-background">
+<summary>A worked memory budget for 65 billion weights</summary>
+<p>Start with an idealized model containing exactly 65 billion weights. A byte contains eight bits, so storing every weight in 16 bits requires 130 GB. Four bits per weight reduces that to 32.5 GB. These calculations use decimal gigabytes and count only the stored weight values.</p>
+<table>
+<thead>
+<tr>
+<th>What is stored</th>
+<th>Approximate size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weight values at 16 bits each</td>
+<td>130 GB</td>
+</tr>
+<tr>
+<td>Weight values at 4 bits each</td>
+<td>32.5 GB</td>
+</tr>
+<tr>
+<td>Four-bit values plus the paper's double-quantized scale overhead</td>
+<td>33.5 GB</td>
+</tr>
+</tbody>
+</table>
+<p>The last row adds approximately 0.127 bits per weight for scales, using the paper's block sizes: 64 weights per first-level block and 256 scales per second-level block. That contributes about 1 GB across 65 billion weights. Without double quantization, the 0.5-bit scale overhead would contribute about 4.1 GB instead. This is where the roughly 3 GB saving comes from. <a href="https://arxiv.org/html/2305.14314v1#S3">Paper, section 3</a>.</p>
+<p><strong>The 33.5 GB estimate is not the total training requirement.</strong> A real run also needs adapters, their gradients and optimizer state, activations, temporary computation buffers, and any parameters kept at higher precision. Sequence length and batch size affect several of these costs. Gradient checkpointing reduces saved activations through recomputation; paging lets some optimizer state reside in CPU RAM when GPU memory is tight.</p>
+<p>This calculation explains how the frozen weights can fit within the paper's 48 GB training setup while leaving some room for the rest. It is an illustrative storage budget, not a reproduction of the authors' measured peak memory. Their <a href="https://arxiv.org/html/2305.14314v1#A7">appendix G</a> examines the memory footprint in more detail.</p>
+</details>
+<p>Figures 2 and 3 are reproduced unmodified from the original paper by Dettmers et al., distributed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+<h2 id="the-takeaway">The takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">🔗</a></h2>
+<p>QLoRA makes fine-tuning more accessible by separating the large body of pretrained weights from the much smaller set of weights that must change. LoRA reduces the trainable part; NF4 and double quantization compress the frozen part; paged optimizers help handle temporary memory pressure.</p>
+<p>The result is a practical route to adapting larger models within a limited GPU-memory budget. The paper's strongest message is the combination: carefully chosen quantization and well-placed adapters can preserve strong task performance without the memory cost of updating the whole model.</p>
+<h2 id="original-sources">Original sources<a class="headerlink" href="#original-sources" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, and Luke Zettlemoyer. <a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs</a>, 2023. This explanation follows the <a href="https://arxiv.org/html/2305.14314v1">original May 2023 version</a>.</li>
+<li><a href="https://github.com/artidoro/qlora">QLoRA code and Guanaco model information</a>, maintained by the authors.</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = 'https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MichalChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://twitter.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> Twitter</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal_Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="localhost:8000/feeds/all.rss"><i class="fa fa-rss-square fa-lg"></i> RSS</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINOv2: How self-supervised visual features transfer across tasks</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/optimization.html"><i class="fa fa-folder-open fa-lg"></i>Optimization</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="http://www.iclr.cc" target="_blank">ICLR Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://icml.cc" target="_blank">ICML Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://nips.cc/" target="_blank">NeurIPS Conf</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://aifrontiers.com/" target="_blank">AI Frontiers</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary/" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepart.io/" target="_blank">DeepArt Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group Andrew Ng</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://ai-on.org/" target="_blank">AI•ON open ML collaboration</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://java-hive.blogspot.com/" target="_blank">My old blog on Java an SE</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://karpathy.github.io/2016/09/07/phd/" target="_blank">PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://alt.qcri.org/semeval2017/" target="_blank">SemEval2017</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://medium.freecodecamp.org/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c" target="_blank">Free CS courses</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Apr/index.html"><i class="fa fa-calendar fa-lg"></i>April 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2023 Michał Chromiak
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>                <p><small>  <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"><img alt="Creative Commons License" style="border-width:0" src="//i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+    Content
+  licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">Creative Commons Attribution-ShareAlike 4.0 International License</a>, except where indicated otherwise.
+</small></p>
+         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+</body>
+</html>
