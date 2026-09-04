@@ -159,6 +159,10 @@ body{
   margin-bottom: 1.5em;
 }
 
+.about-profile .entry-content li + li {
+  margin-top: 0.65em;
+}
+
 .entry-content img{
   border: 1px solid #bbb;
   border-radius: 3px;

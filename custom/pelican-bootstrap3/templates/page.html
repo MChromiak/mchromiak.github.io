@@ -45,9 +45,9 @@
 {% endblock %}
 
 {% block content %}
-    <section id="content" class="body">
+    <section id="content" class="body{% if page.slug == 'about' %} about-profile{% endif %}">
         {% if page.title %}
-        <h1 class="entry-title">{{ page.title }}</h1>
+        <h1 class="entry-title">{{ page.heading|default(page.title) }}</h1>
         {% endif %}
         {% import 'includes/translations.html' as translations with context %}
         {{ translations.translations_for(page) }}
