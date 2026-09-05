@@ -33,7 +33,7 @@ async function inspectPage(page, label, expected) {
     !result.complete ||
     result.naturalWidth !== expected.width ||
     result.naturalHeight !== expected.height ||
-    !result.currentSrc.endsWith(expected.path)
+    !new URL(result.currentSrc).pathname.endsWith(expected.path)
   ) {
     throw new Error(`${label}: animated WebP did not load at its expected dimensions`);
   }
@@ -87,7 +87,7 @@ async function main() {
     await reducedImage.scrollIntoViewIfNeeded();
     await reducedImage.evaluate(async (element) => element.decode());
     const reducedSource = await reducedImage.evaluate((element) => element.currentSrc);
-    if (!reducedSource.endsWith("/img/atlas-conceptual-flow.svg")) {
+    if (!new URL(reducedSource).pathname.endsWith("/img/atlas-conceptual-flow.svg")) {
       throw new Error(`reduced motion: expected the static SVG, received ${reducedSource}`);
     }
     await reducedImage.scrollIntoViewIfNeeded();
