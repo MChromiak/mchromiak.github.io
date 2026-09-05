@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atlas request flow animation source</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #f7fafc;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    text {
+      font-family: Inter, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 1200 675" role="img" aria-labelledby="title description">
+    <title id="title">How an Atlas request turns observations into a new camera-grounded view</title>
+    <desc id="description">Images, text, depth maps, and camera poses enter a shared spatial context. A target camera pose requests the next element. Rectified-flow generation constructs the output, which can join the growing context.</desc>
+
+    <defs>
+      <clipPath id="output-clip">
+        <rect x="895" y="206" width="257" height="232" rx="5"/>
+      </clipPath>
+      <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+      </marker>
+      <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+      </marker>
+      <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
+      </filter>
+    </defs>
+
+    <rect width="1200" height="675" fill="#f7fafc"/>
+    <text x="44" y="48" fill="#1f3342" font-size="29" font-weight="700">From observations to a camera-grounded output</text>
+    <text x="44" y="78" fill="#58707f" font-size="17">A conceptual animation based on World Labs' public Atlas description</text>
+
+    <g id="stage-inputs">
+      <text x="45" y="128" fill="#2878a8" font-size="16" font-weight="700">1  OBSERVE</text>
+
+      <g id="input-text" filter="url(#soft-shadow)">
+        <rect x="44" y="149" width="238" height="82" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <circle cx="75" cy="180" r="16" fill="#e8f2f8"/>
+        <path d="M67 174 H83 M67 180 H80 M67 186 H76" stroke="#2878a8" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="103" y="178" fill="#1f3342" font-size="19" font-weight="700">Text</text>
+        <text x="103" y="204" fill="#58707f" font-size="15">what should exist</text>
+      </g>
+
+      <g id="input-image" filter="url(#soft-shadow)">
+        <rect x="44" y="246" width="238" height="112" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <rect x="59" y="261" width="72" height="66" rx="3" fill="#d9edf2"/>
+        <rect x="59" y="300" width="72" height="27" fill="#b8d5c5"/>
+        <circle cx="113" cy="277" r="8" fill="#d8974d"/>
+        <path d="M64 306 L82 286 L96 299 L110 283 L128 306" fill="#8bb8a5"/>
+        <path d="M72 338 L118 338" stroke="#2878a8" stroke-width="3" stroke-linecap="round"/>
+        <path d="M79 333 L72 338 L79 343" fill="none" stroke="#2878a8" stroke-width="2"/>
+        <text x="149" y="279" fill="#1f3342" font-size="19" font-weight="700">Images</text>
+        <text x="149" y="304" fill="#58707f" font-size="15">what was seen</text>
+        <text x="149" y="329" fill="#2878a8" font-size="14" font-weight="700">+ camera pose</text>
+      </g>
+
+      <g id="input-depth" filter="url(#soft-shadow)">
+        <rect x="44" y="373" width="238" height="112" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <rect x="59" y="388" width="72" height="66" rx="3" fill="#143a52"/>
+        <path d="M59 444 L78 414 L96 434 L113 399 L131 423 V454 H59 Z" fill="#37a5a0"/>
+        <circle cx="116" cy="402" r="8" fill="#e6b35a"/>
+        <path d="M72 465 L118 465" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+        <path d="M79 460 L72 465 L79 470" fill="none" stroke="#0f766e" stroke-width="2"/>
+        <text x="149" y="406" fill="#1f3342" font-size="19" font-weight="700">Depth</text>
+        <text x="149" y="431" fill="#58707f" font-size="15">surface distance</text>
+        <text x="149" y="456" fill="#0f766e" font-size="14" font-weight="700">+ camera pose</text>
+      </g>
+    </g>
+
+    <path id="evidence-arrow" d="M298 318 C330 318 337 318 365 318" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow-blue)"/>
+
+    <g id="stage-context">
+      <text x="367" y="128" fill="#2878a8" font-size="16" font-weight="700">2  GROUND IN SPACE</text>
+      <rect x="363" y="149" width="442" height="336" rx="6" fill="#eaf5fa" stroke="#2878a8" stroke-width="2.5"/>
+      <text x="584" y="181" text-anchor="middle" fill="#1f3342" font-size="20" font-weight="700">Spatial context</text>
+      <text x="584" y="204" text-anchor="middle" fill="#58707f" font-size="14">observations share one coordinate frame</text>
+
+      <g id="context-world">
+        <path d="M428 405 L546 262 L723 305 L687 435 Z" fill="#fdfefe" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M428 405 L546 262 L546 376 L428 435 Z" fill="#d8eaf1" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M546 262 L723 305 L723 414 L546 376 Z" fill="#edf5f7" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M546 376 L723 414 L687 435 L428 435 Z" fill="#c7dfd3" stroke="#8fb2c5" stroke-width="2"/>
+
+        <path d="M518 338 L622 354 L652 336 L549 322 Z" fill="#d8974d" stroke="#84582d" stroke-width="2"/>
+        <path d="M529 337 L522 400 M638 351 L646 413" stroke="#84582d" stroke-width="5"/>
+        <circle cx="589" cy="313" r="13" fill="#f2c96f" stroke="#9d7025" stroke-width="2"/>
+        <path d="M589 327 V345" stroke="#9d7025" stroke-width="4"/>
+        <path d="M674 377 C690 361 714 368 714 389 V414 H670 V394" fill="#78a79c" stroke="#356f67" stroke-width="2"/>
+
+        <g id="point-field" fill="#0f766e">
+          <circle cx="464" cy="399" r="3"/><circle cx="478" cy="383" r="3"/><circle cx="494" cy="365" r="3"/>
+          <circle cx="513" cy="344" r="3"/><circle cx="539" cy="316" r="3"/><circle cx="564" cy="283" r="3"/>
+          <circle cx="575" cy="397" r="3"/><circle cx="603" cy="402" r="3"/><circle cx="632" cy="407" r="3"/>
+          <circle cx="661" cy="414" r="3"/><circle cx="690" cy="420" r="3"/><circle cx="706" cy="363" r="3"/>
+          <circle cx="705" cy="333" r="3"/><circle cx="668" cy="322" r="3"/><circle cx="628" cy="310" r="3"/>
+        </g>
+
+        <g id="camera-a" transform="translate(403 276)">
+          <path d="M0 8 L25 0 V30 L0 22 Z" fill="#ffffff" stroke="#2878a8" stroke-width="2"/>
+          <path d="M25 7 L40 2 V28 L25 23 Z" fill="#2878a8"/>
+        </g>
+        <g id="camera-b" transform="translate(733 244)">
+          <path d="M40 8 L15 0 V30 L40 22 Z" fill="#ffffff" stroke="#2878a8" stroke-width="2"/>
+          <path d="M15 7 L0 2 V28 L15 23 Z" fill="#2878a8"/>
+        </g>
+        <path id="ray-a" d="M443 291 L535 339 L470 403 Z" fill="#2878a8" opacity="0.12"/>
+        <path id="ray-b" d="M733 260 L648 337 L715 410 Z" fill="#2878a8" opacity="0.12"/>
+      </g>
+    </g>
+
+    <path id="camera-track" d="M715 451 C759 466 824 437 861 378" fill="none" stroke="#b45309" stroke-width="2.5" stroke-dasharray="7 7"/>
+    <g id="target-camera">
+      <circle r="24" fill="#fff4e5" stroke="#b45309" stroke-width="2.5"/>
+      <path d="M-12 -5 H5 V9 H-12 Z M5 -1 L14 -7 V11 L5 5 Z" fill="#b45309"/>
+    </g>
+    <text id="target-label" x="822" y="352" text-anchor="middle" fill="#8a4208" font-size="14" font-weight="700">target pose</text>
+
+    <path id="generation-arrow" d="M818 318 C843 318 852 318 878 318" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#arrow-teal)"/>
+    <g id="flow-particles" fill="#0f766e">
+      <circle id="particle-1" r="5"/><circle id="particle-2" r="4"/><circle id="particle-3" r="3"/>
+    </g>
+
+    <g id="stage-output">
+      <text x="882" y="128" fill="#0f766e" font-size="16" font-weight="700">3  GENERATE THE NEXT ELEMENT</text>
+      <rect x="879" y="149" width="289" height="336" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="2.5" filter="url(#soft-shadow)"/>
+      <text x="1023" y="181" text-anchor="middle" fill="#1f3342" font-size="18" font-weight="700">Requested camera view</text>
+
+      <g clip-path="url(#output-clip)">
+        <rect x="895" y="206" width="257" height="232" fill="#dfeef2"/>
+        <g id="output-scene">
+          <rect x="895" y="206" width="257" height="139" fill="#dceaf0"/>
+          <path d="M895 345 L1152 345 L1152 438 L895 438 Z" fill="#c5decf"/>
+          <path d="M895 345 L995 281 L1152 306 L1152 438 L895 438 Z" fill="#eef4f5" opacity="0.72"/>
+          <path d="M946 354 L1049 323 L1105 346 L1001 379 Z" fill="#d8974d" stroke="#84582d" stroke-width="2"/>
+          <path d="M962 349 L955 418 M1088 342 L1096 410" stroke="#84582d" stroke-width="5"/>
+          <circle cx="1026" cy="297" r="17" fill="#f2c96f" stroke="#9d7025" stroke-width="2"/>
+          <path d="M1026 314 V338" stroke="#9d7025" stroke-width="4"/>
+          <path d="M1110 368 C1127 349 1148 358 1152 379 V432 H1103 V390" fill="#78a79c" stroke="#356f67" stroke-width="2"/>
+        </g>
+        <g id="noise-grid">
+          <rect x="895" y="206" width="43" height="39" fill="#274b63"/><rect x="938" y="206" width="43" height="39" fill="#d8974d"/>
+          <rect x="981" y="206" width="43" height="39" fill="#7aa59d"/><rect x="1024" y="206" width="43" height="39" fill="#4f7d96"/>
+          <rect x="1067" y="206" width="43" height="39" fill="#e1b166"/><rect x="1110" y="206" width="42" height="39" fill="#2c6275"/>
+          <rect x="895" y="245" width="43" height="39" fill="#9fbfca"/><rect x="938" y="245" width="43" height="39" fill="#2b647e"/>
+          <rect x="981" y="245" width="43" height="39" fill="#d7e6e8"/><rect x="1024" y="245" width="43" height="39" fill="#b1723d"/>
+          <rect x="1067" y="245" width="43" height="39" fill="#406c69"/><rect x="1110" y="245" width="42" height="39" fill="#b9d3c6"/>
+          <rect x="895" y="284" width="43" height="39" fill="#d7a95d"/><rect x="938" y="284" width="43" height="39" fill="#6995a7"/>
+          <rect x="981" y="284" width="43" height="39" fill="#245b75"/><rect x="1024" y="284" width="43" height="39" fill="#dce8e5"/>
+          <rect x="1067" y="284" width="43" height="39" fill="#be7e42"/><rect x="1110" y="284" width="42" height="39" fill="#6ca198"/>
+          <rect x="895" y="323" width="43" height="39" fill="#43728a"/><rect x="938" y="323" width="43" height="39" fill="#bed7ce"/>
+          <rect x="981" y="323" width="43" height="39" fill="#e7bd75"/><rect x="1024" y="323" width="43" height="39" fill="#3f6f7e"/>
+          <rect x="1067" y="323" width="43" height="39" fill="#96b8b2"/><rect x="1110" y="323" width="42" height="39" fill="#31566c"/>
+          <rect x="895" y="362" width="43" height="38" fill="#aac8bf"/><rect x="938" y="362" width="43" height="38" fill="#8e5b35"/>
+          <rect x="981" y="362" width="43" height="38" fill="#527f91"/><rect x="1024" y="362" width="43" height="38" fill="#e2c280"/>
+          <rect x="1067" y="362" width="43" height="38" fill="#2e6872"/><rect x="1110" y="362" width="42" height="38" fill="#cadeda"/>
+          <rect x="895" y="400" width="43" height="38" fill="#d9b36d"/><rect x="938" y="400" width="43" height="38" fill="#3a6d82"/>
+          <rect x="981" y="400" width="43" height="38" fill="#99bdb2"/><rect x="1024" y="400" width="43" height="38" fill="#35596d"/>
+          <rect x="1067" y="400" width="43" height="38" fill="#c18149"/><rect x="1110" y="400" width="42" height="38" fill="#79a6a1"/>
+        </g>
+      </g>
+
+      <rect x="895" y="206" width="257" height="232" rx="5" fill="none" stroke="#91acae" stroke-width="2"/>
+      <text id="output-status" x="1023" y="462" text-anchor="middle" fill="#0f766e" font-size="14" font-weight="700">rectified flow resolves the output</text>
+    </g>
+
+    <path id="return-path" d="M1020 500 C964 545 742 548 659 474" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrow-teal)"/>
+    <text id="return-label" x="845" y="546" text-anchor="middle" fill="#0f766e" font-size="14" font-weight="700">4  result can join the growing context</text>
+
+    <g id="timeline">
+      <path d="M52 611 H1148" stroke="#cad9df" stroke-width="4" stroke-linecap="round"/>
+      <path id="timeline-progress" d="M52 611 H1148" stroke="#2878a8" stroke-width="4" stroke-linecap="round"/>
+
+      <g id="step-1" transform="translate(52 611)">
+        <circle r="16" fill="#2878a8"/>
+        <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">1</text>
+        <text x="24" y="6" fill="#1f3342" font-size="15" font-weight="700">Observe</text>
+      </g>
+      <g id="step-2" transform="translate(333 611)">
+        <circle r="16" fill="#2878a8"/>
+        <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">2</text>
+        <text x="24" y="6" fill="#1f3342" font-size="15" font-weight="700">Ground</text>
+      </g>
+      <g id="step-3" transform="translate(630 611)">
+        <circle r="16" fill="#0f766e"/>
+        <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">3</text>
+        <text x="24" y="6" fill="#1f3342" font-size="15" font-weight="700">Generate</text>
+      </g>
+      <g id="step-4" transform="translate(930 611)">
+        <circle r="16" fill="#b45309"/>
+        <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">4</text>
+        <text x="24" y="6" fill="#1f3342" font-size="15" font-weight="700">Extend context</text>
+      </g>
+    </g>
+
+    <text x="44" y="657" fill="#6b7f8b" font-size="13">Conceptual sequence, not a diagram of undisclosed Atlas internals</text>
+    <text x="1156" y="657" text-anchor="end" fill="#6b7f8b" font-size="13">Source: World Labs, Atlas model architecture</text>
+  </svg>
+
+  <script>
+    (() => {
+      const duration = 9;
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+      const ease = (value) => {
+        const p = clamp(value);
+        return p * p * (3 - 2 * p);
+      };
+      const byId = (id) => document.getElementById(id);
+      const motionPath = byId("camera-track");
+      const generationPath = byId("generation-arrow");
+      const pathLength = motionPath.getTotalLength();
+      const generationLength = generationPath.getTotalLength();
+      const timelineLength = 1096;
+
+      const setReveal = (id, progress, distance = 18, minimum = 0.18) => {
+        const p = ease(progress);
+        const element = byId(id);
+        element.style.opacity = String(minimum + (1 - minimum) * p);
+        element.setAttribute("transform", `translate(${(1 - p) * -distance} 0)`);
+      };
+
+      const positionOnPath = (element, path, length, progress, rotation = 0) => {
+        const point = path.getPointAtLength(length * clamp(progress));
+        element.setAttribute("transform", `translate(${point.x} ${point.y}) rotate(${rotation})`);
+      };
+
+      const setStage = (id, active, complete) => {
+        const group = byId(id);
+        group.style.opacity = active ? "1" : complete ? "0.78" : "0.42";
+        group.setAttribute("transform", group.getAttribute("data-base") || group.getAttribute("transform"));
+      };
+
+      ["step-1", "step-2", "step-3", "step-4"].forEach((id) => {
+        const element = byId(id);
+        element.setAttribute("data-base", element.getAttribute("transform"));
+      });
+
+      window.renderFrame = (seconds) => {
+        const time = ((seconds % duration) + duration) % duration;
+        const observe = clamp(time / 1.6);
+        const ground = clamp((time - 1.25) / 2.1);
+        const request = clamp((time - 3.15) / 1.8);
+        const generate = clamp((time - 4.6) / 2.25);
+        const extend = clamp((time - 6.45) / 1.25);
+
+        setReveal("input-text", observe / 0.58);
+        setReveal("input-image", (observe - 0.22) / 0.58);
+        setReveal("input-depth", (observe - 0.44) / 0.56);
+
+        byId("evidence-arrow").style.opacity = String(0.2 + 0.8 * ease(ground));
+        byId("evidence-arrow").style.strokeDasharray = "390";
+        byId("evidence-arrow").style.strokeDashoffset = String(390 * (1 - ease(ground)));
+        byId("context-world").style.opacity = String(0.34 + 0.66 * ease(ground));
+        byId("point-field").style.opacity = String(0.15 + 0.85 * ease(ground));
+        byId("point-field").setAttribute("transform", `translate(${584 * (1 - ease(ground))} ${354 * (1 - ease(ground))}) scale(${0.35 + 0.65 * ease(ground)}) translate(${-584 * (1 - ease(ground))} ${-354 * (1 - ease(ground))})`);
+        byId("ray-a").style.opacity = String(0.04 + 0.16 * ease(ground));
+        byId("ray-b").style.opacity = String(0.04 + 0.16 * ease(ground));
+
+        positionOnPath(byId("target-camera"), motionPath, pathLength, ease(request));
+        byId("target-camera").style.opacity = String(0.18 + 0.82 * ease(request));
+        byId("target-label").style.opacity = String(0.12 + 0.88 * ease(request));
+        byId("camera-track").style.opacity = String(0.16 + 0.84 * ease(request));
+        byId("camera-track").style.strokeDashoffset = String(90 * (1 - ease(request)));
+
+        byId("generation-arrow").style.opacity = String(0.16 + 0.84 * ease(generate));
+        byId("generation-arrow").style.strokeDasharray = String(generationLength);
+        byId("generation-arrow").style.strokeDashoffset = String(generationLength * (1 - ease(generate)));
+        ["particle-1", "particle-2", "particle-3"].forEach((id, index) => {
+          const particleProgress = clamp(generate * 1.35 - index * 0.16);
+          positionOnPath(byId(id), generationPath, generationLength, particleProgress);
+          byId(id).style.opacity = String(generate > 0 && generate < 0.94 ? 0.8 : 0);
+        });
+
+        const resolved = ease(generate);
+        byId("noise-grid").style.opacity = String(1 - resolved);
+        byId("output-scene").style.opacity = String(0.22 + 0.78 * resolved);
+        byId("output-status").textContent = resolved > 0.86 ? "new camera-grounded view" : "rectified flow resolves the output";
+        byId("output-status").style.opacity = String(0.34 + 0.66 * resolved);
+
+        byId("return-path").style.opacity = String(0.1 + 0.9 * ease(extend));
+        byId("return-path").style.strokeDashoffset = String(110 * (1 - ease(extend)));
+        byId("return-label").style.opacity = String(0.12 + 0.88 * ease(extend));
+
+        const total = clamp(time / 7.7);
+        byId("timeline-progress").style.strokeDasharray = String(timelineLength);
+        byId("timeline-progress").style.strokeDashoffset = String(timelineLength * (1 - total));
+        const activeStage = time < 1.5 ? 1 : time < 3.4 ? 2 : time < 6.3 ? 3 : 4;
+        setStage("step-1", activeStage === 1, activeStage > 1);
+        setStage("step-2", activeStage === 2, activeStage > 2);
+        setStage("step-3", activeStage === 3, activeStage > 3);
+        setStage("step-4", activeStage === 4, false);
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("frame")) {
+        window.renderFrame(Number(params.get("frame")) || 0);
+        return;
+      }
+
+      const startedAt = performance.now();
+      const animate = (now) => {
+        window.renderFrame((now - startedAt) / 1000);
+        requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

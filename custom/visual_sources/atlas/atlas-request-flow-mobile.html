@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atlas request flow mobile animation source</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #f7fafc;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    text {
+      font-family: Inter, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 720 1100" role="img" aria-labelledby="title description">
+    <title id="title">Mobile view of an Atlas request from observations to a new camera-grounded view</title>
+    <desc id="description">Text, images, depth maps, and camera poses enter a spatial context. A target camera requests the next view. Rectified flow resolves the output, which can then extend the context.</desc>
+
+    <defs>
+      <marker id="arrow-blue-mobile" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+      </marker>
+      <marker id="arrow-teal-mobile" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+      </marker>
+      <clipPath id="mobile-output-clip">
+        <rect x="382" y="701" width="288" height="210" rx="5"/>
+      </clipPath>
+      <filter id="mobile-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
+      </filter>
+    </defs>
+
+    <rect width="720" height="1100" fill="#f7fafc"/>
+    <text x="30" y="50" fill="#1f3342" font-size="31" font-weight="700">From observations to a new view</text>
+    <text x="30" y="82" fill="#58707f" font-size="18">A conceptual Atlas request, shown in four stages</text>
+
+    <text x="30" y="132" fill="#2878a8" font-size="20" font-weight="700">1  OBSERVE</text>
+    <g id="mobile-inputs">
+      <g id="mobile-input-text" filter="url(#mobile-shadow)">
+        <rect x="30" y="154" width="206" height="122" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <circle cx="61" cy="186" r="17" fill="#e8f2f8"/>
+        <path d="M53 180 H69 M53 186 H66 M53 192 H63" stroke="#2878a8" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="89" y="184" fill="#1f3342" font-size="21" font-weight="700">Text</text>
+        <text x="48" y="230" fill="#58707f" font-size="17">what should exist</text>
+      </g>
+
+      <g id="mobile-input-image" filter="url(#mobile-shadow)">
+        <rect x="257" y="154" width="206" height="122" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <rect x="274" y="173" width="67" height="55" rx="3" fill="#d9edf2"/>
+        <rect x="274" y="207" width="67" height="21" fill="#b8d5c5"/>
+        <circle cx="326" cy="186" r="7" fill="#d8974d"/>
+        <path d="M278 214 L294 194 L307 206 L321 191 L338 214" fill="#8bb8a5"/>
+        <text x="356" y="187" fill="#1f3342" font-size="21" font-weight="700">Images</text>
+        <text x="276" y="250" fill="#2878a8" font-size="16" font-weight="700">+ camera pose</text>
+      </g>
+
+      <g id="mobile-input-depth" filter="url(#mobile-shadow)">
+        <rect x="484" y="154" width="206" height="122" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+        <rect x="501" y="173" width="67" height="55" rx="3" fill="#143a52"/>
+        <path d="M501 221 L518 194 L535 213 L550 181 L568 202 V228 H501 Z" fill="#37a5a0"/>
+        <circle cx="553" cy="184" r="7" fill="#e6b35a"/>
+        <text x="584" y="187" fill="#1f3342" font-size="21" font-weight="700">Depth</text>
+        <text x="503" y="250" fill="#0f766e" font-size="16" font-weight="700">+ camera pose</text>
+      </g>
+    </g>
+
+    <path id="mobile-evidence-arrow" d="M360 292 V329" fill="none" stroke="#2878a8" stroke-width="4" marker-end="url(#arrow-blue-mobile)"/>
+
+    <text x="30" y="359" fill="#2878a8" font-size="20" font-weight="700">2  GROUND IN SPACE</text>
+    <g id="mobile-context">
+      <rect x="30" y="379" width="660" height="264" rx="6" fill="#eaf5fa" stroke="#2878a8" stroke-width="3"/>
+      <text x="360" y="415" text-anchor="middle" fill="#1f3342" font-size="23" font-weight="700">Spatial context</text>
+      <text x="360" y="442" text-anchor="middle" fill="#58707f" font-size="17">observations share one camera-grounded frame</text>
+
+      <g id="mobile-world">
+        <path d="M181 584 L299 468 L535 500 L502 604 Z" fill="#ffffff" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M181 584 L299 468 L299 559 L181 604 Z" fill="#d8eaf1" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M299 468 L535 500 L535 588 L299 559 Z" fill="#edf5f7" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M299 559 L535 588 L502 604 L181 604 Z" fill="#c7dfd3" stroke="#8fb2c5" stroke-width="2"/>
+        <path d="M284 532 L410 546 L447 523 L321 510 Z" fill="#d8974d" stroke="#84582d" stroke-width="2"/>
+        <path d="M297 530 L289 587 M431 541 L440 593" stroke="#84582d" stroke-width="6"/>
+        <circle cx="366" cy="491" r="15" fill="#f2c96f" stroke="#9d7025" stroke-width="2"/>
+        <path d="M366 507 V530" stroke="#9d7025" stroke-width="4"/>
+        <path d="M468 556 C487 535 516 545 516 569 V594 H463 V576" fill="#78a79c" stroke="#356f67" stroke-width="2"/>
+
+        <g id="mobile-points" fill="#0f766e">
+          <circle cx="215" cy="574" r="4"/><circle cx="240" cy="551" r="4"/><circle cx="267" cy="522" r="4"/>
+          <circle cx="306" cy="487" r="4"/><circle cx="332" cy="475" r="4"/><circle cx="345" cy="585" r="4"/>
+          <circle cx="384" cy="591" r="4"/><circle cx="425" cy="595" r="4"/><circle cx="471" cy="601" r="4"/>
+          <circle cx="521" cy="578" r="4"/><circle cx="520" cy="532" r="4"/><circle cx="480" cy="512" r="4"/>
+        </g>
+
+        <g transform="translate(123 476)">
+          <path d="M0 9 L27 0 V32 L0 23 Z" fill="#ffffff" stroke="#2878a8" stroke-width="2.5"/>
+          <path d="M27 7 L44 1 V31 L27 25 Z" fill="#2878a8"/>
+        </g>
+        <g transform="translate(552 452)">
+          <path d="M44 9 L17 0 V32 L44 23 Z" fill="#ffffff" stroke="#2878a8" stroke-width="2.5"/>
+          <path d="M17 7 L0 1 V31 L17 25 Z" fill="#2878a8"/>
+        </g>
+        <path id="mobile-ray-a" d="M167 491 L304 529 L201 590 Z" fill="#2878a8" opacity="0.12"/>
+        <path id="mobile-ray-b" d="M552 468 L441 524 L523 589 Z" fill="#2878a8" opacity="0.12"/>
+      </g>
+    </g>
+
+    <path id="mobile-camera-track" d="M534 612 C597 620 648 594 651 536" fill="none" stroke="#b45309" stroke-width="3" stroke-dasharray="8 8"/>
+    <g id="mobile-target-camera">
+      <circle r="25" fill="#fff4e5" stroke="#b45309" stroke-width="3"/>
+      <path d="M-12 -6 H6 V9 H-12 Z M6 -1 L15 -8 V12 L6 5 Z" fill="#b45309"/>
+    </g>
+
+    <path id="mobile-generation-arrow" d="M360 658 V686" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow-teal-mobile)"/>
+    <text x="30" y="716" fill="#0f766e" font-size="20" font-weight="700">3  GENERATE THE NEXT ELEMENT</text>
+
+    <g id="mobile-output" filter="url(#mobile-shadow)">
+      <rect x="30" y="738" width="660" height="223" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="3"/>
+      <g>
+        <text x="184" y="777" text-anchor="middle" fill="#1f3342" font-size="20" font-weight="700">Noisy latent</text>
+        <g id="mobile-noise">
+          <rect x="61" y="799" width="61" height="52" fill="#274b63"/><rect x="122" y="799" width="61" height="52" fill="#d8974d"/>
+          <rect x="183" y="799" width="61" height="52" fill="#7aa59d"/><rect x="244" y="799" width="61" height="52" fill="#4f7d96"/>
+          <rect x="61" y="851" width="61" height="52" fill="#9fbfca"/><rect x="122" y="851" width="61" height="52" fill="#2b647e"/>
+          <rect x="183" y="851" width="61" height="52" fill="#d7e6e8"/><rect x="244" y="851" width="61" height="52" fill="#b1723d"/>
+          <rect x="61" y="903" width="61" height="31" fill="#d7a95d"/><rect x="122" y="903" width="61" height="31" fill="#6995a7"/>
+          <rect x="183" y="903" width="61" height="31" fill="#245b75"/><rect x="244" y="903" width="61" height="31" fill="#6ca198"/>
+        </g>
+      </g>
+
+      <path id="mobile-flow-arrow" d="M322 862 H365" fill="none" stroke="#0f766e" stroke-width="4" marker-end="url(#arrow-teal-mobile)"/>
+      <circle id="mobile-particle" r="6" fill="#0f766e"/>
+
+      <g>
+        <text x="526" y="777" text-anchor="middle" fill="#1f3342" font-size="20" font-weight="700">New camera view</text>
+        <g clip-path="url(#mobile-output-clip)">
+          <rect x="382" y="799" width="288" height="135" fill="#dceaf0"/>
+          <path d="M382 880 L670 880 V934 H382 Z" fill="#c5decf"/>
+          <path d="M382 880 L491 816 L670 842 V934 H382 Z" fill="#eef4f5" opacity="0.72"/>
+          <path d="M430 885 L548 851 L614 875 L495 910 Z" fill="#d8974d" stroke="#84582d" stroke-width="2"/>
+          <path d="M447 880 L440 928 M596 870 L604 925" stroke="#84582d" stroke-width="6"/>
+          <circle cx="523" cy="826" r="18" fill="#f2c96f" stroke="#9d7025" stroke-width="2"/>
+          <path d="M523 844 V871" stroke="#9d7025" stroke-width="4"/>
+          <path d="M618 891 C638 868 663 878 670 901 V934 H613 V913" fill="#78a79c" stroke="#356f67" stroke-width="2"/>
+        </g>
+      </g>
+    </g>
+
+    <path id="mobile-return" d="M610 976 C521 1034 221 1030 128 960" fill="none" stroke="#0f766e" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow-teal-mobile)"/>
+    <text id="mobile-return-label" x="360" y="1029" text-anchor="middle" fill="#0f766e" font-size="18" font-weight="700">4  the result can extend the spatial context</text>
+
+    <text x="30" y="1080" fill="#6b7f8b" font-size="15">Conceptual sequence, not undisclosed Atlas internals</text>
+    <text x="690" y="1080" text-anchor="end" fill="#6b7f8b" font-size="15">Source: World Labs</text>
+  </svg>
+
+  <script>
+    (() => {
+      const duration = 9;
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+      const ease = (value) => {
+        const p = clamp(value);
+        return p * p * (3 - 2 * p);
+      };
+      const byId = (id) => document.getElementById(id);
+      const cameraPath = byId("mobile-camera-track");
+      const flowPath = byId("mobile-flow-arrow");
+      const cameraLength = cameraPath.getTotalLength();
+      const flowLength = flowPath.getTotalLength();
+
+      const reveal = (id, progress) => {
+        const p = ease(progress);
+        const element = byId(id);
+        element.style.opacity = String(0.2 + 0.8 * p);
+        element.setAttribute("transform", `translate(0 ${(1 - p) * -15})`);
+      };
+
+      const placeOnPath = (element, path, length, progress) => {
+        const point = path.getPointAtLength(length * clamp(progress));
+        element.setAttribute("transform", `translate(${point.x} ${point.y})`);
+      };
+
+      window.renderFrame = (seconds) => {
+        const time = ((seconds % duration) + duration) % duration;
+        const observe = clamp(time / 1.6);
+        const ground = clamp((time - 1.25) / 2.1);
+        const request = clamp((time - 3.15) / 1.8);
+        const generate = clamp((time - 4.6) / 2.25);
+        const extend = clamp((time - 6.45) / 1.25);
+
+        reveal("mobile-input-text", observe / 0.58);
+        reveal("mobile-input-image", (observe - 0.22) / 0.58);
+        reveal("mobile-input-depth", (observe - 0.44) / 0.56);
+
+        byId("mobile-evidence-arrow").style.opacity = String(0.2 + 0.8 * ease(ground));
+        byId("mobile-evidence-arrow").style.strokeDasharray = "50";
+        byId("mobile-evidence-arrow").style.strokeDashoffset = String(50 * (1 - ease(ground)));
+        byId("mobile-world").style.opacity = String(0.32 + 0.68 * ease(ground));
+        byId("mobile-points").style.opacity = String(0.14 + 0.86 * ease(ground));
+        byId("mobile-ray-a").style.opacity = String(0.04 + 0.16 * ease(ground));
+        byId("mobile-ray-b").style.opacity = String(0.04 + 0.16 * ease(ground));
+
+        placeOnPath(byId("mobile-target-camera"), cameraPath, cameraLength, ease(request));
+        byId("mobile-target-camera").style.opacity = String(0.18 + 0.82 * ease(request));
+        byId("mobile-camera-track").style.opacity = String(0.16 + 0.84 * ease(request));
+
+        byId("mobile-generation-arrow").style.opacity = String(0.16 + 0.84 * ease(generate));
+        byId("mobile-noise").style.opacity = String(0.3 + 0.7 * (1 - ease(generate)));
+        byId("mobile-output").style.opacity = String(0.42 + 0.58 * ease(generate));
+        placeOnPath(byId("mobile-particle"), flowPath, flowLength, ease(generate));
+        byId("mobile-particle").style.opacity = String(generate > 0 && generate < 0.94 ? 0.9 : 0);
+
+        byId("mobile-return").style.opacity = String(0.1 + 0.9 * ease(extend));
+        byId("mobile-return").style.strokeDashoffset = String(120 * (1 - ease(extend)));
+        byId("mobile-return-label").style.opacity = String(0.12 + 0.88 * ease(extend));
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("frame")) {
+        window.renderFrame(Number(params.get("frame")) || 0);
+        return;
+      }
+
+      const startedAt = performance.now();
+      const animate = (now) => {
+        window.renderFrame((now - startedAt) / 1000);
+        requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

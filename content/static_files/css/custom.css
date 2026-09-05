@@ -293,6 +293,38 @@ body{
   box-shadow: 4px 4px 4px 0px rgba(128, 128, 128, 0.5);
 }
 
+.entry-content .atlas-flow-figure,
+.entry-content .atlas-flow-figure picture,
+.entry-content .atlas-flow-figure img {
+  display: block;
+}
+
+.entry-content .atlas-flow-figure {
+  border-bottom: 0;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.entry-content .atlas-flow-figure:hover {
+  border-bottom: 0;
+}
+
+.entry-content .atlas-flow-figure img {
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  margin: 1em 0;
+}
+
+.entry-content .atlas-flow-figure:focus {
+  outline: none;
+}
+
+.entry-content .atlas-flow-figure:focus-visible {
+  outline: 3px solid #247ba0;
+  outline-offset: 4px;
+}
+
 /* to embedd webm converted from gifs */
 .entry-content video{
   max-width: 100%;
