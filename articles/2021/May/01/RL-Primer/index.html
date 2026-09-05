@@ -175,7 +175,7 @@ estimates the optimal policy without using or estimating the dynamics (transitio
 <p>Model-based algorithm:
 uses the transition function (and the reward function) in order to estimate the optimal policy.</p>
 </blockquote>
-<p>In an <strong>online RL</strong> there is an <em>Agent</em> and the <em>Environment</em>. Agent $A$ performs actions $a$ in environment $E$, and the $E$ response with the <em>reward</em> $r$ and <em>observation</em> $o$ (or a <em>state</em> $s$ if it is not partially observable environment). Additionally a <em>policy</em> (network) is the algorithm used by the agent to decide its actions. This is the part that can be <em>model-based</em> or <em>model-free</em>. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.</p>
+<p>In an <strong>online RL</strong> there is an <em>Agent</em> and the <em>Environment</em>. Agent <span class="math">\(A\)</span> performs actions <span class="math">\(a\)</span> in environment <span class="math">\(E\)</span>, and the <span class="math">\(E\)</span> response with the <em>reward</em> <span class="math">\(r\)</span> and <em>observation</em> <span class="math">\(o\)</span> (or a <em>state</em> <span class="math">\(s\)</span> if it is not partially observable environment). Additionally a <em>policy</em> (network) is the algorithm used by the agent to decide its actions. This is the part that can be <em>model-based</em> or <em>model-free</em>. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.</p>
 <p>Policy can be model-based or model-free. Question is how to optimize the policy network via <em>policy gradient</em> (PG)?</p>
 <p>PG algorithms directly try to optimize the policy to increase rewards, however this directly needs correction from environment in online fashion.</p>
 <h4 id="markov-decision-processes-mdp">Markov decision processes (MDP).<a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link">🔗</a></h4>
@@ -192,12 +192,13 @@ Return is defined as a function of reward sequence, which can be:</p>
 <li>sum of <em>discounted</em> rewards (also called <em>cumulative future discounted reward</em>):</li>
 </ul>
 <p><a name="tdr">
-$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$</p>
+</p>
+<div class="math">$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$</div>
 <p></a></p>
 <ul>
 <li>"Cumulative" refers to the summation.</li>
 <li>"Future" refers to the fact that it's an expected value of all the future timesteps values until the end of the episode with respect to the present quantity.</li>
-<li>"Discounted" refers to the "gamma" $\gamma$ <em>discount rate</em> factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from $t+1$.</li>
+<li>"Discounted" refers to the "gamma" <span class="math">\(\gamma\)</span> <em>discount rate</em> factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from <span class="math">\(t+1\)</span>.</li>
 <li>"Reward" refers to the main quantity of interest, i.e. the reward received from the environment.</li>
 </ul>
 <p>The goal of an RL algorithm is to select actions that maximize the expected cumulative reward (the return) of the agent.</p>
@@ -210,8 +211,8 @@ As an agent interacts with an environment in discrete timesteps, agent takes an 
 <p>Q-Learning is about learning Q-function that takes state and action conditioned on the history to predict future rewards.
 VF are state-action pair functions that estimate how good a particular action will be in a given state, or what the return for that action is expected to be.</p>
 <ul>
-<li><strong>V-function</strong> (State-Value) $v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]$ <br > <strong>Value</strong>   of state $s$ under policy/strategy $\pi$. The expected <strong>return</strong> while starting at $s$ and following the $\pi$ thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The $\mathbb{E}[.]$ because environment state transition function might act in a stochastic way.</li>
-<li><strong>Q-function</strong>  (State-Action) $q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]$  <br ><strong>Quality</strong>  of taking action $a$ in state $s$ with policy/strategy $\pi$.  The expected <strong>return</strong> while starting at $s$ while taking action $a$ and following the $\pi$ thereafter. Shows how good action $a$ is, given a state for agent following a policy. The $\mathbb{E}[.]$ because environment state transition function might act in a stochastic way.</li>
+<li><strong>V-function</strong> (State-Value) <span class="math">\(v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]\)</span> <br > <strong>Value</strong>   of state <span class="math">\(s\)</span> under policy/strategy <span class="math">\(\pi\)</span>. The expected <strong>return</strong> while starting at <span class="math">\(s\)</span> and following the <span class="math">\(\pi\)</span> thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The <span class="math">\(\mathbb{E}[.]\)</span> because environment state transition function might act in a stochastic way.</li>
+<li><strong>Q-function</strong>  (State-Action) <span class="math">\(q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]\)</span>  <br ><strong>Quality</strong>  of taking action <span class="math">\(a\)</span> in state <span class="math">\(s\)</span> with policy/strategy <span class="math">\(\pi\)</span>.  The expected <strong>return</strong> while starting at <span class="math">\(s\)</span> while taking action <span class="math">\(a\)</span> and following the <span class="math">\(\pi\)</span> thereafter. Shows how good action <span class="math">\(a\)</span> is, given a state for agent following a policy. The <span class="math">\(\mathbb{E}[.]\)</span> because environment state transition function might act in a stochastic way.</li>
 <li><strong>Q-Value</strong> - value in state-action table.  The Q-function is implemented as a table of states and actions and Q-values for each s,a pair are stored there.</li>
 </ul>
 <p><strong>Estimating</strong> VF for a particular policy, helps to accurately choose an action that will provide the best total reward possible, after being in that given state.</p>
@@ -227,15 +228,77 @@ VF are state-action pair functions that estimate how good a particular action wi
 <p>There are three common policies used for action selection. The aim of these policies is to balance the trade-off between <strong>exploitation</strong> and <strong>exploration</strong>, by not always exploiting what has been learned so far.</p>
 <ul>
 <li>greedy - Will lock on one action that happened to have good results at one point of time but it is not in reality the optimal action. So Greedy will keep exploiting this action while ignoring the others which might be better. It Exploits too much.</li>
-<li>$\epsilon$-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability $\epsilon$, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.</li>
-<li>$\epsilon$-soft - very similar to $\epsilon$-greedy. The best action is selected with probability $1 - \epsilon$ and the rest of the time a random action is chosen uniformly.</li>
-<li>softmax - one drawback of $\epsilon$-greedy and $\epsilon$-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.</li>
+<li><span class="math">\(\epsilon\)</span>-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability <span class="math">\(\epsilon\)</span>, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.</li>
+<li><span class="math">\(\epsilon\)</span>-soft - very similar to <span class="math">\(\epsilon\)</span>-greedy. The best action is selected with probability <span class="math">\(1 - \epsilon\)</span> and the rest of the time a random action is chosen uniformly.</li>
+<li>softmax - one drawback of <span class="math">\(\epsilon\)</span>-greedy and <span class="math">\(\epsilon\)</span>-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.</li>
 </ul>
 <p>It is not clear which of these policies produces the best results overall. The nature of the task will have some bearing on how well each policy influences learning. If the problem we are trying to solve is of a game playing nature, against a human opponent, human factors may also be influential.</p>
 <h4 id="exploitation-vs-exploration">Expl<strong>oit</strong>ation vs explo<strong>r</strong>ation<a class="headerlink" href="#exploitation-vs-exploration" title="Permanent link">🔗</a></h4>
 <p>Exploitation - keep the current approach. Chooses the greedy action to get the most reward by exploiting the agent’s current action-value estimates. But by being greedy with respect to action-value estimates, may not actually get the most reward and lead to sub-optimal behaviour.</p>
 <p>Exploration - Try new approach.  Allows an agent to improve its current knowledge about each action, hopefully leading to long-term benefit. Improving the accuracy of the estimated action-values, enables an agent to make more informed decisions in the future.</p>
 <p>When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
@@ -317,9 +380,9 @@ VF are state-action pair functions that estimate how good a particular action wi
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Atlas: How one model turns images into controllable 3D worlds</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINOv2: How self-supervised visual features transfer across tasks</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -333,6 +396,12 @@ VF are state-action pair functions that estimate how good a particular action wi
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / Neuroscience</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-world-models.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / World Models</a>
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
@@ -352,134 +421,6 @@ VF are state-action pair functions that estimate how good a particular action wi
   </ul>
 </li>
 <!-- End Sidebar/Categories -->
-<!-- Sidebar/Tag Cloud -->
-<li class="list-group-item">
-  <a href="https://mchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-  <ul class="list-group list-inline tagcloud" id="tags">
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/application.html">application</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/autoencoder.html">Autoencoder</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/basics.html">basics</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/cv.html">CV</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/gpt.html">GPT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/k-nn.html">k-NN</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/markov-decision-process.html">Markov Decision Process</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/mdp.html">MDP</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/reinforcement-learning.html">Reinforcement Learning</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/representation-learning.html">Representation Learning</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/rl.html">RL</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/scalability.html">Scalability</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/self-supervision-ssl.html">Self-Supervision (SSL)</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/vision-transformer.html">Vision Transformer</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/vit.html">ViT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/weak-supervision.html">Weak-supervision</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/wsl.html">WSL</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
-    </li>
-      <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapters.html">Adapters</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/low-rank.html">Low-Rank</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/lora.html">LoRA</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/qlora.html">QLoRA</a></li>
-  <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/peft.html">PEFT</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapter.html">Adapter</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/llm.html">LLM</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/t5.html">T5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/longt5.html">LongT5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/conditional-computation.html">Conditional Computation</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/colt5.html">CoLT5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/ssl.html">SSL</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/optimization.html">Optimization</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/mae.html">MAE</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/i-jepa.html">I-JEPA</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/metaai.html">MetaAI</a></li>
-</ul>
-</li>
-<!-- End Sidebar/Tag Cloud -->
 
 <!-- Sidebar/Links -->
 <li class="list-group-item">
@@ -526,6 +467,14 @@ VF are state-action pair functions that estimate how good a particular action wi
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2026/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2026 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2025/Oct/index.html"><i class="fa fa-calendar fa-lg"></i>October 2025 (1)
+          </a>
+        </li>
         <li class="list-group-item">
           <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
           </a>

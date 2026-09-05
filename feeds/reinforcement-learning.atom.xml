@@ -222,7 +222,7 @@ Figure 8. Aggregate comparison of DT, TD learning (CQL), and behavior cloning ac
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1"&gt;The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning. &lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"/><category term="Transformer"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"></link><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
+&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1"&gt;The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning. &lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"/><category term="Transformer"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"/><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
 &lt;h3 id="prerequisite-rl-knowledge"&gt;Prerequisite RL knowledge&lt;a class="headerlink" href="#prerequisite-rl-knowledge" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Here are explained some of the main terms that this paper uses to motivate its goal. Form more details please refer to free online book from &lt;a href="http://incompleteideas.net/book/the-book.html"&gt;Richard S. Sutton
 and Andrew G. Barto Second &lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt; Edition MIT Press, Cambridge, MA, 2018&lt;/a&gt;&lt;/p&gt;
@@ -235,7 +235,7 @@ estimates the optimal policy without using or estimating the dynamics (transitio
 &lt;p&gt;Model-based algorithm:
 uses the transition function (and the reward function) in order to estimate the optimal policy.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;In an &lt;strong&gt;online RL&lt;/strong&gt; there is an &lt;em&gt;Agent&lt;/em&gt; and the &lt;em&gt;Environment&lt;/em&gt;. Agent $A$ performs actions $a$ in environment $E$, and the $E$ response with the &lt;em&gt;reward&lt;/em&gt; $r$ and &lt;em&gt;observation&lt;/em&gt; $o$ (or a &lt;em&gt;state&lt;/em&gt; $s$ if it is not partially observable environment). Additionally a &lt;em&gt;policy&lt;/em&gt; (network) is the algorithm used by the agent to decide its actions. This is the part that can be &lt;em&gt;model-based&lt;/em&gt; or &lt;em&gt;model-free&lt;/em&gt;. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.&lt;/p&gt;
+&lt;p&gt;In an &lt;strong&gt;online RL&lt;/strong&gt; there is an &lt;em&gt;Agent&lt;/em&gt; and the &lt;em&gt;Environment&lt;/em&gt;. Agent &lt;span class="math"&gt;\(A\)&lt;/span&gt; performs actions &lt;span class="math"&gt;\(a\)&lt;/span&gt; in environment &lt;span class="math"&gt;\(E\)&lt;/span&gt;, and the &lt;span class="math"&gt;\(E\)&lt;/span&gt; response with the &lt;em&gt;reward&lt;/em&gt; &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;em&gt;observation&lt;/em&gt; &lt;span class="math"&gt;\(o\)&lt;/span&gt; (or a &lt;em&gt;state&lt;/em&gt; &lt;span class="math"&gt;\(s\)&lt;/span&gt; if it is not partially observable environment). Additionally a &lt;em&gt;policy&lt;/em&gt; (network) is the algorithm used by the agent to decide its actions. This is the part that can be &lt;em&gt;model-based&lt;/em&gt; or &lt;em&gt;model-free&lt;/em&gt;. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.&lt;/p&gt;
 &lt;p&gt;Policy can be model-based or model-free. Question is how to optimize the policy network via &lt;em&gt;policy gradient&lt;/em&gt; (PG)?&lt;/p&gt;
 &lt;p&gt;PG algorithms directly try to optimize the policy to increase rewards, however this directly needs correction from environment in online fashion.&lt;/p&gt;
 &lt;h4 id="markov-decision-processes-mdp"&gt;Markov decision processes (MDP).&lt;a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
@@ -252,12 +252,13 @@ Return is defined as a function of reward sequence, which can be:&lt;/p&gt;
 &lt;li&gt;sum of &lt;em&gt;discounted&lt;/em&gt; rewards (also called &lt;em&gt;cumulative future discounted reward&lt;/em&gt;):&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;a name="tdr"&gt;
-$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$&lt;/p&gt;
+&lt;/p&gt;
+&lt;div class="math"&gt;$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$&lt;/div&gt;
 &lt;p&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;"Cumulative" refers to the summation.&lt;/li&gt;
 &lt;li&gt;"Future" refers to the fact that it's an expected value of all the future timesteps values until the end of the episode with respect to the present quantity.&lt;/li&gt;
-&lt;li&gt;"Discounted" refers to the "gamma" $\gamma$ &lt;em&gt;discount rate&lt;/em&gt; factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from $t+1$.&lt;/li&gt;
+&lt;li&gt;"Discounted" refers to the "gamma" &lt;span class="math"&gt;\(\gamma\)&lt;/span&gt; &lt;em&gt;discount rate&lt;/em&gt; factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from &lt;span class="math"&gt;\(t+1\)&lt;/span&gt;.&lt;/li&gt;
 &lt;li&gt;"Reward" refers to the main quantity of interest, i.e. the reward received from the environment.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The goal of an RL algorithm is to select actions that maximize the expected cumulative reward (the return) of the agent.&lt;/p&gt;
@@ -270,8 +271,8 @@ As an agent interacts with an environment in discrete timesteps, agent takes an 
 &lt;p&gt;Q-Learning is about learning Q-function that takes state and action conditioned on the history to predict future rewards.
 VF are state-action pair functions that estimate how good a particular action will be in a given state, or what the return for that action is expected to be.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;V-function&lt;/strong&gt; (State-Value) $v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]$ &lt;br &gt; &lt;strong&gt;Value&lt;/strong&gt;   of state $s$ under policy/strategy $\pi$. The expected &lt;strong&gt;return&lt;/strong&gt; while starting at $s$ and following the $\pi$ thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The $\mathbb{E}[.]$ because environment state transition function might act in a stochastic way.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Q-function&lt;/strong&gt;  (State-Action) $q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]$  &lt;br &gt;&lt;strong&gt;Quality&lt;/strong&gt;  of taking action $a$ in state $s$ with policy/strategy $\pi$.  The expected &lt;strong&gt;return&lt;/strong&gt; while starting at $s$ while taking action $a$ and following the $\pi$ thereafter. Shows how good action $a$ is, given a state for agent following a policy. The $\mathbb{E}[.]$ because environment state transition function might act in a stochastic way.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;V-function&lt;/strong&gt; (State-Value) &lt;span class="math"&gt;\(v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]\)&lt;/span&gt; &lt;br &gt; &lt;strong&gt;Value&lt;/strong&gt;   of state &lt;span class="math"&gt;\(s\)&lt;/span&gt; under policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Q-function&lt;/strong&gt;  (State-Action) &lt;span class="math"&gt;\(q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]\)&lt;/span&gt;  &lt;br &gt;&lt;strong&gt;Quality&lt;/strong&gt;  of taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; with policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;.  The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; while taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good action &lt;span class="math"&gt;\(a\)&lt;/span&gt; is, given a state for agent following a policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Q-Value&lt;/strong&gt; - value in state-action table.  The Q-function is implemented as a table of states and actions and Q-values for each s,a pair are stored there.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;Estimating&lt;/strong&gt; VF for a particular policy, helps to accurately choose an action that will provide the best total reward possible, after being in that given state.&lt;/p&gt;
@@ -287,12 +288,74 @@ VF are state-action pair functions that estimate how good a particular action wi
 &lt;p&gt;There are three common policies used for action selection. The aim of these policies is to balance the trade-off between &lt;strong&gt;exploitation&lt;/strong&gt; and &lt;strong&gt;exploration&lt;/strong&gt;, by not always exploiting what has been learned so far.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;greedy - Will lock on one action that happened to have good results at one point of time but it is not in reality the optimal action. So Greedy will keep exploiting this action while ignoring the others which might be better. It Exploits too much.&lt;/li&gt;
-&lt;li&gt;$\epsilon$-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability $\epsilon$, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.&lt;/li&gt;
-&lt;li&gt;$\epsilon$-soft - very similar to $\epsilon$-greedy. The best action is selected with probability $1 - \epsilon$ and the rest of the time a random action is chosen uniformly.&lt;/li&gt;
-&lt;li&gt;softmax - one drawback of $\epsilon$-greedy and $\epsilon$-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft - very similar to &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy. The best action is selected with probability &lt;span class="math"&gt;\(1 - \epsilon\)&lt;/span&gt; and the rest of the time a random action is chosen uniformly.&lt;/li&gt;
+&lt;li&gt;softmax - one drawback of &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy and &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;It is not clear which of these policies produces the best results overall. The nature of the task will have some bearing on how well each policy influences learning. If the problem we are trying to solve is of a game playing nature, against a human opponent, human factors may also be influential.&lt;/p&gt;
 &lt;h4 id="exploitation-vs-exploration"&gt;Expl&lt;strong&gt;oit&lt;/strong&gt;ation vs explo&lt;strong&gt;r&lt;/strong&gt;ation&lt;a class="headerlink" href="#exploitation-vs-exploration" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Exploitation - keep the current approach. Chooses the greedy action to get the most reward by exploiting the agent’s current action-value estimates. But by being greedy with respect to action-value estimates, may not actually get the most reward and lead to sub-optimal behaviour.&lt;/p&gt;
 &lt;p&gt;Exploration - Try new approach.  Allows an agent to improve its current knowledge about each action, hopefully leading to long-term benefit. Improving the accuracy of the estimated action-values, enables an agent to make more informed decisions in the future.&lt;/p&gt;
-&lt;p&gt;When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.&lt;/p&gt;</content><category term="Reinforcement learning"></category><category term="Reinforcement Learning"></category><category term="RL"></category><category term="MDP"></category><category term="Markov Decision Process"></category></entry></feed>
+&lt;p&gt;When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Reinforcement learning"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry></feed>

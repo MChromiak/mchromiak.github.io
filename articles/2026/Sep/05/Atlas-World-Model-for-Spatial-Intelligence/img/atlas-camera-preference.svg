@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Reported preference for Atlas camera-path adherence</title>
+  <desc id="desc">A dot plot shows the share of third-party raters preferring Atlas over five comparison models. Atlas received 75 percent preference against MiniMax H3, 81 against Gemini Omni Flash, 86 against Happy Horse 1.1, 93 against FLUX 3, and 94 against Seedance 2.5, with 95 percent confidence intervals.</desc>
+  <rect width="1200" height="650" fill="#f7fafc"/>
+  <text x="54" y="58" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="700">Which output followed the camera path better?</text>
+  <text x="54" y="92" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="18">Share of third-party raters choosing Atlas; whiskers show 95% confidence intervals</text>
+
+  <rect x="305" y="125" width="825" height="405" rx="6" fill="#ffffff" stroke="#d2dfe6" stroke-width="2"/>
+  <g stroke="#dbe5ea" stroke-width="1">
+    <path d="M305 125 V530"/><path d="M470 125 V530"/><path d="M635 125 V530"/>
+    <path d="M800 125 V530"/><path d="M965 125 V530"/><path d="M1130 125 V530"/>
+  </g>
+  <path d="M305 125 V530" stroke="#b45309" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="305" y="116" text-anchor="middle" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">even split</text>
+
+  <g fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="18" text-anchor="end">
+    <text x="275" y="193">MiniMax H3</text>
+    <text x="275" y="268">Gemini Omni Flash</text>
+    <text x="275" y="343">Happy Horse 1.1</text>
+    <text x="275" y="418">FLUX 3</text>
+    <text x="275" y="493">Seedance 2.5</text>
+  </g>
+
+  <g stroke="#2878a8" stroke-width="4">
+    <path d="M602 188 H833"/><path d="M602 179 V197 M833 179 V197"/>
+    <path d="M701 263 H916"/><path d="M701 254 V272 M916 254 V272"/>
+    <path d="M833 338 H981"/><path d="M833 329 V347 M981 329 V347"/>
+    <path d="M965 413 H1081"/><path d="M965 404 V422 M1081 404 V422"/>
+    <path d="M998 488 H1081"/><path d="M998 479 V497 M1081 479 V497"/>
+  </g>
+
+  <g fill="#0f766e" stroke="#ffffff" stroke-width="4">
+    <circle cx="718" cy="188" r="11"/><circle cx="817" cy="263" r="11"/><circle cx="899" cy="338" r="11"/>
+    <circle cx="1015" cy="413" r="11"/><circle cx="1031" cy="488" r="11"/>
+  </g>
+  <g fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">
+    <text x="738" y="181">75%</text><text x="837" y="256">81%</text><text x="919" y="331">86%</text>
+    <text x="1035" y="406">93%</text><text x="1051" y="481">94%</text>
+  </g>
+
+  <g fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16" text-anchor="middle">
+    <text x="305" y="558">50%</text><text x="470" y="558">60%</text><text x="635" y="558">70%</text>
+    <text x="800" y="558">80%</text><text x="965" y="558">90%</text><text x="1130" y="558">100%</text>
+  </g>
+  <text x="717" y="600" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Other model preferred  |  voter share  |  Atlas preferred</text>
+  <text x="54" y="632" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="15">Source data: World Labs Atlas launch report. The comparison tests camera-path adherence, not overall video quality.</text>
+</svg>

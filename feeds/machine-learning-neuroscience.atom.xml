@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog - Machine Learning / Neuroscience</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/machine-learning-neuroscience.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2025-10-01T15:45:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</title><link href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/" rel="alternate"/><published>2025-10-01T15:30:00+02:00</published><updated>2025-10-01T15:45:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2025-10-01:/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/</id><summary type="html">&lt;p&gt;A narrative walkthrough of &lt;em&gt;The Dragon Hatchling&lt;/em&gt; (BDH/BDH-GPU): a Transformer-class language model recast as local graph dynamics over neurons and synapses. We follow the paper’s central thread—why positive, sparse activations and synapse-level state make reasoning more interpretable—then look at scaling parity with a GPT-2-like baseline, composability by weight concatenation, and the signals of monosemanticity and emergent modularity.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;h3 id="tldr"&gt;TL;DR&lt;a class="headerlink" href="#tldr" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;If you’ve ever wished attention could be explained as something &lt;strong&gt;local&lt;/strong&gt; and &lt;strong&gt;mechanistic&lt;/strong&gt;, BDH is that wish in code. The authors take the familiar Transformer stack and show how it can be rewritten as &lt;strong&gt;synapse-level updates on a neuron graph&lt;/strong&gt; — their “equations of reasoning.” Keys and queries live in a &lt;strong&gt;very high-dimensional positive space&lt;/strong&gt;, activations are &lt;strong&gt;sparse and non-negative&lt;/strong&gt;, and the whole system keeps a &lt;strong&gt;small state per neuron&lt;/strong&gt; that is updated as tokens flow. In like-for-like experiments on &lt;strong&gt;Europarl&lt;/strong&gt;, a &lt;strong&gt;GPU-friendly variant (BDH-GPU)&lt;/strong&gt; tracks a &lt;strong&gt;GPT-2-class&lt;/strong&gt; baseline from &lt;strong&gt;25M to 800M&lt;/strong&gt; parameters under the &lt;strong&gt;same training recipe&lt;/strong&gt;—while revealing structure we can actually study (monosemantic synapses, modular graphs).&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="contribution-of-paper"&gt;Contribution of Paper&lt;a class="headerlink" href="#contribution-of-paper" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The paper reframes a Transformer-style LLM as a &lt;strong&gt;distributed particle system&lt;/strong&gt;: neurons carry &lt;strong&gt;positive, sparse activations&lt;/strong&gt;; synapses carry &lt;strong&gt;fast, Hebbian-like state&lt;/strong&gt;; and attention becomes &lt;strong&gt;local edge reweighting&lt;/strong&gt; on a graph. This is presented in &lt;strong&gt;two equivalent views&lt;/strong&gt;:&lt;/p&gt;
+&lt;p&gt;1) &lt;strong&gt;BDH-GPU (tensor/state-space)&lt;/strong&gt; — practical for training: &lt;strong&gt;three shared matrices&lt;/strong&gt; &lt;span class="math"&gt;\(E, D_x, D_y\)&lt;/span&gt; of size &lt;span class="math"&gt;\(n\times d\)&lt;/span&gt; / &lt;span class="math"&gt;\(d\times n\)&lt;/span&gt;, plus a &lt;strong&gt;per-layer state&lt;/strong&gt; &lt;span class="math"&gt;\(\rho \in \mathbb{R}^{n\times d}\)&lt;/span&gt;.&lt;br&gt;
+2) &lt;strong&gt;BDH (graph)&lt;/strong&gt; — a local kernel over synapses &lt;span class="math"&gt;\(\sigma(i,j)\)&lt;/span&gt; with damping/rotation terms; &lt;strong&gt;feed-forward&lt;/strong&gt; appears as &lt;strong&gt;intra-cluster propagation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;These views agree up to layer-norm placement and state compression, giving attention a &lt;strong&gt;micro-foundation&lt;/strong&gt; at the level of neuron pairs.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="motivation"&gt;Motivation&lt;a class="headerlink" href="#motivation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Modern Transformers scale, but they &lt;strong&gt;hide their mechanics&lt;/strong&gt;: we can probe heads and MLPs, yet we rarely get a crisp account of &lt;em&gt;how&lt;/em&gt; a specific relation is formed and &lt;em&gt;where&lt;/em&gt; it lives. BDH argues for &lt;strong&gt;axiomatic AI&lt;/strong&gt;: if we commit to &lt;strong&gt;local&lt;/strong&gt; update rules with &lt;strong&gt;interpretable state&lt;/strong&gt;, we can make &lt;strong&gt;long-horizon behavior&lt;/strong&gt; analyzable over time—without giving up the performance envelope we expect from attention models.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="intro"&gt;Intro&lt;a class="headerlink" href="#intro" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Think of BDH as a &lt;strong&gt;bridge&lt;/strong&gt;: on one end, &lt;strong&gt;Transformer practice&lt;/strong&gt; (matrix-tensor computations that run well on GPUs); on the other, &lt;strong&gt;brain-style models&lt;/strong&gt; (local interactions, plastic synapses, sparse positive firing). The &lt;strong&gt;bridge deck&lt;/strong&gt; is BDH-GPU: a compact, &lt;strong&gt;three-matrix&lt;/strong&gt; architecture whose layer keeps a &lt;strong&gt;small state&lt;/strong&gt; and updates it per token using &lt;strong&gt;linear attention&lt;/strong&gt;. The &lt;strong&gt;supports&lt;/strong&gt; underneath are the &lt;strong&gt;graph-level equations of reasoning&lt;/strong&gt;—a way to read these tensor ops as &lt;strong&gt;synapse updates&lt;/strong&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="key-ideas-architecture-overview"&gt;Key Ideas &amp;amp; Architecture Overview&lt;a class="headerlink" href="#key-ideas-architecture-overview" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;State-space recurrence.&lt;/strong&gt; Each layer carries a state &lt;span class="math"&gt;\(\rho \in \mathbb{R}^{n\times d}\)&lt;/span&gt;. As tokens pass, &lt;strong&gt;linear attention both reads and writes&lt;/strong&gt; this state. The model’s weights are just &lt;strong&gt;&lt;span class="math"&gt;\(E, D_x, D_y\)&lt;/span&gt;&lt;/strong&gt; (shared across layers), giving roughly &lt;strong&gt;&lt;span class="math"&gt;\((3+o(1))nd\)&lt;/span&gt;&lt;/strong&gt; parameters (I/O aside).  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Positive, sparse activations.&lt;/strong&gt; Activations are by design &lt;strong&gt;non-negative&lt;/strong&gt; and empirically &lt;strong&gt;~5% active&lt;/strong&gt;. This localization means each token touches a &lt;strong&gt;small slice&lt;/strong&gt; of &lt;span class="math"&gt;\(\rho\)&lt;/span&gt;, aiding &lt;strong&gt;efficiency&lt;/strong&gt; and &lt;strong&gt;interpretability&lt;/strong&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Linear attention in the positive orthant.&lt;/strong&gt; Keys/queries live in &lt;span class="math"&gt;\((\mathbb{R}_+)^n\)&lt;/span&gt;. In this regime, tiny &lt;strong&gt;&lt;span class="math"&gt;\(L_1\)&lt;/span&gt;&lt;/strong&gt; differences become &lt;strong&gt;highly separable&lt;/strong&gt;—the paper highlights this as a practical path to sharp matching, with &lt;strong&gt;LSH-style constructions&lt;/strong&gt; to maintain positivity.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Graph view: equations of reasoning.&lt;/strong&gt; Attention becomes a &lt;strong&gt;local edge-reweighting kernel&lt;/strong&gt; over &lt;span class="math"&gt;\(\sigma(i,j)\)&lt;/span&gt;, and the ReLU-low-rank MLP is &lt;strong&gt;intra-cluster propagation&lt;/strong&gt;.  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Architectural picture.&lt;/strong&gt; A schematic (the paper’s Fig. 1) places BDH-GPU between &lt;strong&gt;Transformers&lt;/strong&gt; and &lt;strong&gt;brain-like models&lt;/strong&gt;.  &lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id="formalism-dynamics"&gt;Formalism &amp;amp; Dynamics&lt;a class="headerlink" href="#formalism-dynamics" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;BDH-GPU:&lt;/strong&gt; the three shared matrices and state &lt;span class="math"&gt;\(\rho\)&lt;/span&gt; replicate attention+MLP behavior under &lt;strong&gt;positivity&lt;/strong&gt; and &lt;strong&gt;sparsity&lt;/strong&gt;.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BDH:&lt;/strong&gt; same computation expressed as &lt;strong&gt;local synapse updates&lt;/strong&gt; &lt;span class="math"&gt;\(\sigma(i,j)\)&lt;/span&gt; with damping/rotation terms.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Expressiveness:&lt;/strong&gt; BDH ≥ BDH-GPU in &lt;span class="math"&gt;\(O(nd)\)&lt;/span&gt;, modulo normalization placement and state compression.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="bdh-gpu-implementation-scaling"&gt;BDH-GPU &amp;amp; Implementation / Scaling&lt;a class="headerlink" href="#bdh-gpu-implementation-scaling" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Dataset:&lt;/strong&gt; Europarl, byte-level LM + translation.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Training:&lt;/strong&gt; same regimen for both models (DDP, AdamW, ALiBi; GPT baseline with KV-cache).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Result:&lt;/strong&gt; BDH-GPU′ (gated) matches GPT-2-class baseline from 25M to 800M params (&lt;strong&gt;Fig. 7&lt;/strong&gt;).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Long contexts:&lt;/strong&gt; For &lt;span class="math"&gt;\(&amp;gt;4,096\)&lt;/span&gt; tokens (&lt;span class="math"&gt;\(d=256\)&lt;/span&gt;), state-space kernel is faster and more memory-efficient.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reproducibility:&lt;/strong&gt; Appendix E reports single-node PyTorch code sufficient to replicate results.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="empirical-analysis-findings"&gt;Empirical Analysis &amp;amp; Findings&lt;a class="headerlink" href="#empirical-analysis-findings" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Scaling parity:&lt;/strong&gt; BDH-GPU tracks GPT-2-like baseline on Europarl.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Weight concatenation:&lt;/strong&gt; EN↔FR + EN↔PT → merged model translates across ES/FR/PT, improved after brief joint finetuning (&lt;strong&gt;Table 2, Fig. 15&lt;/strong&gt;).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Interpretability signals:&lt;/strong&gt; emergent modular graphs (power-law, high modularity); monosemantic synapses linked to semantic concepts (currency names), tested with Mann–Whitney.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ablation (no-BPTT):&lt;/strong&gt; detaching recurrent state hurts translation (loss from ~0.65 → 0.75–1.05) but LM ability persists.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="interpretability-concept-representation"&gt;Interpretability &amp;amp; Concept Representation&lt;a class="headerlink" href="#interpretability-concept-representation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Sparse positive activations localize token updates.  &lt;/li&gt;
+&lt;li&gt;Non-negative contributions make synapse semantics easier to read.  &lt;/li&gt;
+&lt;li&gt;Monosemantic synapses align with interpretable concepts.  &lt;/li&gt;
+&lt;li&gt;Graph modularity hints at specialized reusable substructures.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="implications-connections"&gt;Implications &amp;amp; Connections&lt;a class="headerlink" href="#implications-connections" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Reasoning you can inspect:&lt;/strong&gt; synapse-level updates show &lt;em&gt;where&lt;/em&gt; concepts live.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Weights you can compose:&lt;/strong&gt; concatenate along &lt;span class="math"&gt;\(n\)&lt;/span&gt; for multilingual transfer.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Longer horizons:&lt;/strong&gt; state-space recurrence avoids quadratic context growth.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="critique-caveats"&gt;Critique &amp;amp; Caveats&lt;a class="headerlink" href="#critique-caveats" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Europarl-only, byte-level, token-loss metrics (no BLEU/ChrF).  &lt;/li&gt;
+&lt;li&gt;Parity claim = “GPT-2-class under matched setup,” not SOTA.  &lt;/li&gt;
+&lt;li&gt;Memory/state cost: maintaining large &lt;span class="math"&gt;\(n\times d\)&lt;/span&gt; state requires careful system design.  &lt;/li&gt;
+&lt;li&gt;No-BPTT shortcut intriguing, but weaker translation alignment.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="future-research-in-series"&gt;Future Research (in series)&lt;a class="headerlink" href="#future-research-in-series" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Dive deeper into graph kernel stability and dynamics.  &lt;/li&gt;
+&lt;li&gt;Evaluate long-context scaling with state-space kernels.  &lt;/li&gt;
+&lt;li&gt;Test monosemantic synapses at scale (100B+ params).  &lt;/li&gt;
+&lt;li&gt;Broader multilingual/multitask benchmarks.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="useful-resources"&gt;Useful Resources&lt;a class="headerlink" href="#useful-resources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;arXiv:&lt;/strong&gt; &lt;em&gt;The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain&lt;/em&gt; (v1).  &lt;/li&gt;
+&lt;li&gt;Key references: Fig. 1 (bridge), Fig. 6 (one-layer BDH-GPU), Fig. 7 (scaling curve), Table 1 (equations), Table 2 (composition), Figs. 9–13 (interpretability), Tables 4–5 (hyperparams), Appendix E (reproducibility).  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="if-you-read-only-three-pages"&gt;If you read only three pages&lt;a class="headerlink" href="#if-you-read-only-three-pages" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Fig. 1&lt;/strong&gt; — conceptual bridge across model types.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fig. 6&lt;/strong&gt; — the three-matrix simplicity.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fig. 7&lt;/strong&gt; — scaling parity with GPT-2 baseline.  &lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h3 id="quick-glossary"&gt;Quick glossary&lt;a class="headerlink" href="#quick-glossary" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(n\)&lt;/span&gt;&lt;/strong&gt; — neurons dimension (very high-dimensional).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(d\)&lt;/span&gt;&lt;/strong&gt; — small feature/state dimension (e.g., &lt;span class="math"&gt;\(d=256\)&lt;/span&gt;).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(\rho \in \mathbb{R}^{n\times d}\)&lt;/span&gt;&lt;/strong&gt; — per-layer state matrix.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(E, D_x, D_y\)&lt;/span&gt;&lt;/strong&gt; — three shared matrices (&lt;span class="math"&gt;\(n\times d\)&lt;/span&gt; or &lt;span class="math"&gt;\(d\times n\)&lt;/span&gt;).  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BDH vs BDH-GPU:&lt;/strong&gt; graph kernel (local rules) vs tensor form.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BPTT:&lt;/strong&gt; backprop-through-time; no-BPTT detaches &lt;span class="math"&gt;\(\rho\)&lt;/span&gt;.  &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ALiBi:&lt;/strong&gt; linear positional bias scheme.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id="one-sentence-verdict"&gt;One-sentence verdict&lt;a class="headerlink" href="#one-sentence-verdict" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;BDH is a &lt;strong&gt;Transformer-class&lt;/strong&gt; architecture that &lt;strong&gt;shows its work&lt;/strong&gt;: local, positive, sparse, and competitive under controlled conditions—an interpretability-friendly step toward models whose reasoning can be measured and composed.&lt;/p&gt;
+&lt;h3 id="footnotes"&gt;Footnotes&lt;a class="headerlink" href="#footnotes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Machine Learning / Neuroscience"/><category term="Transformers"/><category term="Brain Models"/><category term="Interpretability"/><category term="State-space Models"/><category term="Graph Dynamics"/><category term="Linear Attention"/><category term="Hebbian Plasticity"/></entry></feed>

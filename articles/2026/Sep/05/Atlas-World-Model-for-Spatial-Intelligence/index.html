@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Atlas: How one model turns images into controllable 3D worlds - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
+
+    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+
+<link rel="canonical" href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="World Models,Spatial Intelligence,Multimodal Models,3D Reconstruction,Diffusion,Robotics" />
+        <meta name="description" content="Atlas combines text, images, camera poses, and depth in a shared spatial context. This guide explains what that means, how its autoregressive diffusion architecture works, what World Labs has demonstrated, and what remains unknown." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Atlas: How one model turns images into controllable 3D worlds"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/"/>
+        <meta property="og:description" content="Atlas combines text, images, camera poses, and depth in a shared spatial context. This guide explains what that means, how its autoregressive diffusion architecture works, what World Labs has demonstrated, and what remains unknown."/>
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-cover.jpg" />
+
+        <meta property="article:published_time" content="2026-09-05" />
+            <meta property="article:section" content="Machine Learning / World Models" />
+            <meta property="article:tag" content="World Models" />
+            <meta property="article:tag" content="Spatial Intelligence" />
+            <meta property="article:tag" content="Multimodal Models" />
+            <meta property="article:tag" content="3D Reconstruction" />
+            <meta property="article:tag" content="Diffusion" />
+            <meta property="article:tag" content="Robotics" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
+        <meta property="twitter:image"
+              content="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-cover.jpg"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+        <link href="https://mchromiak.github.io/feeds/machine-learning-world-models.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog Machine Learning / World Models ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/machine-learning-world-models.html" title="Machine Learning / World Models">Machine Learning / World Models</a></li>
+                <li class="active">Atlas: How one model turns images into controllable 3D worlds</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/"
+                       rel="bookmark"
+                       title="Permalink to Atlas: How one model turns images into controllable 3D worlds">
+                        Atlas: How one model turns images into controllable 3D worlds
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2026-09-05T12:00:00+02:00"> Sat, 05 Sep 2026</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2026-09-05T12:00:00+02:00"> Sat, 05 Sep 2026</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://mchromiak.github.io/category/machine-learning-world-models.html">Machine Learning / World Models</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://mchromiak.github.io/tag/world-models.html">World Models</a>
+        /
+	<a href="https://mchromiak.github.io/tag/spatial-intelligence.html">Spatial Intelligence</a>
+        /
+	<a href="https://mchromiak.github.io/tag/multimodal-models.html">Multimodal Models</a>
+        /
+	<a href="https://mchromiak.github.io/tag/3d-reconstruction.html">3D Reconstruction</a>
+        /
+	<a href="https://mchromiak.github.io/tag/diffusion.html">Diffusion</a>
+        /
+	<a href="https://mchromiak.github.io/tag/robotics.html">Robotics</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr>
+<p>A photograph records one view of a scene. Move the camera and much of the world is missing: the back of an object, the room beyond a doorway, and the geometry hidden behind a wall were never captured. A useful world model must do more than make attractive pixels. It must keep track of what has already been observed, respect where the camera is, and decide what can be reconstructed versus what must be inferred.</p>
+<p><strong>Atlas is World Labs' attempt to put those jobs inside one model.</strong> Announced on September 1, 2026, it accepts combinations of text, images, camera poses, and depth maps. It can then generate new views, reconstruct explicit 3D geometry, reframe video, or supply simulated observations for robotics workflows. World Labs calls it an <strong>omni world model</strong> because the same pretrained architecture supports several input and output types rather than assigning each task to a separate specialist model. <a href="https://www.worldlabs.ai/blog/atlas">Official Atlas introduction</a>.</p>
+<p>Atlas is a model from the World Labs team, a company co-founded by Fei-Fei Li, Justin Johnson, Ben Mildenhall, and Christoph Lassner. It is more precise to describe it this way than to attribute the model to one researcher. <a href="https://www.worldlabs.ai/about">World Labs team</a>.</p>
+<p><img alt="Atlas launch artwork: a robot holds a transparent globe above a landscape, beside the words Atlas and A world model for spatial intelligence." src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-cover.jpg"></p>
+<p align="center">Figure 1. Official Atlas launch artwork. (Source: <a href="https://www.worldlabs.ai/blog/atlas">World Labs</a>).</p>
+<h2 id="the-short-version">The short version<a class="headerlink" href="#the-short-version" title="Permanent link">🔗</a></h2>
+<ul>
+<li><strong>What goes in:</strong> text, images, camera poses, and depth maps. A video is represented as a sequence of images.</li>
+<li><strong>What comes out:</strong> images, video frames, depth maps, point clouds, or 3D Gaussian splats, depending on the task.</li>
+<li><strong>What makes it different:</strong> images and depth maps are tied to explicit camera poses, so viewpoint is part of the model's input rather than only a sentence such as "move the camera left."</li>
+<li><strong>How it generates:</strong> Atlas predicts a sequence one element at a time and uses rectified-flow diffusion to construct high-dimensional outputs such as images.</li>
+<li><strong>What has been shown:</strong> camera-controlled generation, sparse-view 3D reconstruction, video reframing, image generation, and components of real-to-sim workflows.</li>
+<li><strong>What has not been established publicly:</strong> the parameter count, training-data composition, compute budget, detailed architecture, inference cost, public weights, long-horizon physical accuracy, or independent benchmark replication.</li>
+</ul>
+<p>That last point matters. Atlas was introduced in a company technical post, not a peer-reviewed paper. The public material is detailed enough to explain the design and inspect the reported evaluations, but not enough to reproduce the model.</p>
+<h2 id="what-world-model-means-here">What "world model" means here<a class="headerlink" href="#what-world-model-means-here" title="Permanent link">🔗</a></h2>
+<p>World Labs uses <strong>spatial intelligence</strong> for the ability to model and reason about objects, places, and interactions across space and time. Spatial intelligence is the broader goal; a world model is the learned system intended to support it. <a href="https://www.worldlabs.ai/about">World Labs' description of spatial intelligence</a>.</p>
+<p>The term <strong>world model</strong> is overloaded. In model-based reinforcement learning, it often means a learned transition model: given a state and an action, predict what state comes next. In generative media, it may describe a system that produces navigable or temporally coherent scenes. In robotics, it can refer to a model that supports rendering, simulation, planning, or some combination of the three.</p>
+<p>World Labs separates these roles into a useful taxonomy:</p>
+<ol>
+<li>A <strong>renderer</strong> predicts observations, such as the image a camera would see.</li>
+<li>A <strong>simulator</strong> predicts geometrically, physically, or dynamically faithful state, such as scene geometry or how objects change over time.</li>
+<li>A <strong>planner</strong> selects actions to reach a goal.</li>
+</ol>
+<p>Atlas publicly demonstrates strong renderer capabilities and reports quantitative reconstruction results for geometry. World Labs also shows physical and dynamic simulation examples, although it does not provide equivalent quantitative evidence for them in the launch report. A separate policy still chooses robot actions; Atlas is not presented as the planner. <a href="https://www.worldlabs.ai/blog/taxonomy-of-world-models">World Labs' functional taxonomy</a>.</p>
+<h2 id="start-with-one-scene">Start with one scene<a class="headerlink" href="#start-with-one-scene" title="Permanent link">🔗</a></h2>
+<p>Suppose you photograph a desk from the doorway. The image contains appearance information: colors, textures, lighting, and visible objects. If the model also receives the camera pose, that metadata specifies where the observation sits in a three-dimensional coordinate system and which direction the camera faced.</p>
+<p>Ask for a view from behind the desk and the model has two kinds of work to do:</p>
+<ul>
+<li><strong>Preserve evidence:</strong> visible objects should remain in compatible positions and keep a consistent appearance.</li>
+<li><strong>Complete missing evidence:</strong> the far side of the desk and any occluded region must be inferred because the input did not contain them.</li>
+</ul>
+<p>Atlas encodes the available observations into what World Labs calls a <strong>spatial context</strong>. Adding another photograph from the opposite side constrains that context. The model should need to invent less because more of the scene is now observed. This is the central idea behind both Atlas's controllable generation and its reconstruction workflow.</p>
+<p><strong>A plausible unseen region is not the same as a measured reconstruction.</strong> From one image, Atlas may produce a convincing continuation, but there is no way to verify that the hidden content matches the real location. More input views reduce ambiguity; they do not make every unobserved surface ground truth.</p>
+<h3 id="one-atlas-request-end-to-end">One Atlas request, end to end<a class="headerlink" href="#one-atlas-request-end-to-end" title="Permanent link">🔗</a></h3>
+<p>The public description can be reduced to four steps:</p>
+<ol>
+<li><strong>Provide observations.</strong> Reference images, depth maps, text, and camera poses describe what is already known about the scene.</li>
+<li><strong>Place them in context.</strong> The camera poses connect each image or depth map to a viewpoint in 3D space, forming the spatial context.</li>
+<li><strong>Request another element.</strong> A target camera pose and output type specify what should be generated next, such as a color image or a depth map from a new view.</li>
+<li><strong>Generate the output.</strong> The transformer conditions on the preceding elements, while rectified-flow diffusion constructs the requested image or depth map. Depth and camera information can then support explicit 3D representations.</li>
+</ol>
+<p>This sequence is a conceptual reading of the launch report, not a complete implementation diagram. World Labs has not published the exact encoders, conditioning representation, or training objective.</p>
+<p><a class="atlas-flow-figure" href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/" aria-label="Open the canonical Atlas article by Michał Chromiak"><picture><source media="(prefers-reduced-motion: reduce)" srcset="img/atlas-conceptual-flow.svg?v=20260905" width="1200" height="700"><source media="(min-width: 601px)" srcset="img/atlas-request-flow.webp?v=20260905-2" width="1200" height="675"><img src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-request-flow-mobile.webp?v=20260905" width="720" height="1100" loading="lazy" decoding="async" alt="Animated conceptual Atlas workflow: text, images, depth maps, and camera poses form a spatial context; a target camera requests the next element, rectified flow resolves the output, and the result can extend the context."></picture></a></p>
+<p align="center">Figure 2. An original conceptual flow based on <a href="https://www.worldlabs.ai/blog/atlas#model-architecture">World Labs' public model description</a>. The animation shows evidence entering a shared spatial context, a target camera pose requesting the next element, and rectified flow resolving the new view. It explains the relationship between published components; it is not a diagram of undisclosed internal modules. The <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-request-flow.webp">animated WebP</a> loops automatically; a <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-conceptual-flow.svg">static diagram</a> is shown when reduced motion is requested. (Copyright: &copy; 2026 <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Michał Chromiak</a>).</p>
+<h2 id="how-the-architecture-fits-together">How the architecture fits together<a class="headerlink" href="#how-the-architecture-fits-together" title="Permanent link">🔗</a></h2>
+<p>World Labs describes Atlas as a <strong>multimodal autoregressive diffusion transformer</strong>. Each word contributes a different part of the design.</p>
+<h3 id="multimodal-several-kinds-of-evidence-share-one-context">Multimodal: several kinds of evidence share one context<a class="headerlink" href="#multimodal-several-kinds-of-evidence-share-one-context" title="Permanent link">🔗</a></h3>
+<p>Atlas currently works with text, images, camera poses, and depth maps. An image says what a camera observed. Its pose says where the camera was and how it was oriented. A depth map estimates how far each visible point is from the camera. Together they provide more structure than pixels alone.</p>
+<p>Calling the model multimodal does not mean every modality is interchangeable. Text describes a scene semantically; camera poses specify geometry; images and depth maps carry dense spatial measurements. The architecture's job is to condition generation on all of them coherently.</p>
+<h3 id="autoregressive-produce-the-next-element-from-earlier-elements">Autoregressive: produce the next element from earlier elements<a class="headerlink" href="#autoregressive-produce-the-next-element-from-earlier-elements" title="Permanent link">🔗</a></h3>
+<p>Atlas treats a task as a sequence of multimodal elements. It generates each new element conditioned on the elements already in the sequence. For example, a collection of reference images and poses can be followed by a requested camera pose and then the image Atlas predicts for that view.</p>
+<p>This resembles a language model predicting the next token, but the unit being generated can be an image or depth map rather than a word fragment. The sequential design also makes familiar inference techniques such as key-value caching relevant.</p>
+<h3 id="diffusion-construct-a-continuous-output-by-denoising">Diffusion: construct a continuous output by denoising<a class="headerlink" href="#diffusion-construct-a-continuous-output-by-denoising" title="Permanent link">🔗</a></h3>
+<p>Images contain far more continuous detail than a small vocabulary of text tokens. Atlas uses a latent diffusion approach, specifically <strong>rectified flow</strong>, to generate those outputs by transforming noise toward a sample that fits the spatial context. <strong>Latent</strong> means the generative process works in a compressed numerical representation rather than manipulating every full-resolution pixel directly.</p>
+<p>Autoregression generates each requested output element conditioned on prior elements. Diffusion constructs the content of that element through iterative denoising. They operate at different levels and are complementary, not competing descriptions of the same step.</p>
+<details class="dinov2-background">
+<summary>Optional detail: What rectified flow is doing</summary>
+<p>At a high level, training shows the model clean examples and noisy starting points. The model learns a direction that moves a noisy representation toward data that resembles the training examples while satisfying the current context. During generation, it begins from noise and follows that learned flow to produce a new sample.</p>
+<p>"Rectified" refers to learning comparatively direct transport paths between noise and data. Straighter paths can reduce the number of numerical steps needed during generation, although the Atlas launch report does not disclose its sampler or step count.</p>
+<p>For the formal construction, see Liu, Gong, and Liu, <a href="https://arxiv.org/abs/2209.03003"><em>Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow</em></a>.</p>
+</details>
+<h3 id="transformer-combine-information-at-scale">Transformer: combine information at scale<a class="headerlink" href="#transformer-combine-information-at-scale" title="Permanent link">🔗</a></h3>
+<p>The transformer processes relationships across the multimodal sequence. Its matrix-heavy computation maps well to modern accelerators, and it provides an architecture that can scale with data and compute. World Labs reports that larger internal Atlas training runs produced better performance and new capabilities. Because the launch post does not provide model sizes, training curves, or compute budgets, this is a development trend rather than a scaling law readers can inspect.</p>
+<h2 id="what-atlas-can-do">What Atlas can do<a class="headerlink" href="#what-atlas-can-do" title="Permanent link">🔗</a></h2>
+<h3 id="follow-an-explicit-camera-path">Follow an explicit camera path<a class="headerlink" href="#follow-an-explicit-camera-path" title="Permanent link">🔗</a></h3>
+<p>Many video generators receive camera direction as text: "pan left" or "crane upward." Atlas instead accepts camera geometry as a native input. A creator can specify the position and orientation for requested views, while reference images anchor the scene's content.</p>
+<p>World Labs reports generation from one to six reference images, with manually designed paths and output up to one minute at 1440p. Its phrase "pixel-perfect camera control" refers to following the specified camera geometry, not to every generated pixel being a measured reconstruction of the source scene.</p>
+<h3 id="reconstruct-a-scene-from-sparse-views">Reconstruct a scene from sparse views<a class="headerlink" href="#reconstruct-a-scene-from-sparse-views" title="Permanent link">🔗</a></h3>
+<p>For reconstruction, Atlas receives images with their camera poses and predicts a 3D point for each input pixel. It can output new 2D views as well as explicit representations such as point clouds and <strong>3D Gaussian splats</strong>. A <strong>point cloud</strong> is a set of sampled locations on visible surfaces, often carrying color as well as position. A Gaussian splat represents a scene as many translucent, oriented 3D primitives that can be rendered quickly from new viewpoints.</p>
+<p><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/depth-to-3d.svg"><img alt="Depth-to-3D geometry: a calibrated camera maps a pixel to a ray, depth selects a point on the ray, and camera pose transforms that point into shared world coordinates; repeating the process creates a point cloud." src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/depth-to-3d.svg"></a></p>
+<p align="center">Figure 3. The geometric bridge from a depth map to a point cloud. This original, general camera-geometry diagram explains the reconstruction concept; it is not an Atlas implementation diagram. (Copyright: &copy; 2026 <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Michał Chromiak</a>).</p>
+<details class="dinov2-background">
+<summary>Optional detail: How a depth map becomes 3D</summary>
+<p>A pixel identifies a direction from the camera into the scene. Its depth value selects a point along that direction. The camera calibration defines the viewing rays, and the camera pose transforms each point from the camera's local coordinates into a shared world coordinate system.</p>
+<p>Repeating this operation across the image produces a point cloud. A renderer can then display those points directly or convert them into a denser representation such as 3D Gaussian splats. This is the geometric intuition behind point-map reconstruction; the Atlas report does not publish its exact conversion pipeline.</p>
+</details>
+<p>World Labs says Atlas can work with one to more than one hundred images. The examples illustrate a continuum: a few views invite more generative completion, while dense coverage provides stronger constraints on the real scene.</p>
+<p><img alt="An Atlas-generated fantasy courtyard used as a thumbnail for an explicit 3D output." src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-3d-output.webp"></p>
+<p align="center">Figure 4. An official example associated with Atlas's explicit 3D outputs. The still image conveys appearance, but the original interactive demonstration is needed to inspect view consistency and geometry. (Source: <a href="https://www.worldlabs.ai/blog/atlas#explicit-3d-outputs">World Labs</a>).</p>
+<h3 id="reframe-events-in-space-and-time">Reframe events in space and time<a class="headerlink" href="#reframe-events-in-space-and-time" title="Permanent link">🔗</a></h3>
+<p>Atlas can combine several synchronized recordings of an event and render a new camera trajectory through it. World Labs demonstrates "bullet time" style reframing from three to five ordinary cameras. This is more constrained than generating an arbitrary future: the cameras provide multiple observations of the same event, and the model synthesizes viewpoints between and beyond them.</p>
+<p>This demonstrates viewpoint synthesis across a recorded event. Predicting the long-term consequences of arbitrary actions is a different and harder task.</p>
+<h3 id="help-construct-robotics-simulations">Help construct robotics simulations<a class="headerlink" href="#help-construct-robotics-simulations" title="Permanent link">🔗</a></h3>
+<p>In the navigation examples, a phone video supplies frames from a real environment. Atlas reconstructs the space and generates RGB and depth observations along simulated robot paths. For manipulation, World Labs presents Atlas as part of a real-to-sim system that can vary objects, positions, motion, lighting, and backgrounds. Atlas supplies the environment and sensor views in this workflow; a separate robot policy chooses actions.</p>
+<p><img alt="A robot manipulation setup captured by several ordinary cameras for a real-to-sim demonstration." src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-robotics.jpg"></p>
+<p align="center">Figure 5. Sparse capture for an official Atlas robotics demonstration. Atlas contributes reconstruction and sensor-view generation; the complete workflow also requires robot, simulation, and policy components. (Source: <a href="https://www.worldlabs.ai/blog/atlas#robotics-simulation">World Labs</a>).</p>
+<h2 id="how-to-read-the-reported-benchmarks">How to read the reported benchmarks<a class="headerlink" href="#how-to-read-the-reported-benchmarks" title="Permanent link">🔗</a></h2>
+<p>World Labs reports two quantitative evaluations. Both are informative, and both need context.</p>
+<h3 id="camera-controlled-generation">Camera-controlled generation<a class="headerlink" href="#camera-controlled-generation" title="Permanent link">🔗</a></h3>
+<p>Each trial pairs one source image with a target path containing one to three cinematic motions. Atlas receives the camera path in its native geometric format. Five comparison models receive text descriptions of the same motion because they do not accept camera poses directly. Third-party raters then choose which output follows the intended path better.</p>
+<p>The reported share preferring Atlas ranges from <strong>75% against MiniMax H3</strong> to <strong>94% against Seedance 2.5</strong>, with the other comparisons in between. This supports a narrow conclusion: under World Labs' protocol, raters found Atlas better at following these camera trajectories.</p>
+<p><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-camera-preference.svg"><img alt="Dot plot of World Labs' camera-path evaluation: 75 to 94 percent of third-party raters preferred Atlas over five comparison models; horizontal whiskers show the reported 95 percent confidence intervals." src="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/img/atlas-camera-preference.svg"></a></p>
+<p align="center">Figure 6. An original chart of the camera-path adherence results reported by World Labs. Atlas received explicit camera geometry, whereas the comparison models received text descriptions of the requested motion. The chart evaluates path following, not overall video quality. Data source: <a href="https://www.worldlabs.ai/blog/atlas#benchmarks">World Labs</a>. (Copyright: &copy; 2026 <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Michał Chromiak</a>).</p>
+<p>It is not a controlled test of overall video quality. The conditioning interface is asymmetric by design: Atlas receives exact geometry while the baselines receive language. That is a legitimate product advantage and also a reason not to interpret the result as proof that Atlas is the best video model on every dimension. World Labs itself notes that more sophisticated prompting could improve some baselines.</p>
+<h3 id="sparse-view-3d-reconstruction">Sparse-view 3D reconstruction<a class="headerlink" href="#sparse-view-3d-reconstruction" title="Permanent link">🔗</a></h3>
+<p>The reconstruction task asks each model to predict a 3D point for each input pixel. World Labs evaluates mean absolute-relative point-map error across DTU, ETH3D, KITTI, NRGBD, 7-Scenes, Tanks and Temples, and ScanNet. Lower is better. The company reports the lowest average error for Atlas, <strong>0.0253</strong>, against five open-source specialist baselines: Pi3X (posed), pi-cubed, VGGT-Omega 1B, Depth Anything 3, and MapAnything.</p>
+<p>This is a dimensionless relative-error score, not a distance in meters: <code>0.0253</code> summarizes disagreement between predicted and reference point maps under the evaluation procedure. The launch post does not provide enough detail about alignment and aggregation to translate that number into a universal statement about reconstruction fidelity.</p>
+<h2 id="atlas-marble-and-access">Atlas, Marble, and access<a class="headerlink" href="#atlas-marble-and-access" title="Permanent link">🔗</a></h2>
+<p>Atlas and Marble are related but not interchangeable:</p>
+<ul>
+<li><strong>Atlas</strong> is the newly announced foundation model and is in early access with selected partners.</li>
+<li><strong>Marble</strong> is World Labs' existing product for creating and exporting navigable 3D worlds. Its public World API currently exposes Marble models.</li>
+<li>World Labs says Atlas will power future versions of Marble and other products.</li>
+</ul>
+<p>This matters for developers. The Atlas launch is not a public release of model weights or a generally available Atlas API. A reader who wants to experiment today can use <a href="https://marble.worldlabs.ai/">Marble</a> or the <a href="https://docs.worldlabs.ai/">World API</a>, but should not assume that current Marble behavior is an evaluation of Atlas.</p>
+<h2 id="the-important-unanswered-questions">The important unanswered questions<a class="headerlink" href="#the-important-unanswered-questions" title="Permanent link">🔗</a></h2>
+<p>Atlas points toward a useful unification of generation and reconstruction, but the public report leaves several questions open:</p>
+<ul>
+<li><strong>Reproducibility:</strong> there is no public paper, model card, code, or checkpoint.</li>
+<li><strong>Training data:</strong> the sources, filtering, licenses, geographic coverage, and privacy controls are not described in detail.</li>
+<li><strong>Training recipe:</strong> the loss functions, task mixture, modality encoders, and spatial-conditioning representation are unpublished.</li>
+<li><strong>Efficiency:</strong> parameter count, hardware requirements, latency, throughput, and per-task compute are unpublished.</li>
+<li><strong>Geometry:</strong> average reconstruction error does not tell us how the model handles thin structures, reflections, moving objects, scale, or unseen regions in every setting.</li>
+<li><strong>Physics:</strong> compelling short demonstrations do not establish stable contact dynamics, conservation laws, or long-horizon causal prediction.</li>
+<li><strong>Robotics transfer:</strong> the launch examples do not isolate how much Atlas-generated simulation improves a policy on physical hardware.</li>
+</ul>
+<p>These questions provide a practical checklist for evaluating a future paper, model card, or public release.</p>
+<h2 id="why-atlas-is-worth-following">Why Atlas is worth following<a class="headerlink" href="#why-atlas-is-worth-following" title="Permanent link">🔗</a></h2>
+<p>Atlas's most interesting contribution is the expandable spatial context: camera-grounded images, depth, and text can live together, and the model can return either pixels or explicit geometry from that context.</p>
+<p>If this approach scales, the boundary between a video generator and a 3D reconstruction system becomes less rigid. A creator could direct a scene by placing observations in space. A robot developer could turn sparse recordings into varied simulation views. A reconstruction system could use learned priors when measurements are incomplete while accepting more evidence when fidelity matters.</p>
+<p>Atlas brings rendering and geometric simulation closer together inside one architecture. Planning remains a separate part of the agent-world loop, while physical and dynamic fidelity remain important evaluation targets.</p>
+<details class="dinov2-background">
+<summary>Check your mental model</summary>
+<ol>
+<li><strong>Atlas generates the hidden side of an object from one photograph. Is that measurement or completion?</strong> It is completion guided by learned priors. The input contains no measurement of the hidden surface.</li>
+<li><strong>Why is a camera pose more useful than the instruction "pan left"?</strong> It gives the model a geometric target: a position and orientation in the scene's coordinate system.</li>
+<li><strong>Does Atlas choose a robot's actions?</strong> Not in the published demonstrations. Atlas helps construct the environment and sensor observations; a separate policy selects actions.</li>
+</ol>
+</details>
+<h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">🔗</a></h2>
+<p>If you are arriving from language-model training, <a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a> provides a useful contrast. QLoRA is an efficiency technique for adapting an existing language model: it freezes compressed base weights and trains small adapters. Atlas is a multimodal foundation model whose objective and context are organized around spatial observations. Reading the two together separates <strong>how a model is adapted</strong> from <strong>what structure a model is trained to represent</strong>.</p>
+<p>For a representation-learning perspective, <a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a> asks a complementary question: can a model learn semantic image representations by predicting in feature space rather than reconstructing pixels?</p>
+<h2 id="primary-sources">Primary sources<a class="headerlink" href="#primary-sources" title="Permanent link">🔗</a></h2>
+<ul>
+<li>World Labs Team. <a href="https://www.worldlabs.ai/blog/atlas">Atlas: A World Model for Spatial Intelligence</a>, September 1, 2026. This is the primary technical source for Atlas's architecture, demonstrations, and reported benchmarks.</li>
+<li>Fei-Fei Li and the World Labs team. <a href="https://www.worldlabs.ai/blog/taxonomy-of-world-models">A Functional Taxonomy of World Models</a>, June 3, 2026. This provides the renderer, simulator, and planner distinction used in this article.</li>
+<li>World Labs Team. <a href="https://www.worldlabs.ai/blog/marble-world-model">Marble: A Multimodal World Model</a>, November 12, 2025. This distinguishes the current product from the Atlas foundation model.</li>
+<li>World Labs Team. <a href="https://www.worldlabs.ai/blog/announcing-the-world-api">Announcing the World API</a>, January 21, 2026. This describes the currently public Marble-based developer interface.</li>
+<li>Xingchao Liu, Chengyue Gong, and Qiang Liu. <a href="https://arxiv.org/abs/2209.03003">Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow</a>, 2022. This is background for the optional rectified-flow explanation; it is not an Atlas architecture paper.</li>
+</ul>
+<p>Figures 1, 4, and 5 are reproduced from World Labs' official Atlas materials for commentary and technical explanation; their captions link to the original online resources. Figures 2, 3, and 6 are original visualizations created for this article and are copyright &copy; 2026 <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Michał Chromiak</a>. Copyright in the reproduced material remains with World Labs.</p>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = 'https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://x.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> X (Twitter)</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal-Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> Feed (Atom)</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Atlas: How one model turns images into controllable 3D worlds</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / Neuroscience</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-world-models.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / World Models</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/optimization.html"><i class="fa fa-folder-open fa-lg"></i>Optimization</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/self-supervision.html"><i class="fa fa-folder-open fa-lg"></i>Self-Supervision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="https://iclr.cc/" target="_blank">ICLR</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://icml.cc/" target="_blank">ICML</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://neurips.cc/" target="_blank">NeurIPS</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://karpathy.github.io/2016/09/07/phd/" target="_blank">A Survival Guide to a PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://java-hive.blogspot.com/" target="_blank">Java Hive (my earlier blog)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://aifrontiers.com/" target="_blank">AI Frontiers 2018 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://alt.qcri.org/semeval2017/" target="_blank">SemEval 2017 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://www.freecodecamp.org/news/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c/" target="_blank">Free CS courses (2017 roundup)</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2026/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2026 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2025/Oct/index.html"><i class="fa fa-calendar fa-lg"></i>October 2025 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Apr/index.html"><i class="fa fa-calendar fa-lg"></i>April 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Mar/index.html"><i class="fa fa-calendar fa-lg"></i>March 2023 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <div class="site-footer__content">
+        <p class="site-footer__copyright">&copy; <span data-current-year>2026</span> Michał Chromiak</p>
+          <div class="site-footer__license">Content licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, except where indicated otherwise.</div>
+      </div>
+      <a class="site-footer__top" href="#" aria-label="Back to top" title="Back to top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</footer>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+</body>
+</html>

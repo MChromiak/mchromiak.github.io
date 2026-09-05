@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain” - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
+
+    <link href="https://mchromiak.github.io/static_files/img/favicon.jpg" rel="icon">
+
+<link rel="canonical" href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="Transformers,Brain Models,Interpretability,State-space Models,Graph Dynamics,Linear Attention,Hebbian Plasticity" />
+        <meta name="description" content="A narrative walkthrough of The Dragon Hatchling (BDH/BDH-GPU): a Transformer-class language model recast as local graph dynamics over neurons and synapses. We follow the paper’s central thread—why positive, sparse activations and synapse-level state make reasoning more interpretable—then look at scaling parity with a GPT-2-like baseline, composability by weight concatenation, and the signals of monosemanticity and emergent modularity." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/"/>
+        <meta property="og:description" content="A narrative walkthrough of The Dragon Hatchling (BDH/BDH-GPU): a Transformer-class language model recast as local graph dynamics over neurons and synapses. We follow the paper’s central thread—why positive, sparse activations and synapse-level state make reasoning more interpretable—then look at scaling parity with a GPT-2-like baseline, composability by weight concatenation, and the signals of monosemanticity and emergent modularity."/>
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2025/Oct/01/img/dragon_hatchling_cover.png" />
+
+        <meta property="article:published_time" content="2025-10-01" />
+            <meta property="article:section" content="Machine Learning / Neuroscience" />
+            <meta property="article:tag" content="Transformers" />
+            <meta property="article:tag" content="Brain Models" />
+            <meta property="article:tag" content="Interpretability" />
+            <meta property="article:tag" content="State-space Models" />
+            <meta property="article:tag" content="Graph Dynamics" />
+            <meta property="article:tag" content="Linear Attention" />
+            <meta property="article:tag" content="Hebbian Plasticity" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
+        <meta property="twitter:image"
+              content="https://mchromiak.github.io/articles/2025/Oct/01/img/dragon_hatchling_cover.png"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://mchromiak.github.io/theme/css/pygments/colorful.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+        <link href="https://mchromiak.github.io/feeds/machine-learning-neuroscience.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog Machine Learning / Neuroscience ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                             Contact detail
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html" title="Machine Learning / Neuroscience">Machine Learning / Neuroscience</a></li>
+                <li class="active">🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/"
+                       rel="bookmark"
+                       title="Permalink to 🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”">
+                        🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2025-10-01T15:30:00+02:00"> Wed, 01 Oct 2025</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2025-10-01T15:45:00+02:00"> Wed, 01 Oct 2025</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html">Machine Learning / Neuroscience</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://mchromiak.github.io/tag/transformers.html">Transformers</a>
+        /
+	<a href="https://mchromiak.github.io/tag/brain-models.html">Brain Models</a>
+        /
+	<a href="https://mchromiak.github.io/tag/interpretability.html">Interpretability</a>
+        /
+	<a href="https://mchromiak.github.io/tag/state-space-models.html">State-space Models</a>
+        /
+	<a href="https://mchromiak.github.io/tag/graph-dynamics.html">Graph Dynamics</a>
+        /
+	<a href="https://mchromiak.github.io/tag/linear-attention.html">Linear Attention</a>
+        /
+	<a href="https://mchromiak.github.io/tag/hebbian-plasticity.html">Hebbian Plasticity</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr>
+<h3 id="tldr">TL;DR<a class="headerlink" href="#tldr" title="Permanent link">🔗</a></h3>
+<p>If you’ve ever wished attention could be explained as something <strong>local</strong> and <strong>mechanistic</strong>, BDH is that wish in code. The authors take the familiar Transformer stack and show how it can be rewritten as <strong>synapse-level updates on a neuron graph</strong> — their “equations of reasoning.” Keys and queries live in a <strong>very high-dimensional positive space</strong>, activations are <strong>sparse and non-negative</strong>, and the whole system keeps a <strong>small state per neuron</strong> that is updated as tokens flow. In like-for-like experiments on <strong>Europarl</strong>, a <strong>GPU-friendly variant (BDH-GPU)</strong> tracks a <strong>GPT-2-class</strong> baseline from <strong>25M to 800M</strong> parameters under the <strong>same training recipe</strong>—while revealing structure we can actually study (monosemantic synapses, modular graphs).</p>
+<hr>
+<h3 id="contribution-of-paper">Contribution of Paper<a class="headerlink" href="#contribution-of-paper" title="Permanent link">🔗</a></h3>
+<p>The paper reframes a Transformer-style LLM as a <strong>distributed particle system</strong>: neurons carry <strong>positive, sparse activations</strong>; synapses carry <strong>fast, Hebbian-like state</strong>; and attention becomes <strong>local edge reweighting</strong> on a graph. This is presented in <strong>two equivalent views</strong>:</p>
+<p>1) <strong>BDH-GPU (tensor/state-space)</strong> — practical for training: <strong>three shared matrices</strong> <span class="math">\(E, D_x, D_y\)</span> of size <span class="math">\(n\times d\)</span> / <span class="math">\(d\times n\)</span>, plus a <strong>per-layer state</strong> <span class="math">\(\rho \in \mathbb{R}^{n\times d}\)</span>.<br>
+2) <strong>BDH (graph)</strong> — a local kernel over synapses <span class="math">\(\sigma(i,j)\)</span> with damping/rotation terms; <strong>feed-forward</strong> appears as <strong>intra-cluster propagation</strong>.</p>
+<p>These views agree up to layer-norm placement and state compression, giving attention a <strong>micro-foundation</strong> at the level of neuron pairs.</p>
+<hr>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">🔗</a></h2>
+<p>Modern Transformers scale, but they <strong>hide their mechanics</strong>: we can probe heads and MLPs, yet we rarely get a crisp account of <em>how</em> a specific relation is formed and <em>where</em> it lives. BDH argues for <strong>axiomatic AI</strong>: if we commit to <strong>local</strong> update rules with <strong>interpretable state</strong>, we can make <strong>long-horizon behavior</strong> analyzable over time—without giving up the performance envelope we expect from attention models.</p>
+<hr>
+<h3 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">🔗</a></h3>
+<p>Think of BDH as a <strong>bridge</strong>: on one end, <strong>Transformer practice</strong> (matrix-tensor computations that run well on GPUs); on the other, <strong>brain-style models</strong> (local interactions, plastic synapses, sparse positive firing). The <strong>bridge deck</strong> is BDH-GPU: a compact, <strong>three-matrix</strong> architecture whose layer keeps a <strong>small state</strong> and updates it per token using <strong>linear attention</strong>. The <strong>supports</strong> underneath are the <strong>graph-level equations of reasoning</strong>—a way to read these tensor ops as <strong>synapse updates</strong>.</p>
+<hr>
+<h2 id="key-ideas-architecture-overview">Key Ideas &amp; Architecture Overview<a class="headerlink" href="#key-ideas-architecture-overview" title="Permanent link">🔗</a></h2>
+<p><strong>State-space recurrence.</strong> Each layer carries a state <span class="math">\(\rho \in \mathbb{R}^{n\times d}\)</span>. As tokens pass, <strong>linear attention both reads and writes</strong> this state. The model’s weights are just <strong><span class="math">\(E, D_x, D_y\)</span></strong> (shared across layers), giving roughly <strong><span class="math">\((3+o(1))nd\)</span></strong> parameters (I/O aside).  </p>
+<p><strong>Positive, sparse activations.</strong> Activations are by design <strong>non-negative</strong> and empirically <strong>~5% active</strong>. This localization means each token touches a <strong>small slice</strong> of <span class="math">\(\rho\)</span>, aiding <strong>efficiency</strong> and <strong>interpretability</strong>.  </p>
+<p><strong>Linear attention in the positive orthant.</strong> Keys/queries live in <span class="math">\((\mathbb{R}_+)^n\)</span>. In this regime, tiny <strong><span class="math">\(L_1\)</span></strong> differences become <strong>highly separable</strong>—the paper highlights this as a practical path to sharp matching, with <strong>LSH-style constructions</strong> to maintain positivity.  </p>
+<p><strong>Graph view: equations of reasoning.</strong> Attention becomes a <strong>local edge-reweighting kernel</strong> over <span class="math">\(\sigma(i,j)\)</span>, and the ReLU-low-rank MLP is <strong>intra-cluster propagation</strong>.  </p>
+<p><strong>Architectural picture.</strong> A schematic (the paper’s Fig. 1) places BDH-GPU between <strong>Transformers</strong> and <strong>brain-like models</strong>.  </p>
+<hr>
+<h3 id="formalism-dynamics">Formalism &amp; Dynamics<a class="headerlink" href="#formalism-dynamics" title="Permanent link">🔗</a></h3>
+<ul>
+<li><strong>BDH-GPU:</strong> the three shared matrices and state <span class="math">\(\rho\)</span> replicate attention+MLP behavior under <strong>positivity</strong> and <strong>sparsity</strong>.  </li>
+<li><strong>BDH:</strong> same computation expressed as <strong>local synapse updates</strong> <span class="math">\(\sigma(i,j)\)</span> with damping/rotation terms.  </li>
+<li><strong>Expressiveness:</strong> BDH ≥ BDH-GPU in <span class="math">\(O(nd)\)</span>, modulo normalization placement and state compression.  </li>
+</ul>
+<hr>
+<h3 id="bdh-gpu-implementation-scaling">BDH-GPU &amp; Implementation / Scaling<a class="headerlink" href="#bdh-gpu-implementation-scaling" title="Permanent link">🔗</a></h3>
+<ul>
+<li><strong>Dataset:</strong> Europarl, byte-level LM + translation.  </li>
+<li><strong>Training:</strong> same regimen for both models (DDP, AdamW, ALiBi; GPT baseline with KV-cache).  </li>
+<li><strong>Result:</strong> BDH-GPU′ (gated) matches GPT-2-class baseline from 25M to 800M params (<strong>Fig. 7</strong>).  </li>
+<li><strong>Long contexts:</strong> For <span class="math">\(&gt;4,096\)</span> tokens (<span class="math">\(d=256\)</span>), state-space kernel is faster and more memory-efficient.  </li>
+<li><strong>Reproducibility:</strong> Appendix E reports single-node PyTorch code sufficient to replicate results.  </li>
+</ul>
+<hr>
+<h3 id="empirical-analysis-findings">Empirical Analysis &amp; Findings<a class="headerlink" href="#empirical-analysis-findings" title="Permanent link">🔗</a></h3>
+<ul>
+<li><strong>Scaling parity:</strong> BDH-GPU tracks GPT-2-like baseline on Europarl.  </li>
+<li><strong>Weight concatenation:</strong> EN↔FR + EN↔PT → merged model translates across ES/FR/PT, improved after brief joint finetuning (<strong>Table 2, Fig. 15</strong>).  </li>
+<li><strong>Interpretability signals:</strong> emergent modular graphs (power-law, high modularity); monosemantic synapses linked to semantic concepts (currency names), tested with Mann–Whitney.  </li>
+<li><strong>Ablation (no-BPTT):</strong> detaching recurrent state hurts translation (loss from ~0.65 → 0.75–1.05) but LM ability persists.  </li>
+</ul>
+<hr>
+<h3 id="interpretability-concept-representation">Interpretability &amp; Concept Representation<a class="headerlink" href="#interpretability-concept-representation" title="Permanent link">🔗</a></h3>
+<ul>
+<li>Sparse positive activations localize token updates.  </li>
+<li>Non-negative contributions make synapse semantics easier to read.  </li>
+<li>Monosemantic synapses align with interpretable concepts.  </li>
+<li>Graph modularity hints at specialized reusable substructures.  </li>
+</ul>
+<hr>
+<h2 id="implications-connections">Implications &amp; Connections<a class="headerlink" href="#implications-connections" title="Permanent link">🔗</a></h2>
+<ul>
+<li><strong>Reasoning you can inspect:</strong> synapse-level updates show <em>where</em> concepts live.  </li>
+<li><strong>Weights you can compose:</strong> concatenate along <span class="math">\(n\)</span> for multilingual transfer.  </li>
+<li><strong>Longer horizons:</strong> state-space recurrence avoids quadratic context growth.  </li>
+</ul>
+<hr>
+<h2 id="critique-caveats">Critique &amp; Caveats<a class="headerlink" href="#critique-caveats" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Europarl-only, byte-level, token-loss metrics (no BLEU/ChrF).  </li>
+<li>Parity claim = “GPT-2-class under matched setup,” not SOTA.  </li>
+<li>Memory/state cost: maintaining large <span class="math">\(n\times d\)</span> state requires careful system design.  </li>
+<li>No-BPTT shortcut intriguing, but weaker translation alignment.  </li>
+</ul>
+<hr>
+<h2 id="future-research-in-series">Future Research (in series)<a class="headerlink" href="#future-research-in-series" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Dive deeper into graph kernel stability and dynamics.  </li>
+<li>Evaluate long-context scaling with state-space kernels.  </li>
+<li>Test monosemantic synapses at scale (100B+ params).  </li>
+<li>Broader multilingual/multitask benchmarks.  </li>
+</ul>
+<hr>
+<h2 id="useful-resources">Useful Resources<a class="headerlink" href="#useful-resources" title="Permanent link">🔗</a></h2>
+<ul>
+<li><strong>arXiv:</strong> <em>The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain</em> (v1).  </li>
+<li>Key references: Fig. 1 (bridge), Fig. 6 (one-layer BDH-GPU), Fig. 7 (scaling curve), Table 1 (equations), Table 2 (composition), Figs. 9–13 (interpretability), Tables 4–5 (hyperparams), Appendix E (reproducibility).  </li>
+</ul>
+<hr>
+<h3 id="if-you-read-only-three-pages">If you read only three pages<a class="headerlink" href="#if-you-read-only-three-pages" title="Permanent link">🔗</a></h3>
+<ol>
+<li><strong>Fig. 1</strong> — conceptual bridge across model types.  </li>
+<li><strong>Fig. 6</strong> — the three-matrix simplicity.  </li>
+<li><strong>Fig. 7</strong> — scaling parity with GPT-2 baseline.  </li>
+</ol>
+<hr>
+<h3 id="quick-glossary">Quick glossary<a class="headerlink" href="#quick-glossary" title="Permanent link">🔗</a></h3>
+<ul>
+<li><strong><span class="math">\(n\)</span></strong> — neurons dimension (very high-dimensional).  </li>
+<li><strong><span class="math">\(d\)</span></strong> — small feature/state dimension (e.g., <span class="math">\(d=256\)</span>).  </li>
+<li><strong><span class="math">\(\rho \in \mathbb{R}^{n\times d}\)</span></strong> — per-layer state matrix.  </li>
+<li><strong><span class="math">\(E, D_x, D_y\)</span></strong> — three shared matrices (<span class="math">\(n\times d\)</span> or <span class="math">\(d\times n\)</span>).  </li>
+<li><strong>BDH vs BDH-GPU:</strong> graph kernel (local rules) vs tensor form.  </li>
+<li><strong>BPTT:</strong> backprop-through-time; no-BPTT detaches <span class="math">\(\rho\)</span>.  </li>
+<li><strong>ALiBi:</strong> linear positional bias scheme.  </li>
+</ul>
+<hr>
+<h3 id="one-sentence-verdict">One-sentence verdict<a class="headerlink" href="#one-sentence-verdict" title="Permanent link">🔗</a></h3>
+<p>BDH is a <strong>Transformer-class</strong> architecture that <strong>shows its work</strong>: local, positive, sparse, and competitive under controlled conditions—an interpretability-friendly step toward models whose reasoning can be measured and composed.</p>
+<h3 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">🔗</a></h3>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = 'https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://x.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> X (Twitter)</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal-Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> Feed (Atom)</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Atlas: How one model turns images into controllable 3D worlds</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / Neuroscience</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-world-models.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / World Models</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/optimization.html"><i class="fa fa-folder-open fa-lg"></i>Optimization</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/self-supervision.html"><i class="fa fa-folder-open fa-lg"></i>Self-Supervision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="https://iclr.cc/" target="_blank">ICLR</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://icml.cc/" target="_blank">ICML</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://neurips.cc/" target="_blank">NeurIPS</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://karpathy.github.io/2016/09/07/phd/" target="_blank">A Survival Guide to a PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://java-hive.blogspot.com/" target="_blank">Java Hive (my earlier blog)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://aifrontiers.com/" target="_blank">AI Frontiers 2018 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://alt.qcri.org/semeval2017/" target="_blank">SemEval 2017 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://www.freecodecamp.org/news/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c/" target="_blank">Free CS courses (2017 roundup)</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2026/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2026 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2025/Oct/index.html"><i class="fa fa-calendar fa-lg"></i>October 2025 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Apr/index.html"><i class="fa fa-calendar fa-lg"></i>April 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Mar/index.html"><i class="fa fa-calendar fa-lg"></i>March 2023 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <div class="site-footer__content">
+        <p class="site-footer__copyright">&copy; <span data-current-year>2026</span> Michał Chromiak</p>
+          <div class="site-footer__license">Content licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, except where indicated otherwise.</div>
+      </div>
+      <a class="site-footer__top" href="#" aria-label="Back to top" title="Back to top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</footer>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics Universal -->
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-108394162-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics Universal Code -->
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+</body>
+</html>

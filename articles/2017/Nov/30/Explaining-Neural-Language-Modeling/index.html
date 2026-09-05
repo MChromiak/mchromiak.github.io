@@ -201,55 +201,55 @@
 <p>To complete the NLP tasks we must provide a measure to enable comparison operations and thus assessment method for grading our model. This measure is probability. This involves all kinds of tasks, for example:</p>
 <ul>
 <li>
-<p><strong>Machine translation:</strong> translating a sentence saying about height it would probably state that $ P(tall\ man) &gt; P(large\ man)$ as the ‘<em>large</em>’ might also refer to weight or general appearance thus, not as probable as ‘<em>tall</em>’</p>
+<p><strong>Machine translation:</strong> translating a sentence saying about height it would probably state that <span class="math">\( P(tall\ man) &gt; P(large\ man)\)</span> as the ‘<em>large</em>’ might also refer to weight or general appearance thus, not as probable as ‘<em>tall</em>’</p>
 </li>
 <li>
-<p><strong>Spelling Correction:</strong>  Spell correcting sentence: “Put you name into form”, so that $P(name\ into\ \textbf{form}) &gt; P(name\ into\ \textbf{from})$</p>
+<p><strong>Spelling Correction:</strong>  Spell correcting sentence: “Put you name into form”, so that <span class="math">\(P(name\ into\ \textbf{form}) &gt; P(name\ into\ \textbf{from})\)</span></p>
 </li>
 <li>
-<p><strong>Speech Recognition:</strong> Call my nurse: $P(Call\ my\ nurse.) \gg P(coal\ miners)$, I have no idea. $P(no\ idea.) \gg P(No\ eye\ deer.)$</p>
+<p><strong>Speech Recognition:</strong> Call my nurse: <span class="math">\(P(Call\ my\ nurse.) \gg P(coal\ miners)\)</span>, I have no idea. <span class="math">\(P(no\ idea.) \gg P(No\ eye\ deer.)\)</span></p>
 </li>
 <li><strong>Summarization, question answering, sentiment analysis</strong> etc.</li>
 </ul>
 <h3 id="the-probabilistic-language-modeling">The probabilistic language modeling<a class="headerlink" href="#the-probabilistic-language-modeling" title="Permanent link">🔗</a></h3>
-<p>The probability of a sentence $S$ (as a sequence of <em>words</em> $w_i$) is : $P(S) = P(w_1,w_2, w_3,\ldots,w_n)$. Now it is important to find the probability of upcoming word. It is an everyday task made e.g. while typing  your mobile keyboard. We will settle the <em>conditional probability</em>  of $w_4$ depending on all previous words. For a 4 word sentence this conditional probability is:</p>
-<p>$$ P(S)=P(w_1, w_2, w_3, w_4) \equiv P(w_4 |w_1, w_2, w3) $$</p>
+<p>The probability of a sentence <span class="math">\(S\)</span> (as a sequence of <em>words</em> <span class="math">\(w_i\)</span>) is : <span class="math">\(P(S) = P(w_1,w_2, w_3,\ldots,w_n)\)</span>. Now it is important to find the probability of upcoming word. It is an everyday task made e.g. while typing  your mobile keyboard. We will settle the <em>conditional probability</em>  of <span class="math">\(w_4\)</span> depending on all previous words. For a 4 word sentence this conditional probability is:</p>
+<div class="math">$$ P(S)=P(w_1, w_2, w_3, w_4) \equiv P(w_4 |w_1, w_2, w3) $$</div>
 <p>This way we can actually represent the language grammar, however, in NLP it is accustomed to use the LM term.</p>
-<p>To calculate the joint probability  of a sentence (as a word sequence) $P(W)$ the chain rule of probability will be used.</p>
+<p>To calculate the joint probability  of a sentence (as a word sequence) <span class="math">\(P(W)\)</span> the chain rule of probability will be used.</p>
 <p><strong>Probability Chain Rule:</strong></p>
-<p>$$P(A|B) = \frac{P(A\cap B)}{P(B)} \implies P(A\cap B)=P(A|B)P(B)$$</p>
+<div class="math">$$P(A|B) = \frac{P(A\cap B)}{P(B)} \implies P(A\cap B)=P(A|B)P(B)$$</div>
 <p>so in general for a token sequence we get:</p>
-<p>$$P(S)=P(w_1,\ldots,w_n) = P(w_1)P(w_2|w_1) P(w_3)P(w_1,w_2)\ldots P(w_n|w_1,\ldots w_{n-1}) ={\displaystyle \prod_{i} P(w_i|w_1,\ldots w_{i-1})}$$</p>
+<div class="math">$$P(S)=P(w_1,\ldots,w_n) = P(w_1)P(w_2|w_1) P(w_3)P(w_1,w_2)\ldots P(w_n|w_1,\ldots w_{n-1}) ={\displaystyle \prod_{i} P(w_i|w_1,\ldots w_{i-1})}$$</div>
 <p>To estimate each probability a straightforward solution could be to use simple counting.</p>
-<p>$$P(w_5|w_1,w_2,w_3,w_4)= \frac{count(w_1,w_2,w_3,w_4,w_5)}{count(w_1,w_2,w_3,w_4)}$$</p>
+<div class="math">$$P(w_5|w_1,w_2,w_3,w_4)= \frac{count(w_1,w_2,w_3,w_4,w_5)}{count(w_1,w_2,w_3,w_4)}$$</div>
 <p>but this gives us to many possible sequences to ever estimate. Imagine how much data (occurrences of each sentence) we would have to get to make this <em>count</em>s meaningful.</p>
 <p>To cope with this issue we can simplify by applying the <strong>Markov Assumption</strong>, which states that it is enough to pick only one, or a couple of previous words as a prefix:</p>
-<p>$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-k},\ldots P(w_{i-1}))}$$</p>
-<p>where $k$ is the number of previous tokens (<em>prefix</em> size) that we consider.</p>
+<div class="math">$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-k},\ldots P(w_{i-1}))}$$</div>
+<p>where <span class="math">\(k\)</span> is the number of previous tokens (<em>prefix</em> size) that we consider.</p>
 <h3 id="n-grams">N-grams<a class="headerlink" href="#n-grams" title="Permanent link">🔗</a></h3>
 <p>An N-gram is a contiguous (order matters) sequence of items, which in this case is the words in text. The n-grams depends on the size of the <em>prefix</em>. The simplest case is the <em>Unigram mode</em>.</p>
 <p>** (Uni-) 1-gram model<em><em>
 The simplest case of </em>Markov assumption</em> is case when the size of prefix is one.
-$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i)}$</p>
+<span class="math">\(P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i)}\)</span></p>
 <p>This will provide us with grammar that only consider one word. As a result it produces a set of unrelated words. It actually would generate sentences with random word order.</p>
 <p>** Bigram **
 However, if we consider a 2-word (tandem) bigrams correlations where we condition each word on previous one we get some sens of meaning between couples of words.</p>
-<p>$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$</p>
+<div class="math">$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$</div>
 <p>This way we get a sequence of tandems that have meaning tandem-wise. This still is not enough to face a long range dependencies from natural languages, like English. This would be difficult even in case of n-grams as there can be very long sentences with dependencies. However, a 3-gram can get us a pretty nice <a href="http://tetration.xyz/Ngram-Tutorial/">approximation</a>.</p>
 <div class="highlight"><pre><span></span><code>and how he probably more easily believe me i never see how much as that he and pride and unshackled
 </code></pre></div>
 
 <h4 id="estimate-n-gram-probabilities">Estimate n-gram probabilities<a class="headerlink" href="#estimate-n-gram-probabilities" title="Permanent link">🔗</a></h4>
 <p>Estimation can be done with <strong>Maximum Likelihood Estimate (MLE)</strong>:</p>
-<p>$$P(w_i|w_{i-1})=\frac{count(w_{i-1},w_i)}{count(w_{i-1 })}$$</p>
+<div class="math">$$P(w_i|w_{i-1})=\frac{count(w_{i-1},w_i)}{count(w_{i-1 })}$$</div>
 <!-- z jupytera:
 Z google ngram raw bigram count table
 normalize by unigrams -->
 
 <p>So the 2-gram estimate  of sentence probability would be the product of all component tandems ordered as in the sentence.</p>
-<p>$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$</p>
-<p>In practice, the outcome should be represented in <em>log</em> form. There are two reasons for this. Firstly, if the sentence is long and the probabilities are really small, then such product might end in arithmetic underflow.  Secondly, adding is faster - and when we use logarithm we know that: $log(a*b) = log(a)+log(b)$, thus:</p>
-<p>$log(P(w_1,\ldots,w_n)) \approx {\displaystyle \sum_{i} log(P(w_i|w_{i-1}))}$</p>
+<div class="math">$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$</div>
+<p>In practice, the outcome should be represented in <em>log</em> form. There are two reasons for this. Firstly, if the sentence is long and the probabilities are really small, then such product might end in arithmetic underflow.  Secondly, adding is faster - and when we use logarithm we know that: <span class="math">\(log(a*b) = log(a)+log(b)\)</span>, thus:</p>
+<p><span class="math">\(log(P(w_1,\ldots,w_n)) \approx {\displaystyle \sum_{i} log(P(w_i|w_{i-1}))}\)</span></p>
 <p>This is why the Language Model is stored in logarithmic values.</p>
 <h3 id="publicly-available-corpora">Publicly available corpora<a class="headerlink" href="#publicly-available-corpora" title="Permanent link">🔗</a></h3>
 <p>There is available <a href="http://www.gutenberg.org/ebooks/search/">Gutenberg Project</a> providing with text format of some books.</p>
@@ -265,14 +265,76 @@ normalize by unigrams -->
 <p>As <strong>perplexity</strong> is a bad approximation to an extreme extrinsic evaluation, in cases where the test dataset does NOT look just like the training set. Thus, it is useful only at the early stages of experiment. So later in experiment extrinsic evaluation should also be used.</p>
 <p>Best model is the one that best predicts an unseen test set, or assigns on average the probability to all sentences that is sees.</p>
 <p>Perprexity metric is the probability of the test set, normalized for the length of the probability by the number of words.</p>
-<p>$$ PP(S) = P(w_1,\ldots, w_N)^{-\frac{1}{N}} =\sqrt[\leftroot{0}\uproot{3}N]{\frac{1}{P(w_1,\ldots, w_N)}} = $$</p>
+<div class="math">$$ PP(S) = P(w_1,\ldots, w_N)^{-\frac{1}{N}} =\sqrt[\leftroot{0}\uproot{3}N]{\frac{1}{P(w_1,\ldots, w_N)}} = $$</div>
 <p>This way the longer the sentence the less probable it will be. Then again by the chain rule:</p>
-<p>$$ = \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_1,\ldots, w_{i-1})}}} $$</p>
+<div class="math">$$ = \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_1,\ldots, w_{i-1})}}} $$</div>
 <p>In case of 2-gram using Markov approximation of the chain rule:</p>
-<p>$$ PP(S) =  \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_{i-1})}}}$$</p>
+<div class="math">$$ PP(S) =  \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_{i-1})}}}$$</div>
 <p>So <em>perplexity</em> is a function of probability of the sentence. The meaning of the inversion in perplexity means that whenever we minimize the perplexity we maximize the probability.</p>
 <p>Perplexity is weighted equivalent branching factor.</p>
 <p>To be continued...</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
@@ -354,9 +416,9 @@ normalize by unigrams -->
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Atlas: How one model turns images into controllable 3D worlds</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">🐉 Dragon Hatchling I — Paper Notes: “The Missing Link between the Transformer and Models of the Brain”</a></li>
     <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA: How to fine-tune large language models with less memory</a></li>
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/">DINOv2: How self-supervised visual features transfer across tasks</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->
@@ -370,6 +432,12 @@ normalize by unigrams -->
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / Neuroscience</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-world-models.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / World Models</a>
     </li>
     <li class="list-group-item">
       <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
@@ -389,134 +457,6 @@ normalize by unigrams -->
   </ul>
 </li>
 <!-- End Sidebar/Categories -->
-<!-- Sidebar/Tag Cloud -->
-<li class="list-group-item">
-  <a href="https://mchromiak.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
-  <ul class="list-group list-inline tagcloud" id="tags">
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/application.html">application</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/autoencoder.html">Autoencoder</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/basics.html">basics</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/cv.html">CV</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/gpt.html">GPT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/k-nn.html">k-NN</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/markov-decision-process.html">Markov Decision Process</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/mdp.html">MDP</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/mlp.html">MLP</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/patternrecognition.html">PatternRecognition</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/reinforcement-learning.html">Reinforcement Learning</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/representation-learning.html">Representation Learning</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/rl.html">RL</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/scalability.html">Scalability</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/self-supervision-ssl.html">Self-Supervision (SSL)</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
-    </li>
-    <li class="list-group-item tag-2">
-      <a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/vision-transformer.html">Vision Transformer</a>
-    </li>
-    <li class="list-group-item tag-1">
-      <a href="https://mchromiak.github.io/tag/vit.html">ViT</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/weak-supervision.html">Weak-supervision</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/wsl.html">WSL</a>
-    </li>
-    <li class="list-group-item tag-4">
-      <a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
-    </li>
-      <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapters.html">Adapters</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/low-rank.html">Low-Rank</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/lora.html">LoRA</a></li>
-    <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/qlora.html">QLoRA</a></li>
-  <li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/peft.html">PEFT</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/adapter.html">Adapter</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/llm.html">LLM</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/t5.html">T5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/longt5.html">LongT5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/conditional-computation.html">Conditional Computation</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/colt5.html">CoLT5</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/ssl.html">SSL</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/optimization.html">Optimization</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/mae.html">MAE</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/i-jepa.html">I-JEPA</a></li>
-<li class="list-group-item tag-4"><a href="https://mchromiak.github.io/tag/metaai.html">MetaAI</a></li>
-</ul>
-</li>
-<!-- End Sidebar/Tag Cloud -->
 
 <!-- Sidebar/Links -->
 <li class="list-group-item">
@@ -563,6 +503,14 @@ normalize by unigrams -->
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
   <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2026/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2026 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2025/Oct/index.html"><i class="fa fa-calendar fa-lg"></i>October 2025 (1)
+          </a>
+        </li>
         <li class="list-group-item">
           <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
           </a>
