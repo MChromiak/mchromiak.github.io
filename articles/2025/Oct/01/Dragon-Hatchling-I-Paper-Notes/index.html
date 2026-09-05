@@ -34,7 +34,7 @@
         <meta property="og:title" content="Dragon Hatchling: A careful guide to BDH&#39;s graph-inspired state-space model"/>
         <meta property="og:url" content="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/"/>
         <meta property="og:description" content="Dragon Hatchling connects a high-dimensional linear-attention state-space model to local graph dynamics. This guide explains the recurrence, the qualified relationship between BDH and BDH-GPU, the Europarl scaling results, and the limits of the paper&#39;s claims about interpretability, long context, model composition, and biological plausibility."/>
-            <meta property="og:image" content="https://mchromiak.github.io/articles/2025/Oct/01/img/bdh-layer-architecture.png" />
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/img/bdh-layer-architecture.png" />
 
         <meta property="article:published_time" content="2025-10-01" />
             <meta property="article:section" content="Machine Learning / Neuroscience" />
@@ -54,7 +54,7 @@
         <meta name="twitter:creator" content="@drChromiak">
     <meta name="twitter:domain" content="https://mchromiak.github.io">
         <meta property="twitter:image"
-              content="https://mchromiak.github.io/articles/2025/Oct/01/img/bdh-layer-architecture.png"/>
+              content="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/img/bdh-layer-architecture.png"/>
 
 
     <!-- Bootstrap -->
@@ -195,6 +195,11 @@
 <p>Layer normalization computes statistics across all coordinates of a vector. A neuron cannot perform that calculation using only its own state and immediate edges unless the graph system adds a mechanism for aggregating and distributing those global statistics.</p>
 <p>The paper's clean local equivalence therefore starts from BDH-Normfree. It then treats trained BDH-GPU, with LayerNorm restored, as a closely related practical architecture. This distinction does not invalidate the graph interpretation, but it separates an exact local construction from the model used in the experiments.</p>
 </details>
+<details class="dinov2-background">
+<summary>Optional context: Axiomatic AI and the particle-system view</summary>
+<p>The authors place BDH inside a broader program they call <strong>Axiomatic AI</strong>: describe both a model's large-scale computation and the local rules from which that computation arises. The ambition is analogous to deriving macroscopic behavior in physics from interactions between simpler components.</p>
+<p>In that language, BDH-GPU can be viewed as an interacting particle system. Each of the <span class="math">\(n\)</span> activation coordinates acts like a particle with a compact state, while the learned low-rank maps and recurrent memory determine how activity propagates between coordinates. The graph formulation makes those pairwise interactions explicit as edges. This is a mathematical interpretation of the recurrence, not evidence that literal physical particles or biological neurons implement it.</p>
+</details>
 <h2 id="one-bdh-gpu-layer-before-the-equations">One BDH-GPU layer, before the equations<a class="headerlink" href="#one-bdh-gpu-layer-before-the-equations" title="Permanent link">🔗</a></h2>
 <p>At time <span class="math">\(t\)</span>, a token enters a stack of <span class="math">\(L\)</span> recurrent depth steps. Each step works with two <span class="math">\(n\)</span>-dimensional, non-negative activation vectors:</p>
 <ul>
@@ -257,8 +262,14 @@ a^*_{t,l}=\rho_{t-1,l}x_{t,l}.
 $$</div>
 <p>The state has fixed shape for a fixed model, independent of the number of processed tokens. This removes a hard architectural context-window boundary from recurrent execution. It does <strong>not</strong> guarantee perfect or unlimited memory: unrelated and stale contributions can interfere, which is why the model uses positional rotation and damping.</p>
 <details class="dinov2-background" markdown="1">
-<summary>Optional detail: Fixed state is not automatically linear-time code</summary>
+<summary>Optional detail: Capacity, positive keys, and the LSH construction</summary>
 
+<p>The paper also asks how many key-value associations a fixed linear-attention state can recover approximately. Under assumptions about correlations between keys, bounded values, and a suitable key representation, Claim 7 places the capacity between approximately <span class="math">\(\widetilde{\Omega}(\sqrt{n})\)</span> and <span class="math">\(\widetilde{O}(n)\)</span> associations per layer. The tilde notation suppresses logarithmic factors. This is a theoretical scaling range, not a measured memory limit for the trained Europarl models.</p>
+<p>Because BDH-GPU keys and queries lie in the positive orthant <span class="math">\((\mathbb{R}_+)^n\)</span>, the paper studies whether positive vectors can still support selective matching. Observation 7 constructs a positive vector whose coordinates represent <strong>locality-sensitive hashing</strong> (LSH) buckets: similar inputs collide in more shared buckets and therefore receive a larger dot product. Observation 8 gives a separate, specially constructed example in which small <span class="math">\(L_1\)</span> differences between positive keys can be separated sharply.</p>
+<p>These results demonstrate expressiveness. The experiments do not show that BDH-GPU learns the proposed LSH encoding, nor that every small <span class="math">\(L_1\)</span> difference in a learned representation is automatically easy to distinguish.</p>
+</details>
+<details class="dinov2-background">
+<summary>Optional detail: Fixed state is not automatically linear-time code</summary>
 <p>The recurrence can be implemented by updating <span class="math">\(\rho\)</span> once per token, which avoids storing all earlier keys and values. The paper says that for <span class="math">\(d=256\)</span>, its state-space kernel becomes faster and more memory-efficient than the simple causal-attention path at contexts typically longer than 4,096 tokens. It does not provide a latency table establishing that threshold across hardware and workloads.</p>
 <p>The compact code in Appendix E and the current <a href="https://github.com/pathwaycom/bdh/blob/main/bdh.py">official <code>bdh.py</code></a> instead materialize a causal <span class="math">\(T\times T\)</span> score matrix for parallel training. That implementation is quadratic in sequence length. The architecture admits recurrent execution; the released teaching implementation does not by itself demonstrate the claimed long-context systems advantage.</p>
 </details>
