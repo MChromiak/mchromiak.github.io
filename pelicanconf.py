@@ -38,7 +38,7 @@ ARTICLE_PATHS = ['articles']
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 
-IGNORE_FILES = ['.#*', '*draft*']
+IGNORE_FILES = ['.#*', '*draft*', 'rm.md']
 #=============================== URL =====================================
 # Define paths in 'output' dir where will be HTML files generated.
 
