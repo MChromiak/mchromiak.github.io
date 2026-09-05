@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 570" role="img" aria-labelledby="title desc">
+  <title id="title">How a depth map and camera pose produce points in 3D</title>
+  <desc id="desc">A pixel defines a viewing ray from a calibrated camera. The depth value selects a point on that ray, and the camera pose places it into shared world coordinates. Repeating this for pixels creates a point cloud.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="570" fill="#f7fafc"/>
+  <text x="54" y="58" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="700">From one pixel to shared 3D geometry</text>
+  <text x="54" y="92" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="18">Depth selects a point on a camera ray; pose places that point in the world</text>
+
+  <text x="75" y="145" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">CAMERA VIEW</text>
+  <path d="M108 287 L190 247 V327 Z" fill="#dcebf3" stroke="#2878a8" stroke-width="3"/>
+  <rect x="54" y="259" width="62" height="56" rx="6" fill="#ffffff" stroke="#2878a8" stroke-width="3"/>
+  <circle cx="116" cy="287" r="10" fill="#2878a8"/>
+  <text x="112" y="359" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">calibrated camera</text>
+
+  <rect x="250" y="184" width="132" height="206" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="3"/>
+  <g stroke="#d5e0e6" stroke-width="1">
+    <path d="M283 184 V390 M316 184 V390 M349 184 V390"/>
+    <path d="M250 225 H382 M250 266 H382 M250 307 H382 M250 348 H382"/>
+  </g>
+  <rect x="316" y="266" width="33" height="41" fill="#f4b860" stroke="#b45309" stroke-width="2"/>
+  <text x="316" y="421" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">pixel (u, v)</text>
+  <text x="316" y="447" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">depth = d</text>
+
+  <path d="M126 287 L670 205" stroke="#2878a8" stroke-width="3" stroke-dasharray="9 7" fill="none"/>
+  <circle cx="492" cy="232" r="12" fill="#b45309" stroke="#ffffff" stroke-width="4"/>
+  <text x="480" y="180" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">depth chooses</text>
+  <text x="480" y="203" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">this point</text>
+
+  <path d="M560 287 H705" stroke="#2878a8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <text x="632" y="266" text-anchor="middle" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">apply pose</text>
+
+  <text x="740" y="145" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">WORLD COORDINATES</text>
+  <rect x="710" y="168" width="430" height="306" rx="6" fill="#eaf5fa" stroke="#2878a8" stroke-width="3"/>
+  <path d="M760 418 H1084 M785 443 V207" stroke="#7896a8" stroke-width="2"/>
+  <path d="M785 418 L1050 245" stroke="#7896a8" stroke-width="2"/>
+  <text x="1091" y="425" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">x</text>
+  <text x="773" y="207" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">y</text>
+  <text x="1058" y="244" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">z</text>
+  <g fill="#0f766e">
+    <circle cx="854" cy="352" r="7"/><circle cx="884" cy="334" r="7"/><circle cx="916" cy="318" r="7"/>
+    <circle cx="948" cy="301" r="7"/><circle cx="980" cy="284" r="7"/><circle cx="1010" cy="270" r="7"/>
+    <circle cx="844" cy="375" r="7"/><circle cx="878" cy="361" r="7"/><circle cx="912" cy="346" r="7"/>
+    <circle cx="946" cy="331" r="7"/><circle cx="980" cy="316" r="7"/><circle cx="1014" cy="300" r="7"/>
+  </g>
+  <circle cx="916" cy="318" r="12" fill="#b45309" stroke="#ffffff" stroke-width="4"/>
+  <text x="925" y="455" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">repeat for many pixels -> point cloud</text>
+
+  <rect x="54" y="496" width="1086" height="46" rx="6" fill="#ffffff" stroke="#c8d7df" stroke-width="2"/>
+  <text x="597" y="526" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">Camera calibration defines the ray. Depth sets distance. Pose connects camera coordinates to world coordinates.</text>
+</svg>

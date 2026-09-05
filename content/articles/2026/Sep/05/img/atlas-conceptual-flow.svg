@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Conceptual flow of an Atlas generation request</title>
+  <desc id="desc">Text, camera-grounded images, and depth maps enter a spatial context. A requested output is generated autoregressively, while rectified flow constructs the image or depth content. Depth and camera information can support point clouds and Gaussian splats.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="700" fill="#f7fafc"/>
+  <text x="54" y="62" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="700">One Atlas request, from evidence to output</text>
+  <text x="54" y="96" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="18">A conceptual reading of the public model description, not a released implementation diagram</text>
+
+  <text x="58" y="150" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">1. OBSERVATIONS</text>
+  <rect x="54" y="172" width="238" height="82" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="2"/>
+  <text x="173" y="205" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">Text</text>
+  <text x="173" y="231" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">semantic description</text>
+
+  <rect x="54" y="274" width="238" height="96" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="2"/>
+  <text x="173" y="307" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">Images + poses</text>
+  <text x="173" y="334" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">what was seen</text>
+  <text x="173" y="357" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">and from where</text>
+
+  <rect x="54" y="390" width="238" height="96" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="2"/>
+  <text x="173" y="423" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">Depth + poses</text>
+  <text x="173" y="450" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">surface distance</text>
+  <text x="173" y="473" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">and viewpoint</text>
+
+  <path d="M310 322 H382" stroke="#2878a8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <text x="406" y="150" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">2. GROUND IN SPACE</text>
+  <rect x="382" y="172" width="308" height="314" rx="6" fill="#eaf5fa" stroke="#2878a8" stroke-width="3"/>
+  <circle cx="472" cy="280" r="52" fill="#ffffff" stroke="#2878a8" stroke-width="2"/>
+  <path d="M445 298 L472 260 L502 282 L520 246" stroke="#0f766e" stroke-width="4" fill="none"/>
+  <circle cx="472" cy="280" r="6" fill="#b45309"/>
+  <path d="M472 280 L594 230 M472 280 L610 322 M472 280 L560 400" stroke="#9eb9c9" stroke-width="2" stroke-dasharray="6 7"/>
+  <circle cx="594" cy="230" r="8" fill="#2878a8"/>
+  <circle cx="610" cy="322" r="8" fill="#2878a8"/>
+  <circle cx="560" cy="400" r="8" fill="#2878a8"/>
+  <text x="536" y="207" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Spatial context</text>
+  <text x="536" y="445" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">Observations share a</text>
+  <text x="536" y="468" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">camera-grounded frame</text>
+
+  <path d="M708 322 H778" stroke="#2878a8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <text x="804" y="150" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">3. GENERATE</text>
+  <rect x="778" y="172" width="368" height="142" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="2"/>
+  <text x="962" y="207" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="700">Requested next element</text>
+  <text x="962" y="238" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="17">target camera pose + modality</text>
+  <text x="962" y="278" text-anchor="middle" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">Autoregressive conditioning</text>
+
+  <path d="M962 314 V359" stroke="#2878a8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="778" y="359" width="368" height="127" rx="6" fill="#e9f7f4" stroke="#0f766e" stroke-width="3"/>
+  <text x="962" y="401" text-anchor="middle" fill="#135d57" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Rectified-flow generation</text>
+  <text x="962" y="432" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">construct image or depth content</text>
+  <text x="962" y="458" text-anchor="middle" fill="#425c6b" font-family="Inter, Arial, sans-serif" font-size="17">from a noisy latent representation</text>
+
+  <path d="M536 505 V558 H962 V512" stroke="#0f766e" stroke-width="3" fill="none" marker-end="url(#arrow-teal)"/>
+
+  <text x="58" y="585" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">4. USE THE RESULT</text>
+  <rect x="54" y="607" width="1092" height="58" rx="6" fill="#ffffff" stroke="#a9c7c2" stroke-width="2"/>
+  <text x="600" y="644" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">New view or video frame  |  Depth map  |  Point cloud  |  3D Gaussian splats</text>
+</svg>
