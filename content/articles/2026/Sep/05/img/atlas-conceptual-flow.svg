@@ -64,4 +64,8 @@
   <text x="58" y="585" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">4. USE THE RESULT</text>
   <rect x="54" y="607" width="1092" height="58" rx="6" fill="#ffffff" stroke="#a9c7c2" stroke-width="2"/>
   <text x="600" y="644" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">New view or video frame  |  Depth map  |  Point cloud  |  3D Gaussian splats</text>
+
+  <a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">
+    <text x="1146" y="690" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600" text-decoration="underline">&#169; 2026 Michał Chromiak</text>
+  </a>
 </svg>
