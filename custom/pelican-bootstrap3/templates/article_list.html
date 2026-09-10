@@ -12,7 +12,7 @@
                 {% endif %}
                 <div class="summary">
                   <div class="cover">
-                    {% if article.cover %}<img src="{{ SITEURL }}/{{ article.cover }}" alt="article cover">{% endif %}
+                    {% if article.cover %}<img src="{{ SITEURL }}/{{ article.cover }}" alt="{{ article.title|striptags|escape }} cover" loading="lazy">{% endif %}
                   </div>
                   <div class="sumtext">
                     {{ article.summary }}

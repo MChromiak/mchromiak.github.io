@@ -1,6 +1,39 @@
 {% extends "article_list.html" %}
 
-{% block canonical_rel %}<link rel="canonical" href="{{ SITEURL }}">{% endblock %}
+{% block canonical_rel %}<link rel="canonical" href="{{ SITEURL }}/">{% endblock %}
+
+{% block meta %}
+    <meta name="author" content="{{ AUTHOR }}">
+    <meta name="description" content="{{ SITE_DESCRIPTION|escape }}">
+{% endblock %}
+
+{% block opengraph %}
+    <meta property="og:site_name" content="{{ SITENAME }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ SITENAME }}">
+    <meta property="og:url" content="{{ SITEURL }}/">
+    <meta property="og:description" content="{{ SITE_DESCRIPTION|escape }}">
+    {% if OPEN_GRAPH_IMAGE %}
+    <meta property="og:image" content="{{ SITEURL }}/{{ OPEN_GRAPH_IMAGE }}">
+    <meta property="og:image:alt" content="{{ SITENAME }}">
+    {% endif %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ SITENAME|tojson }},
+      "url": {{ (SITEURL ~ '/')|tojson }},
+      "description": {{ SITE_DESCRIPTION|tojson }},
+      "inLanguage": {{ DEFAULT_LANG|tojson }},
+      "author": {
+        "@type": "Person",
+        "name": {{ AUTHOR|tojson }},
+        "url": {{ AUTHOR_URL|tojson }},
+        "sameAs": {{ AUTHOR_SAME_AS|tojson }}
+      }
+    }
+    </script>
+{% endblock %}
 
 {% block banner %}
 	{% include 'includes/banner.html' %}

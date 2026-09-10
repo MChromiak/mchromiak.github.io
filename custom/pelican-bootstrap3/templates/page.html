@@ -27,6 +27,29 @@
         <meta property="og:image"
               content="{{ SITEURL }}/{{ OPEN_GRAPH_IMAGE }}"/>
     {% endif %}
+    {% if page.slug == 'about' %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "url": {{ (SITEURL ~ '/' ~ page.url)|tojson }},
+      {% if page.modified %}"dateModified": {{ page.modified.isoformat()|tojson }},{% endif %}
+      "mainEntity": {
+        "@type": "Person",
+        "name": {{ AUTHOR|tojson }},
+        "url": {{ AUTHOR_URL|tojson }},
+        "image": {{ (SITEURL ~ '/' ~ AVATAR)|tojson }},
+        "sameAs": {{ AUTHOR_SAME_AS|tojson }},
+        "jobTitle": "Computer scientist",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Maria Curie-Skłodowska University",
+          "url": "https://www.umcs.pl/en/"
+        }
+      }
+    }
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block canonical_rel %}

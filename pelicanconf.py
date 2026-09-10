@@ -8,6 +8,15 @@ CURRENT_YEAR = datetime.now().year
 AUTHOR = u'Micha\u0142 Chromiak'        
 SITENAME = u'Micha\u0142 Chromiak\'s blog'
 SITESUBTITLE = 'Be a fool to become a Polymath.'
+SITE_DESCRIPTION = ('Technical articles about machine learning, computer vision, '
+                    'world models, reinforcement learning, and AI research by Michał Chromiak.')
+AUTHOR_URL = 'https://mchromiak.github.io/pages/about.html'
+AUTHOR_SAME_AS = [
+    'https://orcid.org/0000-0002-6376-808X',
+    'https://scholar.google.com/citations?user=UeOad3YAAAAJ',
+    'https://www.linkedin.com/in/michal-chromiak',
+    'https://github.com/MChromiak',
+]
 
 # WHEN empty the disqus not work; When set to mchromiak.gihub.io all rendered links refer thus
 #   disable to test locally. To push use the publishconf.py that import pelicanconf.py and
@@ -33,7 +42,7 @@ PATH = 'content'
 
 #articles are here so that the img files will be moved to output;
 #the imgages not present in md file will be moved to "output/articles.../img/"
-STATIC_PATHS = ['static_files', 'articles']
+STATIC_PATHS = ['static_files', 'articles', 'extra']
 ARTICLE_PATHS = ['articles']
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
@@ -141,7 +150,8 @@ ARTICLE_JS = 'static_files/js/article.js'
 EXTRA_PATH_METADATA = {
     'css/custom.css': {'path': 'css/custom.css'},
     'js/custom.js': {'path': 'js/custom.js'},
-    'js/article.js': {'path': 'js/article.js'}
+    'js/article.js': {'path': 'js/article.js'},
+    'extra/robots.txt': {'path': 'robots.txt'},
 }
 
 DISQUS_DISPLAY_COUNTS = True
@@ -180,7 +190,19 @@ MARKDOWN = {
 
 SITEMAP = {
     'format': 'xml',
-    'exclude': ['tag/', 'category/'],
+    # Keep the sitemap focused on canonical content. Listing and archive pages
+    # remain crawlable through navigation but do not need sitemap entries.
+    'exclude': [
+        r'^archive/',
+        r'^archives\.html$',
+        r'^author/',
+        r'^authors\.html$',
+        r'^categories\.html$',
+        r'^category/',
+        r'^index\d+\.html$',
+        r'^tag/',
+        r'^tags\.html$',
+    ],
     'priorities': {
         'articles': 0.5,
         'indexes': 0.5,

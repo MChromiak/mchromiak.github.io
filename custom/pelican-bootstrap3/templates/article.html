@@ -26,13 +26,18 @@
         <meta property="og:description" content="{{ article.summary|striptags|escape }}"/>
         {% if article.cover %}
             <meta property="og:image" content="{{ SITEURL }}/{{ article.cover }}" />
+            <meta property="og:image:alt" content="{{ article.title|striptags|escape }}" />
         {% elif article.og_image %}
             <meta property="og:image" content="{{ SITEURL }}/{{ article.og_image }}"/>
+            <meta property="og:image:alt" content="{{ article.title|striptags|escape }}" />
         {% elif OPEN_GRAPH_IMAGE %}
             <meta property="og:image" content="{{ SITEURL }}/{{ OPEN_GRAPH_IMAGE }}"/>
         {% endif %}
 
-        <meta property="article:published_time" content="{{ article.date.strftime("%Y-%m-%d") }}" />
+        <meta property="article:published_time" content="{{ article.date.isoformat() }}" />
+        {% if article.modified %}
+            <meta property="article:modified_time" content="{{ article.modified.isoformat() }}" />
+        {% endif %}
         {% if article.category %}
             <meta property="article:section" content="{{ article.category }}" />
         {% endif %}
@@ -46,6 +51,34 @@
         {% endif %}
 
     {% endif %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": {{ article.title|striptags|tojson }},
+      "description": {{ article.summary|striptags|tojson }},
+      "url": {{ (SITEURL ~ '/' ~ article.url)|tojson }},
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": {{ (SITEURL ~ '/' ~ article.url)|tojson }}
+      },
+      "datePublished": {{ article.date.isoformat()|tojson }},
+      "dateModified": {{ (article.modified.isoformat() if article.modified else article.date.isoformat())|tojson }},
+      "inLanguage": {{ article.lang|tojson }},
+      {% if article.cover %}"image": {{ (SITEURL ~ '/' ~ article.cover)|tojson }},{% elif article.og_image %}"image": {{ (SITEURL ~ '/' ~ article.og_image)|tojson }},{% elif OPEN_GRAPH_IMAGE %}"image": {{ (SITEURL ~ '/' ~ OPEN_GRAPH_IMAGE)|tojson }},{% endif %}
+      "author": {
+        "@type": "Person",
+        "name": {{ (article.author|string if article.author else AUTHOR)|tojson }},
+        "url": {{ AUTHOR_URL|tojson }},
+        "sameAs": {{ AUTHOR_SAME_AS|tojson }}
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": {{ AUTHOR|tojson }},
+        "url": {{ AUTHOR_URL|tojson }}
+      }
+    }
+    </script>
 {% endblock %}
 
 {% block canonical_rel %}

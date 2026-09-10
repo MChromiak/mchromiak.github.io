@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mchromiak.github.io/sitemap.xml

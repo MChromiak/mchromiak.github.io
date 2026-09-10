@@ -9,6 +9,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if article and article.status == 'hidden' %}
+    <meta name="robots" content="noindex, follow">
+    {% else %}
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    {% endif %}
+    {% if GOOGLE_SITE_VERIFICATION %}
+    <meta name="google-site-verification" content="{{ GOOGLE_SITE_VERIFICATION }}">
+    {% endif %}
 
     {% if 'pelican.plugins.render_math' in PLUGINS %}
     <script type="text/x-mathjax-config">
@@ -57,7 +65,7 @@
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="{{ SITENAME }}"/>
         <meta property="og:url" content="{{ SITEURL }}"/>
-        <meta property="og:description" content="{{ SITENAME }}"/>
+        <meta property="og:description" content="{{ SITE_DESCRIPTION|default(SITENAME)|escape }}"/>
         {% if OPEN_GRAPH_IMAGE %}
             <meta property="og:image"
                   content="{{ SITEURL }}/{{ OPEN_GRAPH_IMAGE }}"/>
