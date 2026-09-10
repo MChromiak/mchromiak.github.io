@@ -27,8 +27,6 @@ SITELOGO = 'static_files/img/sitelogo40.png'
 FAVICON = 'static_files/img/favicon.jpg'
 
 DISQUS_SITENAME = 'mchromiak'
-GOOGLE_ANALYTICS_UNIVERSAL = 'UA-108394162-1'
-GOOGLE_ANALYTICS_UNIVERSAL_PROPERTY = 'auto'
 #======================== DEV SETTINGS=======================
 LOAD_CONTENT_CACHE = False
 # !!!!!!!!!!!!!!!!! Del all every time change
