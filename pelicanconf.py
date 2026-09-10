@@ -10,7 +10,7 @@ SITENAME = u'Micha\u0142 Chromiak\'s blog'
 SITESUBTITLE = 'Be a fool to become a Polymath.'
 SITE_DESCRIPTION = ('Technical articles about machine learning, computer vision, '
                     'world models, reinforcement learning, and AI research by Michał Chromiak.')
-AUTHOR_URL = 'https://mchromiak.github.io/pages/about.html'
+AUTHOR_URL = 'pages/about.html'
 AUTHOR_SAME_AS = [
     'https://orcid.org/0000-0002-6376-808X',
     'https://scholar.google.com/citations?user=UeOad3YAAAAJ',

@@ -6,7 +6,7 @@ Date: 2021-11-14 11:18
 Modified: 2021-12-26 11:18
 Tags: Representation Learning, Self-Supervision (SSL), CV, ViT, BERT, GPT, Autoencoder, Scalability
 Slug: Masked-Autoencoders-Are-Scalable-Vision-Learners
-Related_posts: Transformer-Attention-is-all-you-need
+Related_posts: DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers, DINOv2-Learning-Robust-Visual-Features-without-Supervision, Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture
 Cover: articles/2021/Nov/14/img/MaskedAE1.png
 Summary: A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.
 
@@ -269,6 +269,10 @@ The paper already compares random, block-wise, and grid-wise masks and finds ran
 * studying whether mask-ratio schedules change the balance between reconstruction quality, efficiency, and transfer performance.
 
 These are proposed research directions, not claims evaluated in the MAE paper.
+
+### Continue through the archive
+
+Compare MAE's pixel-reconstruction objective with [DINO's teacher-student agreement](/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/). Then see how [DINOv2](/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/) scales discriminative self-supervision and how [I-JEPA](/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/) predicts missing representations instead of pixels.
 
 ### Useful resources
 
