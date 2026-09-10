@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow, max-image-preview:large">
 
     <script type="text/x-mathjax-config">
         // Override render_math after configuration: local STIX may lack calligraphic glyphs.
@@ -35,8 +36,10 @@
         <meta property="og:url" content="https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"/>
         <meta property="og:description" content="QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2023/May/26/img/QLoRA_cover.png" />
+            <meta property="og:image:alt" content="QLoRA: How to fine-tune large language models with less memory" />
 
-        <meta property="article:published_time" content="2023-05-26" />
+        <meta property="article:published_time" content="2023-05-26T09:33:00+02:00" />
+            <meta property="article:modified_time" content="2023-05-26T09:33:00+02:00" />
             <meta property="article:section" content="Optimization" />
             <meta property="article:tag" content="Adapters" />
             <meta property="article:tag" content="Low-Rank" />
@@ -44,6 +47,33 @@
             <meta property="article:tag" content="QLoRA" />
             <meta property="article:author" content="Michał Chromiak" />
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "QLoRA: How to fine-tune large language models with less memory",
+      "description": "QLoRA makes large language models cheaper to fine-tune by storing the base model in 4 bits and training small, higher-precision adapters. This guide explains LoRA, NormalFloat, double quantization, and paged optimizers, then puts the Guanaco chatbot results in context.",
+      "url": "https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mchromiak.github.io/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"
+      },
+      "datePublished": "2023-05-26T09:33:00+02:00",
+      "dateModified": "2023-05-26T09:33:00+02:00",
+      "inLanguage": "en",
+"image": "https://mchromiak.github.io/articles/2023/May/26/img/QLoRA_cover.png",      "author": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "https://mchromiak.github.io/pages/about.html",
+        "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "https://mchromiak.github.io/pages/about.html"
+      }
+    }
+    </script>
 
     <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary_large_image">
@@ -145,7 +175,7 @@
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/optimization.html">Optimization</a>

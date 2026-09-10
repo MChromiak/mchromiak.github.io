@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow, max-image-preview:large">
 
     <script type="text/x-mathjax-config">
         // Override render_math after configuration: local STIX may lack calligraphic glyphs.
@@ -35,8 +36,10 @@
         <meta property="og:url" content="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/"/>
         <meta property="og:description" content="I-JEPA learns visual features by predicting the representations of hidden image regions, rather than reconstructing their pixels. This guide explains the context encoder, target encoder, predictor, and masking strategy, then examines what the paper&#39;s accuracy and efficiency results actually measure."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2023/Jun/17/img/I-JEPA.png" />
+            <meta property="og:image:alt" content="I-JEPA: Learning from images by predicting missing features" />
 
-        <meta property="article:published_time" content="2023-06-17" />
+        <meta property="article:published_time" content="2023-06-17T14:43:00+02:00" />
+            <meta property="article:modified_time" content="2023-06-17T14:43:00+02:00" />
             <meta property="article:section" content="Self-Supervision" />
             <meta property="article:tag" content="SSL" />
             <meta property="article:tag" content="CV" />
@@ -46,6 +49,33 @@
             <meta property="article:tag" content="MetaAI" />
             <meta property="article:author" content="Michał Chromiak" />
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "I-JEPA: Learning from images by predicting missing features",
+      "description": "I-JEPA learns visual features by predicting the representations of hidden image regions, rather than reconstructing their pixels. This guide explains the context encoder, target encoder, predictor, and masking strategy, then examines what the paper\u0027s accuracy and efficiency results actually measure.",
+      "url": "https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/"
+      },
+      "datePublished": "2023-06-17T14:43:00+02:00",
+      "dateModified": "2023-06-17T14:43:00+02:00",
+      "inLanguage": "en",
+"image": "https://mchromiak.github.io/articles/2023/Jun/17/img/I-JEPA.png",      "author": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "https://mchromiak.github.io/pages/about.html",
+        "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "https://mchromiak.github.io/pages/about.html"
+      }
+    }
+    </script>
 
     <meta name="twitter:dnt" content="on">
     <meta name="twitter:card" content="summary_large_image">
@@ -147,7 +177,7 @@
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/author/michal-chromiak.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/self-supervision.html">Self-Supervision</a>
