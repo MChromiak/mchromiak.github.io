@@ -24,7 +24,12 @@ AUTHOR_SAME_AS = [
 #       pelican content -s publishconf.py
 SITEURL = ''
 SITELOGO = 'static_files/img/sitelogo40.png'
-FAVICON = 'static_files/img/favicon.jpg'
+FAVICON = 'static_files/img/favicon.svg'
+FAVICON_PNG = 'static_files/img/favicon-32.png'
+FAVICON_ICO = 'favicon.ico'
+TOUCHICON = 'static_files/img/apple-touch-icon.png'
+WEB_MANIFEST = 'static_files/site.webmanifest'
+THEME_COLOR = '#2a80b9'
 
 DISQUS_SITENAME = 'mchromiak'
 #======================== DEV SETTINGS=======================
@@ -150,6 +155,7 @@ EXTRA_PATH_METADATA = {
     'js/custom.js': {'path': 'js/custom.js'},
     'js/article.js': {'path': 'js/article.js'},
     'extra/robots.txt': {'path': 'robots.txt'},
+    'extra/favicon.ico': {'path': 'favicon.ico'},
 }
 
 DISQUS_DISPLAY_COUNTS = True
