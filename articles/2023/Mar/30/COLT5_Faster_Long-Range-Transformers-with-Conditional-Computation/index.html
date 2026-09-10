@@ -65,13 +65,13 @@
 "image": "https://mchromiak.github.io/articles/2023/Mar/30/img/CoLT5.png",      "author": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html",
+        "url": "pages/about.html",
         "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
       },
       "publisher": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html"
+        "url": "pages/about.html"
       }
     }
     </script>
@@ -176,7 +176,7 @@
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/optimization.html">Optimization</a>
@@ -312,6 +312,8 @@ $$</div>
 <p><a href="https://github.com/lucidrains/CoLT5-attention">Phil Wang's CoLT5-attention</a> implements conditionally routed components in PyTorch. It is not an official release of the paper's complete trained models, and its README identifies implementation choices that differ from, or interpret gaps in, the paper.</p>
 <p>For the routing background, the original CoLT5 paper cites <a href="https://arxiv.org/abs/2211.01267">Qian et al., Multi-Vector Retrieval as Sparse Alignment</a>. The community implementation also points to <a href="https://arxiv.org/abs/2304.04947">Conditional Adapters (CoDA)</a> and <a href="https://arxiv.org/abs/1502.04759">Wright's coordinate-descent review</a>. CoDA's arXiv submission came after CoLT5's original March release, so it is better treated here as related reading than as the original paper's stated source.</p>
 <p>Other foundations are <a href="https://arxiv.org/abs/2112.07916">LongT5</a>, <a href="https://github.com/google-research/text-to-text-transfer-transformer/blob/main/released_checkpoints.md#t511">T5.1.1</a>, <a href="https://arxiv.org/abs/1911.02150">multi-query attention</a>, and <a href="https://arxiv.org/abs/2205.05131">UL2</a>. The figures reproduced from the CoLT5 paper are attributed to Ainslie et al.; the original preprint is distributed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+<h2 id="continue-through-the-archive">Continue through the archive<a class="headerlink" href="#continue-through-the-archive" title="Permanent link">🔗</a></h2>
+<p>The <a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">Transformer guide</a> supplies the attention foundation behind CoLT5. For a later and substantially different attempt to restructure sequence computation, read the <a href="/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">Dragon Hatchling analysis</a>; its recurrent graph-inspired state should not be mistaken for CoLT5's token routing.</p>
 <h2 id="the-takeaway">The takeaway<a class="headerlink" href="#the-takeaway" title="Permanent link">🔗</a></h2>
 <p>CoLT5 keeps a lightweight representation of the whole input while concentrating additional capacity on learned selections of tokens. Its separate routers distinguish positions that need information from positions that can supply it. Together with faster cross-attention and a suitable pretraining objective, this lets the model make better use of long documents within a given computation budget.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
@@ -378,6 +380,13 @@ $$</div>
 </script>
             </div>
             <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/">Dragon Hatchling: A careful guide to BDH's graph-inspired state-space model</a></li>
+    </ul>
+</section>
     <hr />
     <!-- AddThis Button BEGIN -->
     <div class="addthis_toolbox addthis_default_style">

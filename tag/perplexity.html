@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>perplexity - Michał Chromiak's blog</title>
+    <title>Perplexity - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -26,7 +26,7 @@
 
 
     <meta name="author" content="Michał Chromiak" />
-    <meta name="keywords" content="perplexity" />
+    <meta name="keywords" content="Perplexity" />
 
     <!-- Open Graph tags -->
         <meta property="og:site_name" content="Michał Chromiak's blog" />
@@ -105,11 +105,11 @@
     <ol class="breadcrumb">
         <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
         <li><a href="https://mchromiak.github.io/" title="Tags">Tags</a></li>
-        <li class="active">perplexity</li>
+        <li class="active">Perplexity</li>
     </ol>
             <article>
-                <h2><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></h2>
-                <h5><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/" class="artsubtitle"> </a></h5>
+                <h2><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">Language models: From n-gram counts to neural next-token prediction</a></h2>
+                <h5><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/" class="artsubtitle">Probability, smoothing, cross-entropy, perplexity, and the assumptions behind the numbers </a></h5>
                     <div class="well well-sm">
 <footer class="post-info">
     <span class="label label-default">Date</span>
@@ -118,12 +118,12 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2017-11-30T19:30:00+01:00"> Thu, 30 Nov 2017</time>
+                <i class="fa fa-calendar"></i><time datetime="2018-01-15T12:00:00+01:00"> Mon, 15 Jan 2018</time>
             </span>
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/sequence-models.html">Sequence Models</a>
@@ -132,20 +132,22 @@
 <span class="label label-default">Tags</span>
 	<a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
         /
-	<a href="https://mchromiak.github.io/tag/language-model.html">language model</a>
+	<a href="https://mchromiak.github.io/tag/language-model.html">Language Model</a>
         /
-	<a href="https://mchromiak.github.io/tag/ngram.html">ngram</a>
+	<a href="https://mchromiak.github.io/tag/n-gram.html">N-gram</a>
         /
-	<a href="https://mchromiak.github.io/tag/perplexity.html">perplexity</a>
+	<a href="https://mchromiak.github.io/tag/perplexity.html">Perplexity</a>
         /
-	<a href="https://mchromiak.github.io/tag/smoothing.html">smoothing</a>
+	<a href="https://mchromiak.github.io/tag/smoothing.html">Smoothing</a>
+        /
+	<a href="https://mchromiak.github.io/tag/neural-networks.html">Neural Networks</a>
     
 </footer><!-- /.post-info -->                    </div>
                 <div class="summary">
                   <div class="cover">
-<img src="https://mchromiak.github.io/articles/2017/Nov/30/img/nlp-cover.png" alt="NLP: Explaining Neural Language Modeling cover" loading="lazy">                  </div>
+<img src="https://mchromiak.github.io/articles/2017/Nov/30/img/nlp-cover.png" alt="Language models: From n-gram counts to neural next-token prediction cover" loading="lazy">                  </div>
                   <div class="sumtext">
-                    <p>Language modeling (LM) is the essential part of Natural Language Processing (NLP) tasks such as  Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Goal of the Language Model is to compute the probability of sentence considered as a word sequence. This article explains how to model the language using probability and n-grams. It also discuss the language model evaluation with  use of <em>perplexity</em>.</p>
+                    <p>A language model assigns probabilities to token sequences by predicting each token from its context. This guide derives the chain rule, explains n-gram estimation and smoothing, connects cross-entropy to perplexity, and shows what changes when a neural Transformer replaces the count table.</p>
 <p><small><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/#disqus_thread" >View comments</a>.</small></p>                    <a class="btn btn-default btn-xs" href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">more ...</a>
                   </div>
                 </div>
@@ -185,7 +187,7 @@
 <li class="list-group-item">
   <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
   <ul class="list-group" id="recentposts">
-    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">NLP: Explaining Neural Language Modeling</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">Language models: From n-gram counts to neural next-token prediction</a></li>
   </ul>
 </li>
 <!-- End Sidebar/Recent Posts -->

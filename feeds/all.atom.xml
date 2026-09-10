@@ -335,6 +335,8 @@ $$&lt;/div&gt;
 &lt;p&gt;Dragon Hatchling is best understood as a &lt;strong&gt;graph-interpretable linear-attention state-space architecture&lt;/strong&gt;, not as a finished theory of brains or general reasoning. Its design puts a large, positive activation space next to a compact recurrent memory and gives the memory a neuron-pair interpretation. The norm-free construction then shows how similar dynamics can arise from local graph updates.&lt;/p&gt;
 &lt;p&gt;The paper's strongest empirical evidence is controlled next-byte-loss parity between gated BDH-GPU′ and a GPT-2-like Transformer-XL baseline at 25M-800M parameters on one Europarl setup. The graph, monosemanticity, long-context, biological, and model-composition claims are plausible research directions supported by narrower analyses.&lt;/p&gt;
 &lt;p&gt;That calibration makes the work more interesting, not less. BDH offers concrete equations, testable state variables, and an official implementation. It gives researchers specific mechanisms to reproduce, falsify, and extend rather than relying only on the metaphor of a model that "thinks like a brain."&lt;/p&gt;
+&lt;h2 id="continue-through-the-archive"&gt;Continue through the archive&lt;a class="headerlink" href="#continue-through-the-archive" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Start with the &lt;a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer guide&lt;/a&gt; for the architecture BDH is compared against. &lt;a href="/articles/2023/Mar/30/COLT5_Faster_Long-Range-Transformers-with-Conditional-Computation/"&gt;CoLT5&lt;/a&gt; is a separate example of conditional computation, while &lt;a href="/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/"&gt;Atlas&lt;/a&gt; shifts the discussion from sequence mechanisms to spatial world models.&lt;/p&gt;
 &lt;h2 id="primary-sources"&gt;Primary sources&lt;a class="headerlink" href="#primary-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Adrian Kosowski, Przemysław Uznański, Jan Chorowski, Zuzanna Stamirowska, and Michał Bartoszkiewicz. &lt;a href="https://arxiv.org/abs/2509.26507"&gt;&lt;em&gt;The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain&lt;/em&gt;&lt;/a&gt;, arXiv:2509.26507v1, 2025.&lt;/li&gt;
@@ -962,6 +964,8 @@ Figure 7. Each group pairs related source images with PCA-colored patch maps. Wi
 &lt;h2 id="conclusions"&gt;Conclusions&lt;a class="headerlink" href="#conclusions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;DINOv2's contribution is the complete recipe: DINO aligns image-level views, iBOT develops local patch features, KoLeo spreads global representations, LVD-142M supplies curated scale, and the implementation makes a 1.1-billion-parameter teacher trainable. Distillation transfers that representation into smaller models.&lt;/p&gt;
 &lt;p&gt;The experiments show where the work resides in a downstream system. The frozen backbone provides transferable image and patch features. Retrieval uses those features directly; classification, segmentation, and depth estimation add a trained readout, and full fine-tuning can improve them further.&lt;/p&gt;
+&lt;h2 id="continue-through-the-archive"&gt;Continue through the archive&lt;a class="headerlink" href="#continue-through-the-archive" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Read &lt;a href="/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/"&gt;DINO&lt;/a&gt; first for the momentum-teacher foundation. &lt;a href="/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/"&gt;MAE&lt;/a&gt; offers the pixel-reconstruction alternative, and &lt;a href="/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/"&gt;I-JEPA&lt;/a&gt; moves masked prediction into representation space.&lt;/p&gt;
 &lt;h2 id="references-and-resources"&gt;References and resources&lt;a class="headerlink" href="#references-and-resources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;The primary reference is &lt;strong&gt;&lt;a href="https://arxiv.org/abs/2304.07193"&gt;"DINOv2: Learning Robust Visual Features without Supervision"&lt;/a&gt;&lt;/strong&gt; by Maxime Oquab and colleagues. It was submitted to arXiv on 14 April 2023, revised in February 2024, and published in &lt;em&gt;Transactions on Machine Learning Research&lt;/em&gt; (TMLR) in 2024. The &lt;a href="https://openreview.net/forum?id=a68SUt6zFt"&gt;OpenReview record&lt;/a&gt; contains the publication history, and the authors provide the &lt;a href="https://github.com/facebookresearch/dinov2"&gt;official implementation and checkpoints&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;DINOv2 builds on a line of self-supervised visual learning that includes &lt;a href="../../../../2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers"&gt;DINO&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/2111.07832"&gt;iBOT&lt;/a&gt;, &lt;a href="../../../../2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners"&gt;MAE&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/2202.08360"&gt;SEERv2&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/2204.07141"&gt;MSN&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/2106.09785"&gt;EsViT&lt;/a&gt;, and &lt;a href="https://arxiv.org/abs/2203.14415"&gt;Mugs&lt;/a&gt;. Its weakly supervised comparison set includes &lt;a href="https://arxiv.org/abs/2103.00020"&gt;CLIP&lt;/a&gt;, &lt;a href="https://github.com/mlfoundations/open_clip"&gt;OpenCLIP&lt;/a&gt;, and &lt;a href="https://arxiv.org/abs/2201.08371"&gt;SWAG&lt;/a&gt;.&lt;/p&gt;
@@ -1152,6 +1156,8 @@ $$&lt;/div&gt;
 &lt;p&gt;&lt;a href="https://github.com/lucidrains/CoLT5-attention"&gt;Phil Wang's CoLT5-attention&lt;/a&gt; implements conditionally routed components in PyTorch. It is not an official release of the paper's complete trained models, and its README identifies implementation choices that differ from, or interpret gaps in, the paper.&lt;/p&gt;
 &lt;p&gt;For the routing background, the original CoLT5 paper cites &lt;a href="https://arxiv.org/abs/2211.01267"&gt;Qian et al., Multi-Vector Retrieval as Sparse Alignment&lt;/a&gt;. The community implementation also points to &lt;a href="https://arxiv.org/abs/2304.04947"&gt;Conditional Adapters (CoDA)&lt;/a&gt; and &lt;a href="https://arxiv.org/abs/1502.04759"&gt;Wright's coordinate-descent review&lt;/a&gt;. CoDA's arXiv submission came after CoLT5's original March release, so it is better treated here as related reading than as the original paper's stated source.&lt;/p&gt;
 &lt;p&gt;Other foundations are &lt;a href="https://arxiv.org/abs/2112.07916"&gt;LongT5&lt;/a&gt;, &lt;a href="https://github.com/google-research/text-to-text-transfer-transformer/blob/main/released_checkpoints.md#t511"&gt;T5.1.1&lt;/a&gt;, &lt;a href="https://arxiv.org/abs/1911.02150"&gt;multi-query attention&lt;/a&gt;, and &lt;a href="https://arxiv.org/abs/2205.05131"&gt;UL2&lt;/a&gt;. The figures reproduced from the CoLT5 paper are attributed to Ainslie et al.; the original preprint is distributed under &lt;a href="https://creativecommons.org/licenses/by/4.0/"&gt;CC BY 4.0&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="continue-through-the-archive"&gt;Continue through the archive&lt;a class="headerlink" href="#continue-through-the-archive" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer guide&lt;/a&gt; supplies the attention foundation behind CoLT5. For a later and substantially different attempt to restructure sequence computation, read the &lt;a href="/articles/2025/Oct/01/Dragon-Hatchling-I-Paper-Notes/"&gt;Dragon Hatchling analysis&lt;/a&gt;; its recurrent graph-inspired state should not be mistaken for CoLT5's token routing.&lt;/p&gt;
 &lt;h2 id="the-takeaway"&gt;The takeaway&lt;a class="headerlink" href="#the-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;CoLT5 keeps a lightweight representation of the whole input while concentrating additional capacity on learned selections of tokens. Its separate routers distinguish positions that need information from positions that can supply it. Together with faster cross-attention and a suitable pretraining objective, this lets the model make better use of long documents within a given computation budget.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
@@ -1611,6 +1617,8 @@ Table 4. ADE20K semantic segmentation results in mean intersection over union.
 &lt;li&gt;studying whether mask-ratio schedules change the balance between reconstruction quality, efficiency, and transfer performance.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;These are proposed research directions, not claims evaluated in the MAE paper.&lt;/p&gt;
+&lt;h3 id="continue-through-the-archive"&gt;Continue through the archive&lt;a class="headerlink" href="#continue-through-the-archive" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Compare MAE's pixel-reconstruction objective with &lt;a href="/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/"&gt;DINO's teacher-student agreement&lt;/a&gt;. Then see how &lt;a href="/articles/2023/Apr/18/DINOv2-Learning-Robust-Visual-Features-without-Supervision/"&gt;DINOv2&lt;/a&gt; scales discriminative self-supervision and how &lt;a href="/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/"&gt;I-JEPA&lt;/a&gt; predicts missing representations instead of pixels.&lt;/p&gt;
 &lt;h3 id="useful-resources"&gt;Useful resources&lt;a class="headerlink" href="#useful-resources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://openaccess.thecvf.com/content/CVPR2022/html/He_Masked_Autoencoders_Are_Scalable_Vision_Learners_CVPR_2022_paper.html"&gt;"Masked Autoencoders Are Scalable Vision Learners" - CVPR 2022 paper&lt;/a&gt;&lt;/li&gt;
@@ -2420,81 +2428,382 @@ $$&lt;/div&gt;
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Self-Supervision"/><category term="Representation Learning"/><category term="Transformer"/><category term="CV"/><category term="Vision Transformer"/><category term="ViT"/><category term="Self-Supervision (SSL)"/><category term="k-NN"/></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"/><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
-&lt;h3 id="prerequisite-rl-knowledge"&gt;Prerequisite RL knowledge&lt;a class="headerlink" href="#prerequisite-rl-knowledge" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Here are explained some of the main terms that this paper uses to motivate its goal. Form more details please refer to free online book from &lt;a href="http://incompleteideas.net/book/the-book.html"&gt;Richard S. Sutton
-and Andrew G. Barto Second &lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt; Edition MIT Press, Cambridge, MA, 2018&lt;/a&gt;&lt;/p&gt;
-&lt;h4 id="what-is-model-free-rl"&gt;What is &lt;em&gt;Model-free&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-model-free-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;A “policy”, is a strategy that an agent uses to pursue a goal.&lt;/p&gt;
+&lt;/script&gt;</content><category term="Self-Supervision"/><category term="Representation Learning"/><category term="Transformer"/><category term="CV"/><category term="Vision Transformer"/><category term="ViT"/><category term="Self-Supervision (SSL)"/><category term="k-NN"/></entry><entry><title>Reinforcement learning: A practical primer on agents, returns, values, and policies</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"/><published>2021-05-01T19:30:00+02:00</published><updated>2021-06-15T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;Reinforcement learning trains an agent to make sequential decisions whose consequences may arrive much later. This primer builds the essential vocabulary, derives return and value functions, explains Bellman and temporal-difference learning, and distinguishes online from offline and model-free from model-based RL.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;p&gt;In supervised learning, each training example normally comes with a target. Reinforcement learning (RL) poses a different problem: an &lt;strong&gt;agent&lt;/strong&gt; acts, observes the consequences, and must discover which decisions produce good long-term outcomes.&lt;/p&gt;
+&lt;p&gt;That delay changes everything. A move can look harmless now but determine success many steps later. RL therefore needs a language for trajectories, return, value, uncertainty, and exploration.&lt;/p&gt;
+&lt;h2 id="the-short-version"&gt;The short version&lt;a class="headerlink" href="#the-short-version" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;At time &lt;span class="math"&gt;\(t\)&lt;/span&gt;, an agent observes a state or observation, chooses an action, and receives a reward from the environment.&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;policy&lt;/strong&gt; maps the information available to the agent to a distribution over actions.&lt;/li&gt;
+&lt;li&gt;The goal is to maximize expected &lt;strong&gt;return&lt;/strong&gt;, not necessarily the next immediate reward.&lt;/li&gt;
+&lt;li&gt;Value functions estimate future return from a state or state-action pair.&lt;/li&gt;
+&lt;li&gt;Model-free methods learn values or policies without using an explicit transition model; model-based methods use such a model for prediction or planning.&lt;/li&gt;
+&lt;li&gt;Online RL gathers new experience while learning. Offline RL learns from a fixed dataset and cannot repair poor coverage by exploring.&lt;/li&gt;
+&lt;li&gt;Temporal-difference methods learn before an episode ends by using one estimate to update another.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-interaction-loop"&gt;The interaction loop&lt;a class="headerlink" href="#the-interaction-loop" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;At each time step, the environment is in state &lt;span class="math"&gt;\(S_t\)&lt;/span&gt;. The agent selects action &lt;span class="math"&gt;\(A_t\)&lt;/span&gt; according to its policy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The environment then emits reward &lt;span class="math"&gt;\(R_{t+1}\)&lt;/span&gt; and moves to state &lt;span class="math"&gt;\(S_{t+1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+S_t \xrightarrow{A_t} (R_{t+1}, S_{t+1}).
+$$&lt;/div&gt;
+&lt;p&gt;A &lt;strong&gt;policy&lt;/strong&gt; may be deterministic, &lt;span class="math"&gt;\(a=\pi(s)\)&lt;/span&gt;, or stochastic, &lt;span class="math"&gt;\(\pi(a\mid s)=P(A_t=a\mid S_t=s)\)&lt;/span&gt;. It is the agent's decision rule. The policy itself is not an environment model.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;&lt;strong&gt;State or observation?&lt;/strong&gt;&lt;/summary&gt;
+&lt;p&gt;A state contains the information needed to predict the next transition, given an action. In a fully observed Markov decision process, the agent receives that state directly. In a partially observed problem, it receives an observation &lt;span class="math"&gt;\(O_t\)&lt;/span&gt; that may omit relevant information. The agent may then need a history or learned memory to estimate the hidden state.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="markov-decision-processes"&gt;Markov decision processes&lt;a class="headerlink" href="#markov-decision-processes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A discounted Markov decision process (MDP) is commonly written as&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\mathcal{M}=(\mathcal{S},\mathcal{A},p,r,\gamma),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\mathcal{S}\)&lt;/span&gt; is the state space, &lt;span class="math"&gt;\(\mathcal{A}\)&lt;/span&gt; the action space, &lt;span class="math"&gt;\(p(s'\mid s,a)\)&lt;/span&gt; the transition distribution, &lt;span class="math"&gt;\(r\)&lt;/span&gt; the reward rule, and &lt;span class="math"&gt;\(\gamma\in[0,1]\)&lt;/span&gt; the discount factor.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;Markov property&lt;/strong&gt; says that the present state is sufficient for predicting the next state and reward:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P(S_{t+1},R_{t+1}\mid S_0,A_0,\ldots,S_t,A_t)
+=P(S_{t+1},R_{t+1}\mid S_t,A_t).
+$$&lt;/div&gt;
+&lt;p&gt;This does not require deterministic transitions. The same state-action pair may lead to several outcomes with different probabilities.&lt;/p&gt;
+&lt;h2 id="reward-is-local-return-is-cumulative"&gt;Reward is local; return is cumulative&lt;a class="headerlink" href="#reward-is-local-return-is-cumulative" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A reward &lt;span class="math"&gt;\(R_{t+1}\)&lt;/span&gt; is the scalar feedback received after action &lt;span class="math"&gt;\(A_t\)&lt;/span&gt;. The &lt;strong&gt;return&lt;/strong&gt; &lt;span class="math"&gt;\(G_t\)&lt;/span&gt; combines rewards from the remainder of the trajectory:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots
+=\sum_{k=0}^{\infty}\gamma^kR_{t+k+1}.
+$$&lt;/div&gt;
+&lt;p&gt;The discount factor controls how strongly distant rewards contribute. In continuing tasks, &lt;span class="math"&gt;\(\gamma&amp;lt;1\)&lt;/span&gt; also keeps a bounded reward sequence from producing an infinite return. In finite episodic tasks, &lt;span class="math"&gt;\(\gamma=1\)&lt;/span&gt; may be appropriate.&lt;/p&gt;
+&lt;p&gt;Maximizing immediate reward can be shortsighted. An agent may need to accept a small cost now to reach a much better outcome later. RL usually seeks a policy that maximizes expected return.&lt;/p&gt;
+&lt;h2 id="the-credit-assignment-problem"&gt;The credit-assignment problem&lt;a class="headerlink" href="#the-credit-assignment-problem" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Suppose a long sequence ends with one success signal. Which earlier decisions deserve credit? This is &lt;strong&gt;temporal credit assignment&lt;/strong&gt;: connecting delayed outcomes to the actions that helped cause them.&lt;/p&gt;
+&lt;p&gt;Long delays make learning difficult because the useful signal must propagate across many steps. They should not be confused with the &lt;strong&gt;curse of dimensionality&lt;/strong&gt;, which concerns the rapid growth of a problem's state or action space. A task can suffer from either or both.&lt;/p&gt;
+&lt;h2 id="value-functions"&gt;Value functions&lt;a class="headerlink" href="#value-functions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For a policy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;, the state-value function is the expected return after starting in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; and then following &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+v_\pi(s)=\mathbb{E}_\pi[G_t\mid S_t=s].
+$$&lt;/div&gt;
+&lt;p&gt;The action-value function additionally fixes the first action:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+q_\pi(s,a)=\mathbb{E}_\pi[G_t\mid S_t=s,A_t=a].
+$$&lt;/div&gt;
+&lt;p&gt;These are mathematical functions, not necessarily tables. Small discrete problems can store one value per state or state-action pair; larger problems approximate them with linear models or neural networks.&lt;/p&gt;
+&lt;p&gt;In an MDP, &lt;span class="math"&gt;\(q_\pi(s,a)\)&lt;/span&gt; need not condition on the full history because the state already carries the information required by the Markov property. History or memory becomes relevant when observations are partial.&lt;/p&gt;
+&lt;h2 id="bellman-equations-one-step-plus-the-future"&gt;Bellman equations: one step plus the future&lt;a class="headerlink" href="#bellman-equations-one-step-plus-the-future" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Value functions have a recursive structure. For example, the Bellman expectation equation for &lt;span class="math"&gt;\(v_\pi\)&lt;/span&gt; is&lt;/p&gt;
+&lt;div class="math"&gt;$$
+v_\pi(s)=\sum_a\pi(a\mid s)\sum_{s',r}p(s',r\mid s,a)
+\left[r+\gamma v_\pi(s')\right].
+$$&lt;/div&gt;
+&lt;p&gt;The value of the current state equals the expected immediate reward plus the discounted value of the next state. Dynamic programming uses this relation with a known model. Temporal-difference learning estimates the same structure from sampled transitions.&lt;/p&gt;
+&lt;h2 id="temporal-difference-learning"&gt;Temporal-difference learning&lt;a class="headerlink" href="#temporal-difference-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Monte Carlo methods wait for an episode to finish and use the observed return as a target. &lt;strong&gt;Temporal-difference (TD) learning&lt;/strong&gt; can update after one transition. The TD(0) update is&lt;/p&gt;
+&lt;div class="math"&gt;$$
+V(S_t)\leftarrow V(S_t)+\alpha
+\left[R_{t+1}+\gamma V(S_{t+1})-V(S_t)\right],
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; is the learning rate. The expression in brackets is the &lt;strong&gt;TD error&lt;/strong&gt;. The target &lt;span class="math"&gt;\(R_{t+1}+\gamma V(S_{t+1})\)&lt;/span&gt; contains another estimate, so TD is described as &lt;strong&gt;bootstrapping&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;TD learning is not unsupervised learning in the usual representation-learning sense. It is an RL method whose training signal comes from rewards and successive predictions rather than externally supplied class labels.&lt;/p&gt;
+&lt;h2 id="model-free-and-model-based-rl"&gt;Model-free and model-based RL&lt;a class="headerlink" href="#model-free-and-model-based-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;model&lt;/strong&gt; predicts aspects of the environment, typically transitions and rewards. The distinction concerns how an algorithm uses environment dynamics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Model-free RL&lt;/strong&gt; learns a policy or value function without using an explicit transition model for planning. Q-learning and many policy-gradient methods are model-free.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model-based RL&lt;/strong&gt; uses a known or learned model to evaluate possible futures, plan actions, create synthetic experience, or improve a policy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A learned policy can be a neural network in either family. Likewise, learning a model does not help unless the algorithm uses it effectively, and model errors can compound during long imagined rollouts.&lt;/p&gt;
+&lt;h2 id="online-and-offline-rl"&gt;Online and offline RL&lt;a class="headerlink" href="#online-and-offline-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In &lt;strong&gt;online RL&lt;/strong&gt;, the learner gathers new transitions by interacting with the environment. Its choices affect the data it will see next, so exploration is part of learning.&lt;/p&gt;
+&lt;p&gt;In &lt;strong&gt;offline RL&lt;/strong&gt;, learning uses a fixed dataset of transitions or trajectories produced earlier by one or more behavior policies. The learner cannot request new examples. The central difficulty is &lt;strong&gt;distribution shift&lt;/strong&gt;: a learned policy may choose actions that are poorly represented in the dataset, where value estimates are unreliable.&lt;/p&gt;
+&lt;p&gt;Offline RL is therefore not simply supervised imitation. A dataset may contain mixed-quality behavior, and the objective is usually to find a high-return policy without deploying exploratory actions during training.&lt;/p&gt;
+&lt;h2 id="on-policy-and-off-policy-learning"&gt;On-policy and off-policy learning&lt;a class="headerlink" href="#on-policy-and-off-policy-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The &lt;strong&gt;behavior policy&lt;/strong&gt; generates experience. The &lt;strong&gt;target policy&lt;/strong&gt; is the policy being evaluated or improved.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;An &lt;strong&gt;on-policy&lt;/strong&gt; method learns about the same policy that produces its data. SARSA updates toward the next action actually selected by that policy.&lt;/li&gt;
+&lt;li&gt;An &lt;strong&gt;off-policy&lt;/strong&gt; method can learn about a target policy from data generated by another policy. Q-learning updates toward the greedy next action even when its behavior includes exploration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For tabular control, their one-step targets make the distinction concrete:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\text{SARSA target}=R_{t+1}+\gamma Q(S_{t+1},A_{t+1}),
+$$&lt;/div&gt;
+&lt;div class="math"&gt;$$
+\text{Q-learning target}=R_{t+1}+\gamma\max_a Q(S_{t+1},a).
+$$&lt;/div&gt;
+&lt;h2 id="exploration-and-exploitation"&gt;Exploration and exploitation&lt;a class="headerlink" href="#exploration-and-exploitation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Exploitation&lt;/strong&gt; selects actions that currently appear best. &lt;strong&gt;Exploration&lt;/strong&gt; gathers information that may reveal a better choice. Pure exploitation can lock onto an early mistake; indiscriminate exploration can waste reward.&lt;/p&gt;
+&lt;p&gt;Common action-selection rules include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Greedy:&lt;/strong&gt; choose an action with the highest estimated value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy:&lt;/strong&gt; with probability &lt;span class="math"&gt;\(1-\epsilon\)&lt;/span&gt;, choose a greedy action; with probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, choose uniformly from all actions. This is an &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft policy because every action has nonzero probability.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Softmax or Boltzmann exploration:&lt;/strong&gt; sample actions with probabilities derived from their estimated values and a temperature parameter.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There is no universally best exploration rule. The right mechanism depends on the cost of mistakes, uncertainty, horizon, and whether the learner is allowed to interact at all.&lt;/p&gt;
+&lt;h2 id="how-this-connects-to-sequence-modeling"&gt;How this connects to sequence modeling&lt;a class="headerlink" href="#how-this-connects-to-sequence-modeling" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;An RL trajectory is an ordered sequence of states, actions, and rewards. The &lt;a href="/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/"&gt;Decision Transformer&lt;/a&gt; uses that representation to turn offline policy learning into conditional sequence modeling: given a desired return and recent trajectory context, it predicts the next action.&lt;/p&gt;
+&lt;p&gt;That perspective is useful, but it does not remove the RL problem. Dataset coverage, return conditioning, and evaluation in the environment still determine what behavior can be learned.&lt;/p&gt;
+&lt;h2 id="a-compact-mental-model"&gt;A compact mental model&lt;a class="headerlink" href="#a-compact-mental-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;The environment defines what transitions and rewards are possible.&lt;/li&gt;
+&lt;li&gt;The policy defines how the agent chooses actions.&lt;/li&gt;
+&lt;li&gt;Return specifies the long-term quantity to optimize.&lt;/li&gt;
+&lt;li&gt;Value functions predict that return before the future is known.&lt;/li&gt;
+&lt;li&gt;Bellman relations connect present estimates to the next step.&lt;/li&gt;
+&lt;li&gt;The learning setting determines what evidence is available: live interaction online or fixed experience offline.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="primary-references"&gt;Primary references&lt;a class="headerlink" href="#primary-references" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Richard S. Sutton and Andrew G. Barto. &lt;a href="http://incompleteideas.net/book/the-book-2nd.html"&gt;&lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt;, second edition&lt;/a&gt;, 2018.&lt;/li&gt;
+&lt;li&gt;Sergey Levine et al. &lt;a href="https://arxiv.org/abs/2005.01643"&gt;&lt;em&gt;Offline Reinforcement Learning: Tutorial, Review, and Perspectives on Open Problems&lt;/em&gt;&lt;/a&gt;, 2020.&lt;/li&gt;
+&lt;li&gt;Lili Chen et al. &lt;a href="https://arxiv.org/abs/2106.01345"&gt;&lt;em&gt;Decision Transformer: Reinforcement Learning via Sequence Modeling&lt;/em&gt;&lt;/a&gt;, 2021.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Reinforcement learning"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Value Functions"/><category term="Temporal-Difference Learning"/><category term="Offline RL"/></entry><entry><title>ERNIE 2.0: Continual multi-task pre-training for language understanding</title><link href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/" rel="alternate"/><published>2019-07-30T19:30:00+02:00</published><updated>2019-09-10T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2019-07-30:/articles/2019/Jul/30/ernie-2-0/</id><summary type="html">&lt;p&gt;ERNIE 2.0 extends masked-language-model pre-training with seven lexical, structural, and semantic objectives learned continually through a shared Transformer. This guide explains the training schedule, task embeddings, 2019 English and Chinese evaluations, and the limits of the reported comparison with BERT and XLNet.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;p&gt;BERT showed that a Transformer can learn reusable language representations from large amounts of unlabeled text. ERNIE 2.0 asks a natural follow-up question: &lt;strong&gt;must pre-training be organized around only one or two objectives?&lt;/strong&gt; A corpus contains more than local word co-occurrence. It also contains entities, sentence order, discourse relations, document topics, and weak signals of relevance.&lt;/p&gt;
+&lt;p&gt;Yu Sun and colleagues at Baidu introduced &lt;a href="https://arxiv.org/abs/1907.12412"&gt;ERNIE 2.0&lt;/a&gt; in 2019 as a framework for turning several such signals into pre-training tasks. Instead of training every objective separately or restarting whenever a new task is introduced, ERNIE 2.0 adds objectives incrementally and continues multi-task training with a shared encoder.&lt;/p&gt;
+&lt;p&gt;This article describes the 2019 paper. The name &lt;strong&gt;ERNIE&lt;/strong&gt; has since been reused for later Baidu model families, so claims here should not be projected onto every system carrying that name.&lt;/p&gt;
+&lt;h2 id="the-short-version"&gt;The short version&lt;a class="headerlink" href="#the-short-version" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ERNIE 2.0 is primarily a &lt;strong&gt;training framework&lt;/strong&gt;, not a radically different sequence architecture.&lt;/li&gt;
+&lt;li&gt;Its encoder is a bidirectional Transformer closely related to BERT.&lt;/li&gt;
+&lt;li&gt;Seven pre-training objectives target lexical, syntactic, document-level, and discourse information.&lt;/li&gt;
+&lt;li&gt;A learned task embedding tells the shared encoder which objective produced the current example.&lt;/li&gt;
+&lt;li&gt;New objectives are introduced continually, while older objectives remain in the training mixture to reduce forgetting.&lt;/li&gt;
+&lt;li&gt;In the paper's 2019 experiments, ERNIE 2.0 improved over the reported BERT and XLNet baselines across 16 English and Chinese tasks. That is a result under the paper's models, data, and evaluation protocol, not a current state-of-the-art claim.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="why-use-several-pre-training-objectives"&gt;Why use several pre-training objectives?&lt;a class="headerlink" href="#why-use-several-pre-training-objectives" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A masked language model hides tokens and asks the model to reconstruct them. This is a strong general objective, but the supervision it extracts is indirect. Consider the sentence:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Model-free algorithm:
-estimates the optimal policy without using or estimating the dynamics (transition and reward functions) of the environment.&lt;/p&gt;
-&lt;p&gt;Model-based algorithm:
-uses the transition function (and the reward function) in order to estimate the optimal policy.&lt;/p&gt;
+&lt;p&gt;Ada Lovelace worked with Charles Babbage on the Analytical Engine.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;In an &lt;strong&gt;online RL&lt;/strong&gt; there is an &lt;em&gt;Agent&lt;/em&gt; and the &lt;em&gt;Environment&lt;/em&gt;. Agent &lt;span class="math"&gt;\(A\)&lt;/span&gt; performs actions &lt;span class="math"&gt;\(a\)&lt;/span&gt; in environment &lt;span class="math"&gt;\(E\)&lt;/span&gt;, and the &lt;span class="math"&gt;\(E\)&lt;/span&gt; response with the &lt;em&gt;reward&lt;/em&gt; &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;em&gt;observation&lt;/em&gt; &lt;span class="math"&gt;\(o\)&lt;/span&gt; (or a &lt;em&gt;state&lt;/em&gt; &lt;span class="math"&gt;\(s\)&lt;/span&gt; if it is not partially observable environment). Additionally a &lt;em&gt;policy&lt;/em&gt; (network) is the algorithm used by the agent to decide its actions. This is the part that can be &lt;em&gt;model-based&lt;/em&gt; or &lt;em&gt;model-free&lt;/em&gt;. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.&lt;/p&gt;
-&lt;p&gt;Policy can be model-based or model-free. Question is how to optimize the policy network via &lt;em&gt;policy gradient&lt;/em&gt; (PG)?&lt;/p&gt;
-&lt;p&gt;PG algorithms directly try to optimize the policy to increase rewards, however this directly needs correction from environment in online fashion.&lt;/p&gt;
-&lt;h4 id="markov-decision-processes-mdp"&gt;Markov decision processes (MDP).&lt;a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;MDP is a process with a fixed number of states, and it randomly evolves from one state to another at each step. The probability for it to evolve from state A to state B is fixed.&lt;/p&gt;
-&lt;h4 id="what-is-offline-rl"&gt;What is &lt;em&gt;Offline&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-offline-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In &lt;strong&gt;offline&lt;/strong&gt; RL there is an agent and (instead of interactive environment) a limited, fixed dataset. The dataset contains experience (trajectory rollouts of arbitrary policies) from other scenarios where agents were learning a &lt;em&gt;policy&lt;/em&gt; to gain a good &lt;em&gt;reward&lt;/em&gt;. In contrast to online RL, such setup is more challenging as there is no dynamic environment to test hypothesis, and all is left is to have a set of &lt;em&gt;trajectories&lt;/em&gt; without live feedback. By observing historical episodes of interaction from other agents, an offline agent needs to learn a good policy to achieve a high reward.&lt;/p&gt;
-&lt;h4 id="reward-return"&gt;Reward /return&lt;a class="headerlink" href="#reward-return" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;Reward&lt;/strong&gt;
-Reward is the quantity received from the environment in a given timestep as a result of an action&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Return&lt;/strong&gt;:
-Return is defined as a function of reward sequence, which can be:&lt;/p&gt;
+&lt;p&gt;Masking a token teaches local and contextual prediction. Other transformations can emphasize different structure: mask the whole entity &lt;em&gt;Ada Lovelace&lt;/em&gt;, determine whether two sentences came from the same document, recover shuffled sentence order, or decide whether a query and title are relevant.&lt;/p&gt;
+&lt;p&gt;ERNIE 2.0 groups its objectives into three families:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Word-aware tasks&lt;/strong&gt; emphasize lexical and entity information.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Structure-aware tasks&lt;/strong&gt; emphasize relationships between sentences.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Semantic-aware tasks&lt;/strong&gt; use document and weakly supervised relevance signals.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These objectives do not install symbolic knowledge into fixed locations. They provide additional prediction problems whose gradients shape the same contextual encoder.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="ERNIE 2.0 continual pre-training framework with tasks added over successive stages." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. ERNIE 2.0 introduces pre-training tasks over successive stages while retaining earlier tasks in the multi-task schedule. (Source: &lt;a href="https://arxiv.org/abs/1907.12412"&gt;Sun et al., 2019&lt;/a&gt;, Figure 2).&lt;/p&gt;
+&lt;h2 id="continual-does-not-mean-online-learning"&gt;Continual does not mean online learning&lt;a class="headerlink" href="#continual-does-not-mean-online-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In this paper, &lt;strong&gt;continual pre-training&lt;/strong&gt; means that the training curriculum can expand. The first stage trains an initial set of objectives. A later stage initializes from that checkpoint, adds another objective, and trains on the accumulated set.&lt;/p&gt;
+&lt;p&gt;Keeping earlier tasks matters. If the model optimized only the newest task, it could overwrite representations useful for earlier ones, a failure commonly called &lt;strong&gt;catastrophic forgetting&lt;/strong&gt;. ERNIE 2.0 instead uses continual &lt;em&gt;multi-task&lt;/em&gt; learning: old and new objectives share the encoder and remain available during later stages.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Optional detail: What is shared and what is task-specific?&lt;/summary&gt;
+&lt;p&gt;The Transformer encoder parameters are shared across objectives. Each input combines token, segment, position, and task embeddings. The task ID therefore changes the input representation and lets the encoder condition on the current objective.&lt;/p&gt;
+&lt;p&gt;Prediction heads and losses depend on the task. Token-level objectives predict labels at individual positions; sequence-level objectives classify an entire sentence pair or document relation. Sharing the expensive encoder lets these different signals influence one representation space without requiring a complete model per objective.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="the-seven-objectives"&gt;The seven objectives&lt;a class="headerlink" href="#the-seven-objectives" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;h3 id="word-aware-objectives"&gt;Word-aware objectives&lt;a class="headerlink" href="#word-aware-objectives" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Knowledge masking&lt;/strong&gt; masks complete phrases and named entities rather than always masking isolated subword tokens. Reconstructing an entire multi-token unit makes the model rely on broader context.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Capitalization prediction&lt;/strong&gt; asks whether a token was capitalized in the original text. Capitalization can provide weak clues about names and sentence boundaries, although those clues are language- and script-dependent.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Token-document relation prediction&lt;/strong&gt; asks whether a token appears elsewhere in the source document. The task pushes token representations to retain document-level thematic information.&lt;/p&gt;
+&lt;h3 id="structure-aware-objectives"&gt;Structure-aware objectives&lt;a class="headerlink" href="#structure-aware-objectives" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Sentence reordering&lt;/strong&gt; splits a paragraph into segments, permutes them, and asks the model to recover their original order. It targets local discourse structure rather than only token identity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Sentence distance&lt;/strong&gt; classifies sentence pairs as adjacent, from the same document but non-adjacent, or from different documents. This supplies a graded notion of textual relatedness.&lt;/p&gt;
+&lt;h3 id="semantic-aware-objectives"&gt;Semantic-aware objectives&lt;a class="headerlink" href="#semantic-aware-objectives" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Discourse relation prediction&lt;/strong&gt; uses explicit discourse markers as weak supervision for relations between clauses or sentences.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;IR relevance prediction&lt;/strong&gt; uses query-title pairs from search data to distinguish relevant from less relevant pairs. This is weakly supervised rather than purely self-supervised because user interactions provide the signal.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="ERNIE 2.0 input and encoder structure, including task embeddings and seven pre-training objectives." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. The encoder receives token, segment, position, and task embeddings. Separate objectives reuse the shared Transformer. (Source: &lt;a href="https://arxiv.org/abs/1907.12412"&gt;Sun et al., 2019&lt;/a&gt;, Figure 3).&lt;/p&gt;
+&lt;h2 id="from-pre-training-to-a-downstream-task"&gt;From pre-training to a downstream task&lt;a class="headerlink" href="#from-pre-training-to-a-downstream-task" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Pre-training learns a general encoder without labels for the final application. &lt;strong&gt;Fine-tuning&lt;/strong&gt; then adapts that encoder using supervised examples for a task such as natural-language inference, sentiment classification, semantic similarity, named-entity recognition, or question answering.&lt;/p&gt;
+&lt;p&gt;This separation is important. ERNIE 2.0's seven objectives do not directly solve GLUE or the Chinese evaluation tasks. They construct an initialization that the downstream fine-tuning stage can use.&lt;/p&gt;
+&lt;p&gt;For readers coming from modern parameter-efficient adaptation, &lt;a href="/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"&gt;LoRA&lt;/a&gt; changes the fine-tuning stage rather than the pre-training curriculum: it freezes the base weights and learns small low-rank updates.&lt;/p&gt;
+&lt;h2 id="what-the-experiments-show"&gt;What the experiments show&lt;a class="headerlink" href="#what-the-experiments-show" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The authors evaluate English models on GLUE and Chinese models on nine common understanding tasks. The paper reports results for base- and large-sized configurations and compares against contemporary systems, including BERT and XLNet.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Table of ERNIE 2.0 results on English GLUE tasks." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/engTasks.png"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 3. English GLUE results reported in the paper. Scores belong to the paper's 2019 experimental setup and baseline implementations. (Source: &lt;a href="https://arxiv.org/abs/1907.12412"&gt;Sun et al., 2019&lt;/a&gt;, Table 2).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Table of ERNIE 2.0 results on nine Chinese language-understanding tasks." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 4. Results reported for nine Chinese language-understanding tasks. The task mixture and corpora differ from the English setup. (Source: &lt;a href="https://arxiv.org/abs/1907.12412"&gt;Sun et al., 2019&lt;/a&gt;, Table 3).&lt;/p&gt;
+&lt;p&gt;The central empirical claim is that the complete ERNIE 2.0 recipe outperformed the compared BERT and XLNet systems on all 16 evaluated tasks. Ablations also indicate that adding task families improves the aggregate downstream score.&lt;/p&gt;
+&lt;p&gt;The comparison requires calibration. The systems do not all use identical corpora or pre-training objectives, and benchmark improvements do not isolate a single causal mechanism. The experiments support the value of ERNIE 2.0's combined recipe; they do not prove that every added objective helps every domain or that continually adding objectives will improve without limit.&lt;/p&gt;
+&lt;h2 id="what-aged-well"&gt;What aged well&lt;a class="headerlink" href="#what-aged-well" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Several ideas remain useful beyond this particular model:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;simple sum of rewards (also called cumulative reward), or a&lt;/li&gt;
-&lt;li&gt;sum of &lt;em&gt;discounted&lt;/em&gt; rewards (also called &lt;em&gt;cumulative future discounted reward&lt;/em&gt;):&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The objective is part of the architecture.&lt;/strong&gt; Two models with similar Transformer encoders can learn different representations because their training signals differ.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Weak supervision can expose structure already present in data.&lt;/strong&gt; Document boundaries, sentence order, and search interactions can create training labels cheaply.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Curriculum and retention matter.&lt;/strong&gt; Adding a task is not enough; the schedule must prevent new learning from erasing useful earlier behavior.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-task gains need ablations.&lt;/strong&gt; A larger objective mixture also changes data exposure and optimization, so each contribution should be tested rather than inferred from the final score.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;a name="tdr"&gt;
-&lt;/p&gt;
-&lt;div class="math"&gt;$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$&lt;/div&gt;
-&lt;p&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="limitations"&gt;Limitations&lt;a class="headerlink" href="#limitations" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;"Cumulative" refers to the summation.&lt;/li&gt;
-&lt;li&gt;"Future" refers to the fact that it's an expected value of all the future timesteps values until the end of the episode with respect to the present quantity.&lt;/li&gt;
-&lt;li&gt;"Discounted" refers to the "gamma" &lt;span class="math"&gt;\(\gamma\)&lt;/span&gt; &lt;em&gt;discount rate&lt;/em&gt; factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from &lt;span class="math"&gt;\(t+1\)&lt;/span&gt;.&lt;/li&gt;
-&lt;li&gt;"Reward" refers to the main quantity of interest, i.e. the reward received from the environment.&lt;/li&gt;
+&lt;li&gt;The evaluations measure language understanding benchmarks available in 2019, not generative instruction following or current long-context behavior.&lt;/li&gt;
+&lt;li&gt;English and Chinese systems use different corpora and task signals, so the results are not a controlled cross-language comparison.&lt;/li&gt;
+&lt;li&gt;Task embeddings tell the encoder which objective it is solving; they do not make the resulting coordinates directly interpretable.&lt;/li&gt;
+&lt;li&gt;Continual pre-training still requires replaying earlier objectives and data. It is not continual learning from an unbounded stream at negligible cost.&lt;/li&gt;
+&lt;li&gt;The paper predates the scale and evaluation practices of modern foundation models.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The goal of an RL algorithm is to select actions that maximize the expected cumulative reward (the return) of the agent.&lt;/p&gt;
-&lt;h4 id="what-is-credit-assignment"&gt;What is &lt;em&gt;Credit Assignment&lt;/em&gt;?&lt;a class="headerlink" href="#what-is-credit-assignment" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In real world RL the state (and action) space usually needs to be very fine to cover all possibly relevant situations. This leads to the combinatorial explosion of states and actions which is referred as &lt;em&gt;curse of dimensionality&lt;/em&gt;.
-As an agent interacts with an environment in discrete timesteps, agent takes an action for current state and the environment emits a perception in form of a &lt;em&gt;reward&lt;/em&gt; and an &lt;em&gt;observation&lt;/em&gt;. In case of fully observable Markov Decision Process (MDP) it is the next state (of the environment and the agents). Agent's goal is to maximize the reward. In such &lt;strong&gt;fine grained&lt;/strong&gt; state-action spaces the reward occur terribly temporally delayed.&lt;/p&gt;
-&lt;p&gt;The (temporal) &lt;em&gt;credit assignment problem&lt;/em&gt; (CAP) is the problem of determining the actions that lead to a certain outcome. The problem of determining the contribution of each agent to the result of the training is the (temporal) CAP. In order to maximize the reward in the long run, the agent needs to determine which actions will lead to such outcome, which is essentially the temporal CAP. This way, an action that leads to a higher final cumulative reward should have more &lt;em&gt;credit&lt;/em&gt; (value) than an action that lead to a lower final reward. For instance, in Q-learning (the &lt;em&gt;off-policy&lt;/em&gt; algorithm) agents attempts to determine actions that will lead to the highest value in each state.&lt;/p&gt;
-&lt;p&gt;In RL, due to CAP, reward signals will only very weakly affect all temporally distant states that have preceded it. The influence of a reward gets more and more diluted over time and this can lead to bad convergence properties of the RL mechanism. Many steps must be performed by an iterative RL algorithm to propagate the influence of delayed reinforcement to all states and actions that have an effect on that reinforcement.&lt;/p&gt;
-&lt;h4 id="value-functions"&gt;Value functions&lt;a class="headerlink" href="#value-functions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Q-Learning is about learning Q-function that takes state and action conditioned on the history to predict future rewards.
-VF are state-action pair functions that estimate how good a particular action will be in a given state, or what the return for that action is expected to be.&lt;/p&gt;
+&lt;h2 id="related-reading"&gt;Related reading&lt;a class="headerlink" href="#related-reading" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Start with &lt;a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/"&gt;language-model probability, n-grams, and perplexity&lt;/a&gt; for the prediction objective underneath pre-training. The &lt;a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer guide&lt;/a&gt; explains the shared encoder architecture. For later adaptation methods, continue with &lt;a href="/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"&gt;LoRA&lt;/a&gt; and &lt;a href="/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"&gt;QLoRA&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="primary-sources"&gt;Primary sources&lt;a class="headerlink" href="#primary-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;V-function&lt;/strong&gt; (State-Value) &lt;span class="math"&gt;\(v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]\)&lt;/span&gt; &lt;br &gt; &lt;strong&gt;Value&lt;/strong&gt;   of state &lt;span class="math"&gt;\(s\)&lt;/span&gt; under policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Q-function&lt;/strong&gt;  (State-Action) &lt;span class="math"&gt;\(q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]\)&lt;/span&gt;  &lt;br &gt;&lt;strong&gt;Quality&lt;/strong&gt;  of taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; with policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;.  The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; while taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good action &lt;span class="math"&gt;\(a\)&lt;/span&gt; is, given a state for agent following a policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Q-Value&lt;/strong&gt; - value in state-action table.  The Q-function is implemented as a table of states and actions and Q-values for each s,a pair are stored there.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Estimating&lt;/strong&gt; VF for a particular policy, helps to accurately choose an action that will provide the best total reward possible, after being in that given state.&lt;/p&gt;
-&lt;h4 id="temporal-difference-td-learning"&gt;Temporal Difference (TD) Learning&lt;a class="headerlink" href="#temporal-difference-td-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;em&gt;Temporal Difference&lt;/em&gt; (TD) (aka &lt;em&gt;bootstrapping&lt;/em&gt; method) solves the problem of &lt;strong&gt;estimating&lt;/strong&gt; &lt;a href="#value-functions"&gt;value function&lt;/a&gt;. If the value functions were to be calculated &lt;strong&gt;without estimation&lt;/strong&gt;, the agent would need to wait until the final reward was received before any state-action pair values can be updated. Once the final reward was received, the path taken to reach the final state would need to be traced back and each value updated accordingly. TD address this issue.&lt;/p&gt;
-&lt;p&gt;TD learning is a unsupervised, RL model-free method learning by bootstrapping from current estimate of value function. In TD, agent is learning from an environment through episodes with no prior knowledge of the environment. TD methods adjust predictions to match later, more accurate, predictions about the future before the final outcome is known.&lt;/p&gt;
-&lt;p&gt;Instead of calculating the total future reward, at each step, TD tries to predict the combination of immediate reward and its own reward prediction at the next moment in time.&lt;/p&gt;
-&lt;p&gt;TD method is called a "bootstrapping" method, because the value is updated partly using an existing estimate and not a final reward.&lt;/p&gt;
-&lt;h4 id="onoff-policy-algorithm"&gt;On/Off-policy algorithm&lt;a class="headerlink" href="#onoff-policy-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Off-policy algorithm - evaluate and improve a (target) policy that is different from (current) policy which is used for action selection. When passing the reward from the next state to the current state, it takes the maximum possible reward of the new state and ignores whatever policy we are using. Eg. Q-learning is off-policy as it updates its Q-values using the Q-value of the next state and the &lt;em&gt;greedy&lt;/em&gt; action. In other words, it estimates the &lt;strong&gt;return&lt;/strong&gt; (cumulative/total  &lt;a href="#tdr"&gt;discounted return&lt;/a&gt; future reward, starting from current timestep) for state-action pairs assuming a greedy policy were followed, despite the fact that it's not following a greedy policy.&lt;/p&gt;
-&lt;p&gt;On-policy algorithm - evaluate and improve the same policy which is being used to select actions, Eg. Sarsa  updates its Q-values using the Q-value of the next state and the current policy's action. It estimates the return for state-action pairs assuming the current policy continues to be followed.&lt;/p&gt;
-&lt;h4 id="action-selection-policies"&gt;Action Selection Policies&lt;a class="headerlink" href="#action-selection-policies" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;There are three common policies used for action selection. The aim of these policies is to balance the trade-off between &lt;strong&gt;exploitation&lt;/strong&gt; and &lt;strong&gt;exploration&lt;/strong&gt;, by not always exploiting what has been learned so far.&lt;/p&gt;
+&lt;li&gt;Yu Sun et al. &lt;a href="https://arxiv.org/abs/1907.12412"&gt;&lt;em&gt;ERNIE 2.0: A Continual Pre-training Framework for Language Understanding&lt;/em&gt;&lt;/a&gt;, 2019.&lt;/li&gt;
+&lt;li&gt;Baidu/PaddlePaddle. &lt;a href="https://github.com/PaddlePaddle/ERNIE"&gt;Official ERNIE repository&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Sequence Models"/><category term="NLP"/><category term="Transformer"/><category term="Pre-training"/><category term="Multi-task Learning"/><category term="BERT"/><category term="ERNIE"/></entry><entry><title>Language models: From n-gram counts to neural next-token prediction</title><link href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/" rel="alternate"/><published>2017-11-30T19:30:00+01:00</published><updated>2018-01-15T12:00:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-11-30:/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/</id><summary type="html">&lt;p&gt;A language model assigns probabilities to token sequences by predicting each token from its context. This guide derives the chain rule, explains n-gram estimation and smoothing, connects cross-entropy to perplexity, and shows what changes when a neural Transformer replaces the count table.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;p&gt;When a phone suggests the next word, a speech recognizer chooses between similar sounds, or a generative model continues a prompt, each system needs a way to judge which token sequence is plausible. A &lt;strong&gt;language model&lt;/strong&gt; supplies that judgment by assigning probabilities to sequences.&lt;/p&gt;
+&lt;p&gt;The modern implementation may contain billions of neural-network parameters, but the underlying probabilistic question is simple:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Given the tokens observed so far, what distribution should we assign to the next token?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This article starts with count-based n-gram models because they make the assumptions visible. It then connects the same probability factorization to neural language models and Transformers.&lt;/p&gt;
+&lt;h2 id="the-short-version"&gt;The short version&lt;a class="headerlink" href="#the-short-version" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;greedy - Will lock on one action that happened to have good results at one point of time but it is not in reality the optimal action. So Greedy will keep exploiting this action while ignoring the others which might be better. It Exploits too much.&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft - very similar to &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy. The best action is selected with probability &lt;span class="math"&gt;\(1 - \epsilon\)&lt;/span&gt; and the rest of the time a random action is chosen uniformly.&lt;/li&gt;
-&lt;li&gt;softmax - one drawback of &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy and &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.&lt;/li&gt;
+&lt;li&gt;A language model estimates &lt;span class="math"&gt;\(P(w_t\mid w_{&amp;lt;t})\)&lt;/span&gt;, the probability of the next token given its preceding context.&lt;/li&gt;
+&lt;li&gt;The chain rule turns those conditional probabilities into a probability for the complete sequence.&lt;/li&gt;
+&lt;li&gt;An n-gram model deliberately shortens the context to the previous &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; tokens.&lt;/li&gt;
+&lt;li&gt;Counts alone assign zero probability to unseen sequences, so practical n-gram models redistribute probability through smoothing or backoff.&lt;/li&gt;
+&lt;li&gt;Neural language models replace count tables with learned vector representations and functions that can generalize across contexts.&lt;/li&gt;
+&lt;li&gt;Cross-entropy is the average negative log-probability of the observed tokens. Perplexity is its exponential.&lt;/li&gt;
+&lt;li&gt;Perplexity comparisons are meaningful only when tokenization, test data, and probability conventions are compatible.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;It is not clear which of these policies produces the best results overall. The nature of the task will have some bearing on how well each policy influences learning. If the problem we are trying to solve is of a game playing nature, against a human opponent, human factors may also be influential.&lt;/p&gt;
-&lt;h4 id="exploitation-vs-exploration"&gt;Expl&lt;strong&gt;oit&lt;/strong&gt;ation vs explo&lt;strong&gt;r&lt;/strong&gt;ation&lt;a class="headerlink" href="#exploitation-vs-exploration" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Exploitation - keep the current approach. Chooses the greedy action to get the most reward by exploiting the agent’s current action-value estimates. But by being greedy with respect to action-value estimates, may not actually get the most reward and lead to sub-optimal behaviour.&lt;/p&gt;
-&lt;p&gt;Exploration - Try new approach.  Allows an agent to improve its current knowledge about each action, hopefully leading to long-term benefit. Improving the accuracy of the estimated action-values, enables an agent to make more informed decisions in the future.&lt;/p&gt;
-&lt;p&gt;When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.&lt;/p&gt;
+&lt;h2 id="tokens-types-vocabulary-and-corpus"&gt;Tokens, types, vocabulary, and corpus&lt;a class="headerlink" href="#tokens-types-vocabulary-and-corpus" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;corpus&lt;/strong&gt; is the collection of text used for training or evaluation. &lt;strong&gt;Tokenization&lt;/strong&gt; divides that text into units. A token may be a word, subword, byte, or character; the choice changes both the model and its reported metrics.&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;token&lt;/strong&gt; is one occurrence in a sequence. A &lt;strong&gt;type&lt;/strong&gt; is a distinct token value, and the set of possible types is the &lt;strong&gt;vocabulary&lt;/strong&gt;. In the sentence “a model models text,” there are four word tokens but three types if capitalization and punctuation have already been normalized.&lt;/p&gt;
+&lt;p&gt;Normalization choices also matter. Lowercasing may merge “Polish” and “polish,” while removing punctuation can destroy useful sentence boundaries. There is no universally correct preprocessing pipeline; it must match the task and the model.&lt;/p&gt;
+&lt;details class="dinov2-background" markdown="1"&gt;
+&lt;summary&gt;Optional detail: Why modern models often use subwords or bytes&lt;/summary&gt;
+
+&lt;p&gt;A word vocabulary must decide what to do with unseen words, spelling variants, and productive morphology. Subword tokenizers represent a rare word as several reusable pieces. Byte-level models go further and can represent any UTF-8 text without an unknown-token symbol.&lt;/p&gt;
+&lt;p&gt;The trade-off is sequence length. Smaller units reduce vocabulary problems but create more prediction steps. This is why a perplexity reported for a byte model cannot be compared directly with one reported for a word or subword model.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="from-next-token-probabilities-to-sequence-probability"&gt;From next-token probabilities to sequence probability&lt;a class="headerlink" href="#from-next-token-probabilities-to-sequence-probability" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Let a sequence be &lt;span class="math"&gt;\(w_1,w_2,\ldots,w_N\)&lt;/span&gt;. The probability chain rule gives an exact factorization:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P(w_1,\ldots,w_N)
+= \prod_{t=1}^{N} P(w_t\mid w_1,\ldots,w_{t-1}).
+$$&lt;/div&gt;
+&lt;p&gt;The first factor is unconditional, or conditioned on a start-of-sequence symbol. Later factors condition on progressively longer histories. The equation is not an approximation and does not prescribe a neural network. It only says that a joint probability can be decomposed into conditional probabilities.&lt;/p&gt;
+&lt;p&gt;This formulation supports several applications. A speech recognizer can prefer a probable sentence among acoustically plausible candidates. A spelling corrector can compare alternative sequences. A generative model samples a token from the predicted distribution, appends it to the context, and repeats.&lt;/p&gt;
+&lt;h2 id="the-n-gram-approximation"&gt;The n-gram approximation&lt;a class="headerlink" href="#the-n-gram-approximation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Estimating a separate probability for every possible history is impossible: most sequences never occur in a finite corpus. An n-gram model uses a Markov approximation and retains only the previous &lt;span class="math"&gt;\(n-1\)&lt;/span&gt; tokens:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P(w_t\mid w_1,\ldots,w_{t-1})
+\approx P(w_t\mid w_{t-n+1},\ldots,w_{t-1}).
+$$&lt;/div&gt;
+&lt;p&gt;A unigram model ignores context. A bigram model uses one preceding token. A trigram model uses two. Increasing &lt;span class="math"&gt;\(n\)&lt;/span&gt; captures longer local patterns but makes each context rarer, increasing the data and memory required for reliable estimates.&lt;/p&gt;
+&lt;p&gt;For a bigram model, maximum-likelihood estimation uses relative frequency:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\widehat P(w_t\mid w_{t-1})
+= \frac{C(w_{t-1},w_t)}{C(w_{t-1})}.
+$$&lt;/div&gt;
+&lt;p&gt;Here &lt;span class="math"&gt;\(C(\cdot)\)&lt;/span&gt; denotes a corpus count. The estimate answers: among occurrences of the previous token, what fraction were followed by the candidate next token?&lt;/p&gt;
+&lt;h3 id="why-raw-counts-are-not-enough"&gt;Why raw counts are not enough&lt;a class="headerlink" href="#why-raw-counts-are-not-enough" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;If a valid bigram never appears in training, the maximum-likelihood estimate assigns it probability zero. Because sequence probability is a product, one unseen n-gram makes the entire sequence probability zero.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Smoothing&lt;/strong&gt; reserves or redistributes probability mass for unseen events. Simple add-one smoothing is useful pedagogically but performs poorly for serious language modeling. Strong classical systems use methods such as interpolation, backoff, and modified Kneser-Ney smoothing, which combine evidence from several context lengths and reason more carefully about how words appear in new contexts.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Optional detail: Backoff versus interpolation&lt;/summary&gt;
+&lt;p&gt;A backoff model uses the longest available context and falls back to a shorter one when the longer n-gram lacks reliable evidence. An interpolated model always combines several estimates, for example trigram, bigram, and unigram probabilities, with weights that sum to one.&lt;/p&gt;
+&lt;p&gt;Both approaches address data sparsity. They differ in when and how shorter-context evidence participates.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="why-computations-use-logarithms"&gt;Why computations use logarithms&lt;a class="headerlink" href="#why-computations-use-logarithms" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Multiplying many probabilities smaller than one quickly underflows floating-point arithmetic. Taking logarithms turns the product into a sum:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\log P(w_1,\ldots,w_N)
+= \sum_{t=1}^{N}\log P(w_t\mid w_{&amp;lt;t}).
+$$&lt;/div&gt;
+&lt;p&gt;The log-probability is typically negative. A better prediction assigns the observed token a larger probability and therefore a less negative log-probability.&lt;/p&gt;
+&lt;p&gt;Training usually minimizes the average &lt;strong&gt;negative&lt;/strong&gt; log-probability, also called cross-entropy loss:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+H
+= -\frac{1}{N}\sum_{t=1}^{N}\log P(w_t\mid w_{&amp;lt;t}).
+$$&lt;/div&gt;
+&lt;p&gt;With natural logarithms, &lt;span class="math"&gt;\(H\)&lt;/span&gt; is measured in nats; with base-2 logarithms, it is measured in bits.&lt;/p&gt;
+&lt;h2 id="perplexity"&gt;Perplexity&lt;a class="headerlink" href="#perplexity" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Perplexity exponentiates the average negative log-probability:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\operatorname{PPL}
+= \exp\left(-\frac{1}{N}\sum_{t=1}^{N}\log P(w_t\mid w_{&amp;lt;t})\right)
+= P(w_1,\ldots,w_N)^{-1/N}.
+$$&lt;/div&gt;
+&lt;p&gt;Lower perplexity means the model assigned more probability to the observed test sequence. A rough intuition is an effective branching factor: a perplexity of 20 resembles choosing among 20 equally likely options at each step. Real distributions are not uniform, so this is an interpretation rather than a literal count.&lt;/p&gt;
+&lt;p&gt;Perplexity must be evaluated on data not used for parameter fitting. It is an &lt;strong&gt;intrinsic&lt;/strong&gt; metric: it measures predictive fit to that token stream. An &lt;strong&gt;extrinsic&lt;/strong&gt; evaluation measures performance on the task that ultimately matters, such as transcription errors, translation quality, retrieval accuracy, or human preference.&lt;/p&gt;
+&lt;details class="dinov2-background" markdown="1"&gt;
+&lt;summary&gt;Optional detail: When perplexity comparisons are invalid&lt;/summary&gt;
+
+&lt;p&gt;Perplexity depends on the prediction units. A word model, a 32k-subword model, and a byte model produce different numbers of decisions with different vocabularies. Their raw perplexities are not directly comparable.&lt;/p&gt;
+&lt;p&gt;The test corpus must also match. A model can obtain low perplexity on text similar to its training distribution and perform poorly on another domain. Tokenization, casing, handling of unknown tokens, context length, and whether boundary tokens are scored must be held compatible before interpreting a difference.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="what-a-neural-language-model-changes"&gt;What a neural language model changes&lt;a class="headerlink" href="#what-a-neural-language-model-changes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;An n-gram table treats contexts as discrete entries. A neural language model maps tokens to learned vectors and uses a parameterized function to predict the next-token distribution. Similar contexts can therefore share statistical strength even when the exact sequence was not observed.&lt;/p&gt;
+&lt;p&gt;Early neural language models used a fixed context window. Recurrent networks summarized a variable-length prefix in a hidden state. A &lt;a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer&lt;/a&gt; lets each position combine information from earlier positions through causal self-attention.&lt;/p&gt;
+&lt;p&gt;Despite these architectural differences, autoregressive training still uses the same factorization:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P(w_1,\ldots,w_N)=\prod_{t=1}^{N}P_\theta(w_t\mid w_{&amp;lt;t}),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\theta\)&lt;/span&gt; denotes learned parameters. The model is trained by minimizing token cross-entropy, usually over many sequences in parallel.&lt;/p&gt;
+&lt;p&gt;Masked-language-model systems such as BERT and &lt;a href="/articles/2019/Jul/30/ernie-2-0/"&gt;ERNIE 2.0&lt;/a&gt; use a related but different objective: they reconstruct selected hidden tokens using context on both sides. That produces useful encoders but is not the same causal distribution used for left-to-right generation.&lt;/p&gt;
+&lt;h2 id="what-language-model-probability-does-not-mean"&gt;What language-model probability does not mean&lt;a class="headerlink" href="#what-language-model-probability-does-not-mean" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A high probability does not imply truth. A model estimates regularities in its data and training objective. Common misconceptions, stereotypes, and fluent falsehoods can all receive high probability.&lt;/p&gt;
+&lt;p&gt;Likewise, a low perplexity does not by itself establish reasoning ability, factual accuracy, safety, or usefulness. Those properties require targeted evaluations. Language modeling is the predictive foundation, not a complete definition of intelligence.&lt;/p&gt;
+&lt;h2 id="a-practical-reading-path"&gt;A practical reading path&lt;a class="headerlink" href="#a-practical-reading-path" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Use n-grams to understand conditional probability, sparsity, smoothing, and perplexity.&lt;/li&gt;
+&lt;li&gt;Read the &lt;a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer guide&lt;/a&gt; to see how attention builds a context-dependent predictor.&lt;/li&gt;
+&lt;li&gt;Study &lt;a href="/articles/2019/Jul/30/ernie-2-0/"&gt;ERNIE 2.0&lt;/a&gt; for an example of enriching pre-training with several objectives.&lt;/li&gt;
+&lt;li&gt;Continue to &lt;a href="/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/"&gt;LoRA&lt;/a&gt; and &lt;a href="/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/"&gt;QLoRA&lt;/a&gt; to separate pre-training from efficient downstream adaptation.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="primary-references"&gt;Primary references&lt;a class="headerlink" href="#primary-references" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Daniel Jurafsky and James H. Martin. &lt;a href="https://web.stanford.edu/~jurafsky/slp3/"&gt;&lt;em&gt;Speech and Language Processing&lt;/em&gt;, Chapter 3: N-gram Language Models&lt;/a&gt;, third-edition draft.&lt;/li&gt;
+&lt;li&gt;Yoshua Bengio et al. &lt;a href="https://www.jmlr.org/papers/v3/bengio03a.html"&gt;&lt;em&gt;A Neural Probabilistic Language Model&lt;/em&gt;&lt;/a&gt;, JMLR, 2003.&lt;/li&gt;
+&lt;li&gt;Ashish Vaswani et al. &lt;a href="https://arxiv.org/abs/1706.03762"&gt;&lt;em&gt;Attention Is All You Need&lt;/em&gt;&lt;/a&gt;, 2017.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -2556,228 +2865,7 @@ VF are state-action pair functions that estimate how good a particular action wi
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Reinforcement learning"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>ERNIE 2.0: A continual pre-training framework for language understanding</title><link href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/" rel="alternate"/><published>2019-07-30T19:30:00+02:00</published><updated>2019-07-30T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2019-07-30:/articles/2019/Jul/30/ernie-2-0/</id><summary type="html">&lt;p&gt;ERNIE 2.0 (&lt;em&gt;Enhanced Representation through kNowledge IntEgration&lt;/em&gt;), a new knowledge integration language representation model that aims to beat SOTA results of BERT and XLNet. While pre-training with more than just several simple tasks to grasp the co-occurrence of words or sentences for language modeling, Ernie aims to explore named entities, semantic closeness and discourse relations to obtain valuable lexical, syntactic and semantic information from training corpora. Ernie 2.0 focus on building and learning incrementally pre-training tasks through constant multi-task learning. And it brings some interesting results.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Transformer based models has become the dominant part of modern SOTA research for NLP. ERNIE 2.0 is no different. Lets deep dive into what novel is about the second version of Ernie.&lt;/p&gt;
-&lt;h4 id="tldr"&gt;TL:DR&lt;a class="headerlink" href="#tldr" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;Focus attention to more than just co-occurence.&lt;/strong&gt;
-Contribution of paper:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Design of continual pre-training framework ERNIE 2.0, which supports customized training tasks and multi-task pre-training in an incremental way.&lt;/li&gt;
-&lt;li&gt;ERNIE 2.0 achieves significant improvements over BERT and XLNet on 16 tasks including English GLUE benchmarks and several Chinese tasks.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="intro"&gt;Intro&lt;a class="headerlink" href="#intro" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Co-occurence of words and sentences is the main workhorse of current NLP SOTA solutions. ERNIE 2.0 tries to get a bigger picture with its continuous pre-training.  &lt;/p&gt;
-&lt;h3 id="motivation"&gt;Motivation&lt;a class="headerlink" href="#motivation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;It is the fact that with current solutions, training of the model usually focus on couple of tasks to get the notion of co-occurrence of words and sentences. Those pre-training procedures involved word-level and sentence-level prediction or inference tasks. The closest competitors like Google's BERT captured co-occurrence information by combining a masked language model and a next-sentence prediction task. On the other hand, this co-occurrence information is captured by XLNet by constructing a permutation language model task.&lt;/p&gt;
-&lt;p&gt;With Ernie 2.0 however, the vision becomes broader than just co-occurence. This includes more lexical, syntactic and semantic information from training corpora in form of named entities (like person names, location names, and organization names), semantic closeness (proximity of sentences), sentence order or discourse relations. This is done with Ernie 2.0: continual pre-training framework, by building and learning incrementally pre-training tasks  through constant multi-task learning.&lt;/p&gt;
-&lt;p&gt;The important aspect is that at any time a new custom task can be introduced, while sharing the same encoding network. Thanks to this, a significant amount of information can be shared across different tasks. Ernie 2.0 framework is continuously pre-training and updating the model and gaining enhancements in information through multi-task learning, hence more holistically understand lexical, syntactic and semantic representations.   &lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Paper: &lt;a href="https://arxiv.org/abs/1907.12412"&gt; Ernie 2.0: A continual pre-training framework for language understanding. ArXiv&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Code for fine-tuning and pre-trained models for English: &lt;a href="https://github.com/PaddlePaddle/ERNIE"&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p align="center"&gt;&lt;img alt="ERNIE2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif"&gt;
-&lt;br&gt;
-Figure 1. A continual pre-training framework for language understanding.&lt;/p&gt;
-&lt;h3 id="the-continual-pre-training"&gt;The continual pre-training&lt;a class="headerlink" href="#the-continual-pre-training" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The &lt;em&gt;continual&lt;/em&gt; pre-training consists of two phases:&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;1. Continuously construct unsupervised pre-training tasks using the big data and with prior knowledge involved&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;This phase include three types of tasks:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;word&lt;/em&gt;-aware tasks: Knowledge Masking, Capitalization Prediction, Token-Document Relation Prediction&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;structure&lt;/em&gt;-aware tasks: Sentence Reordering, Sentence Distance&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;semantic&lt;/em&gt;-aware tasks: Discourse Relation, IR Relevance&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;For the details of the tasks please refer to the paper. All tasks are based on self/weak-supervised signals without human annotation.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2. Incrementally update the ERNIE model via multi-task learning&lt;/strong&gt;
-Continuously, task-by-task new tasks are added starting from first, initial task to train initial model. Then next task's parameters are initialized to the values already learned form the previous one. This way the parameters' "knowledge" is passed on and accumulated within the consecutive tasks.&lt;/p&gt;
-&lt;p&gt;This goal is achieved with series of shared text encoding layers that &lt;strong&gt;encodes&lt;/strong&gt; the contextual information possibly customized with RNNs or deep Transformer. The parameters of the encoder are the ones that are updated when a new task is introduced.&lt;/p&gt;
-&lt;p&gt;There are two types of loss functions: sequence-level and token-level. For each task sentence-level loss functions can be combined with token-level loss functions creating the task's loss function used to update the model.&lt;/p&gt;
-&lt;h4 id="fine-tuning-for-tasks"&gt;Fine tuning for tasks&lt;a class="headerlink" href="#fine-tuning-for-tasks" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;The phase of fine-tuning of the pre-trained model for language understanding tasks (e.g question answering, natural language inference, semantic similarity) is done with task specific supervised data.&lt;/p&gt;
-&lt;h3 id="ernie-20-model"&gt;ERNIE 2.0 model&lt;a class="headerlink" href="#ernie-20-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The model is similar to BERT or XLNet.&lt;/p&gt;
-&lt;p align="center"&gt;&lt;img alt="ERNIE2struct" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png"&gt;
-&lt;br&gt;
-Figure 2. ERNIE 2.0 model structure. The input embedding consists of the token embedding, the sentence embedding, the position embedding and the task embedding. There are seven pre-training tasks in the ERNIE 2.0 model.&lt;/p&gt;
-&lt;h4 id="encoder"&gt;Encoder&lt;a class="headerlink" href="#encoder" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Is a multi-layer Transformer same as in BERT, GPT, XLM. Transformer generate sequence of contextual embeddings for each token. Additional markers are added to the start of the sequence and separator symbol is added to separate intervals for the multiple input segment tasks.&lt;/p&gt;
-&lt;h4 id="task-embeddings"&gt;Task embeddings&lt;a class="headerlink" href="#task-embeddings" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;The model feeds task embedding to modulate the characteristic of different tasks.Each task has an id ranging from 0 to N. Each task id is assigned to one unique task embedding. The model input contains the corresponding token, segment, position and task embedding. Any task id can initialize model in the fine-tuning process.&lt;/p&gt;
-&lt;h1 id="results"&gt;Results&lt;a class="headerlink" href="#results" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h1&gt;
-&lt;p align="center"&gt;&lt;img alt="ERNIE2res1" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/engTasks.png"&gt;
-&lt;br&gt;
-Figure 3. ERNIE 2.0 The results on GLUE benchmark for English tasks.&lt;/p&gt;
-&lt;p align="center"&gt;&lt;img alt="ERNIE2res2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png"&gt;
-&lt;br&gt;
-Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.&lt;/p&gt;</content><category term="Sequence Models"/><category term="NMT"/><category term="transformer"/><category term="Sequence transduction"/><category term="Attention model"/><category term="Machine translation"/><category term="seq2seq"/><category term="NLP"/><category term="ELMo"/><category term="OpenAI GPT"/><category term="BERT"/><category term="ERNIE 1.0"/><category term="XLNet"/></entry><entry><title>NLP: Explaining Neural Language Modeling</title><link href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/" rel="alternate"/><published>2017-11-30T19:30:00+01:00</published><updated>2017-11-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-11-30:/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/</id><summary type="html">&lt;p&gt;Language modeling (LM) is the essential part of Natural Language Processing (NLP) tasks such as  Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Goal of the Language Model is to compute the probability of sentence considered as a word sequence. This article explains how to model the language using probability and n-grams. It also discuss the language model evaluation with  use of &lt;em&gt;perplexity&lt;/em&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Read before:&lt;/strong&gt;
-* &lt;a href="https://medium.com/@gon.esbuyo/get-started-with-nlp-part-i-d67ca26cc828"&gt;Get started with NLP (Part I)&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Key Takeaways:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The goal of a language model is to compute a probability of a token (e.g. a sentence or a sequence of words).&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Language Model (LM) actually a grammar of a language as it gives the probability of word that will follow&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Dictionary:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Corpus&lt;/strong&gt; - Body of text, singular. Corpora is the plural of this. Example: A collection of medical journals.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Token&lt;/strong&gt;- Each "entity" that is a part of whatever was split up based on rules. For examples, each word is a token when a sentence is "tokenized" into words. Each sentence can also be a token, if you tokenized the sentences out of a paragraph.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Lexicon&lt;/strong&gt; - Words and their meanings. Example: English dictionary. Consider, however, that various fields will have different lexicons. For example: To a financial investor, the first meaning for thef word "Bull" is someone who is confident about the market, as compared to the common English lexicon, where the first meaning for the word "Bull" is an animal. As such, there is a special lexicon for financial investors, doctors, children, mechanics, and so on.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="intro"&gt;Intro&lt;a class="headerlink" href="#intro" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;Language Modeling (LM)&lt;/em&gt; is one of the most important parts of modern Natural Language Processing (NLP). There are many sorts of applications for  Language Modeling, like: Machine Translation, Spell Correction Speech Recognition, Summarization, Question Answering, Sentiment analysis etc. Each of those tasks require use of &lt;em&gt;language model&lt;/em&gt;. Language model is required to represent the text to a form understandable from the machine point of view.&lt;/p&gt;
-&lt;p&gt;Below I have elaborated on the means to model a corpus of text to use in multiple machine learning NLP tasks.    &lt;/p&gt;
-&lt;h3 id="motivation"&gt;Motivation&lt;a class="headerlink" href="#motivation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Each part of natural language has to assume some representation. Written text in natural way is composed out of sentences that consist of words that in turn contains letters. Each of those pieces of  text sentence can be a subject for analysis. Of course we can also use morphemes [ref]Small meaningful units that make up words. [\ref] or n-grams of the text.&lt;/p&gt;
-&lt;p&gt;One way or another, the text needs to be normalized.  Normalized mean that indexed text and query terms must have same form. For example, &lt;em&gt;U.S.A.&lt;/em&gt; and &lt;em&gt;u.s.a.&lt;/em&gt; are to be considered same (remove dots and case fold - lowercase) and return same result while querying any of them.  Thus, an implicit word classes equivalence must be defined.&lt;/p&gt;
-&lt;h4 id="tokenizing"&gt;Tokenizing&lt;a class="headerlink" href="#tokenizing" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Choosing which text segmentation (aka tokenizing) technique will be used is arbitrary, but depends strictly on the undergoing tasks, their specification, heuristics and preconditions. For instance, if we are after a single character statistics of text task we will probably choose to operate on letters not on n-grams or words. The result for text fragmentation is called &lt;strong&gt;token&lt;/strong&gt;. So by referring to a token in general one actually refers to the fragmentation technique outcome in form of a sentence, word, n-gram, morpheme, letter etc.  &lt;/p&gt;
-&lt;p&gt;However, even word-oriented tokens might give a different set of distinct tokens. For instance in a lemma based tokens the &lt;em&gt;cat&lt;/em&gt; and plural &lt;em&gt;cats&lt;/em&gt; would count as one word having same stem (core meaning-bearing unit). On the other hand, if we make more strict distinctions, that would e.g. differentiate &lt;em&gt;word form&lt;/em&gt;, we would get two distinct tokens. It all depends how you define a token.&lt;/p&gt;
-&lt;p&gt;To make things more clear, lets settle three terms:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;vocabulary&lt;/strong&gt; set of different types&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;type&lt;/strong&gt;  an element of vocabulary, and a&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;token&lt;/strong&gt; as an instance of a &lt;em&gt;type&lt;/em&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Additionally, language modeling must consider the correlated ordering of tokens. This is because every language is based on some grammar, where order has a lot of influence on the meaning of a text.  &lt;/p&gt;
-&lt;p&gt;To complete the NLP tasks we must provide a measure to enable comparison operations and thus assessment method for grading our model. This measure is probability. This involves all kinds of tasks, for example:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Machine translation:&lt;/strong&gt; translating a sentence saying about height it would probably state that &lt;span class="math"&gt;\( P(tall\ man) &amp;gt; P(large\ man)\)&lt;/span&gt; as the ‘&lt;em&gt;large&lt;/em&gt;’ might also refer to weight or general appearance thus, not as probable as ‘&lt;em&gt;tall&lt;/em&gt;’&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Spelling Correction:&lt;/strong&gt;  Spell correcting sentence: “Put you name into form”, so that &lt;span class="math"&gt;\(P(name\ into\ \textbf{form}) &amp;gt; P(name\ into\ \textbf{from})\)&lt;/span&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;strong&gt;Speech Recognition:&lt;/strong&gt; Call my nurse: &lt;span class="math"&gt;\(P(Call\ my\ nurse.) \gg P(coal\ miners)\)&lt;/span&gt;, I have no idea. &lt;span class="math"&gt;\(P(no\ idea.) \gg P(No\ eye\ deer.)\)&lt;/span&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Summarization, question answering, sentiment analysis&lt;/strong&gt; etc.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="the-probabilistic-language-modeling"&gt;The probabilistic language modeling&lt;a class="headerlink" href="#the-probabilistic-language-modeling" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The probability of a sentence &lt;span class="math"&gt;\(S\)&lt;/span&gt; (as a sequence of &lt;em&gt;words&lt;/em&gt; &lt;span class="math"&gt;\(w_i\)&lt;/span&gt;) is : &lt;span class="math"&gt;\(P(S) = P(w_1,w_2, w_3,\ldots,w_n)\)&lt;/span&gt;. Now it is important to find the probability of upcoming word. It is an everyday task made e.g. while typing  your mobile keyboard. We will settle the &lt;em&gt;conditional probability&lt;/em&gt;  of &lt;span class="math"&gt;\(w_4\)&lt;/span&gt; depending on all previous words. For a 4 word sentence this conditional probability is:&lt;/p&gt;
-&lt;div class="math"&gt;$$ P(S)=P(w_1, w_2, w_3, w_4) \equiv P(w_4 |w_1, w_2, w3) $$&lt;/div&gt;
-&lt;p&gt;This way we can actually represent the language grammar, however, in NLP it is accustomed to use the LM term.&lt;/p&gt;
-&lt;p&gt;To calculate the joint probability  of a sentence (as a word sequence) &lt;span class="math"&gt;\(P(W)\)&lt;/span&gt; the chain rule of probability will be used.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Probability Chain Rule:&lt;/strong&gt;&lt;/p&gt;
-&lt;div class="math"&gt;$$P(A|B) = \frac{P(A\cap B)}{P(B)} \implies P(A\cap B)=P(A|B)P(B)$$&lt;/div&gt;
-&lt;p&gt;so in general for a token sequence we get:&lt;/p&gt;
-&lt;div class="math"&gt;$$P(S)=P(w_1,\ldots,w_n) = P(w_1)P(w_2|w_1) P(w_3)P(w_1,w_2)\ldots P(w_n|w_1,\ldots w_{n-1}) ={\displaystyle \prod_{i} P(w_i|w_1,\ldots w_{i-1})}$$&lt;/div&gt;
-&lt;p&gt;To estimate each probability a straightforward solution could be to use simple counting.&lt;/p&gt;
-&lt;div class="math"&gt;$$P(w_5|w_1,w_2,w_3,w_4)= \frac{count(w_1,w_2,w_3,w_4,w_5)}{count(w_1,w_2,w_3,w_4)}$$&lt;/div&gt;
-&lt;p&gt;but this gives us to many possible sequences to ever estimate. Imagine how much data (occurrences of each sentence) we would have to get to make this &lt;em&gt;count&lt;/em&gt;s meaningful.&lt;/p&gt;
-&lt;p&gt;To cope with this issue we can simplify by applying the &lt;strong&gt;Markov Assumption&lt;/strong&gt;, which states that it is enough to pick only one, or a couple of previous words as a prefix:&lt;/p&gt;
-&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-k},\ldots P(w_{i-1}))}$$&lt;/div&gt;
-&lt;p&gt;where &lt;span class="math"&gt;\(k\)&lt;/span&gt; is the number of previous tokens (&lt;em&gt;prefix&lt;/em&gt; size) that we consider.&lt;/p&gt;
-&lt;h3 id="n-grams"&gt;N-grams&lt;a class="headerlink" href="#n-grams" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;An N-gram is a contiguous (order matters) sequence of items, which in this case is the words in text. The n-grams depends on the size of the &lt;em&gt;prefix&lt;/em&gt;. The simplest case is the &lt;em&gt;Unigram mode&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;** (Uni-) 1-gram model&lt;em&gt;&lt;em&gt;
-The simplest case of &lt;/em&gt;Markov assumption&lt;/em&gt; is case when the size of prefix is one.
-&lt;span class="math"&gt;\(P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i)}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;This will provide us with grammar that only consider one word. As a result it produces a set of unrelated words. It actually would generate sentences with random word order.&lt;/p&gt;
-&lt;p&gt;** Bigram **
-However, if we consider a 2-word (tandem) bigrams correlations where we condition each word on previous one we get some sens of meaning between couples of words.&lt;/p&gt;
-&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$&lt;/div&gt;
-&lt;p&gt;This way we get a sequence of tandems that have meaning tandem-wise. This still is not enough to face a long range dependencies from natural languages, like English. This would be difficult even in case of n-grams as there can be very long sentences with dependencies. However, a 3-gram can get us a pretty nice &lt;a href="http://tetration.xyz/Ngram-Tutorial/"&gt;approximation&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;and how he probably more easily believe me i never see how much as that he and pride and unshackled
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h4 id="estimate-n-gram-probabilities"&gt;Estimate n-gram probabilities&lt;a class="headerlink" href="#estimate-n-gram-probabilities" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Estimation can be done with &lt;strong&gt;Maximum Likelihood Estimate (MLE)&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="math"&gt;$$P(w_i|w_{i-1})=\frac{count(w_{i-1},w_i)}{count(w_{i-1 })}$$&lt;/div&gt;
-&lt;!-- z jupytera:
-Z google ngram raw bigram count table
-normalize by unigrams --&gt;
-
-&lt;p&gt;So the 2-gram estimate  of sentence probability would be the product of all component tandems ordered as in the sentence.&lt;/p&gt;
-&lt;div class="math"&gt;$$P(w_1,\ldots,w_n) \approx {\displaystyle \prod_{i} P(w_i|w_{i-1})}$$&lt;/div&gt;
-&lt;p&gt;In practice, the outcome should be represented in &lt;em&gt;log&lt;/em&gt; form. There are two reasons for this. Firstly, if the sentence is long and the probabilities are really small, then such product might end in arithmetic underflow.  Secondly, adding is faster - and when we use logarithm we know that: &lt;span class="math"&gt;\(log(a*b) = log(a)+log(b)\)&lt;/span&gt;, thus:&lt;/p&gt;
-&lt;p&gt;&lt;span class="math"&gt;\(log(P(w_1,\ldots,w_n)) \approx {\displaystyle \sum_{i} log(P(w_i|w_{i-1}))}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;This is why the Language Model is stored in logarithmic values.&lt;/p&gt;
-&lt;h3 id="publicly-available-corpora"&gt;Publicly available corpora&lt;a class="headerlink" href="#publicly-available-corpora" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;There is available &lt;a href="http://www.gutenberg.org/ebooks/search/"&gt;Gutenberg Project&lt;/a&gt; providing with text format of some books.&lt;/p&gt;
-&lt;p&gt;Google also released a publicly available corpus trillion word corpus with over 13 million unique words. It is nice corpus from Google Books with already implemented &lt;a href="https://books.google.com/ngrams"&gt;N-Gram viewer&lt;/a&gt; that enables to plot word counts. It includes number of corpora for multiple languages. See the below chart an example of unigram, 2-gram and 3-gram occurrences.&lt;/p&gt;
-&lt;iframe name="ngram_chart" src="https://books.google.com/ngrams/interactive_chart?content=machine+learning%2Cdeep+learning%2Cnlp%2Cnatural+language+processing&amp;year_start=1982&amp;year_end=2008&amp;corpus=0&amp;smoothing=3&amp;share=&amp;direct_url=t1%3B%2Cmachine%20learning%3B%2Cc0%3B.t1%3B%2Cdeep%20learning%3B%2Cc0%3B.t1%3B%2Cnlp%3B%2Cc0%3B.t1%3B%2Cnatural%20language%20processing%3B%2Cc0" width=860 height=300 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling=no&gt;&lt;/iframe&gt;
-
-&lt;p&gt;Such a large scale text analysis can be done by downloading &lt;a href="http://storage.googleapis.com/books/ngrams/books/datasetsv2.html"&gt;each dataset&lt;/a&gt; using the &lt;a href="https://books.google.com/ngrams/info"&gt;Ngram Viewer API&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;I have created a project to collect and analyze those datasets locally with custom configuration. See the &lt;a href="https://github.com/MChromiak/MC_Utils"&gt;GitHub repo&lt;/a&gt; for the source code.&lt;/p&gt;
-&lt;h3 id="language-model-evaluation-perplexity"&gt;Language Model evaluation – Perplexity&lt;a class="headerlink" href="#language-model-evaluation-perplexity" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;The good LM should calculate higher probabilities to “real” and “frequently observed” sentences than the ones that are wrong accordingly to natural language grammar or those that are rarely observed.&lt;/p&gt;
-&lt;p&gt;To make such assumption, we first train the language model on one set and test it on completely new dataset. Then we can compare the results of our model on the new dataset and evaluate, how good (how accurate in terms of a task e.g. translation, spell check etc) &lt;strong&gt;on average&lt;/strong&gt; it works on this new, previously unseen dataset. For instance how many words it translates correctly. This way one can compare and decide which language model fits the best to a task. This is called &lt;em&gt;extrinsic evaluation&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;The extrinsic evaluation approach however, requires multiple tests on models which are expensive. An alternative is the &lt;em&gt;intrinsic evaluation&lt;/em&gt; which is about testing the LM itself not some particular task or application. The popular intrinsic evaluation is &lt;strong&gt;perplexity&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;As &lt;strong&gt;perplexity&lt;/strong&gt; is a bad approximation to an extreme extrinsic evaluation, in cases where the test dataset does NOT look just like the training set. Thus, it is useful only at the early stages of experiment. So later in experiment extrinsic evaluation should also be used.&lt;/p&gt;
-&lt;p&gt;Best model is the one that best predicts an unseen test set, or assigns on average the probability to all sentences that is sees.&lt;/p&gt;
-&lt;p&gt;Perprexity metric is the probability of the test set, normalized for the length of the probability by the number of words.&lt;/p&gt;
-&lt;div class="math"&gt;$$ PP(S) = P(w_1,\ldots, w_N)^{-\frac{1}{N}} =\sqrt[\leftroot{0}\uproot{3}N]{\frac{1}{P(w_1,\ldots, w_N)}} = $$&lt;/div&gt;
-&lt;p&gt;This way the longer the sentence the less probable it will be. Then again by the chain rule:&lt;/p&gt;
-&lt;div class="math"&gt;$$ = \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_1,\ldots, w_{i-1})}}} $$&lt;/div&gt;
-&lt;p&gt;In case of 2-gram using Markov approximation of the chain rule:&lt;/p&gt;
-&lt;div class="math"&gt;$$ PP(S) =  \sqrt[N]{{\displaystyle \prod_{i}^{N}\frac{1}{P(w_i|w_{i-1})}}}$$&lt;/div&gt;
-&lt;p&gt;So &lt;em&gt;perplexity&lt;/em&gt; is a function of probability of the sentence. The meaning of the inversion in perplexity means that whenever we minimize the perplexity we maximize the probability.&lt;/p&gt;
-&lt;p&gt;Perplexity is weighted equivalent branching factor.&lt;/p&gt;
-&lt;p&gt;To be continued...&lt;/p&gt;
-&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var align = "center",
-        indent = "0em",
-        linebreak = "false";
-
-    if (false) {
-        align = (screen.width &lt; 768) ? "left" : align;
-        indent = (screen.width &lt; 768) ? "0em" : indent;
-        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
-    }
-
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
-
-    var configscript = document.createElement('script');
-    configscript.type = 'text/x-mathjax-config';
-    configscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: '"+ align +"'," +
-        "    displayIndent: '"+ indent +"'," +
-        "    showMathMenu: true," +
-        "    messageStyle: 'normal'," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        availableFonts: ['STIX', 'TeX']," +
-        "        preferredFont: 'STIX'," +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
-        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
-        "    }, " +
-        "}); " +
-        "if ('default' !== 'default') {" +
-            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
-                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
-                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
-                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
-                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
-                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
-            "});" +
-        "}";
-
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-&lt;/script&gt;</content><category term="Sequence Models"/><category term="NLP"/><category term="language model"/><category term="ngram"/><category term="perplexity"/><category term="smoothing"/></entry><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"/><published>2017-09-12T19:30:00+02:00</published><updated>2017-10-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Transformer - more than meets the eye! Are we there yet? Well... not really, but...&lt;/br&gt;   How about eliminating recurrence and convolution from transduction? Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id="recommended-reading-before-approaching-this-post"&gt;Recommended reading before approaching this post:&lt;a class="headerlink" href="#recommended-reading-before-approaching-this-post" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
+&lt;/script&gt;</content><category term="Sequence Models"/><category term="NLP"/><category term="Language Model"/><category term="N-gram"/><category term="Perplexity"/><category term="Smoothing"/><category term="Neural Networks"/></entry><entry><title>The Transformer – Attention is all you need.</title><link href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/" rel="alternate"/><published>2017-09-12T19:30:00+02:00</published><updated>2017-10-30T19:30:00+01:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2017-09-12:/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/</id><summary type="html">&lt;p&gt;Transformer - more than meets the eye! Are we there yet? Well... not really, but...&lt;/br&gt;   How about eliminating recurrence and convolution from transduction? Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new &lt;em&gt;transformer&lt;/em&gt; architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.&lt;/p&gt;</summary><content type="html">&lt;h5 id="recommended-reading-before-approaching-this-post"&gt;Recommended reading before approaching this post:&lt;a class="headerlink" href="#recommended-reading-before-approaching-this-post" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h5&gt;
 &lt;ul&gt;
 &lt;li&gt;RNN – Andrej Karpathy’s blog &lt;a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/"&gt;The Unreasonable Effectiveness of Recurrent Neural Networks&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Seq2Seq - Nathan Lintz &lt;a href="https://indico.io/blog/sequence-modeling-neuralnets-part1/"&gt;Sequence Modeling With Neural Networks (Part 1): Language &amp;amp; Seq2Seq&lt;/a&gt;,
@@ -3046,6 +3134,8 @@ Please leave a comment if you have any other question, or would like to get more
 &lt;ul&gt;
 &lt;li&gt;Paper: &lt;a href="https://arxiv.org/abs/1706.03762"&gt;ArXiv&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h3 id="continue-through-the-archive"&gt;Continue through the archive&lt;a class="headerlink" href="#continue-through-the-archive" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The &lt;a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/"&gt;language-model primer&lt;/a&gt; explains the probability objective that autoregressive Transformers optimize. &lt;a href="/articles/2019/Jul/30/ernie-2-0/"&gt;ERNIE 2.0&lt;/a&gt; shows how a Transformer encoder can learn from a curriculum of pre-training tasks, while &lt;a href="/articles/2021/May/05/MLP-Mixer/"&gt;MLP-Mixer&lt;/a&gt; provides a useful vision-architecture comparison without self-attention.&lt;/p&gt;
 &lt;h3 id="some-interesting-future-research"&gt;Some interesting future research&lt;a class="headerlink" href="#some-interesting-future-research" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Devising more sophisticated compatibility function&lt;/li&gt;

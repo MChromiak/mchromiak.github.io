@@ -68,13 +68,13 @@
 "image": "https://mchromiak.github.io/articles/2023/Apr/18/img/DINOv2cover.png",      "author": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html",
+        "url": "pages/about.html",
         "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
       },
       "publisher": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html"
+        "url": "pages/about.html"
       }
     }
     </script>
@@ -179,7 +179,7 @@
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/computer-vision.html">Computer Vision</a>
@@ -394,6 +394,8 @@ Figure 7. Each group pairs related source images with PCA-colored patch maps. Wi
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">🔗</a></h2>
 <p>DINOv2's contribution is the complete recipe: DINO aligns image-level views, iBOT develops local patch features, KoLeo spreads global representations, LVD-142M supplies curated scale, and the implementation makes a 1.1-billion-parameter teacher trainable. Distillation transfers that representation into smaller models.</p>
 <p>The experiments show where the work resides in a downstream system. The frozen backbone provides transferable image and patch features. Retrieval uses those features directly; classification, segmentation, and depth estimation add a trained readout, and full fine-tuning can improve them further.</p>
+<h2 id="continue-through-the-archive">Continue through the archive<a class="headerlink" href="#continue-through-the-archive" title="Permanent link">🔗</a></h2>
+<p>Read <a href="/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/">DINO</a> first for the momentum-teacher foundation. <a href="/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">MAE</a> offers the pixel-reconstruction alternative, and <a href="/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA</a> moves masked prediction into representation space.</p>
 <h2 id="references-and-resources">References and resources<a class="headerlink" href="#references-and-resources" title="Permanent link">🔗</a></h2>
 <p>The primary reference is <strong><a href="https://arxiv.org/abs/2304.07193">"DINOv2: Learning Robust Visual Features without Supervision"</a></strong> by Maxime Oquab and colleagues. It was submitted to arXiv on 14 April 2023, revised in February 2024, and published in <em>Transactions on Machine Learning Research</em> (TMLR) in 2024. The <a href="https://openreview.net/forum?id=a68SUt6zFt">OpenReview record</a> contains the publication history, and the authors provide the <a href="https://github.com/facebookresearch/dinov2">official implementation and checkpoints</a>.</p>
 <p>DINOv2 builds on a line of self-supervised visual learning that includes <a href="../../../../2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers">DINO</a>, <a href="https://arxiv.org/abs/2111.07832">iBOT</a>, <a href="../../../../2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners">MAE</a>, <a href="https://arxiv.org/abs/2202.08360">SEERv2</a>, <a href="https://arxiv.org/abs/2204.07141">MSN</a>, <a href="https://arxiv.org/abs/2106.09785">EsViT</a>, and <a href="https://arxiv.org/abs/2203.14415">Mugs</a>. Its weakly supervised comparison set includes <a href="https://arxiv.org/abs/2103.00020">CLIP</a>, <a href="https://github.com/mlfoundations/open_clip">OpenCLIP</a>, and <a href="https://arxiv.org/abs/2201.08371">SWAG</a>.</p>
@@ -475,6 +477,7 @@ Figure 7. Each group pairs related source images with PCA-colored patch maps. Wi
     <ul>
         <li><a href="https://mchromiak.github.io/articles/2021/May/03/DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers/">🦖 DINO: Self-supervised ViTs learn strong features and semantic structure</a></li>
         <li><a href="https://mchromiak.github.io/articles/2021/Nov/14/Masked-Autoencoders-Are-Scalable-Vision-Learners/">🎭 Masked autoencoder (MAE) for visual representation learning. From the author of ResNet.</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2023/Jun/17/Self-Supervised-Learning-from-Images-with-a-Joint-Embedding-Predictive-Architecture/">I-JEPA: Learning from images by predicting missing features</a></li>
     </ul>
 </section>
     <hr />

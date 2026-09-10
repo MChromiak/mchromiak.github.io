@@ -222,81 +222,129 @@ Figure 8. Aggregate comparison of DT, TD learning (CQL), and behavior cloning ac
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1"&gt;The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning. &lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"/><category term="Transformer"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>RL Primer</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"/><published>2021-05-01T19:30:00+02:00</published><updated>2021-05-01T19:30:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;The objective of RL is to maximize the reward of an agent by taking a series of actions in response to a dynamic environment. Breaking it down, the process of Reinforcement Learning involves these simple steps: Observation of the environment, deciding how to act using some strategy, acting accordingly&lt;/p&gt;</summary><content type="html">&lt;p&gt;Receiving a reward or penalty, learning from the experiences and refining our strategy, iterate until an optimal strategy is found. RL by itself is quite complex area of AI and by this requires some terms to be explained.&lt;/p&gt;
-&lt;h3 id="prerequisite-rl-knowledge"&gt;Prerequisite RL knowledge&lt;a class="headerlink" href="#prerequisite-rl-knowledge" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Here are explained some of the main terms that this paper uses to motivate its goal. Form more details please refer to free online book from &lt;a href="http://incompleteideas.net/book/the-book.html"&gt;Richard S. Sutton
-and Andrew G. Barto Second &lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt; Edition MIT Press, Cambridge, MA, 2018&lt;/a&gt;&lt;/p&gt;
-&lt;h4 id="what-is-model-free-rl"&gt;What is &lt;em&gt;Model-free&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-model-free-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;A “policy”, is a strategy that an agent uses to pursue a goal.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Model-free algorithm:
-estimates the optimal policy without using or estimating the dynamics (transition and reward functions) of the environment.&lt;/p&gt;
-&lt;p&gt;Model-based algorithm:
-uses the transition function (and the reward function) in order to estimate the optimal policy.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In an &lt;strong&gt;online RL&lt;/strong&gt; there is an &lt;em&gt;Agent&lt;/em&gt; and the &lt;em&gt;Environment&lt;/em&gt;. Agent &lt;span class="math"&gt;\(A\)&lt;/span&gt; performs actions &lt;span class="math"&gt;\(a\)&lt;/span&gt; in environment &lt;span class="math"&gt;\(E\)&lt;/span&gt;, and the &lt;span class="math"&gt;\(E\)&lt;/span&gt; response with the &lt;em&gt;reward&lt;/em&gt; &lt;span class="math"&gt;\(r\)&lt;/span&gt; and &lt;em&gt;observation&lt;/em&gt; &lt;span class="math"&gt;\(o\)&lt;/span&gt; (or a &lt;em&gt;state&lt;/em&gt; &lt;span class="math"&gt;\(s\)&lt;/span&gt; if it is not partially observable environment). Additionally a &lt;em&gt;policy&lt;/em&gt; (network) is the algorithm used by the agent to decide its actions. This is the part that can be &lt;em&gt;model-based&lt;/em&gt; or &lt;em&gt;model-free&lt;/em&gt;. Hence, agents gets to actively (interactively) interact with environment to maximize the reward with policy.&lt;/p&gt;
-&lt;p&gt;Policy can be model-based or model-free. Question is how to optimize the policy network via &lt;em&gt;policy gradient&lt;/em&gt; (PG)?&lt;/p&gt;
-&lt;p&gt;PG algorithms directly try to optimize the policy to increase rewards, however this directly needs correction from environment in online fashion.&lt;/p&gt;
-&lt;h4 id="markov-decision-processes-mdp"&gt;Markov decision processes (MDP).&lt;a class="headerlink" href="#markov-decision-processes-mdp" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;MDP is a process with a fixed number of states, and it randomly evolves from one state to another at each step. The probability for it to evolve from state A to state B is fixed.&lt;/p&gt;
-&lt;h4 id="what-is-offline-rl"&gt;What is &lt;em&gt;Offline&lt;/em&gt; RL?&lt;a class="headerlink" href="#what-is-offline-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In &lt;strong&gt;offline&lt;/strong&gt; RL there is an agent and (instead of interactive environment) a limited, fixed dataset. The dataset contains experience (trajectory rollouts of arbitrary policies) from other scenarios where agents were learning a &lt;em&gt;policy&lt;/em&gt; to gain a good &lt;em&gt;reward&lt;/em&gt;. In contrast to online RL, such setup is more challenging as there is no dynamic environment to test hypothesis, and all is left is to have a set of &lt;em&gt;trajectories&lt;/em&gt; without live feedback. By observing historical episodes of interaction from other agents, an offline agent needs to learn a good policy to achieve a high reward.&lt;/p&gt;
-&lt;h4 id="reward-return"&gt;Reward /return&lt;a class="headerlink" href="#reward-return" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;Reward&lt;/strong&gt;
-Reward is the quantity received from the environment in a given timestep as a result of an action&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Return&lt;/strong&gt;:
-Return is defined as a function of reward sequence, which can be:&lt;/p&gt;
+&lt;/script&gt;&lt;ol class="simple-footnotes"&gt;&lt;li id="sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1"&gt;The "deadly triad" refers to the potential instability caused by combining function approximation, bootstrapping, and off-policy learning. &lt;a href="#sf-Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence-1-back" class="simple-footnote-back"&gt;↩︎&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;</content><category term="Reinforcement learning"/><category term="Transformer"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry><entry><title>Reinforcement learning: A practical primer on agents, returns, values, and policies</title><link href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/" rel="alternate"/><published>2021-05-01T19:30:00+02:00</published><updated>2021-06-15T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2021-05-01:/articles/2021/May/01/RL-Primer/</id><summary type="html">&lt;p&gt;Reinforcement learning trains an agent to make sequential decisions whose consequences may arrive much later. This primer builds the essential vocabulary, derives return and value functions, explains Bellman and temporal-difference learning, and distinguishes online from offline and model-free from model-based RL.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;p&gt;In supervised learning, each training example normally comes with a target. Reinforcement learning (RL) poses a different problem: an &lt;strong&gt;agent&lt;/strong&gt; acts, observes the consequences, and must discover which decisions produce good long-term outcomes.&lt;/p&gt;
+&lt;p&gt;That delay changes everything. A move can look harmless now but determine success many steps later. RL therefore needs a language for trajectories, return, value, uncertainty, and exploration.&lt;/p&gt;
+&lt;h2 id="the-short-version"&gt;The short version&lt;a class="headerlink" href="#the-short-version" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;simple sum of rewards (also called cumulative reward), or a&lt;/li&gt;
-&lt;li&gt;sum of &lt;em&gt;discounted&lt;/em&gt; rewards (also called &lt;em&gt;cumulative future discounted reward&lt;/em&gt;):&lt;/li&gt;
+&lt;li&gt;At time &lt;span class="math"&gt;\(t\)&lt;/span&gt;, an agent observes a state or observation, chooses an action, and receives a reward from the environment.&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;policy&lt;/strong&gt; maps the information available to the agent to a distribution over actions.&lt;/li&gt;
+&lt;li&gt;The goal is to maximize expected &lt;strong&gt;return&lt;/strong&gt;, not necessarily the next immediate reward.&lt;/li&gt;
+&lt;li&gt;Value functions estimate future return from a state or state-action pair.&lt;/li&gt;
+&lt;li&gt;Model-free methods learn values or policies without using an explicit transition model; model-based methods use such a model for prediction or planning.&lt;/li&gt;
+&lt;li&gt;Online RL gathers new experience while learning. Offline RL learns from a fixed dataset and cannot repair poor coverage by exploring.&lt;/li&gt;
+&lt;li&gt;Temporal-difference methods learn before an episode ends by using one estimate to update another.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;a name="tdr"&gt;
-&lt;/p&gt;
-&lt;div class="math"&gt;$$R_t=r_{t+1}+\gamma r_{t+2}+ \gamma^2 r_{r+3}+\ldots = \sum\limits_{k=0}^{\infty}\gamma^kr_{t+k+1}, \gamma \in [0,1]$$&lt;/div&gt;
-&lt;p&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="the-interaction-loop"&gt;The interaction loop&lt;a class="headerlink" href="#the-interaction-loop" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;At each time step, the environment is in state &lt;span class="math"&gt;\(S_t\)&lt;/span&gt;. The agent selects action &lt;span class="math"&gt;\(A_t\)&lt;/span&gt; according to its policy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The environment then emits reward &lt;span class="math"&gt;\(R_{t+1}\)&lt;/span&gt; and moves to state &lt;span class="math"&gt;\(S_{t+1}\)&lt;/span&gt;:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+S_t \xrightarrow{A_t} (R_{t+1}, S_{t+1}).
+$$&lt;/div&gt;
+&lt;p&gt;A &lt;strong&gt;policy&lt;/strong&gt; may be deterministic, &lt;span class="math"&gt;\(a=\pi(s)\)&lt;/span&gt;, or stochastic, &lt;span class="math"&gt;\(\pi(a\mid s)=P(A_t=a\mid S_t=s)\)&lt;/span&gt;. It is the agent's decision rule. The policy itself is not an environment model.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;&lt;strong&gt;State or observation?&lt;/strong&gt;&lt;/summary&gt;
+&lt;p&gt;A state contains the information needed to predict the next transition, given an action. In a fully observed Markov decision process, the agent receives that state directly. In a partially observed problem, it receives an observation &lt;span class="math"&gt;\(O_t\)&lt;/span&gt; that may omit relevant information. The agent may then need a history or learned memory to estimate the hidden state.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="markov-decision-processes"&gt;Markov decision processes&lt;a class="headerlink" href="#markov-decision-processes" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A discounted Markov decision process (MDP) is commonly written as&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\mathcal{M}=(\mathcal{S},\mathcal{A},p,r,\gamma),
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\mathcal{S}\)&lt;/span&gt; is the state space, &lt;span class="math"&gt;\(\mathcal{A}\)&lt;/span&gt; the action space, &lt;span class="math"&gt;\(p(s'\mid s,a)\)&lt;/span&gt; the transition distribution, &lt;span class="math"&gt;\(r\)&lt;/span&gt; the reward rule, and &lt;span class="math"&gt;\(\gamma\in[0,1]\)&lt;/span&gt; the discount factor.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;Markov property&lt;/strong&gt; says that the present state is sufficient for predicting the next state and reward:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+P(S_{t+1},R_{t+1}\mid S_0,A_0,\ldots,S_t,A_t)
+=P(S_{t+1},R_{t+1}\mid S_t,A_t).
+$$&lt;/div&gt;
+&lt;p&gt;This does not require deterministic transitions. The same state-action pair may lead to several outcomes with different probabilities.&lt;/p&gt;
+&lt;h2 id="reward-is-local-return-is-cumulative"&gt;Reward is local; return is cumulative&lt;a class="headerlink" href="#reward-is-local-return-is-cumulative" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A reward &lt;span class="math"&gt;\(R_{t+1}\)&lt;/span&gt; is the scalar feedback received after action &lt;span class="math"&gt;\(A_t\)&lt;/span&gt;. The &lt;strong&gt;return&lt;/strong&gt; &lt;span class="math"&gt;\(G_t\)&lt;/span&gt; combines rewards from the remainder of the trajectory:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots
+=\sum_{k=0}^{\infty}\gamma^kR_{t+k+1}.
+$$&lt;/div&gt;
+&lt;p&gt;The discount factor controls how strongly distant rewards contribute. In continuing tasks, &lt;span class="math"&gt;\(\gamma&amp;lt;1\)&lt;/span&gt; also keeps a bounded reward sequence from producing an infinite return. In finite episodic tasks, &lt;span class="math"&gt;\(\gamma=1\)&lt;/span&gt; may be appropriate.&lt;/p&gt;
+&lt;p&gt;Maximizing immediate reward can be shortsighted. An agent may need to accept a small cost now to reach a much better outcome later. RL usually seeks a policy that maximizes expected return.&lt;/p&gt;
+&lt;h2 id="the-credit-assignment-problem"&gt;The credit-assignment problem&lt;a class="headerlink" href="#the-credit-assignment-problem" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Suppose a long sequence ends with one success signal. Which earlier decisions deserve credit? This is &lt;strong&gt;temporal credit assignment&lt;/strong&gt;: connecting delayed outcomes to the actions that helped cause them.&lt;/p&gt;
+&lt;p&gt;Long delays make learning difficult because the useful signal must propagate across many steps. They should not be confused with the &lt;strong&gt;curse of dimensionality&lt;/strong&gt;, which concerns the rapid growth of a problem's state or action space. A task can suffer from either or both.&lt;/p&gt;
+&lt;h2 id="value-functions"&gt;Value functions&lt;a class="headerlink" href="#value-functions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For a policy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;, the state-value function is the expected return after starting in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; and then following &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+v_\pi(s)=\mathbb{E}_\pi[G_t\mid S_t=s].
+$$&lt;/div&gt;
+&lt;p&gt;The action-value function additionally fixes the first action:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+q_\pi(s,a)=\mathbb{E}_\pi[G_t\mid S_t=s,A_t=a].
+$$&lt;/div&gt;
+&lt;p&gt;These are mathematical functions, not necessarily tables. Small discrete problems can store one value per state or state-action pair; larger problems approximate them with linear models or neural networks.&lt;/p&gt;
+&lt;p&gt;In an MDP, &lt;span class="math"&gt;\(q_\pi(s,a)\)&lt;/span&gt; need not condition on the full history because the state already carries the information required by the Markov property. History or memory becomes relevant when observations are partial.&lt;/p&gt;
+&lt;h2 id="bellman-equations-one-step-plus-the-future"&gt;Bellman equations: one step plus the future&lt;a class="headerlink" href="#bellman-equations-one-step-plus-the-future" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Value functions have a recursive structure. For example, the Bellman expectation equation for &lt;span class="math"&gt;\(v_\pi\)&lt;/span&gt; is&lt;/p&gt;
+&lt;div class="math"&gt;$$
+v_\pi(s)=\sum_a\pi(a\mid s)\sum_{s',r}p(s',r\mid s,a)
+\left[r+\gamma v_\pi(s')\right].
+$$&lt;/div&gt;
+&lt;p&gt;The value of the current state equals the expected immediate reward plus the discounted value of the next state. Dynamic programming uses this relation with a known model. Temporal-difference learning estimates the same structure from sampled transitions.&lt;/p&gt;
+&lt;h2 id="temporal-difference-learning"&gt;Temporal-difference learning&lt;a class="headerlink" href="#temporal-difference-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Monte Carlo methods wait for an episode to finish and use the observed return as a target. &lt;strong&gt;Temporal-difference (TD) learning&lt;/strong&gt; can update after one transition. The TD(0) update is&lt;/p&gt;
+&lt;div class="math"&gt;$$
+V(S_t)\leftarrow V(S_t)+\alpha
+\left[R_{t+1}+\gamma V(S_{t+1})-V(S_t)\right],
+$$&lt;/div&gt;
+&lt;p&gt;where &lt;span class="math"&gt;\(\alpha\)&lt;/span&gt; is the learning rate. The expression in brackets is the &lt;strong&gt;TD error&lt;/strong&gt;. The target &lt;span class="math"&gt;\(R_{t+1}+\gamma V(S_{t+1})\)&lt;/span&gt; contains another estimate, so TD is described as &lt;strong&gt;bootstrapping&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;TD learning is not unsupervised learning in the usual representation-learning sense. It is an RL method whose training signal comes from rewards and successive predictions rather than externally supplied class labels.&lt;/p&gt;
+&lt;h2 id="model-free-and-model-based-rl"&gt;Model-free and model-based RL&lt;a class="headerlink" href="#model-free-and-model-based-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;model&lt;/strong&gt; predicts aspects of the environment, typically transitions and rewards. The distinction concerns how an algorithm uses environment dynamics:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;"Cumulative" refers to the summation.&lt;/li&gt;
-&lt;li&gt;"Future" refers to the fact that it's an expected value of all the future timesteps values until the end of the episode with respect to the present quantity.&lt;/li&gt;
-&lt;li&gt;"Discounted" refers to the "gamma" &lt;span class="math"&gt;\(\gamma\)&lt;/span&gt; &lt;em&gt;discount rate&lt;/em&gt; factor, which is a way to adjust the importance of how much we value rewards at future time steps, i.e. starting from &lt;span class="math"&gt;\(t+1\)&lt;/span&gt;.&lt;/li&gt;
-&lt;li&gt;"Reward" refers to the main quantity of interest, i.e. the reward received from the environment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model-free RL&lt;/strong&gt; learns a policy or value function without using an explicit transition model for planning. Q-learning and many policy-gradient methods are model-free.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model-based RL&lt;/strong&gt; uses a known or learned model to evaluate possible futures, plan actions, create synthetic experience, or improve a policy.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The goal of an RL algorithm is to select actions that maximize the expected cumulative reward (the return) of the agent.&lt;/p&gt;
-&lt;h4 id="what-is-credit-assignment"&gt;What is &lt;em&gt;Credit Assignment&lt;/em&gt;?&lt;a class="headerlink" href="#what-is-credit-assignment" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;In real world RL the state (and action) space usually needs to be very fine to cover all possibly relevant situations. This leads to the combinatorial explosion of states and actions which is referred as &lt;em&gt;curse of dimensionality&lt;/em&gt;.
-As an agent interacts with an environment in discrete timesteps, agent takes an action for current state and the environment emits a perception in form of a &lt;em&gt;reward&lt;/em&gt; and an &lt;em&gt;observation&lt;/em&gt;. In case of fully observable Markov Decision Process (MDP) it is the next state (of the environment and the agents). Agent's goal is to maximize the reward. In such &lt;strong&gt;fine grained&lt;/strong&gt; state-action spaces the reward occur terribly temporally delayed.&lt;/p&gt;
-&lt;p&gt;The (temporal) &lt;em&gt;credit assignment problem&lt;/em&gt; (CAP) is the problem of determining the actions that lead to a certain outcome. The problem of determining the contribution of each agent to the result of the training is the (temporal) CAP. In order to maximize the reward in the long run, the agent needs to determine which actions will lead to such outcome, which is essentially the temporal CAP. This way, an action that leads to a higher final cumulative reward should have more &lt;em&gt;credit&lt;/em&gt; (value) than an action that lead to a lower final reward. For instance, in Q-learning (the &lt;em&gt;off-policy&lt;/em&gt; algorithm) agents attempts to determine actions that will lead to the highest value in each state.&lt;/p&gt;
-&lt;p&gt;In RL, due to CAP, reward signals will only very weakly affect all temporally distant states that have preceded it. The influence of a reward gets more and more diluted over time and this can lead to bad convergence properties of the RL mechanism. Many steps must be performed by an iterative RL algorithm to propagate the influence of delayed reinforcement to all states and actions that have an effect on that reinforcement.&lt;/p&gt;
-&lt;h4 id="value-functions"&gt;Value functions&lt;a class="headerlink" href="#value-functions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Q-Learning is about learning Q-function that takes state and action conditioned on the history to predict future rewards.
-VF are state-action pair functions that estimate how good a particular action will be in a given state, or what the return for that action is expected to be.&lt;/p&gt;
+&lt;p&gt;A learned policy can be a neural network in either family. Likewise, learning a model does not help unless the algorithm uses it effectively, and model errors can compound during long imagined rollouts.&lt;/p&gt;
+&lt;h2 id="online-and-offline-rl"&gt;Online and offline RL&lt;a class="headerlink" href="#online-and-offline-rl" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In &lt;strong&gt;online RL&lt;/strong&gt;, the learner gathers new transitions by interacting with the environment. Its choices affect the data it will see next, so exploration is part of learning.&lt;/p&gt;
+&lt;p&gt;In &lt;strong&gt;offline RL&lt;/strong&gt;, learning uses a fixed dataset of transitions or trajectories produced earlier by one or more behavior policies. The learner cannot request new examples. The central difficulty is &lt;strong&gt;distribution shift&lt;/strong&gt;: a learned policy may choose actions that are poorly represented in the dataset, where value estimates are unreliable.&lt;/p&gt;
+&lt;p&gt;Offline RL is therefore not simply supervised imitation. A dataset may contain mixed-quality behavior, and the objective is usually to find a high-return policy without deploying exploratory actions during training.&lt;/p&gt;
+&lt;h2 id="on-policy-and-off-policy-learning"&gt;On-policy and off-policy learning&lt;a class="headerlink" href="#on-policy-and-off-policy-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The &lt;strong&gt;behavior policy&lt;/strong&gt; generates experience. The &lt;strong&gt;target policy&lt;/strong&gt; is the policy being evaluated or improved.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;V-function&lt;/strong&gt; (State-Value) &lt;span class="math"&gt;\(v^\pi (s)=  \mathbb{E_\pi} [\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s]\)&lt;/span&gt; &lt;br &gt; &lt;strong&gt;Value&lt;/strong&gt;   of state &lt;span class="math"&gt;\(s\)&lt;/span&gt; under policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;. The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good a certain state is, in terms of expected cumulative reward, for an agent following a certain policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Q-function&lt;/strong&gt;  (State-Action) &lt;span class="math"&gt;\(q^\pi (s,a) = \mathbb{E_\pi}[\sum_{k=0}^T \gamma^k R_{t+k+1} | S_t = s, A_t = a]\)&lt;/span&gt;  &lt;br &gt;&lt;strong&gt;Quality&lt;/strong&gt;  of taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; in state &lt;span class="math"&gt;\(s\)&lt;/span&gt; with policy/strategy &lt;span class="math"&gt;\(\pi\)&lt;/span&gt;.  The expected &lt;strong&gt;return&lt;/strong&gt; while starting at &lt;span class="math"&gt;\(s\)&lt;/span&gt; while taking action &lt;span class="math"&gt;\(a\)&lt;/span&gt; and following the &lt;span class="math"&gt;\(\pi\)&lt;/span&gt; thereafter. Shows how good action &lt;span class="math"&gt;\(a\)&lt;/span&gt; is, given a state for agent following a policy. The &lt;span class="math"&gt;\(\mathbb{E}[.]\)&lt;/span&gt; because environment state transition function might act in a stochastic way.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Q-Value&lt;/strong&gt; - value in state-action table.  The Q-function is implemented as a table of states and actions and Q-values for each s,a pair are stored there.&lt;/li&gt;
+&lt;li&gt;An &lt;strong&gt;on-policy&lt;/strong&gt; method learns about the same policy that produces its data. SARSA updates toward the next action actually selected by that policy.&lt;/li&gt;
+&lt;li&gt;An &lt;strong&gt;off-policy&lt;/strong&gt; method can learn about a target policy from data generated by another policy. Q-learning updates toward the greedy next action even when its behavior includes exploration.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Estimating&lt;/strong&gt; VF for a particular policy, helps to accurately choose an action that will provide the best total reward possible, after being in that given state.&lt;/p&gt;
-&lt;h4 id="temporal-difference-td-learning"&gt;Temporal Difference (TD) Learning&lt;a class="headerlink" href="#temporal-difference-td-learning" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;&lt;em&gt;Temporal Difference&lt;/em&gt; (TD) (aka &lt;em&gt;bootstrapping&lt;/em&gt; method) solves the problem of &lt;strong&gt;estimating&lt;/strong&gt; &lt;a href="#value-functions"&gt;value function&lt;/a&gt;. If the value functions were to be calculated &lt;strong&gt;without estimation&lt;/strong&gt;, the agent would need to wait until the final reward was received before any state-action pair values can be updated. Once the final reward was received, the path taken to reach the final state would need to be traced back and each value updated accordingly. TD address this issue.&lt;/p&gt;
-&lt;p&gt;TD learning is a unsupervised, RL model-free method learning by bootstrapping from current estimate of value function. In TD, agent is learning from an environment through episodes with no prior knowledge of the environment. TD methods adjust predictions to match later, more accurate, predictions about the future before the final outcome is known.&lt;/p&gt;
-&lt;p&gt;Instead of calculating the total future reward, at each step, TD tries to predict the combination of immediate reward and its own reward prediction at the next moment in time.&lt;/p&gt;
-&lt;p&gt;TD method is called a "bootstrapping" method, because the value is updated partly using an existing estimate and not a final reward.&lt;/p&gt;
-&lt;h4 id="onoff-policy-algorithm"&gt;On/Off-policy algorithm&lt;a class="headerlink" href="#onoff-policy-algorithm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Off-policy algorithm - evaluate and improve a (target) policy that is different from (current) policy which is used for action selection. When passing the reward from the next state to the current state, it takes the maximum possible reward of the new state and ignores whatever policy we are using. Eg. Q-learning is off-policy as it updates its Q-values using the Q-value of the next state and the &lt;em&gt;greedy&lt;/em&gt; action. In other words, it estimates the &lt;strong&gt;return&lt;/strong&gt; (cumulative/total  &lt;a href="#tdr"&gt;discounted return&lt;/a&gt; future reward, starting from current timestep) for state-action pairs assuming a greedy policy were followed, despite the fact that it's not following a greedy policy.&lt;/p&gt;
-&lt;p&gt;On-policy algorithm - evaluate and improve the same policy which is being used to select actions, Eg. Sarsa  updates its Q-values using the Q-value of the next state and the current policy's action. It estimates the return for state-action pairs assuming the current policy continues to be followed.&lt;/p&gt;
-&lt;h4 id="action-selection-policies"&gt;Action Selection Policies&lt;a class="headerlink" href="#action-selection-policies" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;There are three common policies used for action selection. The aim of these policies is to balance the trade-off between &lt;strong&gt;exploitation&lt;/strong&gt; and &lt;strong&gt;exploration&lt;/strong&gt;, by not always exploiting what has been learned so far.&lt;/p&gt;
+&lt;p&gt;For tabular control, their one-step targets make the distinction concrete:&lt;/p&gt;
+&lt;div class="math"&gt;$$
+\text{SARSA target}=R_{t+1}+\gamma Q(S_{t+1},A_{t+1}),
+$$&lt;/div&gt;
+&lt;div class="math"&gt;$$
+\text{Q-learning target}=R_{t+1}+\gamma\max_a Q(S_{t+1},a).
+$$&lt;/div&gt;
+&lt;h2 id="exploration-and-exploitation"&gt;Exploration and exploitation&lt;a class="headerlink" href="#exploration-and-exploitation" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Exploitation&lt;/strong&gt; selects actions that currently appear best. &lt;strong&gt;Exploration&lt;/strong&gt; gathers information that may reveal a better choice. Pure exploitation can lock onto an early mistake; indiscriminate exploration can waste reward.&lt;/p&gt;
+&lt;p&gt;Common action-selection rules include:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;greedy - Will lock on one action that happened to have good results at one point of time but it is not in reality the optimal action. So Greedy will keep exploiting this action while ignoring the others which might be better. It Exploits too much.&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy - most of the time the action with the highest estimated reward is chosen, called the greediest action. Every once in a while, say with a small probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, an action is selected at random. The action is selected uniformly, independently of the action-value estimates. This method ensures that if enough trials are done, each action will be tried an infinite number of times, thus ensuring optimal actions are discovered. Explores too much because even when one action seem to be the optimal one, the methods keeps allocating a fixed percentage of the time for exploration, thus missing opportunities and increasing total regret.&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft - very similar to &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy. The best action is selected with probability &lt;span class="math"&gt;\(1 - \epsilon\)&lt;/span&gt; and the rest of the time a random action is chosen uniformly.&lt;/li&gt;
-&lt;li&gt;softmax - one drawback of &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy and &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft is that they select random actions uniformly. The worst possible action is just as likely to be selected as the second best. Softmax remedies this by assigning a rank, or weight to each of the actions, according to their action-value estimate. A random action is selected with regards to the weight associated with each action, meaning the worst actions are unlikely to be chosen. This is a good approach to take where the worst actions are very unfavorable.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Greedy:&lt;/strong&gt; choose an action with the highest estimated value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-greedy:&lt;/strong&gt; with probability &lt;span class="math"&gt;\(1-\epsilon\)&lt;/span&gt;, choose a greedy action; with probability &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;, choose uniformly from all actions. This is an &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt;-soft policy because every action has nonzero probability.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Softmax or Boltzmann exploration:&lt;/strong&gt; sample actions with probabilities derived from their estimated values and a temperature parameter.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;It is not clear which of these policies produces the best results overall. The nature of the task will have some bearing on how well each policy influences learning. If the problem we are trying to solve is of a game playing nature, against a human opponent, human factors may also be influential.&lt;/p&gt;
-&lt;h4 id="exploitation-vs-exploration"&gt;Expl&lt;strong&gt;oit&lt;/strong&gt;ation vs explo&lt;strong&gt;r&lt;/strong&gt;ation&lt;a class="headerlink" href="#exploitation-vs-exploration" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;Exploitation - keep the current approach. Chooses the greedy action to get the most reward by exploiting the agent’s current action-value estimates. But by being greedy with respect to action-value estimates, may not actually get the most reward and lead to sub-optimal behaviour.&lt;/p&gt;
-&lt;p&gt;Exploration - Try new approach.  Allows an agent to improve its current knowledge about each action, hopefully leading to long-term benefit. Improving the accuracy of the estimated action-values, enables an agent to make more informed decisions in the future.&lt;/p&gt;
-&lt;p&gt;When an agent explores, it gets more accurate estimates of action-values. And when it exploits, it might get more reward. It cannot, however, choose to do both simultaneously, which is also called the exploration-exploitation dilemma.&lt;/p&gt;
+&lt;p&gt;There is no universally best exploration rule. The right mechanism depends on the cost of mistakes, uncertainty, horizon, and whether the learner is allowed to interact at all.&lt;/p&gt;
+&lt;h2 id="how-this-connects-to-sequence-modeling"&gt;How this connects to sequence modeling&lt;a class="headerlink" href="#how-this-connects-to-sequence-modeling" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;An RL trajectory is an ordered sequence of states, actions, and rewards. The &lt;a href="/articles/2021/Jun/01/Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence/"&gt;Decision Transformer&lt;/a&gt; uses that representation to turn offline policy learning into conditional sequence modeling: given a desired return and recent trajectory context, it predicts the next action.&lt;/p&gt;
+&lt;p&gt;That perspective is useful, but it does not remove the RL problem. Dataset coverage, return conditioning, and evaluation in the environment still determine what behavior can be learned.&lt;/p&gt;
+&lt;h2 id="a-compact-mental-model"&gt;A compact mental model&lt;a class="headerlink" href="#a-compact-mental-model" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;The environment defines what transitions and rewards are possible.&lt;/li&gt;
+&lt;li&gt;The policy defines how the agent chooses actions.&lt;/li&gt;
+&lt;li&gt;Return specifies the long-term quantity to optimize.&lt;/li&gt;
+&lt;li&gt;Value functions predict that return before the future is known.&lt;/li&gt;
+&lt;li&gt;Bellman relations connect present estimates to the next step.&lt;/li&gt;
+&lt;li&gt;The learning setting determines what evidence is available: live interaction online or fixed experience offline.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="primary-references"&gt;Primary references&lt;a class="headerlink" href="#primary-references" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Richard S. Sutton and Andrew G. Barto. &lt;a href="http://incompleteideas.net/book/the-book-2nd.html"&gt;&lt;em&gt;Reinforcement Learning: An Introduction&lt;/em&gt;, second edition&lt;/a&gt;, 2018.&lt;/li&gt;
+&lt;li&gt;Sergey Levine et al. &lt;a href="https://arxiv.org/abs/2005.01643"&gt;&lt;em&gt;Offline Reinforcement Learning: Tutorial, Review, and Perspectives on Open Problems&lt;/em&gt;&lt;/a&gt;, 2020.&lt;/li&gt;
+&lt;li&gt;Lili Chen et al. &lt;a href="https://arxiv.org/abs/2106.01345"&gt;&lt;em&gt;Decision Transformer: Reinforcement Learning via Sequence Modeling&lt;/em&gt;&lt;/a&gt;, 2021.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -358,4 +406,4 @@ VF are state-action pair functions that estimate how good a particular action wi
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="Reinforcement learning"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Markov Decision Process"/></entry></feed>
+&lt;/script&gt;</content><category term="Reinforcement learning"/><category term="Reinforcement Learning"/><category term="RL"/><category term="MDP"/><category term="Value Functions"/><category term="Temporal-Difference Learning"/><category term="Offline RL"/></entry></feed>

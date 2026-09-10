@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>ERNIE 2.0: A continual pre-training framework for language understanding - Michał Chromiak's blog</title>
+    <title>ERNIE 2.0: Continual multi-task pre-training for language understanding - Michał Chromiak's blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -27,58 +27,52 @@
 <link rel="canonical" href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/">
 
         <meta name="author" content="Michał Chromiak" />
-        <meta name="keywords" content="NMT,transformer,Sequence transduction,Attention model,Machine translation,seq2seq,NLP,ELMo,OpenAI GPT,BERT,ERNIE 1.0,XLNet" />
-        <meta name="description" content="ERNIE 2.0 (Enhanced Representation through kNowledge IntEgration), a new knowledge integration language representation model that aims to beat SOTA results of BERT and XLNet. While pre-training with more than just several simple tasks to grasp the co-occurrence of words or sentences for language modeling, Ernie aims to explore named entities, semantic closeness and discourse relations to obtain valuable lexical, syntactic and semantic information from training corpora. Ernie 2.0 focus on building and learning incrementally pre-training tasks through constant multi-task learning. And it brings some interesting results." />
+        <meta name="keywords" content="NLP,Transformer,Pre-training,Multi-task Learning,BERT,ERNIE" />
+        <meta name="description" content="ERNIE 2.0 extends masked-language-model pre-training with seven lexical, structural, and semantic objectives learned continually through a shared Transformer. This guide explains the training schedule, task embeddings, 2019 English and Chinese evaluations, and the limits of the reported comparison with BERT and XLNet." />
 
         <meta property="og:site_name" content="Michał Chromiak's blog" />
         <meta property="og:type" content="article"/>
-        <meta property="og:title" content="ERNIE 2.0: A continual pre-training framework for language understanding"/>
+        <meta property="og:title" content="ERNIE 2.0: Continual multi-task pre-training for language understanding"/>
         <meta property="og:url" content="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/"/>
-        <meta property="og:description" content="ERNIE 2.0 (Enhanced Representation through kNowledge IntEgration), a new knowledge integration language representation model that aims to beat SOTA results of BERT and XLNet. While pre-training with more than just several simple tasks to grasp the co-occurrence of words or sentences for language modeling, Ernie aims to explore named entities, semantic closeness and discourse relations to obtain valuable lexical, syntactic and semantic information from training corpora. Ernie 2.0 focus on building and learning incrementally pre-training tasks through constant multi-task learning. And it brings some interesting results."/>
+        <meta property="og:description" content="ERNIE 2.0 extends masked-language-model pre-training with seven lexical, structural, and semantic objectives learned continually through a shared Transformer. This guide explains the training schedule, task embeddings, 2019 English and Chinese evaluations, and the limits of the reported comparison with BERT and XLNet."/>
             <meta property="og:image" content="https://mchromiak.github.io/articles/2019/Jul/30/img/enrieCover.jpeg" />
-            <meta property="og:image:alt" content="ERNIE 2.0: A continual pre-training framework for language understanding" />
+            <meta property="og:image:alt" content="ERNIE 2.0: Continual multi-task pre-training for language understanding" />
 
         <meta property="article:published_time" content="2019-07-30T19:30:00+02:00" />
-            <meta property="article:modified_time" content="2019-07-30T19:30:00+02:00" />
+            <meta property="article:modified_time" content="2019-09-10T12:00:00+02:00" />
             <meta property="article:section" content="Sequence Models" />
-            <meta property="article:tag" content="NMT" />
-            <meta property="article:tag" content="transformer" />
-            <meta property="article:tag" content="Sequence transduction" />
-            <meta property="article:tag" content="Attention model" />
-            <meta property="article:tag" content="Machine translation" />
-            <meta property="article:tag" content="seq2seq" />
             <meta property="article:tag" content="NLP" />
-            <meta property="article:tag" content="ELMo" />
-            <meta property="article:tag" content="OpenAI GPT" />
+            <meta property="article:tag" content="Transformer" />
+            <meta property="article:tag" content="Pre-training" />
+            <meta property="article:tag" content="Multi-task Learning" />
             <meta property="article:tag" content="BERT" />
-            <meta property="article:tag" content="ERNIE 1.0" />
-            <meta property="article:tag" content="XLNet" />
+            <meta property="article:tag" content="ERNIE" />
             <meta property="article:author" content="Michał Chromiak" />
 
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "ERNIE 2.0: A continual pre-training framework for language understanding",
-      "description": "ERNIE 2.0 (Enhanced Representation through kNowledge IntEgration), a new knowledge integration language representation model that aims to beat SOTA results of BERT and XLNet. While pre-training with more than just several simple tasks to grasp the co-occurrence of words or sentences for language modeling, Ernie aims to explore named entities, semantic closeness and discourse relations to obtain valuable lexical, syntactic and semantic information from training corpora. Ernie 2.0 focus on building and learning incrementally pre-training tasks through constant multi-task learning. And it brings some interesting results.",
+      "headline": "ERNIE 2.0: Continual multi-task pre-training for language understanding",
+      "description": "ERNIE 2.0 extends masked-language-model pre-training with seven lexical, structural, and semantic objectives learned continually through a shared Transformer. This guide explains the training schedule, task embeddings, 2019 English and Chinese evaluations, and the limits of the reported comparison with BERT and XLNet.",
       "url": "https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/"
       },
       "datePublished": "2019-07-30T19:30:00+02:00",
-      "dateModified": "2019-07-30T19:30:00+02:00",
+      "dateModified": "2019-09-10T12:00:00+02:00",
       "inLanguage": "en",
 "image": "https://mchromiak.github.io/articles/2019/Jul/30/img/enrieCover.jpeg",      "author": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html",
+        "url": "pages/about.html",
         "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
       },
       "publisher": {
         "@type": "Person",
         "name": "Micha\u0142 Chromiak",
-        "url": "https://mchromiak.github.io/pages/about.html"
+        "url": "pages/about.html"
       }
     }
     </script>
@@ -155,7 +149,7 @@
             <ol class="breadcrumb">
                 <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
                 <li><a href="https://mchromiak.github.io/category/sequence-models.html" title="Sequence Models">Sequence Models</a></li>
-                <li class="active">ERNIE 2.0: A continual pre-training framework for language understanding</li>
+                <li class="active">ERNIE 2.0: Continual multi-task pre-training for language understanding</li>
             </ol>
     <section id="content">
         <article>
@@ -163,8 +157,8 @@
                 <h1>
                     <a href="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/"
                        rel="bookmark"
-                       title="Permalink to ERNIE 2.0: A continual pre-training framework for language understanding">
-                        ERNIE 2.0: A continual pre-training framework for language understanding
+                       title="Permalink to ERNIE 2.0: Continual multi-task pre-training for language understanding">
+                        ERNIE 2.0: Continual multi-task pre-training for language understanding
                     </a>
                 </h1>
             </header>
@@ -178,103 +172,124 @@
     </span>
           <span class="label label-default">Modified</span>
             <span class="modified">
-                <i class="fa fa-calendar"></i><time datetime="2019-07-30T19:30:00+02:00"> Tue, 30 Jul 2019</time>
+                <i class="fa fa-calendar"></i><time datetime="2019-09-10T12:00:00+02:00"> Tue, 10 Sep 2019</time>
             </span>
 
 
             <span class="label label-default">By</span>
-            <a href="https://mchromiak.github.io/https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+            <a href="https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
 
         <span class="label label-default">Category</span>
         <a href="https://mchromiak.github.io/category/sequence-models.html">Sequence Models</a>
 
 
 <span class="label label-default">Tags</span>
-	<a href="https://mchromiak.github.io/tag/nmt.html">NMT</a>
-        /
-	<a href="https://mchromiak.github.io/tag/transformer.html">transformer</a>
-        /
-	<a href="https://mchromiak.github.io/tag/sequence-transduction.html">Sequence transduction</a>
-        /
-	<a href="https://mchromiak.github.io/tag/attention-model.html">Attention model</a>
-        /
-	<a href="https://mchromiak.github.io/tag/machine-translation.html">Machine translation</a>
-        /
-	<a href="https://mchromiak.github.io/tag/seq2seq.html">seq2seq</a>
-        /
 	<a href="https://mchromiak.github.io/tag/nlp.html">NLP</a>
         /
-	<a href="https://mchromiak.github.io/tag/elmo.html">ELMo</a>
+	<a href="https://mchromiak.github.io/tag/transformer.html">Transformer</a>
         /
-	<a href="https://mchromiak.github.io/tag/openai-gpt.html">OpenAI GPT</a>
+	<a href="https://mchromiak.github.io/tag/pre-training.html">Pre-training</a>
+        /
+	<a href="https://mchromiak.github.io/tag/multi-task-learning.html">Multi-task Learning</a>
         /
 	<a href="https://mchromiak.github.io/tag/bert.html">BERT</a>
         /
-	<a href="https://mchromiak.github.io/tag/ernie-10.html">ERNIE 1.0</a>
-        /
-	<a href="https://mchromiak.github.io/tag/xlnet.html">XLNet</a>
+	<a href="https://mchromiak.github.io/tag/ernie.html">ERNIE</a>
     
 </footer><!-- /.post-info -->                    </div>
                 </div>
-                <p>Transformer based models has become the dominant part of modern SOTA research for NLP. ERNIE 2.0 is no different. Lets deep dive into what novel is about the second version of Ernie.</p>
-<h4 id="tldr">TL:DR<a class="headerlink" href="#tldr" title="Permanent link">🔗</a></h4>
-<p><strong>Focus attention to more than just co-occurence.</strong>
-Contribution of paper:</p>
+                <hr>
+<p>BERT showed that a Transformer can learn reusable language representations from large amounts of unlabeled text. ERNIE 2.0 asks a natural follow-up question: <strong>must pre-training be organized around only one or two objectives?</strong> A corpus contains more than local word co-occurrence. It also contains entities, sentence order, discourse relations, document topics, and weak signals of relevance.</p>
+<p>Yu Sun and colleagues at Baidu introduced <a href="https://arxiv.org/abs/1907.12412">ERNIE 2.0</a> in 2019 as a framework for turning several such signals into pre-training tasks. Instead of training every objective separately or restarting whenever a new task is introduced, ERNIE 2.0 adds objectives incrementally and continues multi-task training with a shared encoder.</p>
+<p>This article describes the 2019 paper. The name <strong>ERNIE</strong> has since been reused for later Baidu model families, so claims here should not be projected onto every system carrying that name.</p>
+<h2 id="the-short-version">The short version<a class="headerlink" href="#the-short-version" title="Permanent link">🔗</a></h2>
 <ul>
-<li>Design of continual pre-training framework ERNIE 2.0, which supports customized training tasks and multi-task pre-training in an incremental way.</li>
-<li>ERNIE 2.0 achieves significant improvements over BERT and XLNet on 16 tasks including English GLUE benchmarks and several Chinese tasks.</li>
+<li>ERNIE 2.0 is primarily a <strong>training framework</strong>, not a radically different sequence architecture.</li>
+<li>Its encoder is a bidirectional Transformer closely related to BERT.</li>
+<li>Seven pre-training objectives target lexical, syntactic, document-level, and discourse information.</li>
+<li>A learned task embedding tells the shared encoder which objective produced the current example.</li>
+<li>New objectives are introduced continually, while older objectives remain in the training mixture to reduce forgetting.</li>
+<li>In the paper's 2019 experiments, ERNIE 2.0 improved over the reported BERT and XLNet baselines across 16 English and Chinese tasks. That is a result under the paper's models, data, and evaluation protocol, not a current state-of-the-art claim.</li>
 </ul>
-<h3 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">🔗</a></h3>
-<p>Co-occurence of words and sentences is the main workhorse of current NLP SOTA solutions. ERNIE 2.0 tries to get a bigger picture with its continuous pre-training.  </p>
-<h3 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">🔗</a></h3>
-<p>It is the fact that with current solutions, training of the model usually focus on couple of tasks to get the notion of co-occurrence of words and sentences. Those pre-training procedures involved word-level and sentence-level prediction or inference tasks. The closest competitors like Google's BERT captured co-occurrence information by combining a masked language model and a next-sentence prediction task. On the other hand, this co-occurrence information is captured by XLNet by constructing a permutation language model task.</p>
-<p>With Ernie 2.0 however, the vision becomes broader than just co-occurence. This includes more lexical, syntactic and semantic information from training corpora in form of named entities (like person names, location names, and organization names), semantic closeness (proximity of sentences), sentence order or discourse relations. This is done with Ernie 2.0: continual pre-training framework, by building and learning incrementally pre-training tasks  through constant multi-task learning.</p>
-<p>The important aspect is that at any time a new custom task can be introduced, while sharing the same encoding network. Thanks to this, a significant amount of information can be shared across different tasks. Ernie 2.0 framework is continuously pre-training and updating the model and gaining enhancements in information through multi-task learning, hence more holistically understand lexical, syntactic and semantic representations.   </p>
+<h2 id="why-use-several-pre-training-objectives">Why use several pre-training objectives?<a class="headerlink" href="#why-use-several-pre-training-objectives" title="Permanent link">🔗</a></h2>
+<p>A masked language model hides tokens and asks the model to reconstruct them. This is a strong general objective, but the supervision it extracts is indirect. Consider the sentence:</p>
+<blockquote>
+<p>Ada Lovelace worked with Charles Babbage on the Analytical Engine.</p>
+</blockquote>
+<p>Masking a token teaches local and contextual prediction. Other transformations can emphasize different structure: mask the whole entity <em>Ada Lovelace</em>, determine whether two sentences came from the same document, recover shuffled sentence order, or decide whether a query and title are relevant.</p>
+<p>ERNIE 2.0 groups its objectives into three families:</p>
+<ol>
+<li><strong>Word-aware tasks</strong> emphasize lexical and entity information.</li>
+<li><strong>Structure-aware tasks</strong> emphasize relationships between sentences.</li>
+<li><strong>Semantic-aware tasks</strong> use document and weakly supervised relevance signals.</li>
+</ol>
+<p>These objectives do not install symbolic knowledge into fixed locations. They provide additional prediction problems whose gradients shape the same contextual encoder.</p>
+<p><img alt="ERNIE 2.0 continual pre-training framework with tasks added over successive stages." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif"></p>
+<p align="center">Figure 1. ERNIE 2.0 introduces pre-training tasks over successive stages while retaining earlier tasks in the multi-task schedule. (Source: <a href="https://arxiv.org/abs/1907.12412">Sun et al., 2019</a>, Figure 2).</p>
+<h2 id="continual-does-not-mean-online-learning">Continual does not mean online learning<a class="headerlink" href="#continual-does-not-mean-online-learning" title="Permanent link">🔗</a></h2>
+<p>In this paper, <strong>continual pre-training</strong> means that the training curriculum can expand. The first stage trains an initial set of objectives. A later stage initializes from that checkpoint, adds another objective, and trains on the accumulated set.</p>
+<p>Keeping earlier tasks matters. If the model optimized only the newest task, it could overwrite representations useful for earlier ones, a failure commonly called <strong>catastrophic forgetting</strong>. ERNIE 2.0 instead uses continual <em>multi-task</em> learning: old and new objectives share the encoder and remain available during later stages.</p>
+<details class="dinov2-background">
+<summary>Optional detail: What is shared and what is task-specific?</summary>
+<p>The Transformer encoder parameters are shared across objectives. Each input combines token, segment, position, and task embeddings. The task ID therefore changes the input representation and lets the encoder condition on the current objective.</p>
+<p>Prediction heads and losses depend on the task. Token-level objectives predict labels at individual positions; sequence-level objectives classify an entire sentence pair or document relation. Sharing the expensive encoder lets these different signals influence one representation space without requiring a complete model per objective.</p>
+</details>
+<h2 id="the-seven-objectives">The seven objectives<a class="headerlink" href="#the-seven-objectives" title="Permanent link">🔗</a></h2>
+<h3 id="word-aware-objectives">Word-aware objectives<a class="headerlink" href="#word-aware-objectives" title="Permanent link">🔗</a></h3>
+<p><strong>Knowledge masking</strong> masks complete phrases and named entities rather than always masking isolated subword tokens. Reconstructing an entire multi-token unit makes the model rely on broader context.</p>
+<p><strong>Capitalization prediction</strong> asks whether a token was capitalized in the original text. Capitalization can provide weak clues about names and sentence boundaries, although those clues are language- and script-dependent.</p>
+<p><strong>Token-document relation prediction</strong> asks whether a token appears elsewhere in the source document. The task pushes token representations to retain document-level thematic information.</p>
+<h3 id="structure-aware-objectives">Structure-aware objectives<a class="headerlink" href="#structure-aware-objectives" title="Permanent link">🔗</a></h3>
+<p><strong>Sentence reordering</strong> splits a paragraph into segments, permutes them, and asks the model to recover their original order. It targets local discourse structure rather than only token identity.</p>
+<p><strong>Sentence distance</strong> classifies sentence pairs as adjacent, from the same document but non-adjacent, or from different documents. This supplies a graded notion of textual relatedness.</p>
+<h3 id="semantic-aware-objectives">Semantic-aware objectives<a class="headerlink" href="#semantic-aware-objectives" title="Permanent link">🔗</a></h3>
+<p><strong>Discourse relation prediction</strong> uses explicit discourse markers as weak supervision for relations between clauses or sentences.</p>
+<p><strong>IR relevance prediction</strong> uses query-title pairs from search data to distinguish relevant from less relevant pairs. This is weakly supervised rather than purely self-supervised because user interactions provide the signal.</p>
+<p><img alt="ERNIE 2.0 input and encoder structure, including task embeddings and seven pre-training objectives." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png"></p>
+<p align="center">Figure 2. The encoder receives token, segment, position, and task embeddings. Separate objectives reuse the shared Transformer. (Source: <a href="https://arxiv.org/abs/1907.12412">Sun et al., 2019</a>, Figure 3).</p>
+<h2 id="from-pre-training-to-a-downstream-task">From pre-training to a downstream task<a class="headerlink" href="#from-pre-training-to-a-downstream-task" title="Permanent link">🔗</a></h2>
+<p>Pre-training learns a general encoder without labels for the final application. <strong>Fine-tuning</strong> then adapts that encoder using supervised examples for a task such as natural-language inference, sentiment classification, semantic similarity, named-entity recognition, or question answering.</p>
+<p>This separation is important. ERNIE 2.0's seven objectives do not directly solve GLUE or the Chinese evaluation tasks. They construct an initialization that the downstream fine-tuning stage can use.</p>
+<p>For readers coming from modern parameter-efficient adaptation, <a href="/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">LoRA</a> changes the fine-tuning stage rather than the pre-training curriculum: it freezes the base weights and learns small low-rank updates.</p>
+<h2 id="what-the-experiments-show">What the experiments show<a class="headerlink" href="#what-the-experiments-show" title="Permanent link">🔗</a></h2>
+<p>The authors evaluate English models on GLUE and Chinese models on nine common understanding tasks. The paper reports results for base- and large-sized configurations and compares against contemporary systems, including BERT and XLNet.</p>
+<p><img alt="Table of ERNIE 2.0 results on English GLUE tasks." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/engTasks.png"></p>
+<p align="center">Figure 3. English GLUE results reported in the paper. Scores belong to the paper's 2019 experimental setup and baseline implementations. (Source: <a href="https://arxiv.org/abs/1907.12412">Sun et al., 2019</a>, Table 2).</p>
+<p><img alt="Table of ERNIE 2.0 results on nine Chinese language-understanding tasks." src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png"></p>
+<p align="center">Figure 4. Results reported for nine Chinese language-understanding tasks. The task mixture and corpora differ from the English setup. (Source: <a href="https://arxiv.org/abs/1907.12412">Sun et al., 2019</a>, Table 3).</p>
+<p>The central empirical claim is that the complete ERNIE 2.0 recipe outperformed the compared BERT and XLNet systems on all 16 evaluated tasks. Ablations also indicate that adding task families improves the aggregate downstream score.</p>
+<p>The comparison requires calibration. The systems do not all use identical corpora or pre-training objectives, and benchmark improvements do not isolate a single causal mechanism. The experiments support the value of ERNIE 2.0's combined recipe; they do not prove that every added objective helps every domain or that continually adding objectives will improve without limit.</p>
+<h2 id="what-aged-well">What aged well<a class="headerlink" href="#what-aged-well" title="Permanent link">🔗</a></h2>
+<p>Several ideas remain useful beyond this particular model:</p>
 <ul>
-<li>Paper: <a href="https://arxiv.org/abs/1907.12412"> Ernie 2.0: A continual pre-training framework for language understanding. ArXiv</a>.</li>
-<li>Code for fine-tuning and pre-trained models for English: <a href="https://github.com/PaddlePaddle/ERNIE">GitHub</a></li>
+<li><strong>The objective is part of the architecture.</strong> Two models with similar Transformer encoders can learn different representations because their training signals differ.</li>
+<li><strong>Weak supervision can expose structure already present in data.</strong> Document boundaries, sentence order, and search interactions can create training labels cheaply.</li>
+<li><strong>Curriculum and retention matter.</strong> Adding a task is not enough; the schedule must prevent new learning from erasing useful earlier behavior.</li>
+<li><strong>Multi-task gains need ablations.</strong> A larger objective mixture also changes data exposure and optimization, so each contribution should be tested rather than inferred from the final score.</li>
 </ul>
-<p align="center"><img alt="ERNIE2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/ernie2.gif">
-<br>
-Figure 1. A continual pre-training framework for language understanding.</p>
-<h3 id="the-continual-pre-training">The continual pre-training<a class="headerlink" href="#the-continual-pre-training" title="Permanent link">🔗</a></h3>
-<p>The <em>continual</em> pre-training consists of two phases:</p>
-<p><strong>1. Continuously construct unsupervised pre-training tasks using the big data and with prior knowledge involved</strong></p>
-<p>This phase include three types of tasks:</p>
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">🔗</a></h2>
 <ul>
-<li><em>word</em>-aware tasks: Knowledge Masking, Capitalization Prediction, Token-Document Relation Prediction</li>
-<li><em>structure</em>-aware tasks: Sentence Reordering, Sentence Distance</li>
-<li><em>semantic</em>-aware tasks: Discourse Relation, IR Relevance</li>
+<li>The evaluations measure language understanding benchmarks available in 2019, not generative instruction following or current long-context behavior.</li>
+<li>English and Chinese systems use different corpora and task signals, so the results are not a controlled cross-language comparison.</li>
+<li>Task embeddings tell the encoder which objective it is solving; they do not make the resulting coordinates directly interpretable.</li>
+<li>Continual pre-training still requires replaying earlier objectives and data. It is not continual learning from an unbounded stream at negligible cost.</li>
+<li>The paper predates the scale and evaluation practices of modern foundation models.</li>
 </ul>
-<p>For the details of the tasks please refer to the paper. All tasks are based on self/weak-supervised signals without human annotation.</p>
-<p><strong>2. Incrementally update the ERNIE model via multi-task learning</strong>
-Continuously, task-by-task new tasks are added starting from first, initial task to train initial model. Then next task's parameters are initialized to the values already learned form the previous one. This way the parameters' "knowledge" is passed on and accumulated within the consecutive tasks.</p>
-<p>This goal is achieved with series of shared text encoding layers that <strong>encodes</strong> the contextual information possibly customized with RNNs or deep Transformer. The parameters of the encoder are the ones that are updated when a new task is introduced.</p>
-<p>There are two types of loss functions: sequence-level and token-level. For each task sentence-level loss functions can be combined with token-level loss functions creating the task's loss function used to update the model.</p>
-<h4 id="fine-tuning-for-tasks">Fine tuning for tasks<a class="headerlink" href="#fine-tuning-for-tasks" title="Permanent link">🔗</a></h4>
-<p>The phase of fine-tuning of the pre-trained model for language understanding tasks (e.g question answering, natural language inference, semantic similarity) is done with task specific supervised data.</p>
-<h3 id="ernie-20-model">ERNIE 2.0 model<a class="headerlink" href="#ernie-20-model" title="Permanent link">🔗</a></h3>
-<p>The model is similar to BERT or XLNet.</p>
-<p align="center"><img alt="ERNIE2struct" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/enrie2struct.png">
-<br>
-Figure 2. ERNIE 2.0 model structure. The input embedding consists of the token embedding, the sentence embedding, the position embedding and the task embedding. There are seven pre-training tasks in the ERNIE 2.0 model.</p>
-<h4 id="encoder">Encoder<a class="headerlink" href="#encoder" title="Permanent link">🔗</a></h4>
-<p>Is a multi-layer Transformer same as in BERT, GPT, XLM. Transformer generate sequence of contextual embeddings for each token. Additional markers are added to the start of the sequence and separator symbol is added to separate intervals for the multiple input segment tasks.</p>
-<h4 id="task-embeddings">Task embeddings<a class="headerlink" href="#task-embeddings" title="Permanent link">🔗</a></h4>
-<p>The model feeds task embedding to modulate the characteristic of different tasks.Each task has an id ranging from 0 to N. Each task id is assigned to one unique task embedding. The model input contains the corresponding token, segment, position and task embedding. Any task id can initialize model in the fine-tuning process.</p>
-<h1 id="results">Results<a class="headerlink" href="#results" title="Permanent link">🔗</a></h1>
-<p align="center"><img alt="ERNIE2res1" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/engTasks.png">
-<br>
-Figure 3. ERNIE 2.0 The results on GLUE benchmark for English tasks.</p>
-<p align="center"><img alt="ERNIE2res2" src="https://mchromiak.github.io/articles/2019/Jul/30/ernie-2-0/img/chnTasks.png">
-<br>
-Figure 4. ERNIE 2.0 The results of 9 common Chinese NLP tasks.</p>
+<h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">🔗</a></h2>
+<p>Start with <a href="/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">language-model probability, n-grams, and perplexity</a> for the prediction objective underneath pre-training. The <a href="/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">Transformer guide</a> explains the shared encoder architecture. For later adaptation methods, continue with <a href="/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">LoRA</a> and <a href="/articles/2023/May/26/QLoRA-Efficient-Finetuning-of-Quantized-LLMs/">QLoRA</a>.</p>
+<h2 id="primary-sources">Primary sources<a class="headerlink" href="#primary-sources" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Yu Sun et al. <a href="https://arxiv.org/abs/1907.12412"><em>ERNIE 2.0: A Continual Pre-training Framework for Language Understanding</em></a>, 2019.</li>
+<li>Baidu/PaddlePaddle. <a href="https://github.com/PaddlePaddle/ERNIE">Official ERNIE repository</a>.</li>
+</ul>
             </div>
             <!-- /.entry-content -->
 <section class="well" id="related-posts">
     <h4>Related Posts:</h4>
     <ul>
         <li><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">Language models: From n-gram counts to neural next-token prediction</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2023/Mar/18/LoRA-Low-Rank-Adaptation-of-Large-Language-Models/">LoRA: Fine-tuning a model by learning a small update</a></li>
     </ul>
 </section>
     <hr />
