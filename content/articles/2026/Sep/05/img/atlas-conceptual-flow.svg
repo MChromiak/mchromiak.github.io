@@ -12,7 +12,7 @@
 
   <rect width="1200" height="700" fill="#f7fafc"/>
   <text x="54" y="62" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="700">One Atlas request, from evidence to output</text>
-  <text x="54" y="96" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="18">A conceptual reading of the public model description, not a released implementation diagram</text>
+  <text x="54" y="96" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="18">Observations share a camera-grounded spatial context</text>
 
   <text x="58" y="150" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">1. OBSERVATIONS</text>
   <rect x="54" y="172" width="238" height="82" rx="6" fill="#ffffff" stroke="#9eb9c9" stroke-width="2"/>
