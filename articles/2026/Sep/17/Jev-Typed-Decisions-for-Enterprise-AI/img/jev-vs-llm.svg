@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 710" role="img" aria-labelledby="title desc">
+  <title id="title">Autoregressive LLM output compared with Jev's parallel typed decisions</title>
+  <desc id="desc">An LLM produces a token sequence that may then be parsed and validated. Jev receives shared textual state and bounded questions, then returns typed probability distributions in parallel. Jev's internal neural architecture is not public.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
+    </filter>
+    <marker id="blue-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/></marker>
+    <marker id="teal-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker>
+  </defs>
+  <rect width="1200" height="710" fill="#f7fafc"/>
+  <text x="42" y="48" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700">The verified difference is the inference contract</text>
+  <text x="42" y="78" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">TypeSafe has not published enough information for a layer-by-layer Jev architecture diagram</text>
+
+  <g filter="url(#shadow)">
+    <rect x="42" y="116" width="535" height="486" rx="7" fill="#ffffff" stroke="#69a5c6" stroke-width="2"/>
+    <text x="70" y="158" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">AUTOREGRESSIVE LLM</text>
+    <text x="70" y="184" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">Native job: generate an open-ended token sequence</text>
+    <rect x="70" y="220" width="158" height="58" rx="5" fill="#edf6fb" stroke="#8ebbd2"/>
+    <text x="149" y="255" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">prompt / messages</text>
+    <path d="M240 249 H291" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#blue-arrow)"/>
+    <rect x="304" y="216" width="226" height="66" rx="5" fill="#203746"/>
+    <text x="417" y="244" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">decoder model</text>
+    <text x="417" y="266" text-anchor="middle" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="12">next token conditioned on prior tokens</text>
+
+    <text x="70" y="333" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">SEQUENTIAL DECODING</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700">
+      <rect x="70" y="350" width="51" height="37" rx="4" fill="#dcecf4"/><text x="95" y="374" text-anchor="middle" fill="#2878a8">{</text>
+      <path d="M126 369 H143" stroke="#2878a8" stroke-width="2" marker-end="url(#blue-arrow)"/>
+      <rect x="149" y="350" width="86" height="37" rx="4" fill="#dcecf4"/><text x="192" y="374" text-anchor="middle" fill="#2878a8">"route"</text>
+      <path d="M240 369 H257" stroke="#2878a8" stroke-width="2" marker-end="url(#blue-arrow)"/>
+      <rect x="263" y="350" width="35" height="37" rx="4" fill="#dcecf4"/><text x="280" y="374" text-anchor="middle" fill="#2878a8">:</text>
+      <path d="M303 369 H320" stroke="#2878a8" stroke-width="2" marker-end="url(#blue-arrow)"/>
+      <rect x="326" y="350" width="96" height="37" rx="4" fill="#dcecf4"/><text x="374" y="374" text-anchor="middle" fill="#2878a8">"billing"</text>
+      <path d="M427 369 H444" stroke="#2878a8" stroke-width="2" marker-end="url(#blue-arrow)"/>
+      <rect x="450" y="350" width="51" height="37" rx="4" fill="#dcecf4"/><text x="475" y="374" text-anchor="middle" fill="#2878a8">}</text>
+    </g>
+    <path d="M285 401 V437" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#blue-arrow)"/>
+    <rect x="127" y="451" width="316" height="58" rx="5" fill="#f7fafc" stroke="#a6bdca"/>
+    <text x="285" y="476" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">parse · validate · repair or retry</text>
+    <text x="285" y="497" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">unless the provider enforces the schema</text>
+    <text x="70" y="555" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">ADVANTAGE</text>
+    <text x="155" y="555" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">flexible prose, code, plans, and explanations</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="623" y="116" width="535" height="486" rx="7" fill="#ffffff" stroke="#58a89d" stroke-width="2"/>
+    <text x="651" y="158" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">JEV / SYSTEM ONE</text>
+    <text x="651" y="184" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">Native job: answer bounded semantic questions</text>
+    <rect x="651" y="220" width="169" height="58" rx="5" fill="#eaf7f3" stroke="#78b8af"/>
+    <text x="735" y="244" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">textual state</text>
+    <text x="735" y="264" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">+ typed questions</text>
+    <path d="M832 249 H872" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#teal-arrow)"/>
+    <rect x="885" y="206" width="245" height="86" rx="5" fill="#203746"/>
+    <text x="1007" y="236" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Jev</text>
+    <text x="1007" y="258" text-anchor="middle" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="12">new architecture + parallel sampler</text>
+    <text x="1007" y="278" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="11">internal layers undisclosed</text>
+
+    <text x="651" y="333" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">PARALLEL BOUNDED OUTPUTS</text>
+    <g>
+      <rect x="651" y="350" width="454" height="46" rx="5" fill="#edf6fb" stroke="#8ebbd2"/>
+      <text x="670" y="379" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Choice</text>
+      <text x="742" y="379" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">billing .94 · support .05 · other .01</text>
+      <rect x="651" y="407" width="454" height="46" rx="5" fill="#eaf7f3" stroke="#78b8af"/>
+      <text x="670" y="436" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Noul</text>
+      <text x="742" y="436" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">policy permits refund = .97</text>
+      <rect x="651" y="464" width="454" height="46" rx="5" fill="#fff4e8" stroke="#d59a5f"/>
+      <text x="670" y="493" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Score</text>
+      <text x="742" y="493" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">urgency = 1.7 / 3 + distribution</text>
+    </g>
+    <text x="651" y="555" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">ADVANTAGE</text>
+    <text x="736" y="555" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">no prose decoding; schema and uncertainty are native</text>
+  </g>
+
+  <rect x="42" y="626" width="1116" height="45" rx="5" fill="#fff7ed" stroke="#d59a5f"/>
+  <text x="62" y="653" fill="#8a4208" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Important:</text>
+  <text x="139" y="653" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">schema-conforming does not mean correct. Jev can choose the wrong valid option; calibration must be tested on your data.</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+    <text x="1158" y="698" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" text-decoration="underline">© 2026 Michał Chromiak</text>
+  </a>
+</svg>

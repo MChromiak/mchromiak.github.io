@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1080" role="img" aria-labelledby="title desc">
+  <title id="title">How one Jev request becomes typed decisions</title>
+  <desc id="desc">A support case becomes shared state. Jev evaluates Choice, Noul, and Score questions in parallel and returns probability distributions. Code applies explicit policy.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/></marker>
+  </defs>
+  <rect width="720" height="1080" fill="#f7fafc"/>
+  <text x="32" y="48" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">One state, three typed decisions</text>
+  <text x="32" y="77" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="15">A readable still for narrow screens and reduced motion</text>
+
+  <text x="32" y="124" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">1  PROVIDE SHARED STATE</text>
+  <rect x="32" y="142" width="656" height="142" rx="7" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+  <text x="55" y="176" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">Support case #A-104</text>
+  <text x="55" y="205" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">“I was charged twice. Please refund this today.”</text>
+  <text x="55" y="235" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">two captured charges · refund policy · verified identity</text>
+  <text x="55" y="263" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">State can be text or structured JSON</text>
+  <path d="M360 294 V331" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <text x="32" y="374" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">2  ASK IN PARALLEL</text>
+  <rect x="32" y="392" width="656" height="242" rx="7" fill="#203746"/>
+  <text x="360" y="431" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Jev</text>
+  <text x="360" y="455" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="12">internal layers are not publicly disclosed</text>
+  <rect x="56" y="480" width="608" height="39" rx="5" fill="#edf6fb"/><text x="74" y="505" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Choice</text><text x="163" y="505" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">Which team owns this case?</text>
+  <rect x="56" y="530" width="608" height="39" rx="5" fill="#eaf7f3"/><text x="74" y="555" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Noul</text><text x="163" y="555" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">Does policy permit a refund?</text>
+  <rect x="56" y="580" width="608" height="39" rx="5" fill="#fff4e8"/><text x="74" y="605" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Score</text><text x="163" y="605" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">How urgent is the request?</text>
+  <path d="M360 644 V681" stroke="#0f766e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <text x="32" y="724" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">3  RECEIVE BOUNDED DISTRIBUTIONS</text>
+  <rect x="32" y="742" width="656" height="143" rx="7" fill="#ffffff" stroke="#58a89d" stroke-width="2"/>
+  <text x="55" y="775" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">owner = billing</text><text x="235" y="775" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13">billing .94 · support .05 · other .01</text>
+  <text x="55" y="817" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">refund yes = .97</text><text x="235" y="817" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13">probability of “yes”</text>
+  <text x="55" y="859" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">urgency = 1.7 / 3</text><text x="235" y="859" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13">distribution over ordered levels</text>
+  <path d="M360 895 V932" stroke="#b45309" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <text x="32" y="975" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">4  COMPOSE AND ACT IN CODE</text>
+  <rect x="32" y="993" width="656" height="55" rx="7" fill="#fff7ed" stroke="#d59a5f"/>
+  <text x="55" y="1027" fill="#1f3342" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">if billing and p(refund) &gt; .90: issue_duplicate_refund()</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/"><text x="688" y="1070" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" text-decoration="underline">© 2026 Michał Chromiak</text></a>
+</svg>
