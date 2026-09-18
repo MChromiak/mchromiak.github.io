@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1130" role="img" aria-labelledby="title desc">
+  <title id="title">A bounded enterprise workflow using code, Jev, an LLM, tools, and human review</title>
+  <desc id="desc">Code prepares relevant state, Jev makes bounded judgments, and a confidence and risk gate routes work to deterministic code, an LLM, or a person. Approved tools execute actions and the system logs outcomes.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/></marker></defs>
+  <rect width="720" height="1130" fill="#f7fafc"/>
+  <text x="32" y="48" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700">A bounded enterprise AI workflow</text>
+  <text x="32" y="77" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="15">Code owns control; each model handles a suitable task</text>
+
+  <rect x="32" y="112" width="656" height="85" rx="7" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+  <text x="55" y="145" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">1  EVENT</text><text x="143" y="145" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="15">ticket · agent trace · alert · document</text>
+  <text x="55" y="174" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13">Unstructured evidence arrives from a controlled source.</text>
+  <path d="M360 207 V239" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="32" y="251" width="656" height="103" rx="7" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+  <text x="55" y="283" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">2  CODE PREPARES STATE</text>
+  <text x="55" y="313" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13">retrieve policy · calculate exact values · remove irrelevant context</text>
+  <text x="55" y="337" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Keep arithmetic, dates, authorization, and side effects in code.</text>
+  <path d="M360 364 V396" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="32" y="408" width="656" height="126" rx="7" fill="#203746"/>
+  <text x="55" y="441" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">3  JEV: bounded semantic judgments</text>
+  <text x="55" y="470" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="13">intent · policy fit · risk · relevance · output quality</text>
+  <rect x="55" y="490" width="190" height="16" rx="8" fill="#2878a8"/><rect x="253" y="490" width="283" height="16" rx="8" fill="#0f766e"/><rect x="544" y="490" width="112" height="16" rx="8" fill="#d59a5f"/>
+  <text x="55" y="524" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="12">typed values + probabilities; internal layers are undisclosed</text>
+  <path d="M360 544 V576" stroke="#0f766e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <path d="M360 588 L540 668 L360 748 L180 668 Z" fill="#fff7ed" stroke="#b45309" stroke-width="2"/>
+  <text x="360" y="650" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">4  confidence × risk</text>
+  <text x="360" y="678" text-anchor="middle" fill="#8a4208" font-family="Inter, Arial, sans-serif" font-size="13">explicit thresholds in code</text>
+  <text x="360" y="705" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">Which capability should handle this case?</text>
+
+  <g>
+    <rect x="32" y="790" width="204" height="145" rx="7" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+    <text x="134" y="824" text-anchor="middle" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">DETERMINISTIC CODE</text>
+    <text x="52" y="855" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">exact rules</text><text x="52" y="878" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">database operations</text><text x="52" y="901" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">approved tool calls</text>
+    <rect x="258" y="790" width="204" height="145" rx="7" fill="#ffffff" stroke="#2878a8" stroke-width="2"/>
+    <text x="360" y="824" text-anchor="middle" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">LLM / AGENT</text>
+    <text x="278" y="855" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">write and explain</text><text x="278" y="878" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">plan and synthesize</text><text x="278" y="901" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">generate code or prose</text>
+    <rect x="484" y="790" width="204" height="145" rx="7" fill="#ffffff" stroke="#b45309" stroke-width="2"/>
+    <text x="586" y="824" text-anchor="middle" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">HUMAN REVIEW</text>
+    <text x="504" y="855" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">uncertain cases</text><text x="504" y="878" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">high-impact actions</text><text x="504" y="901" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">exceptions and appeals</text>
+  </g>
+  <path d="M360 945 V977" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="32" y="989" width="656" height="99" rx="7" fill="#203746"/>
+  <text x="55" y="1023" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">5  CONTROLLED TOOLS + OBSERVABILITY</text>
+  <text x="55" y="1052" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="13">least privilege · approvals · rollback · trace every model decision</text>
+  <text x="55" y="1076" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="13">monitor human overrides, tool outcomes, calibration, drift, and cost</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/"><text x="688" y="1120" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" text-decoration="underline">© 2026 Michał Chromiak</text></a>
+</svg>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jev in an enterprise agentic workflow</title>
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #f7fafc; }
+    svg { display: block; width: 100%; height: 100%; }
+    text { font-family: Inter, Arial, sans-serif; letter-spacing: 0; }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 1200 675" role="img" aria-labelledby="jev-enterprise-title jev-enterprise-description">
+    <title id="jev-enterprise-title">A bounded enterprise workflow using code, Jev, an LLM, tools, and human review</title>
+    <desc id="jev-enterprise-description">Code collects approved state and asks Jev narrow questions. Confidence and risk rules route routine cases to deterministic tools, generative work to an LLM, and uncertain or high-risk cases to a person. Every action is logged and evaluated.</desc>
+
+    <defs>
+      <filter id="jev-enterprise-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
+      </filter>
+      <marker id="jev-enterprise-arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+      </marker>
+      <marker id="jev-enterprise-arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+      </marker>
+      <marker id="jev-enterprise-arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#b45309"/>
+      </marker>
+    </defs>
+
+    <rect width="1200" height="675" fill="#f7fafc"/>
+    <text x="42" y="47" fill="#1f3342" font-size="29" font-weight="700">Use each intelligence source where it is strongest</text>
+    <text x="42" y="76" fill="#58707f" font-size="16">Jev does not replace the agent stack; it can make its routing, gates, and checks explicit</text>
+
+    <g id="jev-enterprise-event" filter="url(#jev-enterprise-shadow)">
+      <text x="42" y="120" fill="#2878a8" font-size="15" font-weight="700">1  EVENT</text>
+      <rect x="42" y="140" width="190" height="116" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+      <circle cx="78" cy="181" r="18" fill="#e8f2f8"/>
+      <path d="M68 181 H88 M78 171 V191" stroke="#2878a8" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="106" y="177" fill="#1f3342" font-size="15" font-weight="700">Incoming case</text>
+      <text x="106" y="198" fill="#58707f" font-size="12">ticket, trace, alert,</text>
+      <text x="106" y="215" fill="#58707f" font-size="12">document, transaction</text>
+      <text x="62" y="239" fill="#6b7f8b" font-size="11">unstructured evidence</text>
+    </g>
+
+    <path id="jev-enterprise-edge-1" d="M242 198 H299" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
+
+    <g id="jev-enterprise-state" filter="url(#jev-enterprise-shadow)">
+      <text x="301" y="120" fill="#2878a8" font-size="15" font-weight="700">2  CODE PREPARES STATE</text>
+      <rect x="301" y="140" width="241" height="116" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+      <text x="322" y="169" fill="#1f3342" font-size="14" font-weight="700">Retrieve approved context</text>
+      <text x="322" y="193" fill="#58707f" font-size="12">• exact arithmetic and dates</text>
+      <text x="322" y="214" fill="#58707f" font-size="12">• policy and account records</text>
+      <text x="322" y="235" fill="#58707f" font-size="12">• only relevant evidence</text>
+    </g>
+
+    <path id="jev-enterprise-edge-2" d="M552 198 H609" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
+
+    <g id="jev-enterprise-jev" filter="url(#jev-enterprise-shadow)">
+      <text x="611" y="120" fill="#0f766e" font-size="15" font-weight="700">3  JEV JUDGES</text>
+      <rect x="611" y="140" width="245" height="116" rx="6" fill="#203746" stroke="#203746" stroke-width="2"/>
+      <text x="733" y="173" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Parallel typed questions</text>
+      <text x="733" y="199" text-anchor="middle" fill="#b9cbd5" font-size="12">intent · risk · policy · quality</text>
+      <g id="jev-enterprise-probs">
+        <rect x="644" y="218" width="52" height="12" rx="6" fill="#5ba0c3"/>
+        <rect x="702" y="218" width="91" height="12" rx="6" fill="#2aa196"/>
+        <rect x="799" y="218" width="24" height="12" rx="6" fill="#d59a5f"/>
+      </g>
+      <text x="733" y="248" text-anchor="middle" fill="#b9cbd5" font-size="11">values + probabilities + confidence</text>
+    </g>
+
+    <path id="jev-enterprise-edge-3" d="M866 198 H924" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#jev-enterprise-arrow-teal)"/>
+
+    <g id="jev-enterprise-gate" filter="url(#jev-enterprise-shadow)">
+      <text x="926" y="120" fill="#b45309" font-size="15" font-weight="700">4  CODE OWNS THE GATE</text>
+      <path d="M1038 139 L1154 198 L1038 257 L922 198 Z" fill="#fff7ed" stroke="#b45309" stroke-width="2.5"/>
+      <text x="1038" y="187" text-anchor="middle" fill="#1f3342" font-size="14" font-weight="700">confidence</text>
+      <text x="1038" y="207" text-anchor="middle" fill="#1f3342" font-size="14" font-weight="700">× risk policy</text>
+      <text x="1038" y="228" text-anchor="middle" fill="#8a4208" font-size="11">thresholds are yours</text>
+    </g>
+
+    <g id="jev-enterprise-routes">
+      <path id="jev-enterprise-route-code" d="M1004 266 C968 311 870 326 812 355" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#jev-enterprise-arrow-teal)"/>
+      <path id="jev-enterprise-route-llm" d="M1038 267 V354" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
+      <path id="jev-enterprise-route-human" d="M1073 266 C1110 311 1134 327 1134 355" fill="none" stroke="#b45309" stroke-width="3" marker-end="url(#jev-enterprise-arrow-orange)"/>
+      <text x="850" y="307" fill="#0f766e" font-size="12" font-weight="700">bounded + confident</text>
+      <text x="1049" y="313" fill="#2878a8" font-size="12" font-weight="700">needs generation</text>
+      <text x="1107" y="300" fill="#b45309" font-size="12" font-weight="700">uncertain / high risk</text>
+    </g>
+
+    <g id="jev-enterprise-code" filter="url(#jev-enterprise-shadow)">
+      <rect x="611" y="368" width="245" height="135" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+      <text x="733" y="397" text-anchor="middle" fill="#0f766e" font-size="15" font-weight="700">DETERMINISTIC CODE</text>
+      <text x="631" y="425" fill="#58707f" font-size="12">calculate · validate · enforce policy</text>
+      <text x="631" y="448" fill="#58707f" font-size="12">database lookup · exact tool call</text>
+      <rect x="639" y="466" width="188" height="23" rx="11" fill="#eaf7f3"/>
+      <text x="733" y="482" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="700">predictable and testable</text>
+    </g>
+
+    <g id="jev-enterprise-llm" filter="url(#jev-enterprise-shadow)">
+      <rect x="883" y="368" width="196" height="135" rx="6" fill="#ffffff" stroke="#2878a8" stroke-width="2"/>
+      <text x="981" y="397" text-anchor="middle" fill="#2878a8" font-size="15" font-weight="700">LLM / AGENT</text>
+      <text x="903" y="425" fill="#58707f" font-size="12">write · explain · plan</text>
+      <text x="903" y="448" fill="#58707f" font-size="12">code · synthesize · converse</text>
+      <rect x="904" y="466" width="154" height="23" rx="11" fill="#e8f2f8"/>
+      <text x="981" y="482" text-anchor="middle" fill="#2878a8" font-size="11" font-weight="700">flexible generation</text>
+    </g>
+
+    <g id="jev-enterprise-human" filter="url(#jev-enterprise-shadow)">
+      <rect x="1094" y="368" width="64" height="135" rx="6" fill="#ffffff" stroke="#b45309" stroke-width="2"/>
+      <circle cx="1126" cy="406" r="14" fill="#fff4e8" stroke="#b45309"/>
+      <path d="M1108 455 Q1126 429 1144 455 V477 H1108 Z" fill="#fff4e8" stroke="#b45309"/>
+      <text x="1126" y="493" text-anchor="middle" fill="#b45309" font-size="10" font-weight="700">REVIEW</text>
+    </g>
+
+    <g id="jev-enterprise-actions" filter="url(#jev-enterprise-shadow)">
+      <text x="42" y="364" fill="#2878a8" font-size="15" font-weight="700">5  ACT THROUGH CONTROLLED TOOLS</text>
+      <rect x="42" y="383" width="500" height="120" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+      <rect x="63" y="407" width="132" height="36" rx="4" fill="#edf6fb" stroke="#69a5c6"/>
+      <text x="129" y="430" text-anchor="middle" fill="#2878a8" font-size="12" font-weight="700">CRM / ERP</text>
+      <rect x="207" y="407" width="132" height="36" rx="4" fill="#eaf7f3" stroke="#58a89d"/>
+      <text x="273" y="430" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="700">TICKETING</text>
+      <rect x="351" y="407" width="169" height="36" rx="4" fill="#fff4e8" stroke="#d59a5f"/>
+      <text x="435" y="430" text-anchor="middle" fill="#b45309" font-size="12" font-weight="700">SECURITY / PAYMENTS</text>
+      <text x="63" y="473" fill="#58707f" font-size="12">Least privilege · idempotency · approvals · rollback</text>
+    </g>
+
+    <path id="jev-enterprise-action-edge" d="M600 436 H554" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
+
+    <g id="jev-enterprise-observe" filter="url(#jev-enterprise-shadow)">
+      <text x="42" y="549" fill="#0f766e" font-size="15" font-weight="700">6  OBSERVE AND IMPROVE</text>
+      <rect x="42" y="567" width="1116" height="52" rx="6" fill="#203746"/>
+      <text x="69" y="599" fill="#ffffff" font-size="13">Log state version, question schema, model version, probabilities, route, human override, tool result, and business outcome.</text>
+      <circle id="jev-enterprise-observe-pulse" cx="1126" cy="593" r="9" fill="#2aa196"/>
+    </g>
+
+    <path id="jev-enterprise-feedback" d="M72 558 C35 489 24 244 37 204" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="7 7" marker-end="url(#jev-enterprise-arrow-teal)"/>
+
+    <text x="42" y="653" fill="#6b7f8b" font-size="12">Reference architecture: business code controls side effects; Jev supplies bounded judgments; LLMs handle open-ended generation.</text>
+    <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+      <text x="1158" y="653" text-anchor="end" fill="#2878a8" font-size="12" font-weight="600" text-decoration="underline">&#169; 2026 Michał Chromiak</text>
+    </a>
+  </svg>
+
+  <script>
+    (() => {
+      const duration = 12;
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+      const ease = (value) => { const p = clamp(value); return p * p * (3 - 2 * p); };
+      const byId = (id) => document.getElementById(id);
+      const reveal = (id, progress, dy = 0) => {
+        const p = ease(progress);
+        const element = byId(id);
+        element.style.opacity = String(0.14 + 0.86 * p);
+        element.setAttribute("transform", `translate(0 ${(1 - p) * dy})`);
+      };
+      const draw = (id, progress, length) => {
+        const element = byId(id);
+        element.style.strokeDasharray = String(length);
+        element.style.strokeDashoffset = String(length * (1 - ease(progress)));
+      };
+
+      window.renderFrame = (seconds) => {
+        const time = ((seconds % duration) + duration) % duration;
+        const event = clamp(time / 1.2);
+        const state = clamp((time - 0.9) / 1.4);
+        const judge = clamp((time - 2.0) / 1.5);
+        const gate = clamp((time - 3.2) / 1.5);
+        const routes = clamp((time - 4.4) / 1.7);
+        const tools = clamp((time - 6.0) / 1.7);
+        const observe = clamp((time - 7.6) / 1.7);
+
+        reveal("jev-enterprise-event", event, 10);
+        draw("jev-enterprise-edge-1", state, 80);
+        reveal("jev-enterprise-state", state, 10);
+        draw("jev-enterprise-edge-2", judge, 80);
+        reveal("jev-enterprise-jev", judge, 10);
+        byId("jev-enterprise-probs").style.opacity = String(0.15 + 0.85 * ease((judge - 0.45) / 0.55));
+        draw("jev-enterprise-edge-3", gate, 80);
+        reveal("jev-enterprise-gate", gate, 10);
+        reveal("jev-enterprise-routes", routes);
+        draw("jev-enterprise-route-code", routes, 250);
+        draw("jev-enterprise-route-llm", routes, 100);
+        draw("jev-enterprise-route-human", routes, 160);
+        reveal("jev-enterprise-code", routes, 14);
+        reveal("jev-enterprise-llm", (routes - 0.12) / 0.88, 14);
+        reveal("jev-enterprise-human", (routes - 0.24) / 0.76, 14);
+        reveal("jev-enterprise-actions", tools, 10);
+        draw("jev-enterprise-action-edge", tools, 70);
+        reveal("jev-enterprise-observe", observe, 8);
+        draw("jev-enterprise-feedback", observe, 520);
+        byId("jev-enterprise-observe-pulse").setAttribute("r", String(7 + 4 * Math.sin(clamp(observe) * Math.PI)));
+        byId("jev-enterprise-observe-pulse").style.opacity = String(0.25 + 0.75 * ease(observe));
+      };
+
+      window.renderFrame(0);
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("frame") && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const started = performance.now();
+        const loop = (now) => { window.renderFrame((now - started) / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      } else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        window.renderFrame(9.1);
+      }
+    })();
+  </script>
+</body>
+</html>

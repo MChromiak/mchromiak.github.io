@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Jev: typed decisions for enterprise AI</title>
+  <desc id="desc">An original editorial cover showing one shared state branching into Choice, Noul, and Score probability outputs, followed by a controlled software decision.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="12" flood-color="#101820" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 L11 5.5 L0 11 Z" fill="#c8dce5"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="#183241"/>
+  <path d="M0 518 C230 454 367 589 598 527 C816 468 959 559 1200 482 V630 H0 Z" fill="#0f766e" opacity="0.35"/>
+  <circle cx="1016" cy="92" r="176" fill="#2878a8" opacity="0.2"/>
+
+  <text x="64" y="91" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">SYSTEM ONE MODELS</text>
+  <text x="64" y="175" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="76" font-weight="800">Jev</text>
+  <text x="64" y="224" fill="#d9e8ee" font-family="Inter, Arial, sans-serif" font-size="30">Typed decisions, not generated prose</text>
+  <text x="64" y="273" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19">What it does · what is actually disclosed · where it fits in enterprise workflows</text>
+
+  <g filter="url(#shadow)">
+    <rect x="67" y="346" width="213" height="112" rx="7" fill="#ffffff"/>
+    <text x="88" y="379" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">SHARED STATE</text>
+    <rect x="88" y="398" width="170" height="12" rx="6" fill="#cfe0e8"/>
+    <rect x="88" y="421" width="132" height="12" rx="6" fill="#cfe0e8"/>
+  </g>
+  <path d="M293 402 H370" fill="none" stroke="#c8dce5" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="383" y="323" width="237" height="158" rx="7" fill="#254b60" stroke="#69a5c6" stroke-width="2"/>
+    <text x="501" y="362" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="800">Jev</text>
+    <text x="501" y="388" text-anchor="middle" fill="#bcd2dc" font-family="Inter, Arial, sans-serif" font-size="14">internal architecture undisclosed</text>
+    <rect x="410" y="413" width="55" height="25" rx="12" fill="#edf6fb"/>
+    <rect x="474" y="413" width="55" height="25" rx="12" fill="#eaf7f3"/>
+    <rect x="538" y="413" width="55" height="25" rx="12" fill="#fff4e8"/>
+    <text x="437" y="430" text-anchor="middle" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">Choice</text>
+    <text x="501" y="430" text-anchor="middle" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">Noul</text>
+    <text x="565" y="430" text-anchor="middle" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">Score</text>
+  </g>
+
+  <path d="M633 402 H711" fill="none" stroke="#c8dce5" stroke-width="4" marker-end="url(#arrow)"/>
+  <g filter="url(#shadow)">
+    <rect x="724" y="323" width="409" height="158" rx="7" fill="#ffffff"/>
+    <text x="750" y="357" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700">TYPED PROBABILITY DISTRIBUTIONS</text>
+    <text x="750" y="393" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">billing</text>
+    <rect x="825" y="382" width="270" height="15" rx="7" fill="#e1eaf0"/>
+    <rect x="825" y="382" width="238" height="15" rx="7" fill="#2878a8"/>
+    <text x="750" y="427" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">policy yes</text>
+    <rect x="825" y="416" width="270" height="15" rx="7" fill="#e1eaf0"/>
+    <rect x="825" y="416" width="256" height="15" rx="7" fill="#0f766e"/>
+    <text x="750" y="461" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">risk 1.7</text>
+    <rect x="825" y="450" width="270" height="15" rx="7" fill="#e1eaf0"/>
+    <rect x="825" y="450" width="153" height="15" rx="7" fill="#d59a5f"/>
+  </g>
+
+  <text x="65" y="555" fill="#d9e8ee" font-family="Inter, Arial, sans-serif" font-size="17">Code keeps control. Models provide bounded semantic judgments.</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+    <text x="1135" y="594" text-anchor="end" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" text-decoration="underline">© 2026 Michał Chromiak</text>
+  </a>
+</svg>

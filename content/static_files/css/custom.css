@@ -198,6 +198,171 @@ body{
   //margin-bottom: 1.5em;
 }
 
+/* IDE-style frame for Pygments code blocks. Syntax parsing remains build-time. */
+.entry-content .highlight.code-window {
+  position: relative;
+  margin: 1.75em 0;
+  overflow: hidden;
+  border: 1px solid #24344d;
+  border-radius: 6px;
+  background: #0f172a;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+.entry-content .code-window__toolbar {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 9px 0 15px;
+  border-bottom: 1px solid #2b3b54;
+  background: #182338;
+  color: #c5d1e3;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.entry-content .code-window__controls {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff6b62;
+  box-shadow: 18px 0 0 #e9b949, 36px 0 0 #37b26c;
+}
+
+.entry-content .code-window__language {
+  overflow: hidden;
+  color: #aebdd2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entry-content .code-window__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 68px;
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #c5d1e3;
+  font: inherit;
+  cursor: pointer;
+}
+
+.entry-content .code-window__copy:hover {
+  border-color: #425572;
+  background: #223149;
+  color: #fff;
+}
+
+.entry-content .code-window__copy:focus-visible {
+  outline: 2px solid #65b9e8;
+  outline-offset: 1px;
+}
+
+.entry-content .code-window__copy.is-copied {
+  color: #7ee2a8;
+}
+
+.entry-content .highlight.code-window pre {
+  max-width: 100%;
+  margin: 0;
+  padding: 18px 20px 20px;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: #0f172a !important;
+  color: #eef3fa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.58;
+  tab-size: 4;
+  white-space: pre;
+}
+
+.entry-content .highlight.code-window pre:focus-visible {
+  outline: 2px solid #65b9e8;
+  outline-offset: -3px;
+}
+
+.entry-content .highlight.code-window code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: inherit;
+}
+
+.entry-content .highlight.code-window pre::-webkit-scrollbar {
+  height: 10px;
+  background: #111b2d;
+}
+
+.entry-content .highlight.code-window pre::-webkit-scrollbar-thumb {
+  border: 2px solid #111b2d;
+  border-radius: 6px;
+  background: #455875;
+}
+
+@media (max-width: 600px) {
+  .entry-content .highlight.code-window {
+    margin: 1.4em 0;
+  }
+
+  .entry-content .code-window__toolbar {
+    grid-template-columns: 48px 1fr auto;
+    padding-left: 12px;
+  }
+
+  .entry-content .code-window__copy {
+    min-width: 34px;
+    padding: 0 8px;
+  }
+
+  .entry-content .code-window__copy span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .entry-content .highlight.code-window pre {
+    padding: 15px 16px 18px;
+    font-size: 12.5px;
+  }
+}
+
+@media print {
+  .entry-content .highlight.code-window {
+    border-color: #999;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .entry-content .code-window__toolbar {
+    display: none;
+  }
+
+  .entry-content .highlight.code-window pre,
+  .entry-content .highlight.code-window pre * {
+    background: #fff !important;
+    color: #111 !important;
+  }
+}
+
 .entry-content details.dinov2-background {
   margin: 0 0 1.5em;
   padding: 0.5em 1em;

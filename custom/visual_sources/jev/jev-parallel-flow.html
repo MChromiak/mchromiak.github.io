@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jev parallel decision flow</title>
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #f7fafc; }
+    svg { display: block; width: 100%; height: 100%; }
+    text { font-family: Inter, Arial, sans-serif; letter-spacing: 0; }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 1200 675" role="img" aria-labelledby="jev-flow-title jev-flow-description">
+    <title id="jev-flow-title">How one Jev request becomes typed decisions</title>
+    <desc id="jev-flow-description">A shared customer-support state and three independent typed questions enter Jev. Choice, Noul, and Score answers return together with probabilities. Ordinary code then routes the case.</desc>
+
+    <defs>
+      <filter id="jev-flow-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
+      </filter>
+      <marker id="jev-flow-arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/>
+      </marker>
+      <marker id="jev-flow-arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/>
+      </marker>
+      <marker id="jev-flow-arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+        <path d="M0 0 L10 5 L0 10 Z" fill="#b45309"/>
+      </marker>
+    </defs>
+
+    <rect width="1200" height="675" fill="#f7fafc"/>
+    <text x="42" y="47" fill="#1f3342" font-size="29" font-weight="700">One state, three typed decisions, one controlled workflow</text>
+    <text x="42" y="76" fill="#58707f" font-size="16">Jev evaluates independent questions against the same state and returns bounded probability distributions</text>
+
+    <g id="jev-flow-state" filter="url(#jev-flow-shadow)">
+      <text x="42" y="120" fill="#2878a8" font-size="15" font-weight="700">1  PROVIDE STATE</text>
+      <rect x="42" y="140" width="255" height="330" rx="6" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
+      <rect x="60" y="160" width="219" height="44" rx="4" fill="#e8f2f8"/>
+      <text x="76" y="180" fill="#1f3342" font-size="15" font-weight="700">Support case #A-104</text>
+      <text x="76" y="197" fill="#58707f" font-size="12">shared evidence, sent once</text>
+
+      <text x="62" y="232" fill="#58707f" font-size="12" font-weight="700">MESSAGE</text>
+      <rect x="60" y="242" width="219" height="62" rx="4" fill="#f7fafc" stroke="#d3dfe5"/>
+      <text x="73" y="264" fill="#1f3342" font-size="13">“I was charged twice.</text>
+      <text x="73" y="284" fill="#1f3342" font-size="13">Please refund this today.”</text>
+
+      <text x="62" y="331" fill="#58707f" font-size="12" font-weight="700">ACCOUNT STATE</text>
+      <rect x="60" y="341" width="219" height="94" rx="4" fill="#f7fafc" stroke="#d3dfe5"/>
+      <circle cx="76" cy="362" r="4" fill="#0f766e"/>
+      <text x="89" y="367" fill="#1f3342" font-size="13">two captured charges</text>
+      <circle cx="76" cy="388" r="4" fill="#0f766e"/>
+      <text x="89" y="393" fill="#1f3342" font-size="13">refund policy attached</text>
+      <circle cx="76" cy="414" r="4" fill="#0f766e"/>
+      <text x="89" y="419" fill="#1f3342" font-size="13">customer identity verified</text>
+      <text x="62" y="454" fill="#6b7f8b" font-size="12">Text or structured JSON</text>
+    </g>
+
+    <path id="jev-flow-state-arrow" d="M311 305 H380" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-flow-arrow-blue)"/>
+
+    <g id="jev-flow-model" filter="url(#jev-flow-shadow)">
+      <text x="380" y="120" fill="#2878a8" font-size="15" font-weight="700">2  ASK IN PARALLEL</text>
+      <rect x="382" y="140" width="347" height="330" rx="6" fill="#203746" stroke="#203746" stroke-width="2"/>
+      <text x="555" y="180" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="700">Jev</text>
+      <text x="555" y="204" text-anchor="middle" fill="#b9cbd5" font-size="13">System One model</text>
+
+      <g id="jev-flow-q-choice">
+        <rect x="405" y="229" width="301" height="55" rx="5" fill="#edf6fb" stroke="#69a5c6"/>
+        <text x="421" y="251" fill="#2878a8" font-size="12" font-weight="700">CHOICE</text>
+        <text x="421" y="271" fill="#1f3342" font-size="14">Which team should own this case?</text>
+      </g>
+      <g id="jev-flow-q-noul">
+        <rect x="405" y="300" width="301" height="55" rx="5" fill="#eaf7f3" stroke="#58a89d"/>
+        <text x="421" y="322" fill="#0f766e" font-size="12" font-weight="700">NOUL</text>
+        <text x="421" y="342" fill="#1f3342" font-size="14">Does the policy permit a refund?</text>
+      </g>
+      <g id="jev-flow-q-score">
+        <rect x="405" y="371" width="301" height="55" rx="5" fill="#fff4e8" stroke="#d59a5f"/>
+        <text x="421" y="393" fill="#b45309" font-size="12" font-weight="700">SCORE</text>
+        <text x="421" y="413" fill="#1f3342" font-size="14">How urgent is the request?</text>
+      </g>
+
+      <g id="jev-flow-pulses">
+        <circle id="jev-flow-pulse-1" r="6" fill="#69a5c6"/>
+        <circle id="jev-flow-pulse-2" r="6" fill="#58a89d"/>
+        <circle id="jev-flow-pulse-3" r="6" fill="#d59a5f"/>
+      </g>
+    </g>
+
+    <path id="jev-flow-answer-arrow" d="M742 305 H798" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#jev-flow-arrow-teal)"/>
+
+    <g id="jev-flow-answers">
+      <text x="800" y="120" fill="#0f766e" font-size="15" font-weight="700">3  RECEIVE TYPED ANSWERS</text>
+      <g id="jev-flow-a-choice" filter="url(#jev-flow-shadow)">
+        <rect x="800" y="140" width="358" height="88" rx="6" fill="#ffffff" stroke="#69a5c6" stroke-width="2"/>
+        <text x="818" y="166" fill="#2878a8" font-size="13" font-weight="700">owner = billing</text>
+        <text x="818" y="188" fill="#58707f" font-size="12">billing 0.94  ·  support 0.05  ·  fraud 0.01</text>
+        <rect x="818" y="201" width="302" height="8" rx="4" fill="#e3edf2"/>
+        <rect id="jev-flow-choice-bar" x="818" y="201" width="284" height="8" rx="4" fill="#2878a8"/>
+      </g>
+      <g id="jev-flow-a-noul" filter="url(#jev-flow-shadow)">
+        <rect x="800" y="245" width="358" height="88" rx="6" fill="#ffffff" stroke="#58a89d" stroke-width="2"/>
+        <text x="818" y="271" fill="#0f766e" font-size="13" font-weight="700">policy permits refund = 0.97</text>
+        <text x="818" y="293" fill="#58707f" font-size="12">probability that the answer is yes</text>
+        <rect x="818" y="306" width="302" height="8" rx="4" fill="#e3edf2"/>
+        <rect id="jev-flow-noul-bar" x="818" y="306" width="293" height="8" rx="4" fill="#0f766e"/>
+      </g>
+      <g id="jev-flow-a-score" filter="url(#jev-flow-shadow)">
+        <rect x="800" y="350" width="358" height="120" rx="6" fill="#ffffff" stroke="#d59a5f" stroke-width="2"/>
+        <text x="818" y="376" fill="#b45309" font-size="13" font-weight="700">urgency = 1.7 / 3</text>
+        <text x="818" y="398" fill="#58707f" font-size="12">ordered levels with a probability distribution</text>
+        <rect x="818" y="416" width="68" height="15" rx="3" fill="#ead9c9"/>
+        <rect x="891" y="416" width="128" height="15" rx="3" fill="#d59a5f"/>
+        <rect x="1024" y="416" width="65" height="15" rx="3" fill="#edc391"/>
+        <rect x="1094" y="416" width="26" height="15" rx="3" fill="#f2dcc4"/>
+        <text x="818" y="450" fill="#6b7f8b" font-size="11">routine</text>
+        <text x="1084" y="450" fill="#6b7f8b" font-size="11">critical</text>
+      </g>
+    </g>
+
+    <g id="jev-flow-code" filter="url(#jev-flow-shadow)">
+      <text x="42" y="521" fill="#b45309" font-size="15" font-weight="700">4  COMPOSE IN CODE</text>
+      <rect x="42" y="540" width="1116" height="79" rx="6" fill="#ffffff" stroke="#d59a5f" stroke-width="2"/>
+      <text x="66" y="571" fill="#1f3342" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">if owner == "billing" and refund_probability &gt; 0.90:</text>
+      <text x="66" y="595" fill="#0f766e" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">    issue_duplicate_charge_refund()</text>
+      <g id="jev-flow-route-pill">
+        <rect x="884" y="558" width="241" height="42" rx="21" fill="#eaf7f3" stroke="#0f766e" stroke-width="2"/>
+        <text x="1005" y="584" text-anchor="middle" fill="#0f766e" font-size="14" font-weight="700">AUTOMATIC, AUDITABLE ROUTE</text>
+      </g>
+    </g>
+
+    <text x="42" y="653" fill="#6b7f8b" font-size="12">Conceptual execution model based on TypeSafe's public documentation; it does not reveal Jev's undisclosed internal layers.</text>
+    <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+      <text x="1158" y="653" text-anchor="end" fill="#2878a8" font-size="12" font-weight="600" text-decoration="underline">&#169; 2026 Michał Chromiak</text>
+    </a>
+  </svg>
+
+  <script>
+    (() => {
+      const duration = 10;
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+      const ease = (value) => { const p = clamp(value); return p * p * (3 - 2 * p); };
+      const byId = (id) => document.getElementById(id);
+      const reveal = (id, progress, dx = -16) => {
+        const p = ease(progress);
+        const element = byId(id);
+        element.style.opacity = String(0.16 + 0.84 * p);
+        element.setAttribute("transform", `translate(${(1 - p) * dx} 0)`);
+      };
+      const draw = (id, progress, length) => {
+        const element = byId(id);
+        element.style.strokeDasharray = String(length);
+        element.style.strokeDashoffset = String(length * (1 - ease(progress)));
+      };
+
+      window.renderFrame = (seconds) => {
+        const time = ((seconds % duration) + duration) % duration;
+        const state = clamp(time / 1.5);
+        const questions = clamp((time - 1.25) / 2.1);
+        const answers = clamp((time - 3.35) / 2.3);
+        const code = clamp((time - 5.65) / 1.9);
+
+        reveal("jev-flow-state", state);
+        draw("jev-flow-state-arrow", questions, 100);
+        reveal("jev-flow-model", questions);
+        reveal("jev-flow-q-choice", questions / 0.55, -12);
+        reveal("jev-flow-q-noul", (questions - 0.18) / 0.55, -12);
+        reveal("jev-flow-q-score", (questions - 0.36) / 0.55, -12);
+        draw("jev-flow-answer-arrow", answers, 80);
+        reveal("jev-flow-answers", answers);
+        reveal("jev-flow-a-choice", answers / 0.48, 12);
+        reveal("jev-flow-a-noul", (answers - 0.06) / 0.48, 12);
+        reveal("jev-flow-a-score", (answers - 0.12) / 0.48, 12);
+
+        const pulseProgress = ease(clamp((time - 2.4) / 1.8));
+        const lanes = [256, 327, 398];
+        ["jev-flow-pulse-1", "jev-flow-pulse-2", "jev-flow-pulse-3"].forEach((id, index) => {
+          byId(id).setAttribute("transform", `translate(${430 + pulseProgress * 245} ${lanes[index]})`);
+          byId(id).style.opacity = String(pulseProgress > 0 && pulseProgress < 1 ? 0.95 : 0.12);
+        });
+
+        byId("jev-flow-choice-bar").setAttribute("width", String(284 * ease(answers)));
+        byId("jev-flow-noul-bar").setAttribute("width", String(293 * ease(answers)));
+        reveal("jev-flow-code", code, 0);
+        byId("jev-flow-route-pill").style.opacity = String(0.18 + 0.82 * ease((code - 0.45) / 0.55));
+      };
+
+      window.renderFrame(0);
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("frame") && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const started = performance.now();
+        const loop = (now) => { window.renderFrame((now - started) / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      } else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        window.renderFrame(7.4);
+      }
+    })();
+  </script>
+</body>
+</html>
