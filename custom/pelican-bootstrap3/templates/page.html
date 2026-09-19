@@ -68,7 +68,7 @@
 {% endblock %}
 
 {% block content %}
-    <section id="content" class="body{% if page.slug == 'about' %} about-profile{% endif %}">
+    <section id="content" class="body{% if page.slug == 'about' %} about-profile{% elif page.slug == 'contact-detail' %} contact-profile{% endif %}">
         {% if page.title %}
         <h1 class="entry-title">{{ page.heading|default(page.title) }}</h1>
         {% endif %}

@@ -135,5 +135,92 @@
         });
     }
 
+    function tableLabel(table, index) {
+        var caption = table.querySelector('caption');
+        if (caption && caption.textContent.trim()) {
+            return caption.textContent.trim();
+        }
+
+        var firstHeader = table.querySelector('thead th');
+        var subject = firstHeader ? firstHeader.textContent.trim() : '';
+        var current = table;
+        while (current && !current.classList.contains('entry-content')) {
+            var sibling = current.previousElementSibling;
+            while (sibling) {
+                var headings = /^H[2-6]$/.test(sibling.tagName) ? [sibling] :
+                    sibling.querySelectorAll('h2, h3, h4, h5, h6');
+                if (headings.length) {
+                    var heading = headings[headings.length - 1].cloneNode(true);
+                    var permalink = heading.querySelector('.headerlink');
+                    if (permalink) {
+                        permalink.remove();
+                    }
+                    return heading.textContent.trim() + (subject ? ': ' + subject : '') + ' table';
+                }
+                sibling = sibling.previousElementSibling;
+            }
+            current = current.parentElement;
+        }
+        return subject ? subject + ' table' : 'Article data table ' + (index + 1);
+    }
+
+    function enhanceTable(table, index) {
+        if (table.classList.contains('article-table')) {
+            return;
+        }
+
+        var headerCells = table.querySelectorAll('thead th');
+        var firstRow = table.querySelector('tr');
+        var columnCount = firstRow ? firstRow.children.length : 0;
+        var wrapper = table.parentElement;
+
+        table.classList.add('article-table');
+        if (columnCount <= 2) {
+            table.classList.add('article-table--compact');
+        } else if (columnCount >= 4) {
+            table.classList.add('article-table--wide');
+        }
+
+        headerCells.forEach(function (cell) {
+            if (!cell.hasAttribute('scope')) {
+                cell.setAttribute('scope', 'col');
+            }
+        });
+
+        if (!wrapper || !wrapper.classList.contains('table-responsive')) {
+            wrapper = document.createElement('div');
+            table.parentNode.insertBefore(wrapper, table);
+            wrapper.appendChild(table);
+        }
+
+        wrapper.classList.add('article-table-wrap');
+        wrapper.setAttribute('role', 'region');
+        wrapper.setAttribute('aria-label', tableLabel(table, index));
+
+        function syncOverflowState() {
+            var scrollable = wrapper.scrollWidth > wrapper.clientWidth + 1;
+            wrapper.classList.toggle('is-scrollable', scrollable);
+            if (scrollable) {
+                wrapper.tabIndex = 0;
+            } else {
+                wrapper.removeAttribute('tabindex');
+            }
+        }
+
+        syncOverflowState();
+        if (window.ResizeObserver) {
+            var observer = new ResizeObserver(syncOverflowState);
+            observer.observe(wrapper);
+            observer.observe(table);
+        } else {
+            window.addEventListener('resize', syncOverflowState);
+            var details = table.closest('details');
+            if (details) {
+                details.addEventListener('toggle', syncOverflowState);
+            }
+        }
+    }
+
     document.querySelectorAll('.entry-content .highlight').forEach(enhanceCodeBlock);
+    document.querySelectorAll('.entry-content table').forEach(enhanceTable);
 })();
