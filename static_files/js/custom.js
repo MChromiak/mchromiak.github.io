@@ -21,7 +21,7 @@
     var new_tab = true;
     var set_icon = true;
     for (var links = document.links, i = 0, a; a = links[i]; i++) {
-        if (a.hostname !== hostname) {
+        if (/^https?:$/.test(a.protocol) && a.hostname !== hostname) {
             if (new_tab)
                 a.target = '_blank';
             if (set_icon)
