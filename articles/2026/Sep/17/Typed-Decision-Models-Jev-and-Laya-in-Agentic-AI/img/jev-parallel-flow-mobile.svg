@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1080" role="img" aria-labelledby="title desc">
-  <title id="title">How one Jev request becomes typed decisions</title>
-  <desc id="desc">A support case becomes shared state. Jev evaluates Choice, Noul, and Score questions in parallel and returns probability distributions. Code applies explicit policy.</desc>
+  <title id="title">How a bounded decision request becomes typed answers</title>
+  <desc id="desc">A support case becomes shared state. A decision model scores Choice, Noul, and Score questions and returns probability distributions. Code applies explicit policy.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#2878a8"/></marker>
   </defs>
@@ -12,14 +12,14 @@
   <rect x="32" y="142" width="656" height="142" rx="7" fill="#ffffff" stroke="#a6bdca" stroke-width="2"/>
   <text x="55" y="176" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700">Support case #A-104</text>
   <text x="55" y="205" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">“I was charged twice. Please refund this today.”</text>
-  <text x="55" y="235" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">two captured charges · refund policy · verified identity</text>
+  <text x="55" y="235" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">two captured charges · refund policy · identity record</text>
   <text x="55" y="263" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">State can be text or structured JSON</text>
   <path d="M360 294 V331" stroke="#2878a8" stroke-width="3" marker-end="url(#arrow)"/>
 
   <text x="32" y="374" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">2  ASK IN PARALLEL</text>
   <rect x="32" y="392" width="656" height="242" rx="7" fill="#203746"/>
-  <text x="360" y="431" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Jev</text>
-  <text x="360" y="455" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="12">internal layers are not publicly disclosed</text>
+  <text x="360" y="431" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Decision model</text>
+  <text x="360" y="455" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="12">Jev and Laya implement this pattern differently</text>
   <rect x="56" y="480" width="608" height="39" rx="5" fill="#edf6fb"/><text x="74" y="505" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Choice</text><text x="163" y="505" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">Which team owns this case?</text>
   <rect x="56" y="530" width="608" height="39" rx="5" fill="#eaf7f3"/><text x="74" y="555" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Noul</text><text x="163" y="555" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">Does policy permit a refund?</text>
   <rect x="56" y="580" width="608" height="39" rx="5" fill="#fff4e8"/><text x="74" y="605" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">Score</text><text x="163" y="605" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14">How urgent is the request?</text>
@@ -34,6 +34,6 @@
 
   <text x="32" y="975" fill="#b45309" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700">4  COMPOSE AND ACT IN CODE</text>
   <rect x="32" y="993" width="656" height="55" rx="7" fill="#fff7ed" stroke="#d59a5f"/>
-  <text x="55" y="1027" fill="#1f3342" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">if billing and p(refund) &gt; .90: issue_duplicate_refund()</text>
-  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/"><text x="688" y="1070" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" text-decoration="underline">© 2026 Michał Chromiak</text></a>
+  <text x="55" y="1027" fill="#1f3342" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">if billing and p(policy_fit) &gt; .90: queue_policy_checks()</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/"><text x="688" y="1070" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" text-decoration="underline">© 2026 Michał Chromiak</text></a>
 </svg>

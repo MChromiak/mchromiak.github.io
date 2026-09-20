@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Typed Decision Models: Jev and Laya in Agentic AI - Michał Chromiak's blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+
+    <script type="text/x-mathjax-config">
+        // Override render_math after configuration: local STIX may lack calligraphic glyphs.
+        MathJax.Hub.Register.StartupHook('End Config', function () {
+            MathJax.Hub.Config({
+                'HTML-CSS': {
+                    availableFonts: [],
+                    preferredFont: null,
+                    webFont: 'TeX'
+                }
+            });
+        });
+    </script>
+
+
+    <link href="https://mchromiak.github.io/static_files/img/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="https://mchromiak.github.io/static_files/img/favicon-32.png" rel="icon" type="image/png" sizes="32x32">
+    <link href="https://mchromiak.github.io/favicon.ico" rel="shortcut icon">
+    <link rel="apple-touch-icon" href="https://mchromiak.github.io/static_files/img/apple-touch-icon.png" sizes="180x180">
+    <link rel="manifest" href="https://mchromiak.github.io/static_files/site.webmanifest">
+    <meta name="theme-color" content="#2a80b9">
+
+<link rel="canonical" href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/">
+
+        <meta name="author" content="Michał Chromiak" />
+        <meta name="keywords" content="Decision Models,Jev,Laya,Agentic AI,Enterprise AI,Calibration,Structured Outputs" />
+        <meta name="description" content="Some AI tasks need a bounded judgment, not generated prose. Jev and Laya illustrate how decision models turn textual state and defined answer spaces into probability distributions. This guide explains the shared pattern, where the implementations differ, what their benchmarks establish, and how to evaluate them in an agentic workflow." />
+
+        <meta property="og:site_name" content="Michał Chromiak's blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Typed Decision Models: Jev and Laya in Agentic AI"/>
+        <meta property="og:url" content="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/"/>
+        <meta property="og:description" content="Some AI tasks need a bounded judgment, not generated prose. Jev and Laya illustrate how decision models turn textual state and defined answer spaces into probability distributions. This guide explains the shared pattern, where the implementations differ, what their benchmarks establish, and how to evaluate them in an agentic workflow."/>
+            <meta property="og:image" content="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg" />
+            <meta property="og:image:alt" content="Typed Decision Models: Jev and Laya in Agentic AI" />
+
+        <meta property="article:published_time" content="2026-09-17T12:00:00+02:00" />
+            <meta property="article:modified_time" content="2026-09-20T12:00:00+02:00" />
+            <meta property="article:section" content="Machine Learning / AI Systems" />
+            <meta property="article:tag" content="Decision Models" />
+            <meta property="article:tag" content="Jev" />
+            <meta property="article:tag" content="Laya" />
+            <meta property="article:tag" content="Agentic AI" />
+            <meta property="article:tag" content="Enterprise AI" />
+            <meta property="article:tag" content="Calibration" />
+            <meta property="article:tag" content="Structured Outputs" />
+            <meta property="article:author" content="Michał Chromiak" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Typed Decision Models: Jev and Laya in Agentic AI",
+      "description": "Some AI tasks need a bounded judgment, not generated prose. Jev and Laya illustrate how decision models turn textual state and defined answer spaces into probability distributions. This guide explains the shared pattern, where the implementations differ, what their benchmarks establish, and how to evaluate them in an agentic workflow.",
+      "url": "https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/"
+      },
+      "datePublished": "2026-09-17T12:00:00+02:00",
+      "dateModified": "2026-09-20T12:00:00+02:00",
+      "inLanguage": "en",
+"image": "https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg",      "author": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "pages/about.html",
+        "sameAs": ["https://orcid.org/0000-0002-6376-808X", "https://scholar.google.com/citations?user=UeOad3YAAAAJ", "https://www.linkedin.com/in/michal-chromiak", "https://github.com/MChromiak"]
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Micha\u0142 Chromiak",
+        "url": "pages/about.html"
+      }
+    }
+    </script>
+
+    <meta name="twitter:dnt" content="on">
+    <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@drChromiak">
+        <meta name="twitter:creator" content="@drChromiak">
+    <meta name="twitter:domain" content="https://mchromiak.github.io">
+        <meta property="twitter:image"
+              content="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg"/>
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://mchromiak.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://mchromiak.github.io/theme/css/pygments/monokai.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://mchromiak.github.io/theme/css/style.css" type="text/css"/>
+        <link href="https://mchromiak.github.io/static_files/css/custom.css" rel="stylesheet">
+
+        <link href="https://mchromiak.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog ATOM Feed"/>
+
+
+
+        <link href="https://mchromiak.github.io/feeds/machine-learning-ai-systems.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Michał Chromiak's blog Machine Learning / AI Systems ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://mchromiak.github.io/" class="navbar-brand">
+<img class="img-responsive pull-left gap-right" src="https://mchromiak.github.io/static_files/img/sitelogo40.png" width=""/> Michał Chromiak's blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://mchromiak.github.io/pages/about.html">
+                             About
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/categorisation.html">
+                             Categorisation
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/contact-detail.html">
+                             Contact
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/links.html">
+                             Links
+                          </a></li>
+                         <li><a href="https://mchromiak.github.io/pages/resources.html">
+                             Resources
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <ol class="breadcrumb">
+                <li><a href="https://mchromiak.github.io" title="Michał Chromiak's blog"><i class="fa fa-home fa-lg"></i></a></li>
+                <li><a href="https://mchromiak.github.io/category/machine-learning-ai-systems.html" title="Machine Learning / AI Systems">Machine Learning / AI Systems</a></li>
+                <li class="active">Typed Decision Models: Jev and Laya in Agentic AI</li>
+            </ol>
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/"
+                       rel="bookmark"
+                       title="Permalink to Typed Decision Models: Jev and Laya in Agentic AI">
+                        Typed Decision Models: Jev and Laya in Agentic AI
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2026-09-17T12:00:00+02:00"> Thu, 17 Sep 2026</time>
+    </span>
+          <span class="label label-default">Modified</span>
+            <span class="modified">
+                <i class="fa fa-calendar"></i><time datetime="2026-09-20T12:00:00+02:00"> Sun, 20 Sep 2026</time>
+            </span>
+
+
+            <span class="label label-default">By</span>
+            <a href="https://mchromiak.github.io/pages/about.html"><i class="fa fa-user"></i> Michał Chromiak</a>
+
+        <span class="label label-default">Category</span>
+        <a href="https://mchromiak.github.io/category/machine-learning-ai-systems.html">Machine Learning / AI Systems</a>
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://mchromiak.github.io/tag/decision-models.html">Decision Models</a>
+        /
+	<a href="https://mchromiak.github.io/tag/jev.html">Jev</a>
+        /
+	<a href="https://mchromiak.github.io/tag/laya.html">Laya</a>
+        /
+	<a href="https://mchromiak.github.io/tag/agentic-ai.html">Agentic AI</a>
+        /
+	<a href="https://mchromiak.github.io/tag/enterprise-ai.html">Enterprise AI</a>
+        /
+	<a href="https://mchromiak.github.io/tag/calibration.html">Calibration</a>
+        /
+	<a href="https://mchromiak.github.io/tag/structured-outputs.html">Structured Outputs</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <hr>
+<p>Imagine a customer writes: “I was charged twice. Please refund the duplicate today.” An AI system may need to draft a reply, but the application first needs narrower judgments: Which team owns the case? Does the policy appear to cover it? How urgent is the message?</p>
+<p>Each judgment has an answer space we can define before seeing this particular ticket. That suggests a different interface from asking a language model to write a paragraph: give a model the relevant text, ask a bounded question, and receive a distribution over the permitted answers. <strong>The model interprets language; code decides what to do with the result.</strong></p>
+<p><a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Jev</a> and <a href="https://github.com/NandhaKishorM/laya">Laya</a> are two current examples. They share the broad idea of returning typed decisions rather than prose, but they are different products with different disclosed internals, training evidence, deployment choices, and limits. “Typed decision model” is a useful description of this <em>task and interface</em>, not the name of one established neural architecture.</p>
+<p><img alt="Editorial cover showing textual state entering a decision model and emerging as bounded probability distributions." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg"></p>
+<p align="center">Figure 1. Shared textual state and defined answer spaces turn a vague automation request into explicit judgments that software can inspect.</p>
+<h2 id="the-decision-pattern">The decision pattern<a class="headerlink" href="#the-decision-pattern" title="Permanent link">🔗</a></h2>
+<p>The application supplies three things: <strong>state</strong> (the evidence), <strong>questions</strong> (the judgments needed), and <strong>answer spaces</strong> (the allowed outcomes). A model returns answers and probability distributions. Code then checks permissions, applies thresholds and hard rules, and chooses whether to act, ask an LLM, or send the case to a person.</p>
+<p>For a choice question, the intended object is a distribution such as <span class="math">\(p(y\mid x,q,C)\)</span>: the probability of answer <span class="math">\(y\)</span> given state <span class="math">\(x\)</span>, question <span class="math">\(q\)</span>, and allowed choices <span class="math">\(C\)</span>. That notation describes the <em>interface</em>. It does not imply that every model estimates well-calibrated probabilities or uses the same internal architecture.</p>
+<p>Jev names its three question types <strong>Noul</strong>, <strong>Choice</strong>, and <strong>Score</strong>. Laya exposes similarly named typed questions. <a href="https://docs.typesafe.ai/primitives">TypeSafe primitives</a>; <a href="https://github.com/NandhaKishorM/laya#decision-primitives">Laya API</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Question shape</th>
+<th>Example</th>
+<th>What the application receives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Yes/no (Noul)</strong></td>
+<td>Did the customer request a refund?</td>
+<td>A probability for “yes”</td>
+</tr>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Which team owns the case?</td>
+<td>A selected option and a distribution over the declared options</td>
+</tr>
+<tr>
+<td><strong>Ordinal Score</strong></td>
+<td>How urgent is the message?</td>
+<td>A position on an ordered rubric and a distribution over its levels</td>
+</tr>
+</tbody>
+</table>
+<p>The word <em>bounded</em> matters. A Choice model cannot name a team outside the list we supplied. That is a useful type guarantee, not a correctness guarantee: if <code>fraud</code> is missing from the list, the model may confidently choose <code>billing</code>. Include <code>other</code> or <code>none_of_the_above</code> where the list may be incomplete.</p>
+<p><a href="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/" aria-label="Open the canonical typed decision models article by Michał Chromiak"><picture><source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-parallel-flow-mobile.svg?v=20260920" width="720" height="1080"><source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-parallel-flow-static.png?v=20260920" width="1200" height="675"><source media="(min-width: 601px)" srcset="../img/jev-parallel-flow.webp?v=20260920" width="1200" height="675"><img src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-parallel-flow-mobile.svg?v=20260920" width="720" height="1080" loading="lazy" decoding="async" alt="A support case and three bounded questions enter a decision model; probability distributions return together, while code keeps the refund rule and action permissions."></picture></a></p>
+<p align="center">Figure 2. The common workflow: reuse relevant state for several bounded judgments, then compose the results in ordinary code. Jev and Laya expose comparable question types, although their implementations are not interchangeable. Sources: <a href="https://docs.typesafe.ai/introduction">TypeSafe introduction</a> and <a href="https://github.com/NandhaKishorM/laya">Laya README</a>.</p>
+<p>For our duplicate-charge ticket, illustrative outputs might be <code>billing: 0.94</code>, <code>policy appears to permit refund: 0.97</code>, and an urgency score of <code>1.7 / 3</code> with its full level distribution. These are example numbers, not a measured response from either model. Neither model has authorized a refund. Code must still verify the charges, identity, refund limits, and permissions.</p>
+<p>Questions sharing the same state can be batched, but dependencies still belong in the workflow. If question B needs the answer to question A, put that answer into a later request or compute the dependency in code. The useful rule is <strong>one semantic judgment per question; composition and side effects in code</strong>.</p>
+<details class="dinov2-background">
+<summary>Optional detail: Choice, Score, and Noul are not interchangeable</summary>
+<p>A <strong>Noul</strong> value of <code>0.5</code> means that “yes” and “no” receive equal probability. It does not mean that the underlying property has medium intensity. To represent intensity, use a Score with explicit ordered levels.</p>
+<p>A <strong>Choice</strong> assumes the valid outcomes form a fixed set. If the listed options may be incomplete, include <code>other</code> or <code>none_of_the_above</code>; otherwise the model must select the least-wrong declared option.</p>
+<p>A <strong>Score</strong> is a probability-weighted position across two to ten ordered levels. With three zero-indexed levels and probabilities <code>0.25</code>, <code>0.50</code>, and <code>0.25</code>, the returned score is <code>0×0.25 + 1×0.50 + 2×0.25 = 1.0</code>. Different distributions can produce that same value, so inspect the distribution when the shape matters. A Score is not a reconstructed dollar amount, duration, or probability of loss.</p>
+<p>TypeSafe currently documents up to 255 Choice options, two to ten Score levels, a 64k-token combined request limit, and a 32k-token limit for the state plus the longest question. Those are product limits, not properties of the general idea.</p>
+</details>
+<h2 id="two-implementations-one-task-shape">Two implementations, one task shape<a class="headerlink" href="#two-implementations-one-task-shape" title="Permanent link">🔗</a></h2>
+<p>The shared contract does not make Jev and Laya the same model. TypeSafe calls Jev a <strong>System One Model</strong> and says it uses a new architecture, a parallel sampler, and post-training called Reinforcement Learning for Calibrated Decisions (RLCD). It has not published the neural topology, parameter count, training recipe, or loss. We can describe its documented behavior, not draw its hidden layers. <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">TypeSafe launch</a>.</p>
+<p>Laya is open-source and more inspectable. Its English and typed-decision checkpoints use a 421-million-parameter ModernBERT-large encoder; its multilingual checkpoint uses a 322-million-parameter mmBERT-base encoder. A question-and-option head scores declared answers without writing a response token by token. The project supplies code, weights, a router, and benchmark scripts. Those assets make local deployment and task-specific fine-tuning possible, but the published results depend strongly on the checkpoint and the task. <a href="https://github.com/NandhaKishorM/laya">Laya repository</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Design choice</th>
+<th>Jev</th>
+<th>Laya</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployment</td>
+<td>TypeSafe's managed API</td>
+<td>Open weights and code; run and maintain it yourself</td>
+</tr>
+<tr>
+<td>Disclosed internals</td>
+<td>Parallel sampling and RLCD are described; network architecture is not published</td>
+<td>ModernBERT/mmBERT encoder with a typed-option head is documented</td>
+</tr>
+<tr>
+<td>Typical input budget</td>
+<td>TypeSafe documents a 64k-token combined request limit</td>
+<td>Default checkpoints use 512 or 1,024 tokens; configuration and encoder capacity differ</td>
+</tr>
+<tr>
+<td>Adaptation</td>
+<td>Versioned provider model</td>
+<td>Fine-tune a checkpoint and fit calibration to the target domain</td>
+</tr>
+<tr>
+<td>Main operational trade-off</td>
+<td>Less infrastructure to own, but provider dependence</td>
+<td>More control over data and deployment, but model serving and evaluation are yours</td>
+</tr>
+</tbody>
+</table>
+<p>These are <strong>product and deployment differences</strong>, not a verdict about which is universally more accurate. Laya's author published earlier work on fast probability estimates for sales conversations in <a href="https://arxiv.org/abs/2503.23303">2025</a>. That is relevant intellectual history, but it is not evidence that the current Laya checkpoints or Jev's undisclosed architecture existed then.</p>
+<details class="dinov2-background">
+<summary>Optional detail: What differs inside Laya's checkpoints?</summary>
+<p>The <code>laya</code> English checkpoint and <code>laya-typed-decisions</code> share an encoder family but serve different roles. The latter was fine-tuned on the training split of the typed-decisions benchmark; the base English and multilingual checkpoints perform much worse on that test without specialization. The multilingual checkpoint can handle more scripts, but its quality is not uniform across languages. The router selects a checkpoint before inference rather than trusting a confidently wrong out-of-language answer. <a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md">Laya README and benchmark report</a>.</p>
+<p>The context figures in the table are documented defaults, not absolute architectural ceilings. Raising a configured limit consumes memory and computation and does not guarantee reliable long-document decisions. Jev's larger advertised request limit likewise says little by itself about accuracy on long, noisy state.</p>
+</details>
+<h2 id="why-this-differs-from-asking-an-llm">Why this differs from asking an LLM<a class="headerlink" href="#why-this-differs-from-asking-an-llm" title="Permanent link">🔗</a></h2>
+<p>Think of two forms. A generative LLM receives a mostly blank page and writes an answer. A decision model receives a scorecard whose boxes and permitted values are already defined. The distinction concerns the requested output and the work needed to produce it; it does not prove that all decision models share one architecture.</p>
+<h3 id="a-conventional-llm-generates-a-sequence">A conventional LLM generates a sequence<a class="headerlink" href="#a-conventional-llm-generates-a-sequence" title="Permanent link">🔗</a></h3>
+<p>A decoder-style language model assigns probabilities to the next token given the tokens already present. It selects a token, appends it to the sequence, and repeats until the response is complete. This autoregressive process is powerful because a sequence can represent almost anything: prose, code, a plan, a tool call, or structured data.</p>
+<p>The flexibility has a cost. Output length adds sequential decoding work. If the result must drive software, the system also needs a contract around the generated sequence. Modern structured-output APIs can constrain an LLM to valid JSON, so malformed output is not inevitable. But the model is still being used as a generator, and application-level uncertainty over the business choices is usually not the native output.</p>
+<h3 id="a-decision-model-scores-declared-answers">A decision model scores declared answers<a class="headerlink" href="#a-decision-model-scores-declared-answers" title="Permanent link">🔗</a></h3>
+<p>The caller declares yes/no, Choice, or Score answer spaces before inference. Jev says it returns several independent distributions through a parallel sampler; Laya uses a bidirectional encoder and an option-scoring head. Neither has to generate an explanatory paragraph for a bounded judgment. This contrasts with autoregressive output, but not with every possible classifier or structured-output system.</p>
+<p><a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-vs-llm.svg"><img alt="Comparison of an autoregressive LLM decoding a token sequence and a bounded decision model scoring declared answers." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-vs-llm.svg"></a></p>
+<p align="center">Figure 3. The visible contrast is sequence generation versus distributions over declared answer spaces. Jev's internals are not public; Laya documents its encoder and head. Sources: <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">TypeSafe launch</a> and <a href="https://github.com/NandhaKishorM/laya">Laya repository</a>.</p>
+<p>The resulting advantages follow from specialization:</p>
+<ul>
+<li><strong>Less sequential output work.</strong> The model is not decoding a paragraph or JSON document token by token.</li>
+<li><strong>A bounded result by construction.</strong> Choice cannot invent an option outside the supplied set; Noul remains a yes/no probability; Score remains on the declared rubric.</li>
+<li><strong>Several questions can share prepared state.</strong> This avoids sending the same evidence in separate sequential calls when the implementation supports batching.</li>
+<li><strong>Uncertainty is available to policy.</strong> Code can inspect the complete distribution rather than only the winning label.</li>
+<li><strong>Control flow stays visible.</strong> Thresholds, deterministic rules, permissions, and side effects remain in ordinary software.</li>
+</ul>
+<p>These benefits appear when the answer space is known in advance. A narrow interface gives up the ability to write arbitrary strings. It does not automatically give better accuracy, calibration, or latency than a well-built classifier or LLM on a particular workload.</p>
+<details class="dinov2-background">
+<summary>Optional detail: Why structured-output LLMs are still different</summary>
+<p>Constrained decoding can make an LLM emit JSON that conforms to a schema. That solves an important engineering problem, and it means “LLMs always require fragile parsing” is no longer accurate.</p>
+<p>The proposed distinction is deeper than JSON syntax: Jev and Laya aim to score bounded answers directly, while a structured-output LLM remains a generator even when decoding is constrained. The LLM remains useful when a schema contains generated strings or the task requires flexible reasoning before filling it.</p>
+<p>Compare the complete workload rather than the interface label: quality, latency, cost, stability, usefulness of the probabilities, and integration effort.</p>
+</details>
+<h2 id="what-the-probabilities-mean">What the probabilities mean<a class="headerlink" href="#what-the-probabilities-mean" title="Permanent link">🔗</a></h2>
+<p>Both products return numbers that look like probabilities. To <strong>calibrate</strong> them, we need a population of cases with known outcomes. Think of a weather forecast: among days labelled “80% chance of rain,” rain should occur roughly 80% of the time. The analogous test groups model decisions assigned probability <code>0.8</code> and checks their observed frequency.</p>
+<p>Calibration says nothing certain about a single case. A ticket routed to <code>billing</code> with probability <code>0.8</code> can still belong to <code>fraud</code>. The schema only guarantees that the answer is one of the declared choices; it does not guarantee that the chosen answer is correct.</p>
+<p>Jev's Choice and Score responses also include <code>confidence</code>, a scalar derived from the distribution's shape. A concentrated distribution has higher confidence than a flat one; Noul already supplies a yes/no probability. Laya uses comparable field names, but equal-looking fields do not establish equal calibration across providers. <a href="https://docs.typesafe.ai/confidence">TypeSafe confidence semantics</a>; <a href="https://github.com/NandhaKishorM/laya#decision-primitives">Laya API</a>.</p>
+<p>Compare two Choice results:</p>
+<div class="highlight"><pre><span></span><code>A: billing 0.94 | technical 0.05 | other 0.01
+B: billing 0.40 | technical 0.35 | other 0.25
+</code></pre></div>
+
+<p>Both select <code>billing</code>, but they tell different stories. Result A is concentrated around one answer. Result B is almost a three-way contest and should be treated more cautiously. Looking only at the winning label would hide that difference.</p>
+<p>Four related quantities are easy to confuse:</p>
+<ul>
+<li><strong>Probability</strong> belongs to an outcome, such as <code>P(refund permitted) = 0.83</code>.</li>
+<li><strong>Confidence</strong> may summarize how concentrated a multi-option distribution is; inspect each provider's definition.</li>
+<li><strong>Correctness</strong> is established only by comparing the prediction with an appropriate reference outcome.</li>
+<li><strong>Calibration</strong> asks whether probability estimates match frequencies over many cases.</li>
+</ul>
+<p>TypeSafe describes RLCD as post-training for calibrated decisions but did not publish a cross-domain calibration study with its launch. Laya reports calibration tests and also says its base checkpoints are overconfident as shipped; its stronger expected-calibration-error result follows temperature fitting on held-out data. That fitting is a deployment step, not an intrinsic guarantee. <a href="https://docs.typesafe.ai/introduction/machine-learning-primer">TypeSafe's RLCD primer</a>; <a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md">Laya benchmark report</a>.</p>
+<p>Treat either product's probabilities as estimates to validate on representative labelled traffic. Recheck them after changing the model, prompt/schema, language, or application domain. If the cost of a false positive is high, compare decisions and uncertainty at the threshold that actually controls the workflow, not only overall accuracy.</p>
+<h2 id="what-the-comparisons-actually-show">What the comparisons actually show<a class="headerlink" href="#what-the-comparisons-actually-show" title="Permanent link">🔗</a></h2>
+<p>There is no single “Jev versus Laya” number. A vendor workflow, a fine-tuned checkpoint on a matching training split, and a fresh third-party task set answer different questions. Read each result with its task, model version, hardware, and reference labels attached.</p>
+<h3 id="jev-against-llm-workflows">Jev against LLM workflows<a class="headerlink" href="#jev-against-llm-workflows" title="Permanent link">🔗</a></h3>
+<p>TypeSafe publishes four workflow evaluations: security incidents, agent-trace observability, invoice processing, and customer service. Each one turns a business policy into narrow model questions plus deterministic code, then runs the same workflow with Jev and several LLMs. <a href="https://evals.typesafe.ai/">Interactive workflow evaluations</a>.</p>
+<p>In Figure 4, moving right means spending more per case and moving up means agreeing more often with TypeSafe's reference. The most attractive region is therefore the upper-left corner.</p>
+<p><a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-workflow-eval-replot.svg"><img alt="Scatterplot of agreement with TypeSafe's model-derived reference versus reported cost per case. Jev is far left at 67.8 percent and 0.0004 dollars, while several LLM workflows show similar or higher agreement at higher cost." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-workflow-eval-replot.svg"></a></p>
+<p align="center">Figure 4. Jev reports 67.8% mean agreement at $0.0004 and 0.4 seconds per case. GPT-5.6 Terra reports 67.9% at $0.0304 and 10.1 seconds; GPT-5.6 Sol reports 74.1% at $0.0836 and 23.3 seconds. Data: <a href="https://evals.typesafe.ai/">TypeSafe workflow evals</a>, accessed September 17, 2026.</p>
+<p>Jev sits far to the left while remaining close to several LLM configurations on the vertical axis. The clearest pair is Jev and GPT-5.6 Terra: their reported agreement differs by only 0.1 percentage point, while Terra costs about 76 times more and takes about 25 times longer per case using the rounded values shown. That comparison applies to these four bounded decision workflows, not to the open-ended generation and reasoning tasks that Jev cannot perform.</p>
+<p>The vertical axis is <strong>agreement</strong>, not independently annotated accuracy. TypeSafe constructs its reference by averaging answers from GPT-6 Astra and Claude Fable 5.1 at high thinking. Its own model-capabilities team wrote the workflows, and each non-reference model uses its provider's default reasoning setting. Laya was not part of this evaluation. These choices make the plot a useful Jev-versus-LLM vendor demonstration, not a Jev-versus-Laya leaderboard.</p>
+<details class="dinov2-background">
+<summary>Optional detail: Per-workflow results and methodology</summary>
+<p>The aggregate gives all four workflows equal weight. Jev's displayed per-workflow results are:</p>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th style="text-align: right;">Reference agreement</th>
+<th style="text-align: right;">Reported cost per case</th>
+<th style="text-align: right;">Reported time per case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security incidents</td>
+<td style="text-align: right;">61.7%</td>
+<td style="text-align: right;">$0.0001</td>
+<td style="text-align: right;">0.3 s</td>
+</tr>
+<tr>
+<td>Agent-trace observability</td>
+<td style="text-align: right;">71.6%</td>
+<td style="text-align: right;">$0.0003</td>
+<td style="text-align: right;">0.5 s</td>
+</tr>
+<tr>
+<td>Invoice processing</td>
+<td style="text-align: right;">61.8%</td>
+<td style="text-align: right;">$0.0011</td>
+<td style="text-align: right;">0.5 s</td>
+</tr>
+<tr>
+<td>Customer service</td>
+<td style="text-align: right;">76.0%</td>
+<td style="text-align: right;">$0.0001</td>
+<td style="text-align: right;">0.4 s</td>
+</tr>
+</tbody>
+</table>
+<p>The spread matters. Invoice processing, for example, is a case where several LLM workflows score materially higher than Jev. An aggregate should not become a service-level promise for a different domain.</p>
+<p>Latency was measured by TypeSafe from laptops on the US West Coast, where its service was hosted. Costs use provider prices at evaluation time. TypeSafe acknowledges possible workflow bias and that its largest advertised gains are likely at the high end of real-world results. Its homepage multipliers also depend on the selected comparator and workload, so the per-model values above are more informative than one universal speedup claim.</p>
+</details>
+<h3 id="what-laya-adds-and-what-it-does-not-establish">What Laya adds, and what it does not establish<a class="headerlink" href="#what-laya-adds-and-what-it-does-not-establish" title="Permanent link">🔗</a></h3>
+<p>The Laya project reports <code>0.766</code> top-label accuracy on 2,000 typed decisions for a checkpoint <strong>fine-tuned on that benchmark's training split</strong>, compared with a published Jev result of <code>0.727</code>. Its base English and multilingual checkpoints score <code>0.362</code> and <code>0.342</code> on the same test, below the reported <code>0.461</code> majority-class baseline. The improvement is evidence that specialization matters, not that any Laya checkpoint beats Jev out of the box. The Jev figure was imported from another run, so prompts and sample conditions were not identical. <a href="https://github.com/NandhaKishorM/laya/blob/main/README.md#benchmarks">Laya results and caveats</a>.</p>
+<p>The distribution-level picture differs from the winning-label picture. On that typed-decisions comparison, Jev has higher reported <em>soft accuracy</em> against the reference distributions (<code>0.580</code> versus <code>0.471</code>), while Laya's fine-tuned checkpoint has better reported top-label accuracy. Laya's raw calibration error on this set is higher (<code>0.213</code> versus Jev's published <code>0.144</code>); the stronger Laya calibration headline uses additional temperature fitting. These figures should not be collapsed into “better probabilities.” <a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md">Laya benchmark report</a>.</p>
+<p>An independent check points the other way on broader tasks. <a href="https://github.com/fstandhartinger/jevbench/blob/main/RESULTS-v1.2.md">JevBench v1.2</a> ranks Jev above the tested base Laya English checkpoint on its mixed decision suite. That Laya run used default 512-token question budgets and CPU inference, so it neither measures the specialized typed-decisions checkpoint nor fairly compares local GPU latency with Jev's hosted API. It does show why a result on one trained task should not be generalized to long policies and unfamiliar questions.</p>
+<p>Laya also reports short local GPU inference times; Jev reports end-to-end hosted latency. Those are different measurement boundaries. A decision between them needs a same-task test at your own serving boundary, including network, batch size, cold starts, model hosting cost, and human-review volume.</p>
+<h2 id="where-decision-models-fit-in-an-agent-stack">Where decision models fit in an agent stack<a class="headerlink" href="#where-decision-models-fit-in-an-agent-stack" title="Permanent link">🔗</a></h2>
+<p>A bounded decision model is not an agent: it does not own a goal, generate a plan, write a customer message, or operate tools. Its role is a <strong>semantic decision layer</strong> between unstructured evidence and code that controls a workflow. Jev and Laya are candidates for this layer, not a reason to replace every existing rule or classifier.</p>
+<p>Consider a support agent. The LLM may need to synthesize a conversation, retrieve evidence, draft a response, and propose an approved tool call. A decision model can sit at narrower boundaries:</p>
+<ul>
+<li>before the LLM, classify intent and choose the appropriate specialist;</li>
+<li>after retrieval, score passages for relevance, contradiction, or prompt injection;</li>
+<li>before a tool call, judge whether the request matches policy and whether review is needed;</li>
+<li>after generation, verify that a response addresses the request or that cited evidence supports a claim;</li>
+<li>after the run, triage the trace for silent failures and prioritize human review.</li>
+</ul>
+<p><a href="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/" aria-label="Open the canonical typed decision models article by Michał Chromiak"><picture><source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-enterprise-routing-mobile.svg?v=20260920" width="720" height="1130"><source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-enterprise-routing-static.png?v=20260920" width="1200" height="675"><source media="(min-width: 601px)" srcset="../img/jev-enterprise-routing.webp?v=20260920" width="1200" height="675"><img src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-enterprise-routing-mobile.svg?v=20260920" width="720" height="1130" loading="lazy" decoding="async" alt="Enterprise workflow: code prepares relevant state, a bounded decision model supplies judgments, and explicit risk rules route work to code, an LLM, or human review before controlled tools act and outcomes are logged."></picture></a></p>
+<p align="center">Figure 5. Code owns state preparation, policy, permissions, and side effects. A decision model supplies bounded judgments; LLMs generate and reason; people handle uncertain or high-impact exceptions. The layout is a conceptual application pattern, not a claim about either model's internals. Sources: TypeSafe's <a href="https://docs.typesafe.ai/concepts/how-to-build-with-system-one">system-design guidance</a> and <a href="https://docs.typesafe.ai/patterns/intent-routing">intent-routing pattern</a>.</p>
+<p>Follow one request through the diagram. Code first retrieves the customer record and relevant policy, calculates exact values such as dates and amounts, and removes unrelated history. The model then scores intent, policy fit, risk, and urgency. A routine order-status request can go to deterministic code only after hard checks; a product question can go to a specialist LLM; an uncertain complaint can go to a person. The thresholds remain visible in code rather than buried in an agent prompt.</p>
+<p>Batching can also reduce sequential agent loops. As one product-specific example, TypeSafe's regulatory-document cookbook reports that one Jev call with 13 independent questions was 12.2 times cheaper and 10.0 times faster than thirteen sequential calls, with similar outputs across five repeats. Concurrent calls would narrow that latency comparison. Laya also batches questions, but its throughput must be measured separately on the chosen hardware. <a href="https://docs.typesafe.ai/cookbooks/parallel_questions">TypeSafe cookbook</a>; <a href="https://github.com/NandhaKishorM/laya#speed-tesla-t4-measured">Laya speed measurements</a>.</p>
+<h2 id="which-tool-should-do-which-job">Which tool should do which job?<a class="headerlink" href="#which-tool-should-do-which-job" title="Permanent link">🔗</a></h2>
+<table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Best starting point</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact arithmetic, date comparison, database lookup, authorization, hard policy</td>
+<td><strong>Code</strong></td>
+<td>Deterministic, testable, auditable, and usually cheaper</td>
+</tr>
+<tr>
+<td>Bounded semantic classification, scoring, routing, or verification over text</td>
+<td><strong>Decision model candidate</strong></td>
+<td>Typed distributions over declared outcomes; compare Jev, Laya, and conventional classifiers on your task</td>
+</tr>
+<tr>
+<td>Explanation, conversation, synthesis, planning, code, or any open-ended output</td>
+<td><strong>LLM</strong></td>
+<td>Generative flexibility is the requirement, not overhead</td>
+</tr>
+<tr>
+<td>Ambiguous, novel, regulated, or high-impact exception</td>
+<td><strong>Human review</strong></td>
+<td>Accountability and contextual judgment outweigh automation speed</td>
+</tr>
+<tr>
+<td>A real enterprise process</td>
+<td><strong>A deliberate combination</strong></td>
+<td>Different stages have different accuracy, latency, control, and accountability needs</td>
+</tr>
+</tbody>
+</table>
+<p>A useful test is: <strong>Can I enumerate the valid answer space before seeing the case?</strong> If yes, and the hard part is a semantic judgment over text, test a decision model against a conventional classifier and a structured-output LLM. If the output must contain new language, a novel plan, or a chain of reasoning, use an LLM. If code can calculate the answer exactly, do not call a model.</p>
+<h2 id="the-same-task-through-two-apis">The same task through two APIs<a class="headerlink" href="#the-same-task-through-two-apis" title="Permanent link">🔗</a></h2>
+<p>The two APIs are not drop-in replacements. The Jev SDK expresses each question with a Python class; Laya takes a dictionary and can run locally. Both can provide judgments to the <em>same application-owned</em> policy. Here is the Jev form, using the official Python SDK:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typesafe_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Choice</span><span class="p">,</span> <span class="n">Noul</span><span class="p">,</span> <span class="n">Score</span><span class="p">,</span> <span class="n">TypeSafeClient</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;I was charged twice. Please refund the duplicate today.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;charges&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;amount_usd&quot;</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;captured&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;amount_usd&quot;</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;captured&quot;</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;policy&quot;</span><span class="p">:</span> <span class="s2">&quot;Verified duplicate charges are eligible for a refund.&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">with</span> <span class="n">TypeSafeClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">system_one</span><span class="p">(</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+        <span class="n">questions</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="n">Choice</span><span class="p">(</span>
+                <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;Which team owns the primary issue?&quot;</span><span class="p">,</span>
+                <span class="n">criteria</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;billing&quot;</span><span class="p">:</span> <span class="s2">&quot;Charges, invoices, refunds, or subscriptions.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;technical&quot;</span><span class="p">:</span> <span class="s2">&quot;Product failures or errors.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;Login, permissions, or account security.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;None of the listed teams fits.&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;refund_allowed&quot;</span><span class="p">:</span> <span class="n">Noul</span><span class="p">(</span>
+                <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;Does `policy` permit the refund requested in `message`, given `charges`?&quot;</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;urgency&quot;</span><span class="p">:</span> <span class="n">Score</span><span class="p">(</span>
+                <span class="n">instructions</span><span class="o">=</span><span class="s2">&quot;How urgent is the request expressed in `message`?&quot;</span><span class="p">,</span>
+                <span class="n">criteria</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;Routine: no stated deadline or ongoing harm.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Time-sensitive: the customer asks for prompt resolution.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Urgent: delay is causing material harm.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Critical: immediate intervention is required.&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">owner</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">answers</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
+<span class="n">refund_probability</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">answers</span><span class="p">[</span><span class="s2">&quot;refund_allowed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">noul</span>
+
+<span class="k">if</span> <span class="n">owner</span><span class="o">.</span><span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;billing&quot;</span> <span class="ow">and</span> <span class="n">refund_probability</span> <span class="o">&gt;</span> <span class="mf">0.90</span><span class="p">:</span>
+    <span class="n">queue_duplicate_refund_for_policy_checks</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">route_to_review</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The model interprets language. Code still verifies identity, compares charge amounts, enforces authorization, applies refund limits, records the action, and makes it idempotent. A high model probability must never become a substitute for transaction controls.</p>
+<p>Laya expresses a similar request with dictionary schemas. This abbreviated example shows the interface rather than a validated refund policy: <a href="https://github.com/NandhaKishorM/laya#quickstart-route-mode-recommended">Laya quickstart</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">laya</span><span class="w"> </span><span class="kn">import</span> <span class="n">Router</span>
+
+<span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="p">()</span>
+<span class="n">decision</span> <span class="o">=</span> <span class="n">router</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">state</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;owner&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;choice&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="s2">&quot;Which team owns the primary issue?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;criteria&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;billing&quot;</span><span class="p">:</span> <span class="s2">&quot;charges, invoices, refunds, or subscriptions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;technical&quot;</span><span class="p">:</span> <span class="s2">&quot;product failures or errors&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;login, permissions, or account security&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;none of the listed teams fits&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;refund_requested&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;noul&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;instructions&quot;</span><span class="p">:</span> <span class="s2">&quot;Does the customer explicitly request a refund?&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+<span class="n">owner</span> <span class="o">=</span> <span class="n">decision</span><span class="p">[</span><span class="s2">&quot;answers&quot;</span><span class="p">][</span><span class="s2">&quot;owner&quot;</span><span class="p">][</span><span class="s2">&quot;choice&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>The snippets ask related, not byte-identical, questions. A fair production comparison would normalize both providers' outputs, use one frozen question set and policy, and evaluate the resulting decisions against the same labelled cases.</p>
+<h2 id="failure-modes-that-matter-in-production">Failure modes that matter in production<a class="headerlink" href="#failure-modes-that-matter-in-production" title="Permanent link">🔗</a></h2>
+<p>The shared interface brings shared engineering hazards, while each model adds its own. TypeSafe's <a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13">Jev 1.13 limitations</a> and Laya's <a href="https://github.com/NandhaKishorM/laya#honest-limits">documented limits</a> suggest five boundaries:</p>
+<ol>
+<li><strong>Keep exact work in code.</strong> Jev documents weaknesses in numerical precision, counting, and date comparison; a small encoder is not a substitute for exact computation either. Parse timestamps, calculate amounts, check authorization, and enforce hard limits deterministically.</li>
+<li><strong>Prepare focused, untrusted state.</strong> Retrieve only the evidence needed for the question. Test adversarial content and prompt injection because text inside the state can influence the result.</li>
+<li><strong>Leave room for “none of the above.”</strong> A closed Choice with an incomplete option list forces the model to select the least-wrong answer.</li>
+<li><strong>Validate and version the decision boundary.</strong> Measure precision, recall, coverage, calibration, and business cost. Pin the Jev model version or Laya checkpoint and record any local calibration fit used to set a threshold.</li>
+<li><strong>Engineer the surrounding service.</strong> A hosted API needs timeouts, retries, and fallback behavior; a local checkpoint needs serving capacity, cold-start planning, and monitoring. Both need human queues and reversible side effects. Log state and schema versions, distributions, routes, overrides, tool outcomes, and eventual business results.</li>
+</ol>
+<p>Neither model returns a natural-language rationale. That avoids mistaking fluent prose for evidence, but it does not make a system auditable by itself. The audit trail comes from versioned inputs, explicit criteria, probabilities, policy code, and observed outcomes.</p>
+<h2 id="how-to-evaluate-a-decision-model-in-your-workflow">How to evaluate a decision model in your workflow<a class="headerlink" href="#how-to-evaluate-a-decision-model-in-your-workflow" title="Permanent link">🔗</a></h2>
+<p>Begin with one decision, not an entire agent. Define its allowed outputs, the business cost of each error, and which cases must always reach a person. Build a labelled set that includes common traffic, rare classes, ambiguity, missing evidence, and adversarial examples.</p>
+<p>Next, compare complete implementations: deterministic rules, a conventional classifier, a structured-output LLM, Jev, a suitable Laya checkpoint, and any useful hybrid. Use the same held-out inputs and downstream policy for each. Alongside per-class precision and recall, measure calibration, latency percentiles, infrastructure and API cost, and the share of cases sent to human review. Separate zero-shot tests from tests after task-specific fine-tuning; report both if both matter.</p>
+<p>Run the preferred design in shadow mode before it can act. Compare its decisions with real outcomes and reviewer choices. When it goes live, begin with reversible, low-impact actions and continue monitoring input drift, confidence distributions, overrides, provider errors, version changes, and downstream outcomes.</p>
+<p>Low-cost decision calls could make per-item checks practical across retrieved passages, proposed tool calls, generated outputs, and completed traces. Their value still depends on explicit policy, domain evaluation, observability, and safe fallbacks.</p>
+<h2 id="the-practical-takeaway">The practical takeaway<a class="headerlink" href="#the-practical-takeaway" title="Permanent link">🔗</a></h2>
+<p>The useful idea is broader than either product: many steps in an AI workflow need a bounded judgment, not another paragraph. Jev packages that as a managed decision API; Laya offers an inspectable, adaptable local route. Both make the answer space explicit and expose distributions to code. Neither should be selected from a single vendor graph or a mismatched benchmark.</p>
+<p>Give each part of the system the job it handles best: code performs exact work and controls actions, a tested decision model interprets text into bounded answers, LLMs generate and reason, and people resolve consequential uncertainty. The model at the decision step can change without handing it authority over the rest of the workflow.</p>
+<h2 id="related-reading">Related reading<a class="headerlink" href="#related-reading" title="Permanent link">🔗</a></h2>
+<p>For the mechanism bounded decision models avoid at output time, <a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">Transformer: Attention Is All You Need</a> explains the architecture underlying modern sequence models, while <a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">Explaining neural language modelling</a> develops next-token prediction from first principles.</p>
+<p>For a different view of decision-making systems, <a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/">Reinforcement learning: a practical primer</a> explains states, actions, rewards, values, and policies. A bounded judgment model is not itself an RL agent: it does not own goals, environmental actions, or long-horizon credit assignment.</p>
+<h2 id="primary-sources">Primary sources<a class="headerlink" href="#primary-sources" title="Permanent link">🔗</a></h2>
+<ul>
+<li>Diogo Almeida. <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Introducing System One Models &amp; Jev</a>, TypeSafe AI, September 15, 2026. Primary launch description, disclosed components, company benchmarks, and caveats.</li>
+<li>TypeSafe AI. <a href="https://docs.typesafe.ai/introduction">Introduction</a>, <a href="https://docs.typesafe.ai/concepts/system-one">System One</a>, and <a href="https://docs.typesafe.ai/primitives">Primitives</a>. Public interface and answer semantics.</li>
+<li>TypeSafe AI. <a href="https://docs.typesafe.ai/introduction/machine-learning-primer">AI primer: RLCD and calibrated decisions</a> and <a href="https://docs.typesafe.ai/confidence">Confidence</a>. Definitions of calibration, probability, and confidence.</li>
+<li>TypeSafe AI. <a href="https://evals.typesafe.ai/">Workflow evals</a>. Interactive aggregate and per-workflow measurements, methodology, and reference construction.</li>
+<li>TypeSafe AI. <a href="https://docs.typesafe.ai/concepts/how-to-build-with-system-one">How to build with System One</a>, <a href="https://docs.typesafe.ai/patterns/intent-routing">Intent routing</a>, and <a href="https://docs.typesafe.ai/cookbooks/parallel_questions">Parallel questions</a>. Official workflow patterns and batching example.</li>
+<li>TypeSafe AI. <a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13">Jev 1.13 known limitations</a> and <a href="https://docs.typesafe.ai/models">Models and pricing</a>. Version-specific failure modes, aliases, limits, and dated pricing.</li>
+<li>TypeSafe AI. <a href="https://github.com/typesafe-ai/typesafe-sdk-python">Official Python SDK</a> and <a href="https://github.com/typesafe-ai/typesafe-sdk-js">JavaScript SDK</a>. MIT-licensed client implementations and public request/response types.</li>
+<li>Nandakishor Mukkunnoth and Convai Innovations. <a href="https://github.com/NandhaKishorM/laya">Laya repository</a>, <a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md">benchmarks and reproduction notes</a>, and <a href="https://huggingface.co/convaiinnovations/laya">model checkpoints</a>. Primary documentation for the open implementation, its training-specific results, limits, and code.</li>
+<li>Nandakishor Mukkunnoth. <a href="https://arxiv.org/abs/2503.23303">SalesRLAgent</a>, March 2025. Earlier, domain-specific probability-prediction work; not a paper describing the current Laya architecture.</li>
+<li>Benchmark Heaven. <a href="https://github.com/fstandhartinger/jevbench/blob/main/RESULTS-v1.2.md">JevBench v1.2 results</a>. Independent, versioned decision-task comparison; its CPU Laya run is not a matched GPU serving test.</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+            </div>
+            <!-- /.entry-content -->
+<section class="well" id="related-posts">
+    <h4>Related Posts:</h4>
+    <ul>
+        <li><a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/">The Transformer – Attention is all you need.</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/">Language models: From n-gram counts to neural next-token prediction</a></li>
+        <li><a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/">Reinforcement learning: A practical primer on agents, returns, values, and policies</a></li>
+    </ul>
+</section>
+    <hr />
+    <!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+            <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    </div>
+    <!-- AddThis Button END -->
+    <hr/>
+    <section class="comments" id="comments">
+        <h2>Comments</h2>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+                var disqus_url = 'https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/';
+
+            var disqus_config = function () {
+                this.language = "en";
+            };
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    </section>
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://mchromiak.github.io/static_files/img/me.png"/>
+        </p>
+    <p>
+      <strong>About Michał Chromiak</strong><br/>
+         PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.
+    </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/michal-chromiak"><i class="fa fa-linkedin-square fa-lg"></i> LinkedIn</a></li>
+    <li class="list-group-item"><a href="https://github.com/MChromiak"><i class="fa fa-github-square fa-lg"></i> GitHub</a></li>
+    <li class="list-group-item"><a href="https://x.com/drChromiak"><i class="fa fa-twitter-square fa-lg"></i> X (Twitter)</a></li>
+    <li class="list-group-item"><a href="https://www.researchgate.net/profile/Michal-Chromiak"><i class="fa fa-researchgate-square fa-lg"></i> ResearchGate</a></li>
+    <li class="list-group-item"><a href="https://scholar.google.pl/citations?user=UeOad3YAAAAJ&hl=en"><i class="fa fa-google-scholar-square fa-lg"></i> Google Scholar</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/feeds/all.atom.xml"><i class="fa fa-rss-square fa-lg"></i> Feed (Atom)</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Recent Posts -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Recent Posts</span></h4>
+  <ul class="list-group" id="recentposts">
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/">From a fly connectome to a digital fly: what the experiments show</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/">Typed Decision Models: Jev and Laya in Agentic AI</a></li>
+    <li class="list-group-item"><a href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/">Atlas: How one model turns images into controllable 3D worlds</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Recent Posts -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/applications.html"><i class="fa fa-folder-open fa-lg"></i>Applications</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/computer-vision.html"><i class="fa fa-folder-open fa-lg"></i>Computer Vision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-ai-systems.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / AI Systems</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-neuroscience.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / Neuroscience</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/machine-learning-world-models.html"><i class="fa fa-folder-open fa-lg"></i>Machine Learning / World Models</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/ml-dojo.html"><i class="fa fa-folder-open fa-lg"></i>ML Dojo</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/optimization.html"><i class="fa fa-folder-open fa-lg"></i>Optimization</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/reinforcement-learning.html"><i class="fa fa-folder-open fa-lg"></i>Reinforcement learning</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/self-supervision.html"><i class="fa fa-folder-open fa-lg"></i>Self-Supervision</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://mchromiak.github.io/category/sequence-models.html"><i class="fa fa-folder-open fa-lg"></i>Sequence Models</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="https://iclr.cc/" target="_blank">ICLR</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://icml.cc/" target="_blank">ICML</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://neurips.cc/" target="_blank">NeurIPS</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://developers.google.com/machine-learning/glossary" target="_blank">ML Glossary</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://deepdreamgenerator.com/" target="_blank">Deep Dream Generator</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://stanfordmlgroup.github.io/" target="_blank">Stanford ML Group</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://karpathy.github.io/2016/09/07/phd/" target="_blank">A Survival Guide to a PhD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://java-hive.blogspot.com/" target="_blank">Java Hive (my earlier blog)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://aifrontiers.com/" target="_blank">AI Frontiers 2018 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://alt.qcri.org/semeval2017/" target="_blank">SemEval 2017 (archive)</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://www.freecodecamp.org/news/450-free-online-programming-computer-science-courses-you-can-start-in-september-59712e77635c/" target="_blank">Free CS courses (2017 roundup)</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+
+<!-- Sidebar/Archive -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Archive</span></h4>
+  <ul class="list-group" id="archive">
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2026/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2026 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2025/Oct/index.html"><i class="fa fa-calendar fa-lg"></i>October 2025 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Apr/index.html"><i class="fa fa-calendar fa-lg"></i>April 2023 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2023/Mar/index.html"><i class="fa fa-calendar fa-lg"></i>March 2023 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/Jun/index.html"><i class="fa fa-calendar fa-lg"></i>June 2021 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2021/May/index.html"><i class="fa fa-calendar fa-lg"></i>May 2021 (3)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2019/Jul/index.html"><i class="fa fa-calendar fa-lg"></i>July 2019 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Nov/index.html"><i class="fa fa-calendar fa-lg"></i>November 2017 (1)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Sep/index.html"><i class="fa fa-calendar fa-lg"></i>September 2017 (2)
+          </a>
+        </li>
+        <li class="list-group-item">
+          <a href="https://mchromiak.github.io/archive/2017/Aug/index.html"><i class="fa fa-calendar fa-lg"></i>August 2017 (1)
+          </a>
+        </li>
+  </ul>
+</li>
+<!-- End Sidebar/Archive -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__inner">
+      <div class="site-footer__content">
+        <p class="site-footer__copyright">&copy; <span data-current-year>2026</span> Michał Chromiak</p>
+          <div class="site-footer__license">Content licensed under <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, except where indicated otherwise.</div>
+      </div>
+      <a class="site-footer__top" href="#" aria-label="Back to top" title="Back to top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</footer>
+<script src="https://mchromiak.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://mchromiak.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://mchromiak.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://mchromiak.github.io/static_files/js/custom.js"></script>
+
+    <script src="https://mchromiak.github.io/theme/js/bodypadding.js"></script>
+    <!-- Disqus -->
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'mchromiak'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    <!-- End Disqus Code -->
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-58PH9XEMKB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-58PH9XEMKB');
+    </script>
+
+
+        <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59ea3c17b283c631"></script>
+    <script src="https://mchromiak.github.io/static_files/js/article.js"></script>
+</body>
+</html>

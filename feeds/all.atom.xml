@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/all.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2026-09-19T12:00:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>From a fly connectome to a digital fly: what the experiments show</title><link href="https://mchromiak.github.io/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/" rel="alternate"/><published>2026-09-19T12:00:00+02:00</published><updated>2026-09-19T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-19:/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/</id><summary type="html">&lt;p&gt;The 2026 male fruit fly connectome links brain and nerve cord in one open map. New studies compare male and female circuits, trace vision and taste pathways, and test social-behavior predictions. Here is how those results differ from digital-fly game demos.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michał Chromiak's blog</title><link href="https://mchromiak.github.io/" rel="alternate"/><link href="/feeds/all.atom.xml" rel="self"/><id>https://mchromiak.github.io/</id><updated>2026-09-20T12:00:00+02:00</updated><subtitle>Be a fool to become a Polymath.</subtitle><entry><title>From a fly connectome to a digital fly: what the experiments show</title><link href="https://mchromiak.github.io/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/" rel="alternate"/><published>2026-09-19T12:00:00+02:00</published><updated>2026-09-19T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-19:/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/</id><summary type="html">&lt;p&gt;The 2026 male fruit fly connectome links brain and nerve cord in one open map. New studies compare male and female circuits, trace vision and taste pathways, and test social-behavior predictions. Here is how those results differ from digital-fly game demos.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
 &lt;p&gt;A fruit fly can now be represented by a remarkably complete wiring map, and versions of that map have been put inside virtual worlds. The two achievements are easy to conflate. A connectome records which neurons connect; a digital fly also needs rules for how those neurons respond, a way to turn inputs into neural signals, and a controller that turns outputs into movement.&lt;/p&gt;
 &lt;p&gt;The major new result in September 2026 is the &lt;a href="https://pubmed.ncbi.nlm.nih.gov/42691995/"&gt;first complete map of a male fly's central nervous system&lt;/a&gt;: brain, optic lobes, and ventral nerve cord together. Its value is already visible in peer-reviewed studies of sex differences, vision, taste, and social behavior. The Minecraft and Doom projects that followed are a different kind of experiment: they test software interfaces built around the open map. &lt;strong&gt;The question throughout this article is what each layer actually establishes.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/"&gt;&lt;img alt="Four stages of digital-fly research: reconstruct the wiring, simulate neural dynamics, test circuit predictions, and close a sensory-motor loop in a virtual body." src="https://mchromiak.github.io/articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/img/fly-model-evidence.svg"&gt;&lt;/a&gt;&lt;/p&gt;
@@ -72,85 +72,47 @@
 &lt;li&gt;&lt;a href="https://www.nature.com/articles/s41593-025-02080-4"&gt;Beiran and Litwin-Kumar, "Prediction of neural activity in connectome-constrained recurrent networks" (&lt;em&gt;Nature Neuroscience&lt;/em&gt;, 2025)&lt;/a&gt;: why identical wiring does not uniquely fix neural dynamics.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://eon.systems/updates/embodied-brain-emulation"&gt;Eon Systems, "How the Eon Team Produced a Virtual Embodied Fly" (2026)&lt;/a&gt;: a company technical account of its integration.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/evnsnclr/neurocraft-fly-public"&gt;NeuroCraft Fly&lt;/a&gt;, &lt;a href="https://github.com/nftechie/doomfly"&gt;DOOMFLY&lt;/a&gt;, and &lt;a href="https://github.com/cesp99/fly-chess"&gt;fly-chess&lt;/a&gt;: creators' repositories for the community demos, not peer-reviewed biological experiments.&lt;/li&gt;
-&lt;/ul&gt;</content><category term="Machine Learning / Neuroscience"/><category term="Connectomics"/><category term="Drosophila"/><category term="Brain Simulation"/><category term="Computational Neuroscience"/><category term="FlyWire"/><category term="NeuroMechFly"/></entry><entry><title>Jev: Typed decisions for enterprise AI</title><link href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/" rel="alternate"/><published>2026-09-17T12:00:00+02:00</published><updated>2026-09-17T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-17:/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/</id><summary type="html">&lt;p&gt;Jev does not generate prose. It turns textual application state and bounded questions into typed probabilistic decisions that software can use directly. This guide explains its interface, the architectural facts TypeSafe has disclosed, the limits of its benchmark evidence, and its role alongside code, LLMs, and people in enterprise agentic workflows.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
-&lt;p&gt;Imagine a customer writes: “I was charged twice. Please refund the duplicate today.” An AI system may need to draft a courteous reply, but before it does that, the application needs three smaller answers: Which team owns the case? Does the refund policy apply? How urgent is the request?&lt;/p&gt;
-&lt;p&gt;An LLM can answer those questions, but its native operation is to generate a sequence of tokens. If the application only needs a label or score, generating a paragraph or JSON document is a roundabout way to get there.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Jev is TypeSafe AI's model for that narrower job.&lt;/strong&gt; You give it the relevant text and define the possible kinds of answer. It returns typed values and probability distributions that ordinary code can inspect. Jev does not draft the customer response or decide which tool to call; it supplies the judgments that help the application make those choices. &lt;a href="https://docs.typesafe.ai/introduction"&gt;TypeSafe's introduction to Jev&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Editorial cover showing textual state entering Jev and emerging as typed probability distributions." src="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-cover.svg"&gt;&lt;/p&gt;
-&lt;p align="center"&gt;Figure 1. When the possible answers are known in advance, Jev maps shared textual state to bounded probabilistic judgments.&lt;/p&gt;
-&lt;p&gt;TypeSafe calls Jev its first &lt;strong&gt;System One Model&lt;/strong&gt;, borrowing the name from the fast, intuitive mode of cognition popularized by Daniel Kahneman. The product was announced on September 15, 2026 and is currently in early access. The company says it developed a new architecture, a parallel sampler, and a post-training method called &lt;strong&gt;Reinforcement Learning for Calibrated Decisions&lt;/strong&gt;, or RLCD. &lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;TypeSafe's launch article&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="jev-in-one-minute"&gt;Jev in one minute&lt;a class="headerlink" href="#jev-in-one-minute" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;A Jev call follows a simple four-step pattern:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;The application gathers the relevant &lt;strong&gt;state&lt;/strong&gt;, such as a support conversation, policy excerpt, or agent trace.&lt;/li&gt;
-&lt;li&gt;The developer defines bounded questions: yes or no, one choice from a list, or a score on an ordered rubric.&lt;/li&gt;
-&lt;li&gt;Jev evaluates the questions independently and returns a probability distribution for each one.&lt;/li&gt;
-&lt;li&gt;Code applies thresholds, permissions, and business rules before anything happens in the outside world.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The model is therefore better understood as a &lt;strong&gt;learned decision primitive&lt;/strong&gt; than as a faster chatbot. It fits routing, scoring, verification, triage, and guardrails. It does not replace an LLM when the task requires an explanation, a plan, code, or new prose.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;What is publicly known:&lt;/strong&gt; TypeSafe has described Jev's interface, parallel sampler, and RLCD post-training method. It has not published the neural topology, parameter count, training recipe, or loss. The diagrams below explain the observable inference contract rather than hidden internal layers.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;A Jev request has two parts:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;State&lt;/strong&gt; describes the case: a support conversation, security alert, invoice, agent trace, policy, or another text-bearing record.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Questions&lt;/strong&gt; define the judgments the application needs and the allowed answer space.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The public API exposes three question types.&lt;/p&gt;
+&lt;/ul&gt;</content><category term="Machine Learning / Neuroscience"/><category term="Connectomics"/><category term="Drosophila"/><category term="Brain Simulation"/><category term="Computational Neuroscience"/><category term="FlyWire"/><category term="NeuroMechFly"/></entry><entry><title>Typed Decision Models: Jev and Laya in Agentic AI</title><link href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/" rel="alternate"/><published>2026-09-17T12:00:00+02:00</published><updated>2026-09-20T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-17:/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/</id><summary type="html">&lt;p&gt;Some AI tasks need a bounded judgment, not generated prose. Jev and Laya illustrate how decision models turn textual state and defined answer spaces into probability distributions. This guide explains the shared pattern, where the implementations differ, what their benchmarks establish, and how to evaluate them in an agentic workflow.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;p&gt;Imagine a customer writes: “I was charged twice. Please refund the duplicate today.” An AI system may need to draft a reply, but the application first needs narrower judgments: Which team owns the case? Does the policy appear to cover it? How urgent is the message?&lt;/p&gt;
+&lt;p&gt;Each judgment has an answer space we can define before seeing this particular ticket. That suggests a different interface from asking a language model to write a paragraph: give a model the relevant text, ask a bounded question, and receive a distribution over the permitted answers. &lt;strong&gt;The model interprets language; code decides what to do with the result.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;Jev&lt;/a&gt; and &lt;a href="https://github.com/NandhaKishorM/laya"&gt;Laya&lt;/a&gt; are two current examples. They share the broad idea of returning typed decisions rather than prose, but they are different products with different disclosed internals, training evidence, deployment choices, and limits. “Typed decision model” is a useful description of this &lt;em&gt;task and interface&lt;/em&gt;, not the name of one established neural architecture.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Editorial cover showing textual state entering a decision model and emerging as bounded probability distributions." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg"&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 1. Shared textual state and defined answer spaces turn a vague automation request into explicit judgments that software can inspect.&lt;/p&gt;
+&lt;h2 id="the-decision-pattern"&gt;The decision pattern&lt;a class="headerlink" href="#the-decision-pattern" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The application supplies three things: &lt;strong&gt;state&lt;/strong&gt; (the evidence), &lt;strong&gt;questions&lt;/strong&gt; (the judgments needed), and &lt;strong&gt;answer spaces&lt;/strong&gt; (the allowed outcomes). A model returns answers and probability distributions. Code then checks permissions, applies thresholds and hard rules, and chooses whether to act, ask an LLM, or send the case to a person.&lt;/p&gt;
+&lt;p&gt;For a choice question, the intended object is a distribution such as &lt;span class="math"&gt;\(p(y\mid x,q,C)\)&lt;/span&gt;: the probability of answer &lt;span class="math"&gt;\(y\)&lt;/span&gt; given state &lt;span class="math"&gt;\(x\)&lt;/span&gt;, question &lt;span class="math"&gt;\(q\)&lt;/span&gt;, and allowed choices &lt;span class="math"&gt;\(C\)&lt;/span&gt;. That notation describes the &lt;em&gt;interface&lt;/em&gt;. It does not imply that every model estimates well-calibrated probabilities or uses the same internal architecture.&lt;/p&gt;
+&lt;p&gt;Jev names its three question types &lt;strong&gt;Noul&lt;/strong&gt;, &lt;strong&gt;Choice&lt;/strong&gt;, and &lt;strong&gt;Score&lt;/strong&gt;. Laya exposes similarly named typed questions. &lt;a href="https://docs.typesafe.ai/primitives"&gt;TypeSafe primitives&lt;/a&gt;; &lt;a href="https://github.com/NandhaKishorM/laya#decision-primitives"&gt;Laya API&lt;/a&gt;.&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Primitive&lt;/th&gt;
-&lt;th&gt;Ask it when&lt;/th&gt;
-&lt;th&gt;Returned answer&lt;/th&gt;
+&lt;th&gt;Question shape&lt;/th&gt;
+&lt;th&gt;Example&lt;/th&gt;
+&lt;th&gt;What the application receives&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Noul&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;The application needs the probability that a statement is true&lt;/td&gt;
-&lt;td&gt;A number from 0 to 1 representing the probability of “yes”&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Yes/no (Noul)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Did the customer request a refund?&lt;/td&gt;
+&lt;td&gt;A probability for “yes”&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;strong&gt;Choice&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;Exactly one option should be selected from a fixed, unordered set&lt;/td&gt;
-&lt;td&gt;The selected option, a probability for every option, and confidence&lt;/td&gt;
+&lt;td&gt;Which team owns the case?&lt;/td&gt;
+&lt;td&gt;A selected option and a distribution over the declared options&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Score&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;The answer lies on an ordered rubric&lt;/td&gt;
-&lt;td&gt;A fractional score, the level definitions, a probability for every level, and confidence&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Ordinal Score&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;How urgent is the message?&lt;/td&gt;
+&lt;td&gt;A position on an ordered rubric and a distribution over its levels&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;“Does the customer explicitly request a refund?” is a Noul question. “Which team owns the case?” is a Choice. “How severe is this incident?” is a Score, provided the levels define what &lt;em&gt;low&lt;/em&gt;, &lt;em&gt;medium&lt;/em&gt;, and &lt;em&gt;high&lt;/em&gt; mean. &lt;a href="https://docs.typesafe.ai/primitives"&gt;TypeSafe primitives&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a href="/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/" aria-label="Open the canonical Jev article by Michał Chromiak"&gt;&lt;picture&gt;&lt;source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-parallel-flow-mobile.svg?v=20260917" width="720" height="1080"&gt;&lt;source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-parallel-flow-static.png?v=20260917" width="1200" height="675"&gt;&lt;source media="(min-width: 601px)" srcset="../img/jev-parallel-flow.webp?v=20260917" width="1200" height="675"&gt;&lt;img src="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-parallel-flow-mobile.svg?v=20260917" width="720" height="1080" loading="lazy" decoding="async" alt="Conceptual Jev request: one support-case state enters with independent Choice, Noul, and Score questions; typed probability distributions return together, and code applies an explicit refund rule."&gt;&lt;/picture&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p align="center"&gt;Figure 2. One Jev call takes shared state, evaluates several independent questions, and hands typed results back to code. Sources: &lt;a href="https://docs.typesafe.ai/introduction"&gt;TypeSafe introduction&lt;/a&gt; and &lt;a href="https://docs.typesafe.ai/primitives"&gt;primitives documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;For the duplicate-charge ticket from the introduction, an illustrative result might be:&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Question&lt;/th&gt;
-&lt;th&gt;Returned judgment&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Who owns the issue?&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;billing: 0.94&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Does policy permit a refund?&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;yes: 0.97&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;How urgent is it?&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;1.7 / 3&lt;/code&gt; plus the level distribution&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;Jev has not authorized a refund. It has supplied three semantic measurements. Code must still verify that two charges exist, confirm the customer's identity, apply refund limits, and check permissions before queuing an action.&lt;/p&gt;
-&lt;p&gt;All three questions read the same state but not one another's answers. If a later question depends on an earlier result, code starts a second request with the new state. This gives us the main design rule: &lt;strong&gt;one semantic judgment per question, composition in code&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The word &lt;em&gt;bounded&lt;/em&gt; matters. A Choice model cannot name a team outside the list we supplied. That is a useful type guarantee, not a correctness guarantee: if &lt;code&gt;fraud&lt;/code&gt; is missing from the list, the model may confidently choose &lt;code&gt;billing&lt;/code&gt;. Include &lt;code&gt;other&lt;/code&gt; or &lt;code&gt;none_of_the_above&lt;/code&gt; where the list may be incomplete.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/" aria-label="Open the canonical typed decision models article by Michał Chromiak"&gt;&lt;picture&gt;&lt;source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-parallel-flow-mobile.svg?v=20260920" width="720" height="1080"&gt;&lt;source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-parallel-flow-static.png?v=20260920" width="1200" height="675"&gt;&lt;source media="(min-width: 601px)" srcset="../img/jev-parallel-flow.webp?v=20260920" width="1200" height="675"&gt;&lt;img src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-parallel-flow-mobile.svg?v=20260920" width="720" height="1080" loading="lazy" decoding="async" alt="A support case and three bounded questions enter a decision model; probability distributions return together, while code keeps the refund rule and action permissions."&gt;&lt;/picture&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 2. The common workflow: reuse relevant state for several bounded judgments, then compose the results in ordinary code. Jev and Laya expose comparable question types, although their implementations are not interchangeable. Sources: &lt;a href="https://docs.typesafe.ai/introduction"&gt;TypeSafe introduction&lt;/a&gt; and &lt;a href="https://github.com/NandhaKishorM/laya"&gt;Laya README&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For our duplicate-charge ticket, illustrative outputs might be &lt;code&gt;billing: 0.94&lt;/code&gt;, &lt;code&gt;policy appears to permit refund: 0.97&lt;/code&gt;, and an urgency score of &lt;code&gt;1.7 / 3&lt;/code&gt; with its full level distribution. These are example numbers, not a measured response from either model. Neither model has authorized a refund. Code must still verify the charges, identity, refund limits, and permissions.&lt;/p&gt;
+&lt;p&gt;Questions sharing the same state can be batched, but dependencies still belong in the workflow. If question B needs the answer to question A, put that answer into a later request or compute the dependency in code. The useful rule is &lt;strong&gt;one semantic judgment per question; composition and side effects in code&lt;/strong&gt;.&lt;/p&gt;
 &lt;details class="dinov2-background"&gt;
 &lt;summary&gt;Optional detail: Choice, Score, and Noul are not interchangeable&lt;/summary&gt;
 &lt;p&gt;A &lt;strong&gt;Noul&lt;/strong&gt; value of &lt;code&gt;0.5&lt;/code&gt; means that “yes” and “no” receive equal probability. It does not mean that the underlying property has medium intensity. To represent intensity, use a Score with explicit ordered levels.&lt;/p&gt;
@@ -158,34 +120,79 @@
 &lt;p&gt;A &lt;strong&gt;Score&lt;/strong&gt; is a probability-weighted position across two to ten ordered levels. With three zero-indexed levels and probabilities &lt;code&gt;0.25&lt;/code&gt;, &lt;code&gt;0.50&lt;/code&gt;, and &lt;code&gt;0.25&lt;/code&gt;, the returned score is &lt;code&gt;0×0.25 + 1×0.50 + 2×0.25 = 1.0&lt;/code&gt;. Different distributions can produce that same value, so inspect the distribution when the shape matters. A Score is not a reconstructed dollar amount, duration, or probability of loss.&lt;/p&gt;
 &lt;p&gt;TypeSafe currently documents up to 255 Choice options, two to ten Score levels, a 64k-token combined request limit, and a 32k-token limit for the state plus the longest question. Those are product limits, not properties of the general idea.&lt;/p&gt;
 &lt;/details&gt;
-&lt;h2 id="why-jev-behaves-differently-from-an-llm"&gt;Why Jev behaves differently from an LLM&lt;a class="headerlink" href="#why-jev-behaves-differently-from-an-llm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;The clearest comparison is to imagine two forms. An LLM receives an almost blank page and writes the answer one token at a time. Jev receives a scorecard whose boxes and allowed values have already been defined, then fills those boxes with values and probabilities. The first interface is open-ended; the second is deliberately bounded.&lt;/p&gt;
+&lt;h2 id="two-implementations-one-task-shape"&gt;Two implementations, one task shape&lt;a class="headerlink" href="#two-implementations-one-task-shape" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The shared contract does not make Jev and Laya the same model. TypeSafe calls Jev a &lt;strong&gt;System One Model&lt;/strong&gt; and says it uses a new architecture, a parallel sampler, and post-training called Reinforcement Learning for Calibrated Decisions (RLCD). It has not published the neural topology, parameter count, training recipe, or loss. We can describe its documented behavior, not draw its hidden layers. &lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;TypeSafe launch&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Laya is open-source and more inspectable. Its English and typed-decision checkpoints use a 421-million-parameter ModernBERT-large encoder; its multilingual checkpoint uses a 322-million-parameter mmBERT-base encoder. A question-and-option head scores declared answers without writing a response token by token. The project supplies code, weights, a router, and benchmark scripts. Those assets make local deployment and task-specific fine-tuning possible, but the published results depend strongly on the checkpoint and the task. &lt;a href="https://github.com/NandhaKishorM/laya"&gt;Laya repository&lt;/a&gt;.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Design choice&lt;/th&gt;
+&lt;th&gt;Jev&lt;/th&gt;
+&lt;th&gt;Laya&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Deployment&lt;/td&gt;
+&lt;td&gt;TypeSafe's managed API&lt;/td&gt;
+&lt;td&gt;Open weights and code; run and maintain it yourself&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Disclosed internals&lt;/td&gt;
+&lt;td&gt;Parallel sampling and RLCD are described; network architecture is not published&lt;/td&gt;
+&lt;td&gt;ModernBERT/mmBERT encoder with a typed-option head is documented&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Typical input budget&lt;/td&gt;
+&lt;td&gt;TypeSafe documents a 64k-token combined request limit&lt;/td&gt;
+&lt;td&gt;Default checkpoints use 512 or 1,024 tokens; configuration and encoder capacity differ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Adaptation&lt;/td&gt;
+&lt;td&gt;Versioned provider model&lt;/td&gt;
+&lt;td&gt;Fine-tune a checkpoint and fit calibration to the target domain&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Main operational trade-off&lt;/td&gt;
+&lt;td&gt;Less infrastructure to own, but provider dependence&lt;/td&gt;
+&lt;td&gt;More control over data and deployment, but model serving and evaluation are yours&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;These are &lt;strong&gt;product and deployment differences&lt;/strong&gt;, not a verdict about which is universally more accurate. Laya's author published earlier work on fast probability estimates for sales conversations in &lt;a href="https://arxiv.org/abs/2503.23303"&gt;2025&lt;/a&gt;. That is relevant intellectual history, but it is not evidence that the current Laya checkpoints or Jev's undisclosed architecture existed then.&lt;/p&gt;
+&lt;details class="dinov2-background"&gt;
+&lt;summary&gt;Optional detail: What differs inside Laya's checkpoints?&lt;/summary&gt;
+&lt;p&gt;The &lt;code&gt;laya&lt;/code&gt; English checkpoint and &lt;code&gt;laya-typed-decisions&lt;/code&gt; share an encoder family but serve different roles. The latter was fine-tuned on the training split of the typed-decisions benchmark; the base English and multilingual checkpoints perform much worse on that test without specialization. The multilingual checkpoint can handle more scripts, but its quality is not uniform across languages. The router selects a checkpoint before inference rather than trusting a confidently wrong out-of-language answer. &lt;a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md"&gt;Laya README and benchmark report&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The context figures in the table are documented defaults, not absolute architectural ceilings. Raising a configured limit consumes memory and computation and does not guarantee reliable long-document decisions. Jev's larger advertised request limit likewise says little by itself about accuracy on long, noisy state.&lt;/p&gt;
+&lt;/details&gt;
+&lt;h2 id="why-this-differs-from-asking-an-llm"&gt;Why this differs from asking an LLM&lt;a class="headerlink" href="#why-this-differs-from-asking-an-llm" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Think of two forms. A generative LLM receives a mostly blank page and writes an answer. A decision model receives a scorecard whose boxes and permitted values are already defined. The distinction concerns the requested output and the work needed to produce it; it does not prove that all decision models share one architecture.&lt;/p&gt;
 &lt;h3 id="a-conventional-llm-generates-a-sequence"&gt;A conventional LLM generates a sequence&lt;a class="headerlink" href="#a-conventional-llm-generates-a-sequence" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;A decoder-style language model assigns probabilities to the next token given the tokens already present. It selects a token, appends it to the sequence, and repeats until the response is complete. This autoregressive process is powerful because a sequence can represent almost anything: prose, code, a plan, a tool call, or structured data.&lt;/p&gt;
 &lt;p&gt;The flexibility has a cost. Output length adds sequential decoding work. If the result must drive software, the system also needs a contract around the generated sequence. Modern structured-output APIs can constrain an LLM to valid JSON, so malformed output is not inevitable. But the model is still being used as a generator, and application-level uncertainty over the business choices is usually not the native output.&lt;/p&gt;
-&lt;h3 id="jev-returns-bounded-decisions"&gt;Jev returns bounded decisions&lt;a class="headerlink" href="#jev-returns-bounded-decisions" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;TypeSafe says Jev uses a new model architecture and a &lt;strong&gt;parallel sampler&lt;/strong&gt;. The caller declares Noul, Choice, and Score answer spaces before inference. Jev returns the requested distributions without generating an explanatory string token by token. Questions sharing the same state are processed in parallel and independently.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-vs-llm.svg"&gt;&lt;img alt="Comparison of an autoregressive LLM decoding a token sequence and Jev returning bounded distributions in parallel." src="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-vs-llm.svg"&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p align="center"&gt;Figure 3. An LLM generates a sequence; Jev returns distributions over answer spaces declared by the caller. Source: &lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;TypeSafe's launch description&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="a-decision-model-scores-declared-answers"&gt;A decision model scores declared answers&lt;a class="headerlink" href="#a-decision-model-scores-declared-answers" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The caller declares yes/no, Choice, or Score answer spaces before inference. Jev says it returns several independent distributions through a parallel sampler; Laya uses a bidirectional encoder and an option-scoring head. Neither has to generate an explanatory paragraph for a bounded judgment. This contrasts with autoregressive output, but not with every possible classifier or structured-output system.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-vs-llm.svg"&gt;&lt;img alt="Comparison of an autoregressive LLM decoding a token sequence and a bounded decision model scoring declared answers." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-vs-llm.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 3. The visible contrast is sequence generation versus distributions over declared answer spaces. Jev's internals are not public; Laya documents its encoder and head. Sources: &lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;TypeSafe launch&lt;/a&gt; and &lt;a href="https://github.com/NandhaKishorM/laya"&gt;Laya repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The resulting advantages follow from specialization:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Less sequential output work.&lt;/strong&gt; The model is not decoding a paragraph or JSON document token by token.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;A bounded result by construction.&lt;/strong&gt; Choice cannot invent an option outside the supplied set; Noul remains a yes/no probability; Score remains on the declared rubric.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Many questions can reuse one state.&lt;/strong&gt; A long document does not need to be resent in a separate call for every independent judgment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Several questions can share prepared state.&lt;/strong&gt; This avoids sending the same evidence in separate sequential calls when the implementation supports batching.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Uncertainty is available to policy.&lt;/strong&gt; Code can inspect the complete distribution rather than only the winning label.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Control flow stays visible.&lt;/strong&gt; Thresholds, deterministic rules, permissions, and side effects remain in ordinary software.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;These benefits appear when the answer space is known in advance. Jev gains a tighter interface by giving up the ability to write arbitrary strings.&lt;/p&gt;
+&lt;p&gt;These benefits appear when the answer space is known in advance. A narrow interface gives up the ability to write arbitrary strings. It does not automatically give better accuracy, calibration, or latency than a well-built classifier or LLM on a particular workload.&lt;/p&gt;
 &lt;details class="dinov2-background"&gt;
 &lt;summary&gt;Optional detail: Why structured-output LLMs are still different&lt;/summary&gt;
 &lt;p&gt;Constrained decoding can make an LLM emit JSON that conforms to a schema. That solves an important engineering problem, and it means “LLMs always require fragile parsing” is no longer accurate.&lt;/p&gt;
-&lt;p&gt;Jev's proposed distinction is deeper than JSON syntax. TypeSafe says the model and RLCD post-training are optimized for bounded decisions and calibrated application-level probabilities, while the sampler returns several independent decisions in parallel. A structured-output LLM remains useful when the schema contains generated strings or when the task requires reasoning before producing the structure.&lt;/p&gt;
+&lt;p&gt;The proposed distinction is deeper than JSON syntax: Jev and Laya aim to score bounded answers directly, while a structured-output LLM remains a generator even when decoding is constrained. The LLM remains useful when a schema contains generated strings or the task requires flexible reasoning before filling it.&lt;/p&gt;
 &lt;p&gt;Compare the complete workload rather than the interface label: quality, latency, cost, stability, usefulness of the probabilities, and integration effort.&lt;/p&gt;
 &lt;/details&gt;
-&lt;h2 id="reading-jevs-probabilities"&gt;Reading Jev's probabilities&lt;a class="headerlink" href="#reading-jevs-probabilities" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;TypeSafe describes RLCD as training Jev to produce &lt;strong&gt;calibrated decisions&lt;/strong&gt;. Think of a weather forecast: if rain occurs on roughly 80 out of 100 comparable days labelled “80% chance of rain,” the forecasts are calibrated. For Jev, the same idea applies to groups of decisions assigned probability &lt;code&gt;0.8&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="what-the-probabilities-mean"&gt;What the probabilities mean&lt;a class="headerlink" href="#what-the-probabilities-mean" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Both products return numbers that look like probabilities. To &lt;strong&gt;calibrate&lt;/strong&gt; them, we need a population of cases with known outcomes. Think of a weather forecast: among days labelled “80% chance of rain,” rain should occur roughly 80% of the time. The analogous test groups model decisions assigned probability &lt;code&gt;0.8&lt;/code&gt; and checks their observed frequency.&lt;/p&gt;
 &lt;p&gt;Calibration says nothing certain about a single case. A ticket routed to &lt;code&gt;billing&lt;/code&gt; with probability &lt;code&gt;0.8&lt;/code&gt; can still belong to &lt;code&gt;fraud&lt;/code&gt;. The schema only guarantees that the answer is one of the declared choices; it does not guarantee that the chosen answer is correct.&lt;/p&gt;
-&lt;p&gt;For Choice and Score, the API also supplies &lt;code&gt;confidence&lt;/code&gt;, a scalar derived from the shape of the probability distribution. A distribution concentrated on one option has higher confidence than a flat distribution. Noul needs no separate confidence field because its single probability already describes the split between yes and no. &lt;a href="https://docs.typesafe.ai/confidence"&gt;TypeSafe's confidence documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Jev's Choice and Score responses also include &lt;code&gt;confidence&lt;/code&gt;, a scalar derived from the distribution's shape. A concentrated distribution has higher confidence than a flat one; Noul already supplies a yes/no probability. Laya uses comparable field names, but equal-looking fields do not establish equal calibration across providers. &lt;a href="https://docs.typesafe.ai/confidence"&gt;TypeSafe confidence semantics&lt;/a&gt;; &lt;a href="https://github.com/NandhaKishorM/laya#decision-primitives"&gt;Laya API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Compare two Choice results:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;A: billing 0.94 | technical 0.05 | other 0.01
 B: billing 0.40 | technical 0.35 | other 0.25
@@ -195,18 +202,21 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;p&gt;Four related quantities are easy to confuse:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Probability&lt;/strong&gt; belongs to an outcome, such as &lt;code&gt;P(refund permitted) = 0.83&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Confidence&lt;/strong&gt; summarizes how concentrated a multi-option distribution is.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Confidence&lt;/strong&gt; may summarize how concentrated a multi-option distribution is; inspect each provider's definition.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Correctness&lt;/strong&gt; is established only by comparing the prediction with an appropriate reference outcome.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Calibration&lt;/strong&gt; asks whether probability estimates match frequencies over many cases.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;TypeSafe documents these intended semantics but has not published reliability diagrams, expected calibration error, Brier scores, or an independent calibration study. Treat the returned probabilities as measurements to validate on representative labelled traffic, especially after changing the model version or deployment domain.&lt;/p&gt;
-&lt;h2 id="reading-the-published-benchmark"&gt;Reading the published benchmark&lt;a class="headerlink" href="#reading-the-published-benchmark" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;TypeSafe describes RLCD as post-training for calibrated decisions but did not publish a cross-domain calibration study with its launch. Laya reports calibration tests and also says its base checkpoints are overconfident as shipped; its stronger expected-calibration-error result follows temperature fitting on held-out data. That fitting is a deployment step, not an intrinsic guarantee. &lt;a href="https://docs.typesafe.ai/introduction/machine-learning-primer"&gt;TypeSafe's RLCD primer&lt;/a&gt;; &lt;a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md"&gt;Laya benchmark report&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Treat either product's probabilities as estimates to validate on representative labelled traffic. Recheck them after changing the model, prompt/schema, language, or application domain. If the cost of a false positive is high, compare decisions and uncertainty at the threshold that actually controls the workflow, not only overall accuracy.&lt;/p&gt;
+&lt;h2 id="what-the-comparisons-actually-show"&gt;What the comparisons actually show&lt;a class="headerlink" href="#what-the-comparisons-actually-show" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;There is no single “Jev versus Laya” number. A vendor workflow, a fine-tuned checkpoint on a matching training split, and a fresh third-party task set answer different questions. Read each result with its task, model version, hardware, and reference labels attached.&lt;/p&gt;
+&lt;h3 id="jev-against-llm-workflows"&gt;Jev against LLM workflows&lt;a class="headerlink" href="#jev-against-llm-workflows" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;TypeSafe publishes four workflow evaluations: security incidents, agent-trace observability, invoice processing, and customer service. Each one turns a business policy into narrow model questions plus deterministic code, then runs the same workflow with Jev and several LLMs. &lt;a href="https://evals.typesafe.ai/"&gt;Interactive workflow evaluations&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In Figure 4, moving right means spending more per case and moving up means agreeing more often with TypeSafe's reference. The most attractive region is therefore the upper-left corner.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-workflow-eval-replot.svg"&gt;&lt;img alt="Scatterplot of agreement with TypeSafe's model-derived reference versus reported cost per case. Jev is far left at 67.8 percent and 0.0004 dollars, while several LLM workflows show similar or higher agreement at higher cost." src="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-workflow-eval-replot.svg"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-workflow-eval-replot.svg"&gt;&lt;img alt="Scatterplot of agreement with TypeSafe's model-derived reference versus reported cost per case. Jev is far left at 67.8 percent and 0.0004 dollars, while several LLM workflows show similar or higher agreement at higher cost." src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-workflow-eval-replot.svg"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p align="center"&gt;Figure 4. Jev reports 67.8% mean agreement at $0.0004 and 0.4 seconds per case. GPT-5.6 Terra reports 67.9% at $0.0304 and 10.1 seconds; GPT-5.6 Sol reports 74.1% at $0.0836 and 23.3 seconds. Data: &lt;a href="https://evals.typesafe.ai/"&gt;TypeSafe workflow evals&lt;/a&gt;, accessed September 17, 2026.&lt;/p&gt;
 &lt;p&gt;Jev sits far to the left while remaining close to several LLM configurations on the vertical axis. The clearest pair is Jev and GPT-5.6 Terra: their reported agreement differs by only 0.1 percentage point, while Terra costs about 76 times more and takes about 25 times longer per case using the rounded values shown. That comparison applies to these four bounded decision workflows, not to the open-ended generation and reasoning tasks that Jev cannot perform.&lt;/p&gt;
-&lt;p&gt;The vertical axis is &lt;strong&gt;agreement&lt;/strong&gt;, not independently annotated accuracy. TypeSafe constructs its reference by averaging answers from GPT-6 Astra and Claude Fable 5.1 at high thinking. Its own model-capabilities team wrote the workflows, and each non-reference model uses its provider's default reasoning setting. These choices make the evaluation useful as a vendor demonstration, but not an independent leaderboard.&lt;/p&gt;
+&lt;p&gt;The vertical axis is &lt;strong&gt;agreement&lt;/strong&gt;, not independently annotated accuracy. TypeSafe constructs its reference by averaging answers from GPT-6 Astra and Claude Fable 5.1 at high thinking. Its own model-capabilities team wrote the workflows, and each non-reference model uses its provider's default reasoning setting. Laya was not part of this evaluation. These choices make the plot a useful Jev-versus-LLM vendor demonstration, not a Jev-versus-Laya leaderboard.&lt;/p&gt;
 &lt;details class="dinov2-background"&gt;
 &lt;summary&gt;Optional detail: Per-workflow results and methodology&lt;/summary&gt;
 &lt;p&gt;The aggregate gives all four workflows equal weight. Jev's displayed per-workflow results are:&lt;/p&gt;
@@ -249,9 +259,14 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;p&gt;The spread matters. Invoice processing, for example, is a case where several LLM workflows score materially higher than Jev. An aggregate should not become a service-level promise for a different domain.&lt;/p&gt;
 &lt;p&gt;Latency was measured by TypeSafe from laptops on the US West Coast, where its service was hosted. Costs use provider prices at evaluation time. TypeSafe acknowledges possible workflow bias and that its largest advertised gains are likely at the high end of real-world results. Its homepage multipliers also depend on the selected comparator and workload, so the per-model values above are more informative than one universal speedup claim.&lt;/p&gt;
 &lt;/details&gt;
-&lt;h2 id="where-jev-changes-an-enterprise-agent-stack"&gt;Where Jev changes an enterprise agent stack&lt;a class="headerlink" href="#where-jev-changes-an-enterprise-agent-stack" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Jev is not an agent: it does not choose a goal, generate a plan, write a message, or operate tools. Its role is closer to a &lt;strong&gt;decision layer&lt;/strong&gt; between unstructured evidence and the code that controls a workflow.&lt;/p&gt;
-&lt;p&gt;Consider a support agent. The LLM may need to understand a conversation, retrieve evidence, draft a response, and call an approved tool. Jev can sit at several narrower decision boundaries:&lt;/p&gt;
+&lt;h3 id="what-laya-adds-and-what-it-does-not-establish"&gt;What Laya adds, and what it does not establish&lt;a class="headerlink" href="#what-laya-adds-and-what-it-does-not-establish" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The Laya project reports &lt;code&gt;0.766&lt;/code&gt; top-label accuracy on 2,000 typed decisions for a checkpoint &lt;strong&gt;fine-tuned on that benchmark's training split&lt;/strong&gt;, compared with a published Jev result of &lt;code&gt;0.727&lt;/code&gt;. Its base English and multilingual checkpoints score &lt;code&gt;0.362&lt;/code&gt; and &lt;code&gt;0.342&lt;/code&gt; on the same test, below the reported &lt;code&gt;0.461&lt;/code&gt; majority-class baseline. The improvement is evidence that specialization matters, not that any Laya checkpoint beats Jev out of the box. The Jev figure was imported from another run, so prompts and sample conditions were not identical. &lt;a href="https://github.com/NandhaKishorM/laya/blob/main/README.md#benchmarks"&gt;Laya results and caveats&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The distribution-level picture differs from the winning-label picture. On that typed-decisions comparison, Jev has higher reported &lt;em&gt;soft accuracy&lt;/em&gt; against the reference distributions (&lt;code&gt;0.580&lt;/code&gt; versus &lt;code&gt;0.471&lt;/code&gt;), while Laya's fine-tuned checkpoint has better reported top-label accuracy. Laya's raw calibration error on this set is higher (&lt;code&gt;0.213&lt;/code&gt; versus Jev's published &lt;code&gt;0.144&lt;/code&gt;); the stronger Laya calibration headline uses additional temperature fitting. These figures should not be collapsed into “better probabilities.” &lt;a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md"&gt;Laya benchmark report&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;An independent check points the other way on broader tasks. &lt;a href="https://github.com/fstandhartinger/jevbench/blob/main/RESULTS-v1.2.md"&gt;JevBench v1.2&lt;/a&gt; ranks Jev above the tested base Laya English checkpoint on its mixed decision suite. That Laya run used default 512-token question budgets and CPU inference, so it neither measures the specialized typed-decisions checkpoint nor fairly compares local GPU latency with Jev's hosted API. It does show why a result on one trained task should not be generalized to long policies and unfamiliar questions.&lt;/p&gt;
+&lt;p&gt;Laya also reports short local GPU inference times; Jev reports end-to-end hosted latency. Those are different measurement boundaries. A decision between them needs a same-task test at your own serving boundary, including network, batch size, cold starts, model hosting cost, and human-review volume.&lt;/p&gt;
+&lt;h2 id="where-decision-models-fit-in-an-agent-stack"&gt;Where decision models fit in an agent stack&lt;a class="headerlink" href="#where-decision-models-fit-in-an-agent-stack" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;A bounded decision model is not an agent: it does not own a goal, generate a plan, write a customer message, or operate tools. Its role is a &lt;strong&gt;semantic decision layer&lt;/strong&gt; between unstructured evidence and code that controls a workflow. Jev and Laya are candidates for this layer, not a reason to replace every existing rule or classifier.&lt;/p&gt;
+&lt;p&gt;Consider a support agent. The LLM may need to synthesize a conversation, retrieve evidence, draft a response, and propose an approved tool call. A decision model can sit at narrower boundaries:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;before the LLM, classify intent and choose the appropriate specialist;&lt;/li&gt;
 &lt;li&gt;after retrieval, score passages for relevance, contradiction, or prompt injection;&lt;/li&gt;
@@ -259,11 +274,11 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;li&gt;after generation, verify that a response addresses the request or that cited evidence supports a claim;&lt;/li&gt;
 &lt;li&gt;after the run, triage the trace for silent failures and prioritize human review.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;a href="/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/" aria-label="Open the canonical Jev article by Michał Chromiak"&gt;&lt;picture&gt;&lt;source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-enterprise-routing-mobile.svg?v=20260917" width="720" height="1130"&gt;&lt;source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-enterprise-routing-static.png?v=20260917" width="1200" height="675"&gt;&lt;source media="(min-width: 601px)" srcset="../img/jev-enterprise-routing.webp?v=20260917" width="1200" height="675"&gt;&lt;img src="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/img/jev-enterprise-routing-mobile.svg?v=20260917" width="720" height="1130" loading="lazy" decoding="async" alt="Enterprise workflow: code prepares relevant state, Jev supplies bounded judgments, and confidence plus risk rules route work to deterministic code, an LLM, or human review before controlled tools act and outcomes are logged."&gt;&lt;/picture&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p align="center"&gt;Figure 5. Code owns state preparation, policy, permissions, and side effects. Jev supplies bounded judgments; LLMs generate and reason; people handle uncertain or high-impact exceptions. Sources: TypeSafe's &lt;a href="https://docs.typesafe.ai/concepts/how-to-build-with-system-one"&gt;system-design guidance&lt;/a&gt; and &lt;a href="https://docs.typesafe.ai/patterns/intent-routing"&gt;intent-routing pattern&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Follow one request through the diagram. Code first retrieves the customer record and relevant policy, calculates exact values such as dates and amounts, and removes unrelated history. Jev then labels the intent, policy fit, risk, and urgency. A high-confidence order-status request can go directly to deterministic code; a product question can go to a specialist LLM; an uncertain complaint can go to a person. The thresholds remain visible in code rather than buried in an agent prompt.&lt;/p&gt;
-&lt;p&gt;It can also reduce sequential agent loops. If thirteen independent checks use the same long document, Jev can evaluate them in one batched request. TypeSafe's own regulatory-document cookbook reports that one 13-question call was 12.2 times cheaper and 10.0 times faster than thirteen sequential calls, with similar outputs across five repeats. The latency comparison sums sequential calls, so concurrent requests would narrow the time advantage, but not the repeated-input cost. &lt;a href="https://docs.typesafe.ai/cookbooks/parallel_questions"&gt;Parallel-questions cookbook&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id="when-to-use-code-jev-an-llm-or-a-person"&gt;When to use code, Jev, an LLM, or a person&lt;a class="headerlink" href="#when-to-use-code-jev-an-llm-or-a-person" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;a href="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/" aria-label="Open the canonical typed decision models article by Michał Chromiak"&gt;&lt;picture&gt;&lt;source media="(max-width: 600px)" srcset="/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-enterprise-routing-mobile.svg?v=20260920" width="720" height="1130"&gt;&lt;source media="(prefers-reduced-motion: reduce)" srcset="../img/jev-enterprise-routing-static.png?v=20260920" width="1200" height="675"&gt;&lt;source media="(min-width: 601px)" srcset="../img/jev-enterprise-routing.webp?v=20260920" width="1200" height="675"&gt;&lt;img src="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-enterprise-routing-mobile.svg?v=20260920" width="720" height="1130" loading="lazy" decoding="async" alt="Enterprise workflow: code prepares relevant state, a bounded decision model supplies judgments, and explicit risk rules route work to code, an LLM, or human review before controlled tools act and outcomes are logged."&gt;&lt;/picture&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p align="center"&gt;Figure 5. Code owns state preparation, policy, permissions, and side effects. A decision model supplies bounded judgments; LLMs generate and reason; people handle uncertain or high-impact exceptions. The layout is a conceptual application pattern, not a claim about either model's internals. Sources: TypeSafe's &lt;a href="https://docs.typesafe.ai/concepts/how-to-build-with-system-one"&gt;system-design guidance&lt;/a&gt; and &lt;a href="https://docs.typesafe.ai/patterns/intent-routing"&gt;intent-routing pattern&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Follow one request through the diagram. Code first retrieves the customer record and relevant policy, calculates exact values such as dates and amounts, and removes unrelated history. The model then scores intent, policy fit, risk, and urgency. A routine order-status request can go to deterministic code only after hard checks; a product question can go to a specialist LLM; an uncertain complaint can go to a person. The thresholds remain visible in code rather than buried in an agent prompt.&lt;/p&gt;
+&lt;p&gt;Batching can also reduce sequential agent loops. As one product-specific example, TypeSafe's regulatory-document cookbook reports that one Jev call with 13 independent questions was 12.2 times cheaper and 10.0 times faster than thirteen sequential calls, with similar outputs across five repeats. Concurrent calls would narrow that latency comparison. Laya also batches questions, but its throughput must be measured separately on the chosen hardware. &lt;a href="https://docs.typesafe.ai/cookbooks/parallel_questions"&gt;TypeSafe cookbook&lt;/a&gt;; &lt;a href="https://github.com/NandhaKishorM/laya#speed-tesla-t4-measured"&gt;Laya speed measurements&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="which-tool-should-do-which-job"&gt;Which tool should do which job?&lt;a class="headerlink" href="#which-tool-should-do-which-job" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -279,9 +294,9 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;td&gt;Deterministic, testable, auditable, and usually cheaper&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Bounded semantic classification, scoring, ranking, routing, or verification over text&lt;/td&gt;
-&lt;td&gt;&lt;strong&gt;Jev candidate&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;Typed distributions and many independent questions over shared state&lt;/td&gt;
+&lt;td&gt;Bounded semantic classification, scoring, routing, or verification over text&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Decision model candidate&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Typed distributions over declared outcomes; compare Jev, Laya, and conventional classifiers on your task&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Explanation, conversation, synthesis, planning, code, or any open-ended output&lt;/td&gt;
@@ -300,9 +315,9 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;A useful test is: &lt;strong&gt;Can I enumerate the valid answer space before seeing the case?&lt;/strong&gt; If yes, and the hard part is a semantic judgment over text, Jev may fit. If the output must contain new language, a novel plan, or a chain of reasoning, use an LLM. If code can calculate the answer exactly, do not call either model.&lt;/p&gt;
-&lt;h2 id="a-minimal-workflow-in-code"&gt;A minimal workflow in code&lt;a class="headerlink" href="#a-minimal-workflow-in-code" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;The official Python SDK makes the boundary explicit:&lt;/p&gt;
+&lt;p&gt;A useful test is: &lt;strong&gt;Can I enumerate the valid answer space before seeing the case?&lt;/strong&gt; If yes, and the hard part is a semantic judgment over text, test a decision model against a conventional classifier and a structured-output LLM. If the output must contain new language, a novel plan, or a chain of reasoning, use an LLM. If code can calculate the answer exactly, do not call a model.&lt;/p&gt;
+&lt;h2 id="the-same-task-through-two-apis"&gt;The same task through two APIs&lt;a class="headerlink" href="#the-same-task-through-two-apis" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The two APIs are not drop-in replacements. The Jev SDK expresses each question with a Python class; Laya takes a dictionary and can run locally. Both can provide judgments to the &lt;em&gt;same application-owned&lt;/em&gt; policy. Here is the Jev form, using the official Python SDK:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;typesafe_sdk&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Choice&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Noul&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Score&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;TypeSafeClient&lt;/span&gt;
 
 &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -352,27 +367,54 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;The model interprets language. Code still verifies identity, compares charge amounts, enforces authorization, applies refund limits, records the action, and makes it idempotent. A high model probability must never become a substitute for transaction controls.&lt;/p&gt;
+&lt;p&gt;Laya expresses a similar request with dictionary schemas. This abbreviated example shows the interface rather than a validated refund policy: &lt;a href="https://github.com/NandhaKishorM/laya#quickstart-route-mode-recommended"&gt;Laya quickstart&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;laya&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Router&lt;/span&gt;
+
+&lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Router&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;decision&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;router&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;predict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;state&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;owner&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;choice&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;instructions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Which team owns the primary issue?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;criteria&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;billing&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;charges, invoices, refunds, or subscriptions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;technical&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;product failures or errors&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;account&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;login, permissions, or account security&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="s2"&gt;&amp;quot;other&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;none of the listed teams fits&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;refund_requested&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;noul&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;instructions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Does the customer explicitly request a refund?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;owner&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;decision&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;answers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;owner&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;choice&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The snippets ask related, not byte-identical, questions. A fair production comparison would normalize both providers' outputs, use one frozen question set and policy, and evaluate the resulting decisions against the same labelled cases.&lt;/p&gt;
 &lt;h2 id="failure-modes-that-matter-in-production"&gt;Failure modes that matter in production&lt;a class="headerlink" href="#failure-modes-that-matter-in-production" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;TypeSafe's &lt;a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13"&gt;Jev 1.13 limitations&lt;/a&gt; translate into five practical boundaries:&lt;/p&gt;
+&lt;p&gt;The shared interface brings shared engineering hazards, while each model adds its own. TypeSafe's &lt;a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13"&gt;Jev 1.13 limitations&lt;/a&gt; and Laya's &lt;a href="https://github.com/NandhaKishorM/laya#honest-limits"&gt;documented limits&lt;/a&gt; suggest five boundaries:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Keep exact work in code.&lt;/strong&gt; Jev is weak at numerical precision, counting, and date comparison. Parse timestamps, calculate amounts, check authorization, and enforce hard limits deterministically.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Keep exact work in code.&lt;/strong&gt; Jev documents weaknesses in numerical precision, counting, and date comparison; a small encoder is not a substitute for exact computation either. Parse timestamps, calculate amounts, check authorization, and enforce hard limits deterministically.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Prepare focused, untrusted state.&lt;/strong&gt; Retrieve only the evidence needed for the question. Test adversarial content and prompt injection because text inside the state can influence the result.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Leave room for “none of the above.”&lt;/strong&gt; A closed Choice with an incomplete option list forces the model to select the least-wrong answer.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Validate and version the decision boundary.&lt;/strong&gt; Measure precision, recall, coverage, calibration, and business cost, then pin the model version used to set each threshold.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Engineer the surrounding service.&lt;/strong&gt; Timeouts, retries, circuit breakers, fallbacks, human queues, and reversible side effects remain application responsibilities. Log the state and schema versions, distributions, route, overrides, tool outcomes, and eventual business result.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Validate and version the decision boundary.&lt;/strong&gt; Measure precision, recall, coverage, calibration, and business cost. Pin the Jev model version or Laya checkpoint and record any local calibration fit used to set a threshold.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Engineer the surrounding service.&lt;/strong&gt; A hosted API needs timeouts, retries, and fallback behavior; a local checkpoint needs serving capacity, cold-start planning, and monitoring. Both need human queues and reversible side effects. Log state and schema versions, distributions, routes, overrides, tool outcomes, and eventual business results.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Jev returns no natural-language rationale. That avoids mistaking a fluent explanation for evidence, but it does not make the system auditable by itself. The audit trail comes from versioned inputs, explicit criteria, probabilities, policy code, and observed outcomes.&lt;/p&gt;
-&lt;h2 id="how-to-evaluate-jev-in-your-own-workflow"&gt;How to evaluate Jev in your own workflow&lt;a class="headerlink" href="#how-to-evaluate-jev-in-your-own-workflow" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Neither model returns a natural-language rationale. That avoids mistaking fluent prose for evidence, but it does not make a system auditable by itself. The audit trail comes from versioned inputs, explicit criteria, probabilities, policy code, and observed outcomes.&lt;/p&gt;
+&lt;h2 id="how-to-evaluate-a-decision-model-in-your-workflow"&gt;How to evaluate a decision model in your workflow&lt;a class="headerlink" href="#how-to-evaluate-a-decision-model-in-your-workflow" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Begin with one decision, not an entire agent. Define its allowed outputs, the business cost of each error, and which cases must always reach a person. Build a labelled set that includes common traffic, rare classes, ambiguity, missing evidence, and adversarial examples.&lt;/p&gt;
-&lt;p&gt;Next, compare complete implementations: deterministic rules, a conventional classifier, a structured-output LLM, Jev, and any useful hybrid. Use the same inputs and downstream policy for each. Alongside per-class precision and recall, measure calibration, latency percentiles, cost, and the share of cases sent to human review.&lt;/p&gt;
+&lt;p&gt;Next, compare complete implementations: deterministic rules, a conventional classifier, a structured-output LLM, Jev, a suitable Laya checkpoint, and any useful hybrid. Use the same held-out inputs and downstream policy for each. Alongside per-class precision and recall, measure calibration, latency percentiles, infrastructure and API cost, and the share of cases sent to human review. Separate zero-shot tests from tests after task-specific fine-tuning; report both if both matter.&lt;/p&gt;
 &lt;p&gt;Run the preferred design in shadow mode before it can act. Compare its decisions with real outcomes and reviewer choices. When it goes live, begin with reversible, low-impact actions and continue monitoring input drift, confidence distributions, overrides, provider errors, version changes, and downstream outcomes.&lt;/p&gt;
-&lt;p&gt;Jev's low reported cost could make per-item checks practical across retrieved passages, proposed tool calls, generated outputs, and completed traces. Their value still depends on explicit policy, domain evaluation, observability, and safe fallbacks.&lt;/p&gt;
-&lt;h2 id="the-current-verdict"&gt;The current verdict&lt;a class="headerlink" href="#the-current-verdict" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Jev addresses a real mismatch in enterprise AI: many steps need a bounded judgment, not another paragraph. Its interface makes those decisions explicit and gives code direct access to their probability distributions. TypeSafe's early workflow results suggest that specialization can reduce cost and latency, although independent evidence is still needed for quality and calibration.&lt;/p&gt;
-&lt;p&gt;The practical lesson is to give each part of the system the job it handles best: code performs exact work and controls actions, Jev interprets text into bounded decisions, LLMs generate and reason, and people resolve consequential uncertainty. That is a more useful architecture than asking one model to do everything.&lt;/p&gt;
+&lt;p&gt;Low-cost decision calls could make per-item checks practical across retrieved passages, proposed tool calls, generated outputs, and completed traces. Their value still depends on explicit policy, domain evaluation, observability, and safe fallbacks.&lt;/p&gt;
+&lt;h2 id="the-practical-takeaway"&gt;The practical takeaway&lt;a class="headerlink" href="#the-practical-takeaway" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The useful idea is broader than either product: many steps in an AI workflow need a bounded judgment, not another paragraph. Jev packages that as a managed decision API; Laya offers an inspectable, adaptable local route. Both make the answer space explicit and expose distributions to code. Neither should be selected from a single vendor graph or a mismatched benchmark.&lt;/p&gt;
+&lt;p&gt;Give each part of the system the job it handles best: code performs exact work and controls actions, a tested decision model interprets text into bounded answers, LLMs generate and reason, and people resolve consequential uncertainty. The model at the decision step can change without handing it authority over the rest of the workflow.&lt;/p&gt;
 &lt;h2 id="related-reading"&gt;Related reading&lt;a class="headerlink" href="#related-reading" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;For the mechanism Jev deliberately avoids at output time, &lt;a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer: Attention Is All You Need&lt;/a&gt; explains the architecture underlying modern sequence models, while &lt;a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/"&gt;Explaining neural language modelling&lt;/a&gt; develops next-token prediction from first principles.&lt;/p&gt;
-&lt;p&gt;For a different view of decision-making systems, &lt;a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/"&gt;Reinforcement learning: a practical primer&lt;/a&gt; explains states, actions, rewards, values, and policies. Jev is not an RL agent, but the distinction helps clarify why a probabilistic judgment model does not itself own goals, environmental actions, or long-horizon credit assignment.&lt;/p&gt;
+&lt;p&gt;For the mechanism bounded decision models avoid at output time, &lt;a href="https://mchromiak.github.io/articles/2017/Sep/12/Transformer-Attention-is-all-you-need/"&gt;Transformer: Attention Is All You Need&lt;/a&gt; explains the architecture underlying modern sequence models, while &lt;a href="https://mchromiak.github.io/articles/2017/Nov/30/Explaining-Neural-Language-Modeling/"&gt;Explaining neural language modelling&lt;/a&gt; develops next-token prediction from first principles.&lt;/p&gt;
+&lt;p&gt;For a different view of decision-making systems, &lt;a href="https://mchromiak.github.io/articles/2021/May/01/RL-Primer/"&gt;Reinforcement learning: a practical primer&lt;/a&gt; explains states, actions, rewards, values, and policies. A bounded judgment model is not itself an RL agent: it does not own goals, environmental actions, or long-horizon credit assignment.&lt;/p&gt;
 &lt;h2 id="primary-sources"&gt;Primary sources&lt;a class="headerlink" href="#primary-sources" title="Permanent link"&gt;🔗&lt;/a&gt;&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Diogo Almeida. &lt;a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev"&gt;Introducing System One Models &amp;amp; Jev&lt;/a&gt;, TypeSafe AI, September 15, 2026. Primary launch description, disclosed components, company benchmarks, and caveats.&lt;/li&gt;
@@ -382,7 +424,72 @@ B: billing 0.40 | technical 0.35 | other 0.25
 &lt;li&gt;TypeSafe AI. &lt;a href="https://docs.typesafe.ai/concepts/how-to-build-with-system-one"&gt;How to build with System One&lt;/a&gt;, &lt;a href="https://docs.typesafe.ai/patterns/intent-routing"&gt;Intent routing&lt;/a&gt;, and &lt;a href="https://docs.typesafe.ai/cookbooks/parallel_questions"&gt;Parallel questions&lt;/a&gt;. Official workflow patterns and batching example.&lt;/li&gt;
 &lt;li&gt;TypeSafe AI. &lt;a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13"&gt;Jev 1.13 known limitations&lt;/a&gt; and &lt;a href="https://docs.typesafe.ai/models"&gt;Models and pricing&lt;/a&gt;. Version-specific failure modes, aliases, limits, and dated pricing.&lt;/li&gt;
 &lt;li&gt;TypeSafe AI. &lt;a href="https://github.com/typesafe-ai/typesafe-sdk-python"&gt;Official Python SDK&lt;/a&gt; and &lt;a href="https://github.com/typesafe-ai/typesafe-sdk-js"&gt;JavaScript SDK&lt;/a&gt;. MIT-licensed client implementations and public request/response types.&lt;/li&gt;
-&lt;/ul&gt;</content><category term="Machine Learning / AI Systems"/><category term="Jev"/><category term="TypeSafe AI"/><category term="System One Models"/><category term="Agentic AI"/><category term="Enterprise AI"/><category term="Calibration"/><category term="Structured Outputs"/></entry><entry><title>Atlas: How one model turns images into controllable 3D worlds</title><link href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/" rel="alternate"/><published>2026-09-05T12:00:00+02:00</published><updated>2026-09-05T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-05:/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/</id><summary type="html">&lt;p&gt;Atlas combines text, images, camera poses, and depth in a shared spatial context. This guide explains what that means, how its autoregressive diffusion architecture works, what World Labs has demonstrated, and what remains unknown.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
+&lt;li&gt;Nandakishor Mukkunnoth and Convai Innovations. &lt;a href="https://github.com/NandhaKishorM/laya"&gt;Laya repository&lt;/a&gt;, &lt;a href="https://github.com/NandhaKishorM/laya/blob/main/BENCHMARKS.md"&gt;benchmarks and reproduction notes&lt;/a&gt;, and &lt;a href="https://huggingface.co/convaiinnovations/laya"&gt;model checkpoints&lt;/a&gt;. Primary documentation for the open implementation, its training-specific results, limits, and code.&lt;/li&gt;
+&lt;li&gt;Nandakishor Mukkunnoth. &lt;a href="https://arxiv.org/abs/2503.23303"&gt;SalesRLAgent&lt;/a&gt;, March 2025. Earlier, domain-specific probability-prediction work; not a paper describing the current Laya architecture.&lt;/li&gt;
+&lt;li&gt;Benchmark Heaven. &lt;a href="https://github.com/fstandhartinger/jevbench/blob/main/RESULTS-v1.2.md"&gt;JevBench v1.2 results&lt;/a&gt;. Independent, versioned decision-task comparison; its CPU Laya run is not a matched GPU serving test.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="Machine Learning / AI Systems"/><category term="Decision Models"/><category term="Jev"/><category term="Laya"/><category term="Agentic AI"/><category term="Enterprise AI"/><category term="Calibration"/><category term="Structured Outputs"/></entry><entry><title>Atlas: How one model turns images into controllable 3D worlds</title><link href="https://mchromiak.github.io/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/" rel="alternate"/><published>2026-09-05T12:00:00+02:00</published><updated>2026-09-05T12:00:00+02:00</updated><author><name>Michał Chromiak</name></author><id>tag:mchromiak.github.io,2026-09-05:/articles/2026/Sep/05/Atlas-World-Model-for-Spatial-Intelligence/</id><summary type="html">&lt;p&gt;Atlas combines text, images, camera poses, and depth in a shared spatial context. This guide explains what that means, how its autoregressive diffusion architecture works, what World Labs has demonstrated, and what remains unknown.&lt;/p&gt;</summary><content type="html">&lt;hr&gt;
 &lt;p&gt;A photograph records one view of a scene. Move the camera and much of the world is missing: the back of an object, the room beyond a doorway, and the geometry hidden behind a wall were never captured. A useful world model must do more than make attractive pixels. It must keep track of what has already been observed, respect where the camera is, and decide what can be reconstructed versus what must be inferred.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Atlas is World Labs' attempt to put those jobs inside one model.&lt;/strong&gt; Announced on September 1, 2026, it accepts combinations of text, images, camera poses, and depth maps. It can then generate new views, reconstruct explicit 3D geometry, reframe video, or supply simulated observations for robotics workflows. World Labs calls it an &lt;strong&gt;omni world model&lt;/strong&gt; because the same pretrained architecture supports several input and output types rather than assigning each task to a separate specialist model. &lt;a href="https://www.worldlabs.ai/blog/atlas"&gt;Official Atlas introduction&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Atlas is a model from the World Labs team, a company co-founded by Fei-Fei Li, Justin Johnson, Ben Mildenhall, and Christoph Lassner. It is more precise to describe it this way than to attribute the model to one researcher. &lt;a href="https://www.worldlabs.ai/about"&gt;World Labs team&lt;/a&gt;.&lt;/p&gt;
