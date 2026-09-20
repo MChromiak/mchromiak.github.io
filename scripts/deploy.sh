@@ -20,7 +20,7 @@ fi
 make check
 
 deploy_branch="codex/pages-publish-$(date -u +%Y%m%dT%H%M%SZ)-$$"
-git branch --track "$deploy_branch" origin/main
+git branch "$deploy_branch" refs/remotes/origin/main
 ghp-import -n -m "Publish Pelican site from $(git rev-parse --short HEAD)" \
   -b "$deploy_branch" output
 
@@ -30,4 +30,9 @@ if ! git push origin "$deploy_branch:main"; then
 fi
 
 git fetch origin refs/heads/main:refs/remotes/origin/main
-git branch -d "$deploy_branch"
+if git merge-base --is-ancestor "$deploy_branch" refs/remotes/origin/main; then
+  git branch -D "$deploy_branch"
+else
+  echo "Published branch could not be verified; retained $deploy_branch." >&2
+  exit 1
+fi
