@@ -39,22 +39,22 @@
 
     {# Favicons are a touchy subject. For reasoning for the following code, see: http://stackoverflow.com/a/23851464/872397 #}
     {% if FAVICON %}
-    <link href="{{ SITEURL }}/{{ FAVICON }}" rel="icon" type="image/svg+xml">
+    <link href="{{ SITEURL }}/{{ FAVICON }}?v={{ FAVICON_VERSION }}" rel="icon" type="image/svg+xml">
     {% endif %}
     {% if FAVICON_PNG %}
-    <link href="{{ SITEURL }}/{{ FAVICON_PNG }}" rel="icon" type="image/png" sizes="32x32">
+    <link href="{{ SITEURL }}/{{ FAVICON_PNG }}?v={{ FAVICON_VERSION }}" rel="icon" type="image/png" sizes="32x32">
     {% endif %}
     {% if FAVICON_ICO %}
-    <link href="{{ SITEURL }}/{{ FAVICON_ICO }}" rel="shortcut icon">
+    <link href="{{ SITEURL }}/{{ FAVICON_ICO }}?v={{ FAVICON_VERSION }}" rel="shortcut icon">
     {% endif %}
     {% if FAVICON_IE %}
     <!--[if IE]><link rel="shortcut icon" href="{{ SITEURL }}/{{ FAVICON_IE }}"><![endif]-->
     {% endif %}
     {% if TOUCHICON %}
-    <link rel="apple-touch-icon" href="{{ SITEURL }}/{{ TOUCHICON }}" sizes="180x180">
+    <link rel="apple-touch-icon" href="{{ SITEURL }}/{{ TOUCHICON }}?v={{ FAVICON_VERSION }}" sizes="180x180">
     {% endif %}
     {% if WEB_MANIFEST %}
-    <link rel="manifest" href="{{ SITEURL }}/{{ WEB_MANIFEST }}">
+    <link rel="manifest" href="{{ SITEURL }}/{{ WEB_MANIFEST }}?v={{ FAVICON_VERSION }}">
     {% endif %}
     {% if THEME_COLOR %}
     <meta name="theme-color" content="{{ THEME_COLOR }}">

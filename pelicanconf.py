@@ -29,6 +29,7 @@ FAVICON_PNG = 'static_files/img/favicon-32.png'
 FAVICON_ICO = 'favicon.ico'
 TOUCHICON = 'static_files/img/apple-touch-icon.png'
 WEB_MANIFEST = 'static_files/site.webmanifest'
+FAVICON_VERSION = '20260920-white'
 THEME_COLOR = '#2a80b9'
 
 DISQUS_SITENAME = 'mchromiak'
