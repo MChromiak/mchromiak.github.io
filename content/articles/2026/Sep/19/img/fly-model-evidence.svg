@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">From a fly connectome to a digital fly</title>
+  <desc id="desc">Four linked stages: an anatomical wiring diagram, a model that produces neural spikes, experiments that compare predictions with living flies, and a virtual body in a closed sensory-motor loop.</desc>
+  <defs>
+    <style>
+      .label{font:700 25px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#263640}
+      .small{font:16px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#46606b}
+      .eyebrow{font:700 17px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#176c77}
+      .title{font:700 37px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#18323e}
+      .number{font:700 18px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#fff}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#4e8295"/></marker>
+  </defs>
+  <rect width="1200" height="675" fill="#f5faf9"/>
+  <path d="M0 0H1200V8H0Z" fill="#176c77"/>
+  <text class="eyebrow" x="66" y="63">THE EXPERIMENTAL PROGRESSION</text>
+  <text class="title" x="66" y="110">From wiring diagram to digital behavior</text>
+  <text class="small" x="66" y="143">Each step adds a model, a measurement, or a physical interface.</text>
+
+  <path d="M332 189V538M600 189V538M868 189V538" stroke="#d5e3e4" stroke-width="2"/>
+
+  <text class="eyebrow" x="66" y="219">01 / RECONSTRUCT</text>
+  <g stroke="#367b87" stroke-width="3" opacity=".8">
+    <path d="M105 307 157 267 223 290 269 251M105 307 126 389 186 353 239 405M157 267 186 353 223 290 239 405M126 389 239 405 269 251" fill="none"/>
+  </g>
+  <g fill="#f5faf9" stroke="#176c77" stroke-width="5">
+    <circle cx="105" cy="307" r="11"/><circle cx="157" cy="267" r="11"/><circle cx="223" cy="290" r="11"/>
+    <circle cx="269" cy="251" r="11"/><circle cx="126" cy="389" r="11"/><circle cx="186" cy="353" r="11"/><circle cx="239" cy="405" r="11"/>
+  </g>
+  <text class="label" x="66" y="478">Map connections</text>
+  <text class="small" x="66" y="510">FlyWire: neurons and synapses</text>
+
+  <text class="eyebrow" x="353" y="219">02 / SIMULATE</text>
+  <path d="M365 389H390L408 378 425 389H444L458 361 468 263 477 388H507L521 367 535 389H576" fill="none" stroke="#db7549" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M365 412H576M365 271V412" stroke="#adc6ca" stroke-width="2"/>
+  <path d="M458 309H573" stroke="#9cbbbc" stroke-width="2" stroke-dasharray="6 6"/>
+  <text class="small" x="518" y="298">threshold</text>
+  <text class="label" x="353" y="478">Model activity</text>
+  <text class="small" x="353" y="510">Spikes and circuit predictions</text>
+
+  <text class="eyebrow" x="621" y="219">03 / TEST</text>
+  <rect x="637" y="285" width="78" height="98" rx="6" fill="#e1f0f0" stroke="#3a8f9e" stroke-width="3"/>
+  <path d="M648 348H659L668 338 680 348H691L698 314 704 348" fill="none" stroke="#3a8f9e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M725 335H752" fill="none" stroke="#4e8295" stroke-width="3" marker-end="url(#arrow)"/>
+  <circle cx="803" cy="335" r="46" fill="#fff4e7" stroke="#eaa45a" stroke-width="3"/>
+  <path d="M782 336 797 350 826 319" fill="none" stroke="#c7663f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="small" x="632" y="422">prediction</text>
+  <text class="small" x="759" y="422">fly experiment</text>
+  <text class="label" x="621" y="478">Check predictions</text>
+  <text class="small" x="621" y="510">Neural and behavioral tests</text>
+
+  <text class="eyebrow" x="889" y="219">04 / EMBODY</text>
+  <g stroke="#286d79" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <ellipse cx="1022" cy="334" rx="64" ry="38" fill="#e4f2ed"/>
+    <circle cx="952" cy="334" r="24" fill="#e4f2ed"/>
+    <path d="M982 363 955 407 936 414M1005 369 995 411 977 425M1040 369 1050 411 1070 425M978 303 962 265 936 255M1011 299 1004 254 985 235M1043 302 1060 263 1086 254"/>
+  </g>
+  <path d="M1092 344a78 78 0 0 1-8 42" fill="none" stroke="#db7549" stroke-width="3" marker-end="url(#arrow)"/>
+  <text class="label" x="889" y="478">Close the loop</text>
+  <text class="small" x="889" y="510">Body, world, and new sensation</text>
+
+  <path d="M86 576H1112" stroke="#bad0d3" stroke-width="4"/>
+  <path d="M86 576H949" stroke="#4e8295" stroke-width="4"/>
+  <g fill="#176c77"><circle cx="86" cy="576" r="17"/><circle cx="354" cy="576" r="17"/><circle cx="622" cy="576" r="17"/><circle cx="890" cy="576" r="17"/></g>
+  <text class="number" x="80" y="582">1</text><text class="number" x="348" y="582">2</text><text class="number" x="616" y="582">3</text><text class="number" x="884" y="582">4</text>
+  <text class="small" x="66" y="642">(c) Michal Chromiak | mchromiak.github.io</text>
+</svg>
