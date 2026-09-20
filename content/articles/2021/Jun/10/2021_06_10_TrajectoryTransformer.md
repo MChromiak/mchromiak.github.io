@@ -1,13 +1,12 @@
 Title: Trajectory Transformer: Reinforcement Learning as Sequence problem
 Subtitle: Reinforcement Learning as One Big Sequence Modeling Problem - Research Paper Explained
-Status: hidden
+Status: draft
 Category: Reinforcement learning
 Date: 2021-06-10 14:00
 Modified: 2021-06-10 14:00
 Tags: Transformer, Transformer, Reinforcement Learning, RL, RL as Sequence
 Slug: Reinforcement-Learning-as-One-Big-Sequence-Modeling-Problem-RL-assequence
 Related_posts: Transformer-Attention-is-all-you-need, Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence
-Cover: articles/2021/June/10/img/TrajectoryTransformer-Cover.png
 Summary:   with the goal of predicting a sequence of actions to get a sequence of high rewards
 
 #### The Trajectory Transformer paper explained.

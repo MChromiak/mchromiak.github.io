@@ -1,9 +1,16 @@
-*~
-._*
-*.lock
-*.DS_Store
-*.swp
-*.out
+# Generated site and Pelican caches
+/output/
+/output-preview/
+/cache/
+**/__pycache__/
 *.py[cod]
-output
+
+# Local environments and editor state
+/.venv/
+/.vscode/
+/.idea/
+.DS_Store
+._*
+*~
+*.swp
 *.pid

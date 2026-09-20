@@ -18,10 +18,7 @@ AUTHOR_SAME_AS = [
     'https://github.com/MChromiak',
 ]
 
-# WHEN empty the disqus not work; When set to mchromiak.gihub.io all rendered links refer thus
-#   disable to test locally. To push use the publishconf.py that import pelicanconf.py and
-#   adds the SITEURL as remote address:
-#       pelican content -s publishconf.py
+# Keep local URLs relative. publishconf.py supplies the production domain.
 SITEURL = ''
 SITELOGO = 'static_files/img/sitelogo40.png'
 FAVICON = 'static_files/img/favicon.svg'
@@ -35,11 +32,7 @@ THEME_COLOR = '#2a80b9'
 DISQUS_SITENAME = 'mchromiak'
 #======================== DEV SETTINGS=======================
 LOAD_CONTENT_CACHE = False
-# !!!!!!!!!!!!!!!!! Del all every time change
 DELETE_OUTPUT_DIRECTORY = True
-
-# if DELETE_OUTPUT_DIRECTORY=True do not delete this directories
-OUTPUT_RETENTION = [".git","LICENSE", "README.md", "robots.txt"]
 
 #========================== FILES ==================================
 PATH = 'content'
@@ -75,8 +68,8 @@ DATE_FORMATS = { # to use US month names in article dates and archives
 
 # Prefix the feeds with current URL (not localhost)
 FEED_DOMAIN = SITEURL
-# Feed generation is usually not desired when developing
-FEED_ALL_ATOM = 'feeds/all.atom.xml'
+# Feed generation is only enabled in publishconf.py, where SITEURL is set.
+FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
@@ -220,5 +213,3 @@ SITEMAP = {
         'pages': 'monthly'
     }
 }
-
-# TODO: Travis integration

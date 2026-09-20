@@ -17,6 +17,8 @@ FEED_ALL_ATOM = 'feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True
+DRAFT_SAVE_AS = False
+DRAFT_PAGE_SAVE_AS = False
 
 # Following items are often useful when publishing
 
