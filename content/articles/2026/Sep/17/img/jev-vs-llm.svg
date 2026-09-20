@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 710" role="img" aria-labelledby="title desc">
-  <title id="title">Autoregressive LLM output compared with Jev's parallel typed decisions</title>
-  <desc id="desc">An LLM produces a token sequence that may then be parsed and validated. Jev receives shared textual state and bounded questions, then returns typed probability distributions in parallel. Jev's internal neural architecture is not public.</desc>
+  <title id="title">Autoregressive LLM output compared with bounded decision models</title>
+  <desc id="desc">An LLM generates a token sequence. A decision model receives textual state and bounded questions, then scores the declared answers. Jev and Laya illustrate the interface through different implementations.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1f3342" flood-opacity="0.13"/>
@@ -9,8 +9,8 @@
     <marker id="teal-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#0f766e"/></marker>
   </defs>
   <rect width="1200" height="710" fill="#f7fafc"/>
-  <text x="42" y="48" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700">The verified difference is the inference contract</text>
-  <text x="42" y="78" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">TypeSafe has not published enough information for a layer-by-layer Jev architecture diagram</text>
+  <text x="42" y="48" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="700">The output contract changes the job</text>
+  <text x="42" y="78" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="16">This contrasts observable outputs, not the undisclosed internal layers of Jev</text>
 
   <g filter="url(#shadow)">
     <rect x="42" y="116" width="535" height="486" rx="7" fill="#ffffff" stroke="#69a5c6" stroke-width="2"/>
@@ -45,16 +45,16 @@
 
   <g filter="url(#shadow)">
     <rect x="623" y="116" width="535" height="486" rx="7" fill="#ffffff" stroke="#58a89d" stroke-width="2"/>
-    <text x="651" y="158" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">JEV / SYSTEM ONE</text>
+    <text x="651" y="158" fill="#0f766e" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">BOUNDED DECISION MODEL</text>
     <text x="651" y="184" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="14">Native job: answer bounded semantic questions</text>
     <rect x="651" y="220" width="169" height="58" rx="5" fill="#eaf7f3" stroke="#78b8af"/>
     <text x="735" y="244" text-anchor="middle" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700">textual state</text>
     <text x="735" y="264" text-anchor="middle" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="12">+ typed questions</text>
     <path d="M832 249 H872" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#teal-arrow)"/>
     <rect x="885" y="206" width="245" height="86" rx="5" fill="#203746"/>
-    <text x="1007" y="236" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Jev</text>
-    <text x="1007" y="258" text-anchor="middle" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="12">new architecture + parallel sampler</text>
-    <text x="1007" y="278" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="11">internal layers undisclosed</text>
+    <text x="1007" y="236" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Decision model</text>
+    <text x="1007" y="258" text-anchor="middle" fill="#b9cbd5" font-family="Inter, Arial, sans-serif" font-size="12">scores declared options</text>
+    <text x="1007" y="278" text-anchor="middle" fill="#e8bd75" font-family="Inter, Arial, sans-serif" font-size="11">Jev and Laya differ internally</text>
 
     <text x="651" y="333" fill="#58707f" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">PARALLEL BOUNDED OUTPUTS</text>
     <g>
@@ -74,8 +74,8 @@
 
   <rect x="42" y="626" width="1116" height="45" rx="5" fill="#fff7ed" stroke="#d59a5f"/>
   <text x="62" y="653" fill="#8a4208" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700">Important:</text>
-  <text x="139" y="653" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">schema-conforming does not mean correct. Jev can choose the wrong valid option; calibration must be tested on your data.</text>
-  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+  <text x="139" y="653" fill="#1f3342" font-family="Inter, Arial, sans-serif" font-size="13">schema-conforming does not mean correct. Test decision quality and calibration on your own data.</text>
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/">
     <text x="1158" y="698" text-anchor="end" fill="#2878a8" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" text-decoration="underline">© 2026 Michał Chromiak</text>
   </a>
 </svg>

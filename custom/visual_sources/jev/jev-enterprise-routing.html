@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jev in an enterprise agentic workflow</title>
+  <title>Bounded decisions in an enterprise agentic workflow</title>
   <style>
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #f7fafc; }
     svg { display: block; width: 100%; height: 100%; }
@@ -12,8 +12,8 @@
 </head>
 <body>
   <svg viewBox="0 0 1200 675" role="img" aria-labelledby="jev-enterprise-title jev-enterprise-description">
-    <title id="jev-enterprise-title">A bounded enterprise workflow using code, Jev, an LLM, tools, and human review</title>
-    <desc id="jev-enterprise-description">Code collects approved state and asks Jev narrow questions. Confidence and risk rules route routine cases to deterministic tools, generative work to an LLM, and uncertain or high-risk cases to a person. Every action is logged and evaluated.</desc>
+    <title id="jev-enterprise-title">A bounded enterprise workflow using code, a decision model, an LLM, tools, and human review</title>
+    <desc id="jev-enterprise-description">Code collects approved state and asks a decision model narrow questions. Explicit rules route routine cases to deterministic tools, generative work to an LLM, and uncertain or high-risk cases to a person. Every action is logged and evaluated.</desc>
 
     <defs>
       <filter id="jev-enterprise-shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -32,7 +32,7 @@
 
     <rect width="1200" height="675" fill="#f7fafc"/>
     <text x="42" y="47" fill="#1f3342" font-size="29" font-weight="700">Use each intelligence source where it is strongest</text>
-    <text x="42" y="76" fill="#58707f" font-size="16">Jev does not replace the agent stack; it can make its routing, gates, and checks explicit</text>
+    <text x="42" y="76" fill="#58707f" font-size="16">A decision model supplies bounded judgments; code still owns policy, routing, and actions</text>
 
     <g id="jev-enterprise-event" filter="url(#jev-enterprise-shadow)">
       <text x="42" y="120" fill="#2878a8" font-size="15" font-weight="700">1  EVENT</text>
@@ -59,9 +59,9 @@
     <path id="jev-enterprise-edge-2" d="M552 198 H609" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
 
     <g id="jev-enterprise-jev" filter="url(#jev-enterprise-shadow)">
-      <text x="611" y="120" fill="#0f766e" font-size="15" font-weight="700">3  JEV JUDGES</text>
+      <text x="611" y="120" fill="#0f766e" font-size="15" font-weight="700">3  DECISION MODEL</text>
       <rect x="611" y="140" width="245" height="116" rx="6" fill="#203746" stroke="#203746" stroke-width="2"/>
-      <text x="733" y="173" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Parallel typed questions</text>
+      <text x="733" y="173" text-anchor="middle" fill="#ffffff" font-size="21" font-weight="700">Bounded questions</text>
       <text x="733" y="199" text-anchor="middle" fill="#b9cbd5" font-size="12">intent · risk · policy · quality</text>
       <g id="jev-enterprise-probs">
         <rect x="644" y="218" width="52" height="12" rx="6" fill="#5ba0c3"/>
@@ -85,9 +85,9 @@
       <path id="jev-enterprise-route-code" d="M1004 266 C968 311 870 326 812 355" fill="none" stroke="#0f766e" stroke-width="3" marker-end="url(#jev-enterprise-arrow-teal)"/>
       <path id="jev-enterprise-route-llm" d="M1038 267 V354" fill="none" stroke="#2878a8" stroke-width="3" marker-end="url(#jev-enterprise-arrow-blue)"/>
       <path id="jev-enterprise-route-human" d="M1073 266 C1110 311 1134 327 1134 355" fill="none" stroke="#b45309" stroke-width="3" marker-end="url(#jev-enterprise-arrow-orange)"/>
-      <text x="850" y="307" fill="#0f766e" font-size="12" font-weight="700">bounded + confident</text>
+      <text x="850" y="307" fill="#0f766e" font-size="12" font-weight="700">routine + checked</text>
       <text x="1049" y="313" fill="#2878a8" font-size="12" font-weight="700">needs generation</text>
-      <text x="1107" y="300" fill="#b45309" font-size="12" font-weight="700">uncertain / high risk</text>
+      <text x="1107" y="295" fill="#b45309" font-size="12" font-weight="700">review</text>
     </g>
 
     <g id="jev-enterprise-code" filter="url(#jev-enterprise-shadow)">
@@ -138,8 +138,8 @@
 
     <path id="jev-enterprise-feedback" d="M72 558 C35 489 24 244 37 204" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="7 7" marker-end="url(#jev-enterprise-arrow-teal)"/>
 
-    <text x="42" y="653" fill="#6b7f8b" font-size="12">Reference architecture: business code controls side effects; Jev supplies bounded judgments; LLMs handle open-ended generation.</text>
-    <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+    <text x="42" y="653" fill="#6b7f8b" font-size="12">Conceptual workflow: code controls side effects, decision models score bounded questions, and LLMs generate.</text>
+    <a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/">
       <text x="1158" y="653" text-anchor="end" fill="#2878a8" font-size="12" font-weight="600" text-decoration="underline">&#169; 2026 Michał Chromiak</text>
     </a>
   </svg>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Jev: typed decisions for enterprise AI</title>
+  <title id="title">Typed decision models: Jev and Laya in agentic AI</title>
   <desc id="desc">An original editorial cover showing one shared state branching into Choice, Noul, and Score probability outputs, followed by a controlled software decision.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -13,10 +13,10 @@
   <path d="M0 518 C230 454 367 589 598 527 C816 468 959 559 1200 482 V630 H0 Z" fill="#0f766e" opacity="0.35"/>
   <circle cx="1016" cy="92" r="176" fill="#2878a8" opacity="0.2"/>
 
-  <text x="64" y="91" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">SYSTEM ONE MODELS</text>
-  <text x="64" y="175" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="76" font-weight="800">Jev</text>
-  <text x="64" y="224" fill="#d9e8ee" font-family="Inter, Arial, sans-serif" font-size="30">Typed decisions, not generated prose</text>
-  <text x="64" y="273" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19">What it does · what is actually disclosed · where it fits in enterprise workflows</text>
+  <text x="64" y="91" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="700">A DECISION LAYER FOR AI AGENTS</text>
+  <text x="64" y="175" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="67" font-weight="800">Typed decisions</text>
+  <text x="64" y="224" fill="#d9e8ee" font-family="Inter, Arial, sans-serif" font-size="30">Jev and Laya as two examples</text>
+  <text x="64" y="273" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="19">Bounded questions · probability distributions · software control</text>
 
   <g filter="url(#shadow)">
     <rect x="67" y="346" width="213" height="112" rx="7" fill="#ffffff"/>
@@ -28,8 +28,8 @@
 
   <g filter="url(#shadow)">
     <rect x="383" y="323" width="237" height="158" rx="7" fill="#254b60" stroke="#69a5c6" stroke-width="2"/>
-    <text x="501" y="362" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="29" font-weight="800">Jev</text>
-    <text x="501" y="388" text-anchor="middle" fill="#bcd2dc" font-family="Inter, Arial, sans-serif" font-size="14">internal architecture undisclosed</text>
+    <text x="501" y="362" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="800">Decision model</text>
+    <text x="501" y="388" text-anchor="middle" fill="#bcd2dc" font-family="Inter, Arial, sans-serif" font-size="14">implementation varies</text>
     <rect x="410" y="413" width="55" height="25" rx="12" fill="#edf6fb"/>
     <rect x="474" y="413" width="55" height="25" rx="12" fill="#eaf7f3"/>
     <rect x="538" y="413" width="55" height="25" rx="12" fill="#fff4e8"/>
@@ -54,7 +54,7 @@
   </g>
 
   <text x="65" y="555" fill="#d9e8ee" font-family="Inter, Arial, sans-serif" font-size="17">Code keeps control. Models provide bounded semantic judgments.</text>
-  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/">
+  <a href="https://mchromiak.github.io/articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/">
     <text x="1135" y="594" text-anchor="end" fill="#9fc7dc" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" text-decoration="underline">© 2026 Michał Chromiak</text>
   </a>
 </svg>

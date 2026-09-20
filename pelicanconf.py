@@ -156,6 +156,7 @@ EXTRA_PATH_METADATA = {
     'js/article.js': {'path': 'js/article.js'},
     'extra/robots.txt': {'path': 'robots.txt'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
+    'extra/typed-decision-redirect.html': {'path': 'articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/index.html'},
 }
 
 DISQUS_DISPLAY_COUNTS = True
