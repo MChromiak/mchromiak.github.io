@@ -1,4 +1,3 @@
-ghp-import==2.1.0
 pelican[markdown]==4.12.0
 pelican-i18n-subsites==1.0.0
 pelican-related-posts==1.0.0
