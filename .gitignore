@@ -6,6 +6,7 @@
 
 # Local environments and editor state
 /.venv/
+/.local/
 /.vscode/
 /.idea/
 .DS_Store
