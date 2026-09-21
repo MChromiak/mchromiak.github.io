@@ -1,6 +1,5 @@
 # Generated site and Pelican caches
 /output/
-/output-preview/
 /cache/
 **/__pycache__/
 *.py[cod]

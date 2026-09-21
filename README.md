@@ -24,11 +24,12 @@ make check           # production build plus local-asset validation
 git push origin pelican
 ```
 
-A push to `pelican` publishes the site after `make check` passes. Pull requests
-run the same check without deploying.
+A push to `pelican` builds and publishes the site with Pelican's official
+GitHub Pages workflow. Run `make check` before pushing to catch missing local
+assets.
 
 Articles and their images live in `content/articles/`. Shared assets live in
-`content/static_files/`, and theme customizations in `custom/pelican-bootstrap3/`.
+`content/static_files/`, and theme customizations in `themes/pelican-bootstrap3/`.
 Use `Status: draft` for unfinished articles; production builds exclude drafts.
 
 Configuration is split conventionally:
@@ -36,3 +37,5 @@ Configuration is split conventionally:
 - `pelicanconf.py`: local development and common site settings;
 - `publishconf.py`: production URL, feeds, analytics, and comments;
 - `requirements.txt`: pinned Python packages used locally and in CI.
+
+Generated files stay in `output/` and are not committed.

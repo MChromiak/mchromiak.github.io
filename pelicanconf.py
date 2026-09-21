@@ -1,12 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- #
-from __future__ import unicode_literals
 from datetime import datetime
 
 CURRENT_YEAR = datetime.now().year
 
-AUTHOR = u'Micha\u0142 Chromiak'        
-SITENAME = u'Micha\u0142 Chromiak\'s blog'
+AUTHOR = 'Micha\u0142 Chromiak'
+SITENAME = "Micha\u0142 Chromiak's blog"
 SITESUBTITLE = 'Be a fool to become a Polymath.'
 SITE_DESCRIPTION = ('Technical articles about machine learning, computer vision, '
                     'world models, reinforcement learning, and AI research by Michał Chromiak.')
@@ -18,7 +15,7 @@ AUTHOR_SAME_AS = [
     'https://github.com/MChromiak',
 ]
 
-# Keep local URLs relative. publishconf.py supplies the production domain.
+# publishconf.py supplies the production domain.
 SITEURL = ''
 SITELOGO = 'static_files/img/sitelogo40.png'
 FAVICON = 'static_files/img/favicon.svg'
@@ -30,23 +27,16 @@ FAVICON_VERSION = '20260920-white'
 THEME_COLOR = '#2a80b9'
 
 DISQUS_SITENAME = 'mchromiak'
-#======================== DEV SETTINGS=======================
+# Development settings
 LOAD_CONTENT_CACHE = False
 DELETE_OUTPUT_DIRECTORY = True
 
-#========================== FILES ==================================
+# Content
 PATH = 'content'
 
-#articles are here so that the img files will be moved to output;
-#the imgages not present in md file will be moved to "output/articles.../img/"
+# Keep images next to their articles in the generated site.
 STATIC_PATHS = ['static_files', 'articles', 'extra']
 ARTICLE_PATHS = ['articles']
-# Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
-
-IGNORE_FILES = ['.#*', '*draft*', 'rm.md']
-#=============================== URL =====================================
-# Define paths in 'output' dir where will be HTML files generated.
 
 ARTICLE_URL = 'articles/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
 ARTICLE_SAVE_AS = 'articles/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
@@ -57,18 +47,16 @@ DRAFT_SAVE_AS = 'drafts/{slug}.html'
 YEAR_ARCHIVE_SAVE_AS = 'archive/{date:%Y}/index.html'
 MONTH_ARCHIVE_SAVE_AS = 'archive/{date:%Y}/{date:%b}/index.html'
 DAY_ARCHIVE_SAVE_AS = 'archive/{date:%Y}/{date:%b}/{date:%d}/index.html'
-#============================================================
 
 TIMEZONE = 'Europe/Warsaw'
 
-DEFAULT_LANG = u'en'
-DATE_FORMATS = { # to use US month names in article dates and archives
+DEFAULT_LANG = 'en'
+DATE_FORMATS = {  # Use English month names in article dates and archives.
     'en': ('en_US.UTF-8','%a, %d %b %Y')
 }
 
-# Prefix the feeds with current URL (not localhost)
 FEED_DOMAIN = SITEURL
-# Feed generation is only enabled in publishconf.py, where SITEURL is set.
+# Feeds are enabled only by publishconf.py.
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
@@ -104,7 +92,7 @@ DEFAULT_PAGINATION = 10
 
 DISPLAY_ARTICLE_INFO_ON_INDEX = True
 
-RELATED_POSTS_MAX = 10 # plugin related_posts
+RELATED_POSTS_MAX = 10
 
 DISPLAY_TAGS_ON_SIDEBAR = True
 DISPLAY_TAGS_INLINE = True
@@ -118,14 +106,13 @@ DISPLAY_ARCHIVE_ON_SIDEBAR = True
 
 CC_LICENSE = 'CC-BY-SA'
 
-#=============================== THEME =====================================
+# Theme
 
-THEME = 'custom/pelican-bootstrap3'
+THEME = 'themes/pelican-bootstrap3'
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.i18n']}
-BOOTSTRAP_THEME='cerulean'
+BOOTSTRAP_THEME = 'cerulean'
 
-BANNER = 'static_files/img/prv/banner.jpg' # image from googlenet generate as Iterative_Places205-GoogLeNet_2
-#BANNER_SUBTITLE = 'Be a fool to become a Polymath.'
+BANNER = 'static_files/img/prv/banner.jpg'
 BANNER_SUBTITLE = 'Cast Math spells on data.'
 
 DISPLAY_CATEGORIES_ON_MENU = False
@@ -145,9 +132,6 @@ CUSTOM_JS = 'static_files/js/custom.js'
 ARTICLE_JS = 'static_files/js/article.js'
 
 EXTRA_PATH_METADATA = {
-    'css/custom.css': {'path': 'css/custom.css'},
-    'js/custom.js': {'path': 'js/custom.js'},
-    'js/article.js': {'path': 'js/article.js'},
     'extra/robots.txt': {'path': 'robots.txt'},
     'extra/favicon.ico': {'path': 'favicon.ico'},
     'extra/typed-decision-redirect.html': {'path': 'articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/index.html'},
@@ -156,16 +140,15 @@ EXTRA_PATH_METADATA = {
 DISQUS_DISPLAY_COUNTS = True
 DISQUS_NO_ID = True
 
-# ============== Open Graph =====================================================
+# Open Graph
 USE_OPEN_GRAPH = True
 OPEN_GRAPH_IMAGE = 'static_files/img/Avatar.png'
-# twiitts of each post will have image and text included
 TWITTER_CARDS = True
 TWITTER_USERNAME = 'drChromiak'
 
 ADDTHIS_PROFILE = 'ra-59ea3c17b283c631'
 
-#=============================== PLUGINS =====================================
+# Plugins
 
 PLUGINS = [
     'pelican.plugins.i18n_subsites',
@@ -182,7 +165,7 @@ MARKDOWN = {
         'markdown.extensions.extra': {},
         'markdown.extensions.meta': {},
         'markdown.extensions.toc': {'permalink': '🔗'},
-        'markdown.extensions.attr_list': {}, # to enable eg. alignment for images or image id for anchors
+        'markdown.extensions.attr_list': {},
     },
     'output_format': 'html5',
 }

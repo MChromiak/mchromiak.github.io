@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- #
-from __future__ import unicode_literals
-
 # This file is only used if you use `make publish` or
 # explicitly specify it as your config file.
 
@@ -17,10 +13,8 @@ FEED_ALL_ATOM = 'feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True
-DRAFT_SAVE_AS = False
-DRAFT_PAGE_SAVE_AS = False
+DRAFT_SAVE_AS = ''
+DRAFT_PAGE_SAVE_AS = ''
 
-# Following items are often useful when publishing
-
-DISQUS_SITENAME = "mchromiak"
-GOOGLE_ANALYTICS_GA4 = "G-58PH9XEMKB"
+DISQUS_SITENAME = 'mchromiak'
+GOOGLE_ANALYTICS_GA4 = 'G-58PH9XEMKB'
