@@ -3,11 +3,12 @@ Subtitle: Probability, smoothing, cross-entropy, perplexity, and the assumptions
 Status: published
 Category: Sequence Models
 Date: 2017-11-30 19:30
-Modified: 2018-01-15 12:00
+Modified: 2026-09-10 21:31
 Tags: NLP, Language Model, N-gram, Perplexity, Smoothing, Neural Networks
 Slug: Explaining-Neural-Language-Modeling
 Related_posts: Transformer-Attention-is-all-you-need, ernie-2-0
 Cover: articles/2017/Nov/30/img/nlp-cover.png
+Thumbnail: articles/2017/Nov/30/img/nlp-cover-thumb.webp
 Summary: A language model assigns probabilities to token sequences by predicting each token from its context. This guide derives the chain rule, explains n-gram estimation and smoothing, connects cross-entropy to perplexity, and shows what changes when a neural Transformer replaces the count table.
 
 ---

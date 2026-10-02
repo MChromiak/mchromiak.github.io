@@ -35,9 +35,10 @@
       "url": {{ (SITEURL ~ '/' ~ page.url)|tojson }},
       {% if page.modified %}"dateModified": {{ page.modified.isoformat()|tojson }},{% endif %}
       "mainEntity": {
+        "@id": {{ AUTHOR_ID|tojson }},
         "@type": "Person",
         "name": {{ AUTHOR|tojson }},
-        "url": {{ AUTHOR_URL|tojson }},
+        "url": {{ AUTHOR_ABSOLUTE_URL|tojson }},
         "image": {{ (SITEURL ~ '/' ~ AVATAR)|tojson }},
         "sameAs": {{ AUTHOR_SAME_AS|tojson }},
         "jobTitle": "Computer scientist",

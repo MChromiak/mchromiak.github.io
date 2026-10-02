@@ -3,7 +3,7 @@ Subtitle: How bounded questions turn text into usable probabilities, and where t
 Status: published
 Category: Machine Learning / AI Systems
 Date: 2026-09-17 12:00
-Modified: 2026-09-20 12:00
+Modified: 2026-09-20 12:57
 Tags: Decision Models, Jev, Laya, Agentic AI, Enterprise AI, Calibration, Structured Outputs
 Slug: Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI
 Related_posts: Transformer-Attention-is-all-you-need, Explaining-Neural-Language-Modeling, RL-Primer
@@ -18,7 +18,7 @@ Each judgment has an answer space we can define before seeing this particular ti
 
 [Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev) and [Laya](https://github.com/NandhaKishorM/laya) are two current examples. They share the broad idea of returning typed decisions rather than prose, but they are different products with different disclosed internals, training evidence, deployment choices, and limits. “Typed decision model” is a useful description of this *task and interface*, not the name of one established neural architecture.
 
-![Editorial cover showing textual state entering a decision model and emerging as bounded probability distributions.]({attach}img/jev-cover.svg)
+![Editorial cover showing textual state entering a decision model and emerging as bounded probability distributions.]({attach}img/jev-cover.svg){: width="1200" height="630" }
 
 Figure 1. Shared textual state and defined answer spaces turn a vague automation request into explicit judgments that software can inspect.
 {: align=center }
@@ -100,7 +100,7 @@ The flexibility has a cost. Output length adds sequential decoding work. If the 
 
 The caller declares yes/no, Choice, or Score answer spaces before inference. Jev says it returns several independent distributions through a parallel sampler; Laya uses a bidirectional encoder and an option-scoring head. Neither has to generate an explanatory paragraph for a bounded judgment. This contrasts with autoregressive output, but not with every possible classifier or structured-output system.
 
-[![Comparison of an autoregressive LLM decoding a token sequence and a bounded decision model scoring declared answers.]({attach}img/jev-vs-llm.svg)]({attach}img/jev-vs-llm.svg)
+[![Comparison of an autoregressive LLM decoding a token sequence and a bounded decision model scoring declared answers.]({attach}img/jev-vs-llm.svg){: width="1200" height="710" }]({attach}img/jev-vs-llm.svg)
 
 Figure 3. The visible contrast is sequence generation versus distributions over declared answer spaces. Jev's internals are not public; Laya documents its encoder and head. Sources: [TypeSafe launch](https://typesafe.ai/blog/introducing-system-one-models-and-jev) and [Laya repository](https://github.com/NandhaKishorM/laya).
 {: align=center }
@@ -164,7 +164,7 @@ TypeSafe publishes four workflow evaluations: security incidents, agent-trace ob
 
 In Figure 4, moving right means spending more per case and moving up means agreeing more often with TypeSafe's reference. The most attractive region is therefore the upper-left corner.
 
-[![Scatterplot of agreement with TypeSafe's model-derived reference versus reported cost per case. Jev is far left at 67.8 percent and 0.0004 dollars, while several LLM workflows show similar or higher agreement at higher cost.]({attach}img/jev-workflow-eval-replot.svg)]({attach}img/jev-workflow-eval-replot.svg)
+[![Scatterplot of agreement with TypeSafe's model-derived reference versus reported cost per case. Jev is far left at 67.8 percent and 0.0004 dollars, while several LLM workflows show similar or higher agreement at higher cost.]({attach}img/jev-workflow-eval-replot.svg){: width="1200" height="730" }]({attach}img/jev-workflow-eval-replot.svg)
 
 Figure 4. Jev reports 67.8% mean agreement at $0.0004 and 0.4 seconds per case. GPT-5.6 Terra reports 67.9% at $0.0304 and 10.1 seconds; GPT-5.6 Sol reports 74.1% at $0.0836 and 23.3 seconds. Data: [TypeSafe workflow evals](https://evals.typesafe.ai/), accessed September 17, 2026.
 {: align=center }

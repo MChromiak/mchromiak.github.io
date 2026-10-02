@@ -1,8 +1,11 @@
 {% extends "article_list.html" %}
 {% block title %}{{ tag }} - {{ SITENAME }}{% endblock %}
+{% block canonical_rel %}
+{% if articles|count > 1 %}<link rel="canonical" href="{{ SITEURL }}/{{ tag.url }}">{% endif %}
+{% endblock %}
 {% block meta %}
     <meta name="author" content="{{ AUTHOR }}" />
-    <meta name="keywords" content="{{ tag }}" />
+    <meta name="description" content="Articles about {{ tag }} by {{ AUTHOR }}." />
 {% endblock %}
 {% block breadcrumbs %}
     {% if DISPLAY_BREADCRUMBS %}

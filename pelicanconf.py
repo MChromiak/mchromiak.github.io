@@ -8,6 +8,8 @@ SITESUBTITLE = 'Be a fool to become a Polymath.'
 SITE_DESCRIPTION = ('Technical articles about machine learning, computer vision, '
                     'world models, reinforcement learning, and AI research by Michał Chromiak.')
 AUTHOR_URL = 'pages/about.html'
+AUTHOR_ABSOLUTE_URL = 'https://mchromiak.github.io/pages/about.html'
+AUTHOR_ID = f'{AUTHOR_ABSOLUTE_URL}#person'
 AUTHOR_SAME_AS = [
     'https://orcid.org/0000-0002-6376-808X',
     'https://scholar.google.com/citations?user=UeOad3YAAAAJ',
@@ -17,7 +19,7 @@ AUTHOR_SAME_AS = [
 
 # publishconf.py supplies the production domain.
 SITEURL = ''
-SITELOGO = 'static_files/img/sitelogo40.png'
+SITELOGO = 'static_files/img/sitelogo80.png'
 FAVICON = 'static_files/img/favicon.svg'
 FAVICON_PNG = 'static_files/img/favicon-32.png'
 FAVICON_ICO = 'favicon.ico'
@@ -63,7 +65,7 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-AVATAR = 'static_files/img/me.png'
+AVATAR = 'static_files/img/me.webp'
 ABOUT_ME = ' PhD in Computer Science by Polish Academy of Sciences (PAS). Focus research on understanding chaos of data. Deeply understanding the phenomena makes it easy, but first you need to learn. Holds two MScs, in Mathematics and in Computer Science.'
 
 # Blogroll
@@ -112,7 +114,7 @@ THEME = 'themes/pelican-bootstrap3'
 JINJA_ENVIRONMENT = {'extensions': ['jinja2.ext.i18n']}
 BOOTSTRAP_THEME = 'cerulean'
 
-BANNER = 'static_files/img/prv/banner.jpg'
+BANNER = 'static_files/img/prv/banner.webp'
 BANNER_SUBTITLE = 'Cast Math spells on data.'
 
 DISPLAY_CATEGORIES_ON_MENU = False
@@ -137,7 +139,7 @@ EXTRA_PATH_METADATA = {
     'extra/typed-decision-redirect.html': {'path': 'articles/2026/Sep/17/Jev-Typed-Decisions-for-Enterprise-AI/index.html'},
 }
 
-DISQUS_DISPLAY_COUNTS = True
+DISQUS_DISPLAY_COUNTS = False
 DISQUS_NO_ID = True
 
 # Open Graph
@@ -145,8 +147,6 @@ USE_OPEN_GRAPH = True
 OPEN_GRAPH_IMAGE = 'static_files/img/Avatar.png'
 TWITTER_CARDS = True
 TWITTER_USERNAME = 'drChromiak'
-
-ADDTHIS_PROFILE = 'ra-59ea3c17b283c631'
 
 # Plugins
 
@@ -185,14 +185,4 @@ SITEMAP = {
         r'^tag/',
         r'^tags\.html$',
     ],
-    'priorities': {
-        'articles': 0.5,
-        'indexes': 0.5,
-        'pages': 0.5
-    },
-    'changefreqs': {
-        'articles': 'monthly',
-        'indexes': 'daily',
-        'pages': 'monthly'
-    }
 }

@@ -1,7 +1,7 @@
 <div id="aboutme">
     {% if AVATAR %}
         <p>
-            <img width="100%" class="img-thumbnail" src="{{ SITEURL }}/{{ AVATAR }}"/>
+            <img width="180" height="180" class="img-thumbnail" src="{{ SITEURL }}/{{ AVATAR }}" alt="Portrait of {{ AUTHOR }}" loading="lazy" decoding="async"/>
         </p>
     {% endif %}
     {% if ABOUT_ME %}

@@ -4,7 +4,7 @@
         {% for article in (articles_page.object_list if articles_page else articles) %}
             <article>
                 <h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
-                <h5><a href="{{ SITEURL }}/{{ article.url }}" class="artsubtitle">{{ article.subtitle }} </a></h5>
+                <p class="article-subtitle"><a href="{{ SITEURL }}/{{ article.url }}" class="artsubtitle">{{ article.subtitle }} </a></p>
                 {% if DISPLAY_ARTICLE_INFO_ON_INDEX %}
                     <div class="well well-sm">
                         {% include "includes/article_info.html" %}
@@ -12,7 +12,7 @@
                 {% endif %}
                 <div class="summary">
                   <div class="cover">
-                    {% if article.cover %}<img src="{{ SITEURL }}/{{ article.cover }}" alt="{{ article.title|striptags|escape }} cover" loading="lazy">{% endif %}
+                    {% if article.cover %}<img src="{{ SITEURL }}/{{ article.thumbnail|default(article.cover) }}" alt="{{ article.title|striptags|escape }} cover" width="600" height="400" loading="lazy" decoding="async">{% endif %}
                   </div>
                   <div class="sumtext">
                     {{ article.summary }}

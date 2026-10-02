@@ -2,11 +2,12 @@ Title:  The Transformer – Attention is all you need.
 Status: published
 Category: Sequence Models
 Date: 2017-09-12 19:30
-Modified: 2017-10-30 19:30
+Modified: 2026-09-10 21:31
 Tags: NMT, transformer, Sequence transduction, Attention model, Machine translation, seq2seq, NLP
 Slug: Transformer-Attention-is-all-you-need
 Related_posts: Explaining-Neural-Language-Modeling, ernie-2-0, MLP-Mixer
 Cover: articles/2017/Sep/12/img/cover_trans.gif
+Thumbnail: articles/2017/Sep/12/img/cover_trans-thumb.webp
 Summary: Transformer - more than meets the eye! Are we there yet? Well... not really, but...</br>   How about eliminating recurrence and convolution from transduction? Sequence modeling and transduction (e.g. language modeling, machine translation) problems solutions has been dominated by RNN (especially gated RNN) or LSTM, additionally employing the attention mechanism. Main sequence transduction models are based on RNN or CNN including encoder and decoder. The new *transformer* architecture is claimed however, to be more parallelizable and requiring significantly less time to train, solely focusing on attention mechanisms.
 
 

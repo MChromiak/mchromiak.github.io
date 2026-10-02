@@ -1,4 +1,5 @@
 Title: Contact
+Modified: 2026-09-19 08:28
 Slug: contact-detail
 Summary: Contact Michał Chromiak by email or find his professional and research profiles.
 

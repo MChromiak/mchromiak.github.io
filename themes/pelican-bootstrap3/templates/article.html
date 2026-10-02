@@ -67,15 +67,17 @@
       "inLanguage": {{ article.lang|tojson }},
       {% if article.cover %}"image": {{ (SITEURL ~ '/' ~ article.cover)|tojson }},{% elif article.og_image %}"image": {{ (SITEURL ~ '/' ~ article.og_image)|tojson }},{% elif OPEN_GRAPH_IMAGE %}"image": {{ (SITEURL ~ '/' ~ OPEN_GRAPH_IMAGE)|tojson }},{% endif %}
       "author": {
+        "@id": {{ AUTHOR_ID|tojson }},
         "@type": "Person",
         "name": {{ (article.author|string if article.author else AUTHOR)|tojson }},
-        "url": {{ AUTHOR_URL|tojson }},
+        "url": {{ AUTHOR_ABSOLUTE_URL|tojson }},
         "sameAs": {{ AUTHOR_SAME_AS|tojson }}
       },
       "publisher": {
+        "@id": {{ AUTHOR_ID|tojson }},
         "@type": "Person",
         "name": {{ AUTHOR|tojson }},
-        "url": {{ AUTHOR_URL|tojson }}
+        "url": {{ AUTHOR_ABSOLUTE_URL|tojson }}
       }
     }
     </script>

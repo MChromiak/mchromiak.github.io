@@ -3,17 +3,17 @@
 
 <!-- Sidebar/Series -->
 <li class="list-group-item">
-  <h4>{{ title(_('Series'), DISABLE_SIDEBAR_TITLE_ICONS, icon='tags') }}</h4>
+  <h2>{{ title(_('Series'), DISABLE_SIDEBAR_TITLE_ICONS, icon='tags') }}</h2>
   <ul class="list-group">
     {% if article.series.previous %}
     <li class="list-group-item">
-      <h5></i>{{ _('Previous article') }}</h5>
+      <h3></i>{{ _('Previous article') }}</h3>
       <a href="{{ SITEURL }}/{{ article.series.previous.url }}">{{ article.series.previous.title }}</a>
     </li>
     {% endif %}
     {% if article.series.next %}
     <li class="list-group-item">
-      <h5>{{ _('Next article') }}</h5>
+      <h3>{{ _('Next article') }}</h3>
       <a href="{{ SITEURL }}/{{ article.series.next.url }}">{{ article.series.next.title }}</a>
     </li>
     {% endif %}

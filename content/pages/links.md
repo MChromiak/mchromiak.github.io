@@ -1,4 +1,5 @@
 Title: Links
+Modified: 2026-09-04 07:52
 Heading: Learning and research links
 Summary: Selected courses, books, research blogs, tools, and datasets for studying machine learning, with older material clearly identified.
 Comments: enabled

@@ -6,7 +6,7 @@
 
 <!-- Sidebar/Recent Posts -->
 <li class="list-group-item">
-  <h4>{{ title(_('Recent Posts'), DISABLE_SIDEBAR_TITLE_ICONS) }}</h4>
+  <h2>{{ title(_('Recent Posts'), DISABLE_SIDEBAR_TITLE_ICONS) }}</h2>
   <ul class="list-group" id="recentposts">
     {% for article in articles[:RECENT_POST_COUNT] %}
     <li class="list-group-item">

@@ -3,7 +3,7 @@ Subtitle: What the 2026 male-CNS map reveals, what experiments test, and what di
 Status: published
 Category: Machine Learning / Neuroscience
 Date: 2026-09-19 12:00
-Modified: 2026-09-19 12:00
+Modified: 2026-09-20 09:25
 Tags: Connectomics, Drosophila, Brain Simulation, Computational Neuroscience, FlyWire, NeuroMechFly
 Slug: From-Fly-Connectome-to-Digital-Behavior
 Related_posts: Dragon-Hatchling-I-Paper-Notes, Atlas-World-Model-for-Spatial-Intelligence

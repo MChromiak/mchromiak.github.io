@@ -3,11 +3,12 @@ Subtitle: "Decision Transformer: Reinforcement Learning via Sequence Modeling" -
 Status: published
 Category: Reinforcement learning
 Date: 2021-06-01 19:30
-Modified: 2021-07-13 19:30
+Modified: 2026-09-04 07:52
 Tags: Transformer, Reinforcement Learning, RL, MDP, Markov Decision Process
 Slug: Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence
 Related_posts: Transformer-Attention-is-all-you-need, RL-Primer
 Cover: articles/2021/Jun/01/img/DecisionTransformer-Cover.png
+Thumbnail: articles/2021/Jun/01/img/DecisionTransformer-Cover-thumb.webp
 Summary: Decision Transformer casts offline reinforcement learning (RL) as conditional sequence modeling. A causally masked GPT-style Transformer predicts each action from a desired return-to-go, the current state, and the recent trajectory. It avoids value-function bootstrapping and policy-gradient optimization during training, yet matches or exceeds several strong offline RL baselines on the benchmarks studied in the paper.
 
 

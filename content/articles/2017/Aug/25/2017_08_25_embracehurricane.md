@@ -6,6 +6,7 @@ Tags: application, PatternRecognition
 Slug: embrace-hurricane
 Related_posts: slug1
 Cover: articles/2017/Aug/25/embrace-hurricane/img/cover_irma.jpg
+Thumbnail: articles/2017/Aug/25/img/cover_irma-thumb.webp
 Summary: Reducing uncertainty is very challenging and important task in many areas. It it literally often a matter of live and death. If the prediction is accurate, it is easy to imagine how meaningful it is, especially in cases such as weather forecasts in case of hurricanes.
 
 

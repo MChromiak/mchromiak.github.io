@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% if article and article.status == 'hidden' %}
+    {% if (article and article.status == 'hidden') or (tag is defined and tag and articles is defined and articles|count < 2) %}
     <meta name="robots" content="noindex, follow">
     {% else %}
     <meta name="robots" content="index, follow, max-image-preview:large">
@@ -93,6 +93,13 @@
         <meta name="flattr:id" content="m1qj28">
     {% endif %}
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&amp;family=Merriweather:wght@400;700&amp;family=Source+Serif+4:wght@400;600&amp;display=swap" rel="stylesheet">
+    {% if BANNER and (BANNER_ALL_PAGES or (article is not defined and page is not defined and tag is not defined and category is not defined)) %}
+    <link rel="preload" as="image" href="{{ SITEURL }}/{{ BANNER }}" fetchpriority="high">
+    {% endif %}
+
     <!-- Bootstrap -->
     {% if BOOTSTRAP_THEME %}
         <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/bootstrap.{{ BOOTSTRAP_THEME }}.min.css" type="text/css"/>
@@ -114,6 +121,10 @@
     <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/style.css" type="text/css"/>
     {% if CUSTOM_CSS %}
         <link href="{{ SITEURL }}/{{ CUSTOM_CSS }}" rel="stylesheet">
+    {% endif %}
+    {% if article and 'video-js' in article.content %}
+        <link href="https://unpkg.com/video.js@7.21.7/dist/video-js.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/sea/index.css" rel="stylesheet">
     {% endif %}
     {% if SHARIFF %}
         <link href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/shariff/shariff.min.css" rel="stylesheet">
@@ -154,7 +165,7 @@
             </button>
             {% endif %}
             <a href="{{ SITEURL }}/" class="navbar-brand">
-                {% if SITELOGO %}<img class="img-responsive pull-left gap-right" src="{{ SITEURL }}/{{ SITELOGO }}" width="{{ SITELOGO_SIZE }}"/> {% endif %}
+                {% if SITELOGO %}<img class="img-responsive pull-left gap-right" src="{{ SITEURL }}/{{ SITELOGO }}" width="40" height="41" alt="" aria-hidden="true"/> {% endif %}
                 {% if not HIDE_SITENAME %}{{ SITENAME }}{% endif %}
             </a>
         </div>
@@ -210,17 +221,17 @@
     <div class="row">
         {% set contact_page = page is defined and page.slug == 'contact-detail' %}
         {% if contact_page %}
-        <div class="col-xs-12 contact-layout">
+        <main class="col-xs-12 contact-layout" id="main-content">
         {% elif not HIDE_SIDEBAR or ABOUT_ME or AVATAR %}
-        <div class="col-sm-9{% if SIDEBAR_ON_LEFT %} col-sm-push-3{% endif %}">
+        <main class="col-sm-9{% if SIDEBAR_ON_LEFT %} col-sm-push-3{% endif %}" id="main-content">
         {% else %}
-        <div class="col-lg-12">
+        <main class="col-lg-12" id="main-content">
         {% endif %}
         {% block breadcrumbs %}
         {% endblock %}
         {% block content %}
         {% endblock %}
-        </div>
+        </main>
         {% if not contact_page and (not HIDE_SIDEBAR or ABOUT_ME or AVATAR) %}
         <div class="col-sm-3{% if SIDEBAR_ON_LEFT %} col-sm-pull-9{% endif %}" id="sidebar">
             <aside>

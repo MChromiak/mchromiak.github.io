@@ -1,4 +1,5 @@
 Title: About
+Modified: 2026-09-04 07:02
 Heading: Michał Chromiak, PhD
 Summary: Michał Chromiak is a computer scientist at Maria Curie-Skłodowska University. His work spans machine learning, software engineering, and the integration of heterogeneous systems.
 

@@ -1,4 +1,5 @@
 Title: Resources
+Modified: 2026-09-04 07:52
 Heading: Papers and research notes
 Summary: An annotated collection of machine-learning papers, technical articles, and implementations, organised by research topic.
 Status: published

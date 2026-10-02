@@ -1,4 +1,5 @@
 Title: Categorisation
+Modified: 2026-09-04 07:52
 Heading: Topics and reading guide
 Summary: Find a starting point in machine learning, explore the blog by topic, and understand how tasks, learning methods, and models fit together.
 

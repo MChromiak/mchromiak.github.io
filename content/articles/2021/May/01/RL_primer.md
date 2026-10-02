@@ -3,11 +3,12 @@ Subtitle: The concepts and equations needed to reason about online, offline, mod
 Status: published
 Category: Reinforcement learning
 Date: 2021-05-01 19:30
-Modified: 2021-06-15 12:00
+Modified: 2026-09-10 21:31
 Tags: Reinforcement Learning, RL, MDP, Value Functions, Temporal-Difference Learning, Offline RL
 Slug: RL-Primer
 Related_posts: Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence, Transformer-Attention-is-all-you-need
 Cover: articles/2021/May/01/img/RL-primer-Cover.jpg
+Thumbnail: articles/2021/May/01/img/RL-primer-Cover-thumb.webp
 Summary: Reinforcement learning trains an agent to make sequential decisions whose consequences may arrive much later. This primer builds the essential vocabulary, derives return and value functions, explains Bellman and temporal-difference learning, and distinguishes online from offline and model-free from model-based RL.
 
 ---
