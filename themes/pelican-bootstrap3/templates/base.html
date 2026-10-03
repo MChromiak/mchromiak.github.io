@@ -120,7 +120,7 @@
     {% endif %}
     <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/style.css" type="text/css"/>
     {% if CUSTOM_CSS %}
-        <link href="{{ SITEURL }}/{{ CUSTOM_CSS }}" rel="stylesheet">
+        <link href="{{ SITEURL }}/{{ CUSTOM_CSS }}{% if CUSTOM_CSS_VERSION %}?v={{ CUSTOM_CSS_VERSION }}{% endif %}" rel="stylesheet">
     {% endif %}
     {% if article and 'video-js' in article.content %}
         <link href="https://unpkg.com/video.js@7.21.7/dist/video-js.min.css" rel="stylesheet">

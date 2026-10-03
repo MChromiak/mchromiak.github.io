@@ -128,6 +128,7 @@ DISPLAY_BREADCRUMBS = True
 DISPLAY_CATEGORY_IN_BREADCRUMBS = True
 
 CUSTOM_CSS = 'static_files/css/custom.css'
+CUSTOM_CSS_VERSION = '20261003'
 CUSTOM_JS = 'static_files/js/custom.js'
 
 # JS scripts run on article sides. see article.html template

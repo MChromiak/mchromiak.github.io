@@ -10,6 +10,13 @@ div.col-sm-3 {
   background-color: white;
 }
 
+@media (min-width: 768px) {
+  body > .container > .row {
+    background: #fff;
+    box-shadow: 0 6px 24px rgba(2, 16, 46, 0.22);
+  }
+}
+
 footer {
   background-color: azure;
 }
