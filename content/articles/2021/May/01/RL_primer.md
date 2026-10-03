@@ -10,6 +10,7 @@ Related_posts: Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling
 Cover: articles/2021/May/01/img/RL-primer-Cover.jpg
 Thumbnail: articles/2021/May/01/img/RL-primer-Cover-thumb.webp
 Summary: Reinforcement learning trains an agent to make sequential decisions whose consequences may arrive much later. This primer builds the essential vocabulary, derives return and value functions, explains Bellman and temporal-difference learning, and distinguishes online from offline and model-free from model-based RL.
+Description: A practical introduction to reinforcement learning: agents, returns, value functions, Bellman equations, and temporal-difference learning.
 
 ---
 

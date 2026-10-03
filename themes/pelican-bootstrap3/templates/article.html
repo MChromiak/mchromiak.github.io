@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set article_description = article.description|default(article.summary, true) %}
 {% block title %}{{ article.title|striptags }} - {{ SITENAME }}{% endblock %}
 {% block html_lang %}{{ article.lang }}{% endblock %}
 {% block meta %}
@@ -10,8 +11,8 @@
     {% if article.tags %}
         <meta name="keywords" content="{{ article.tags|join(',')|striptags }}" />
     {% endif %}
-    {% if article.summary %}
-        <meta name="description" content="{{ article.summary|striptags|escape }}" />
+    {% if article_description %}
+        <meta name="description" content="{{ article_description|striptags|escape }}" />
     {% endif %}
 {% endblock %}
 {% block opengraph %}
@@ -23,7 +24,7 @@
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="{{ article.title|striptags|escape }}"/>
         <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}"/>
-        <meta property="og:description" content="{{ article.summary|striptags|escape }}"/>
+        <meta property="og:description" content="{{ article_description|striptags|escape }}"/>
         {% if article.cover %}
             <meta property="og:image" content="{{ SITEURL }}/{{ article.cover }}" />
             <meta property="og:image:alt" content="{{ article.title|striptags|escape }}" />
@@ -56,7 +57,7 @@
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": {{ article.title|striptags|tojson }},
-      "description": {{ article.summary|striptags|tojson }},
+      "description": {{ article_description|striptags|tojson }},
       "url": {{ (SITEURL ~ '/' ~ article.url)|tojson }},
       "mainEntityOfPage": {
         "@type": "WebPage",
@@ -79,6 +80,31 @@
         "name": {{ AUTHOR|tojson }},
         "url": {{ AUTHOR_ABSOLUTE_URL|tojson }}
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ (SITEURL ~ '/')|tojson }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ (article.category|string)|tojson }},
+          "item": {{ (SITEURL ~ '/' ~ article.category.url)|tojson }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ article.title|striptags|tojson }}
+        }
+      ]
     }
     </script>
 {% endblock %}

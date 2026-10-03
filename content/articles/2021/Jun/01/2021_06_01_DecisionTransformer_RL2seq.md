@@ -10,6 +10,7 @@ Related_posts: Transformer-Attention-is-all-you-need, RL-Primer
 Cover: articles/2021/Jun/01/img/DecisionTransformer-Cover.png
 Thumbnail: articles/2021/Jun/01/img/DecisionTransformer-Cover-thumb.webp
 Summary: Decision Transformer casts offline reinforcement learning (RL) as conditional sequence modeling. A causally masked GPT-style Transformer predicts each action from a desired return-to-go, the current state, and the recent trajectory. It avoids value-function bootstrapping and policy-gradient optimization during training, yet matches or exceeds several strong offline RL baselines on the benchmarks studied in the paper.
+Description: How Decision Transformer reframes offline reinforcement learning as conditional sequence modeling with return-to-go, states, and actions.
 
 
 

@@ -10,6 +10,7 @@ Related_posts: DINO-Emerging-Properties-in-Self-Supervised-Vision-Transformers, 
 Cover: articles/2021/Nov/14/img/MaskedAE1.png
 Thumbnail: articles/2021/Nov/14/img/MaskedAE1-thumb.webp
 Summary: A masked autoencoder (MAE) learns visual representations by reconstructing missing image patches from a small visible subset. It divides an image into regular non-overlapping patches, samples patches uniformly without replacement, removes the masked patches before the encoder, and inserts learned mask tokens only for the lightweight decoder. With a 75% masking ratio, the encoder processes just 25% of the patches. This asymmetric design reduces training time and memory, enabling ViT-Large and ViT-Huge models to scale on ImageNet-1K. A ViT-Huge model pretrained for 1600 epochs and fine-tuned at 448-pixel resolution reaches 87.8% ImageNet-1K top-1 accuracy.
+Description: How masked autoencoders learn visual representations by reconstructing hidden patches, and why asymmetric ViT encoders scale efficiently.
 
 
 ![MAE reconstructions for COCO validation images]({attach}img/HeaderCoCoResults.png)

@@ -26,9 +26,10 @@
       "description": {{ SITE_DESCRIPTION|tojson }},
       "inLanguage": {{ DEFAULT_LANG|tojson }},
       "author": {
+        "@id": {{ AUTHOR_ID|tojson }},
         "@type": "Person",
         "name": {{ AUTHOR|tojson }},
-        "url": {{ AUTHOR_URL|tojson }},
+        "url": {{ AUTHOR_ABSOLUTE_URL|tojson }},
         "sameAs": {{ AUTHOR_SAME_AS|tojson }}
       }
     }

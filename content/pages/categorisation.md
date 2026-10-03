@@ -13,7 +13,7 @@ This blog explores how machine-learning methods work and what research papers te
 - **[Sequence models](/category/sequence-models.html)**: language modelling, attention, and transformers for processing and generating sequences.
 - **[Reinforcement learning](/category/reinforcement-learning.html)**: learning to make decisions, from rewards and value functions to policies learned from recorded experience.
 - **[ML Dojo](/category/ml-dojo.html)**: introductions and practical explanations for building a foundation in machine learning.
-- **[Applications](/category/applications.html)**: examples of machine learning applied to problems beyond benchmark datasets.
+- **[Applications](/category/applications.html)**: examples of machine learning applied to problems beyond benchmark datasets, including a historical note on [pattern recognition in hurricane forecasting]({filename}/articles/2017/Aug/25/2017_08_25_embracehurricane.md).
 
 Categories group articles by their main subject. [Tags](/tags.html) connect ideas across those groups: a transformer can process text or images, and self-supervised learning can be used in either domain. General machine learning, deep learning, optimisation, and fine-tuning are cross-cutting topics rather than separate branches of a single hierarchy.
 

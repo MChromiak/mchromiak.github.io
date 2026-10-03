@@ -9,6 +9,7 @@ Slug: Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI
 Related_posts: Transformer-Attention-is-all-you-need, Explaining-Neural-Language-Modeling, RL-Primer
 Cover: articles/2026/Sep/17/Typed-Decision-Models-Jev-and-Laya-in-Agentic-AI/img/jev-cover.svg
 Summary: Some AI tasks need a bounded judgment, not generated prose. Jev and Laya illustrate how decision models turn textual state and defined answer spaces into probability distributions. This guide explains the shared pattern, where the implementations differ, what their benchmarks establish, and how to evaluate them in an agentic workflow.
+Description: How typed decision models such as Jev and Laya produce bounded, auditable judgments and fit into enterprise agentic workflows.
 
 ---
 

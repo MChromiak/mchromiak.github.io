@@ -8,6 +8,7 @@ Related_posts: slug1
 Cover: articles/2017/Aug/25/embrace-hurricane/img/cover_irma.jpg
 Thumbnail: articles/2017/Aug/25/img/cover_irma-thumb.webp
 Summary: Reducing uncertainty is very challenging and important task in many areas. It it literally often a matter of live and death. If the prediction is accurate, it is easy to imagine how meaningful it is, especially in cases such as weather forecasts in case of hurricanes.
+Description: How pattern recognition and data-driven forecasting can reduce uncertainty in hurricane prediction, illustrated through the 2017 Atlantic season.
 
 
 Recent hurricane Harvey has become one of the most devastating and dangerous of its kind along the history. However, the question arises if our science has the tools to do something to help in such cases. Of course, currently there Is no technology that can physically eliminate the threat of hurricane by neutralizing it or changing its path but one can think of a more mathematical way of predicting its behavior.

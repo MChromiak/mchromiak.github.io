@@ -10,6 +10,7 @@ Related_posts: Transformer-Attention-is-all-you-need, ernie-2-0
 Cover: articles/2017/Nov/30/img/nlp-cover.png
 Thumbnail: articles/2017/Nov/30/img/nlp-cover-thumb.webp
 Summary: A language model assigns probabilities to token sequences by predicting each token from its context. This guide derives the chain rule, explains n-gram estimation and smoothing, connects cross-entropy to perplexity, and shows what changes when a neural Transformer replaces the count table.
+Description: An intuitive guide to n-gram and neural language models, including smoothing, cross-entropy, perplexity, and Transformer prediction.
 
 ---
 

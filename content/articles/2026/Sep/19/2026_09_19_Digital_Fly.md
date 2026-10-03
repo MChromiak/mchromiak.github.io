@@ -9,6 +9,7 @@ Slug: From-Fly-Connectome-to-Digital-Behavior
 Related_posts: Dragon-Hatchling-I-Paper-Notes, Atlas-World-Model-for-Spatial-Intelligence
 Cover: articles/2026/Sep/19/From-Fly-Connectome-to-Digital-Behavior/img/fly-model-evidence.svg
 Summary: The 2026 male fruit fly connectome links brain and nerve cord in one open map. New studies compare male and female circuits, trace vision and taste pathways, and test social-behavior predictions. Here is how those results differ from digital-fly game demos.
+Description: What recent fruit-fly connectome experiments reveal about circuit-to-behavior prediction, digital simulations, and the limits of brain emulation.
 
 ---
 
