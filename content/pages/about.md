@@ -1,5 +1,5 @@
 Title: About
-Modified: 2026-09-04 07:02
+Modified: 2026-10-04 16:38
 Heading: Michał Chromiak, PhD
 Summary: Michał Chromiak is a computer scientist at Maria Curie-Skłodowska University. His work spans machine learning, software engineering, and the integration of heterogeneous systems.
 
@@ -11,14 +11,14 @@ I hold a PhD in Computer Science from the [Institute of Fundamental Technologica
 
 ## Research and engineering
 
+I served on the Programme Committees for [ECAI 2024](https://www.ecai2024.eu/committees/pc) and [ECAI 2025](https://ecai2025.org/program-committee/), two editions of the European Conference on Artificial Intelligence.
+
 My experience spans academic research and applied software development. Selected work includes:
 
 * **Object databases.** Contributions to the ODRA database prototype and research on the Stack-Based Approach to databases at the [Polish-Japanese Academy of Information Technology](https://pja.edu.pl/en/) during my doctoral studies.
 * **Geospatial software.** Development of an aerial-image georeferencing platform for the [Institute of Soil Science and Plant Cultivation (IUNG)](https://www.iung.pl/).
 * **Healthcare software.** Design of transaction-like behaviour on top of Elasticsearch for CompuGroup Medical.
 * **Computational biology.** Exploratory work in 2016 on modelling CRISPR workflows using MapReduce.
-
-I also served on the [ECAI 2024 Programme Committee](https://www.ecai2024.eu/committees/pc).
 
 ## About this blog
 
