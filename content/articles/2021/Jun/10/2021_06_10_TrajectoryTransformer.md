@@ -3,7 +3,6 @@ Subtitle: Reinforcement Learning as One Big Sequence Modeling Problem - Research
 Status: draft
 Category: Reinforcement learning
 Date: 2021-06-10 14:00
-Modified: 2021-06-10 14:00
 Tags: Transformer, Transformer, Reinforcement Learning, RL, RL as Sequence
 Slug: Reinforcement-Learning-as-One-Big-Sequence-Modeling-Problem-RL-assequence
 Related_posts: Transformer-Attention-is-all-you-need, Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence

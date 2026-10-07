@@ -2,7 +2,7 @@ Title:  The Transformer – Attention is all you need.
 Status: published
 Category: Sequence Models
 Date: 2017-09-12 19:30
-Modified: 2026-09-10 21:31
+Modified: 2017-10-30 19:30
 Tags: NMT, transformer, Sequence transduction, Attention model, Machine translation, seq2seq, NLP
 Slug: Transformer-Attention-is-all-you-need
 Related_posts: Explaining-Neural-Language-Modeling, ernie-2-0, MLP-Mixer

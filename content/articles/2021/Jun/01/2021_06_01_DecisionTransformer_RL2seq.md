@@ -3,7 +3,7 @@ Subtitle: "Decision Transformer: Reinforcement Learning via Sequence Modeling" -
 Status: published
 Category: Reinforcement learning
 Date: 2021-06-01 19:30
-Modified: 2026-09-04 07:52
+Modified: 2026-09-03 08:56
 Tags: Transformer, Reinforcement Learning, RL, MDP, Markov Decision Process
 Slug: Decision-Transformer-Reinforcement-Learning-via-Sequence-Modeling-RL-as-sequence
 Related_posts: Transformer-Attention-is-all-you-need, RL-Primer
